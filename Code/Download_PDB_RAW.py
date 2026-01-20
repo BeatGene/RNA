@@ -1,4 +1,6 @@
 import os
+import gzip
+import shutil
 import requests
 import pandas as pd
 from Bio.PDB import PDBList, MMCIFParser
@@ -8,13 +10,15 @@ import time
 
 # 忽略 Biopython 解析非标准 PDB 时的警告
 warnings.simplefilter('ignore', PDBConstructionException)
+# 忽略pandas的无关警告
+warnings.filterwarnings('ignore', category=UserWarning)
 
 
 class RNADatasetCurator:
     def __init__(self, save_dir="./pdb_data"):
         self.save_dir = save_dir
-        if not os.path.exists(save_dir):
-            os.makedirs(save_dir)
+        # 优化：exist_ok=True 一行替代if判断，更简洁
+        os.makedirs(save_dir, exist_ok=True)
         self.parser = MMCIFParser(QUIET=True)
 
     def search_rna_structures(self):
@@ -22,9 +26,9 @@ class RNADatasetCurator:
         使用 RCSB Search API 查找 RNA 结构，并同时获取它们的标题。
         """
         print("正在从 PDB 检索 RNA 结构列表 (包含标题)...")
-        url = "[https://search.rcsb.org/rcsbsearch/v2/query](https://search.rcsb.org/rcsbsearch/v2/query)"
+        # ✅ 修复1：去掉多余的[]和()，修正URL语法错误
+        url = "https://search.rcsb.org/rcsbsearch/v2/query"
 
-        # 这是一个 JSON 查询，寻找包含 RNA 聚合物的结构
         query = {
             "query": {
                 "type": "terminal",
@@ -41,7 +45,8 @@ class RNADatasetCurator:
             }
         }
 
-        response = requests.post(url, json=query)
+        # ✅ 修复6：增加timeout=30，防止请求卡死
+        response = requests.post(url, json=query, timeout=30)
         id_list = []
 
         if response.status_code == 200:
@@ -49,32 +54,47 @@ class RNADatasetCurator:
             id_list = [entry['identifier'] for entry in result_set]
             print(f"找到 {len(id_list)} 个包含 RNA 的结构 ID。")
         else:
-            print("检索 ID 失败")
-            return {}
-
-        # 进一步：我们需要获取这些 ID 对应的 Title (结构名称)
-        # 为了不让 PDB API 崩溃，我们使用 GraphQL 或者简单的分批查询，
-        # 但为了脚本简单，这里我们稍后在分析时单独处理，或者只记录 ID。
-        # (注：为了工程效率，大规模获取标题建议用 GraphQL，这里为保持脚本简单，
-        # 我们将在下载后尝试从文件头读取标题，或者仅列出 ID)
+            print(f"检索 ID 失败，响应码: {response.status_code}")
+            return []
 
         return id_list
 
     def get_structure_title_from_cif(self, structure):
         """尝试从解析的结构中获取 Header 标题"""
-        # Biopython 的 MMCIFParser 解析后的 header 通常在 structure.header 中
-        # 但 MMCIF 格式比较复杂，有时 title 字段位置不固定
-        title = structure.header.get('name', 'Unknown Title')
+        # ✅ 修复4：修改为正确的标题key，获取真实的PDB结构标题
+        title = structure.header.get('structure_title', 'Unknown Title')
         return title
+
+    def _unzip_gz_file(self, gz_filepath):
+        """内部方法：解压gz压缩包，返回解压后的cif文件路径"""
+        cif_filepath = gz_filepath.replace('.gz', '')
+        if not os.path.exists(cif_filepath):
+            with gzip.open(gz_filepath, 'rb') as f_in:
+                with open(cif_filepath, 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+        return cif_filepath
 
     def download_structure(self, pdb_id):
         """
-        下载 mmCIF 文件
+        下载 mmCIF 文件 + 自动解压.gz压缩包
         """
         pdbl = PDBList(verbose=False)
-        # retrieve_pdb_file 会自动下载到 self.save_dir
-        filepath = pdbl.retrieve_pdb_file(pdb_id, pdir=self.save_dir, file_format='mmCif')
-        return filepath
+        pdb_id_lower = pdb_id.lower()
+        # 拼接解压后的文件路径，用于判断是否已下载
+        target_cif = os.path.join(self.save_dir, f"{pdb_id_lower}.cif")
+
+        # ✅ 修复8：文件已存在则跳过下载，直接返回路径
+        if os.path.exists(target_cif):
+            return target_cif
+
+        # ✅ 修复2：Biopython新版本参数修正 file_format→format，mmCif→mmcif
+        gz_filepath = pdbl.retrieve_pdb_file(pdb_id_lower, pdir=self.save_dir, format='mmcif')
+        if not gz_filepath or not os.path.exists(gz_filepath):
+            return None
+
+        # ✅ 修复3：自动解压gz压缩包，返回可解析的cif文件路径
+        cif_filepath = self._unzip_gz_file(gz_filepath)
+        return cif_filepath
 
     def analyze_rna_integrity(self, filepath, pdb_id):
         """
@@ -83,51 +103,47 @@ class RNADatasetCurator:
         try:
             structure = self.parser.get_structure(pdb_id, filepath)
         except Exception as e:
-            print(f"解析错误 {pdb_id}: {e}")
+            print(f"解析错误 {pdb_id}: {str(e)[:50]}...")
             return []
 
-        # 获取结构的标题（名字）
         structure_title = self.get_structure_title_from_cif(structure)
-
         rna_chains_info = []
 
         for model in structure:
             for chain in model:
-                # 过滤杂原子/水分子
+                # 过滤杂原子/水分子/配体，只保留主链残基
                 residues = [res for res in chain if res.id[0] == " "]
-
                 if not residues:
                     continue
 
                 # 简单判断是否为 RNA
                 res_names = [res.get_resname().strip() for res in residues]
-                # 只要链里包含常见的 RNA 碱基，就认为是 RNA 链
-                is_likely_rna = any(n in ['A', 'U', 'C', 'G', 'RA', 'RU', 'RC', 'RG'] for n in res_names)
+                # ✅ 修复5：补充小写r开头的残基名，解决RNA链漏检问题
+                rna_res_types = ['A', 'U', 'C', 'G', 'RA', 'RU', 'RC', 'RG', 'rA', 'rU', 'rC', 'rG']
+                is_likely_rna = any(n in rna_res_types for n in res_names)
 
                 if is_likely_rna:
                     seq_len = len(residues)
-
-                    # --- 检查数据缺失 (Missing Residues) ---
                     res_ids = [res.id[1] for res in residues]
+
                     if len(res_ids) > 1:
-                        theoretical_len = max(res_ids) - min(res_ids) + 1
+                        min_id, max_id = min(res_ids), max(res_ids)
+                        theoretical_len = max_id - min_id + 1
                         missing_count = theoretical_len - seq_len
-                        # 覆盖率 = 实际长度 / (实际长度 + 缺失长度)
-                        completeness = seq_len / theoretical_len if theoretical_len > 0 else 0
+                        completeness = seq_len / theoretical_len if theoretical_len > 0 else 0.0
                     else:
                         missing_count = 0
                         completeness = 1.0
 
                     rna_chains_info.append({
                         'PDB_ID': pdb_id,
-                        'Title': structure_title,  # 新增：RNA的名字
+                        'Title': structure_title,
                         'Chain_ID': chain.id,
                         'Length': seq_len,
-                        'Completeness': round(completeness, 4),  # 完整度 (0-1)
+                        'Completeness': round(completeness, 4),
                         'Missing_Residues': missing_count,
-                        'Is_Valid': True  # 默认标记，后续可手动改为 False
+                        'Is_Valid': True
                     })
-
             # 只处理第一个 Model (通常是最佳模型)
             break
 
@@ -136,13 +152,14 @@ class RNADatasetCurator:
     def run_pipeline(self, max_files=None):
         """
         主流程
-        :param max_files: 设置为 None 则下载所有数据 (警告：可能很大)
+        :param max_files: 设置为 None 则下载所有数据
         """
         all_ids = self.search_rna_structures()
+        if not all_ids:
+            print("未检索到任何RNA结构ID，程序退出")
+            return
 
-        # 如果设置了最大数量（测试用），则切片
         target_ids = all_ids[:max_files] if max_files else all_ids
-
         results = []
 
         print(f"计划处理 {len(target_ids)} 个结构...")
@@ -151,7 +168,7 @@ class RNADatasetCurator:
         for index, pdb_id in enumerate(target_ids):
             print(f"[{index + 1}/{len(target_ids)}] Processing {pdb_id}...")
 
-            # 1. 下载
+            # 1. 下载+解压
             try:
                 filepath = self.download_structure(pdb_id)
             except Exception as e:
@@ -161,17 +178,21 @@ class RNADatasetCurator:
             if not os.path.exists(filepath):
                 continue
 
-            # 2. 分析 (无论好坏，都收集信息)
+            # 2. 分析
             chain_data = self.analyze_rna_integrity(filepath, pdb_id)
             if chain_data:
                 results.extend(chain_data)
 
+            # ✅ 修复7：增加下载间隔，规避RCSB的IP封禁风控
+            time.sleep(0.5)
+
+        if not results:
+            print("未解析到任何有效RNA链数据")
+            return
+
         # 3. 导出全量报告
         df = pd.DataFrame(results)
-
-        # 调整列的顺序，好看一点
         cols = ['PDB_ID', 'Title', 'Chain_ID', 'Length', 'Completeness', 'Missing_Residues']
-        # 确保列存在
         cols = [c for c in cols if c in df.columns]
         df = df[cols]
 
@@ -179,19 +200,18 @@ class RNADatasetCurator:
         print(f"共统计了 {len(df)} 条 RNA 链的信息。")
         print(df.head())
 
-        # 保存所有数据
         output_file = "all_rna_structures.csv"
-        df.to_csv(output_file, index=False)
+        df.to_csv(output_file, index=False, encoding='utf-8-sig')
         print(f"所有数据已保存至: {output_file}")
 
-        # 4. 自动帮你生成一个“推荐列表” (Optional)
-        # 这里只是建议，不删除原始数据
+        # 4. 生成高质量推荐列表
         recommended = df[
             (df['Completeness'] > 0.95) &
             (df['Length'] >= 30) &
             (df['Length'] <= 1024)
-            ]
-        recommended.to_csv("recommended_rna_clean.csv", index=False)
+            ].drop_duplicates(subset=['PDB_ID', 'Chain_ID'])
+
+        recommended.to_csv("recommended_rna_clean.csv", index=False, encoding='utf-8-sig')
         print(f"已筛选出 {len(recommended)} 条高质量数据保存至: recommended_rna_clean.csv")
 
 
@@ -199,4 +219,4 @@ if __name__ == "__main__":
     curator = RNADatasetCurator()
     # ⚠️ 注意：如果要下载所有，请把下面这行改成 curator.run_pipeline(max_files=None)
     # 第一次运行建议先用 5 个试试水
-    curator.run_pipeline(max_files=5)
+    curator.run_pipeline(max_files=1)
