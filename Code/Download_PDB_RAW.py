@@ -3,7 +3,8 @@ import gzip
 import shutil
 import requests
 import pandas as pd
-from tqdm import tqdm  # 新增：进度条
+import csv  # 新增：用于逐行写入
+from tqdm import tqdm
 from Bio.PDB import PDBList, MMCIFParser
 from Bio.PDB.MMCIF2Dict import MMCIF2Dict
 from Bio.PDB.PDBExceptions import PDBConstructionException
@@ -15,18 +16,20 @@ from functools import wraps
 warnings.simplefilter('ignore', PDBConstructionException)
 warnings.filterwarnings('ignore', category=UserWarning)
 
-# 配置项（集中管理，便于修改）
+# 配置项
 CONFIG = {
     "save_dir": "./pdb_data",
+    "csv_filename": "all_rna_structures.csv",  # 结果文件名
     "rcsb_search_url": "https://search.rcsb.org/rcsbsearch/v2/query",
-    "rate_limit_s": 1.0,  # RCSB建议的请求间隔
+    "rate_limit_s": 0.5,
     "recommended_min_len": 30,
     "recommended_max_len": 1024,
     "recommended_min_completeness": 0.95,
     "rna_bases": {'A', 'U', 'C', 'G', 'I', 'RA', 'RU', 'RC', 'RG', 'rA', 'rU', 'rC', 'rG',
-                  'm6A', 'ψ', '5MU', 'OMU', '假尿苷'},  # 补充修饰碱基
+                  'm6A', 'ψ', '5MU', 'OMU', '假尿苷'},
     "dna_markers": {'T', 'DT', 'dT'}
 }
+
 
 # 重试装饰器
 def retry(max_retries=3, delay=1):
@@ -40,21 +43,68 @@ def retry(max_retries=3, delay=1):
                     if i == max_retries - 1:
                         print(f"重试{max_retries}次失败: {args}, 错误: {e}")
                         return None
-                    time.sleep(delay * (i + 1))  # 指数退避
+                    time.sleep(delay * (i + 1))
             return None
+
         return wrapper
+
     return decorator
+
 
 class RNADatasetCurator:
     def __init__(self, save_dir=None):
         self.save_dir = save_dir or CONFIG["save_dir"]
         os.makedirs(self.save_dir, exist_ok=True)
         self.parser = MMCIFParser(QUIET=True)
-        # 初始化PDBList（适配新版本）
         self.pdbl = PDBList(verbose=False)
 
+        # CSV文件路径
+        self.csv_path = os.path.join(self.save_dir, CONFIG["csv_filename"])
+
+        # 初始化 CSV 表头（如果文件不存在）
+        self.columns = ['PDB_ID', 'Title', 'Method', 'Resolution', 'Model_Idx', 'Chain_ID',
+                        'Length', 'Completeness', 'Missing_Residues']
+        self._init_csv()
+
+    def _init_csv(self):
+        """如果文件不存在，写入表头"""
+        if not os.path.exists(self.csv_path):
+            with open(self.csv_path, 'w', newline='', encoding='utf-8-sig') as f:
+                writer = csv.DictWriter(f, fieldnames=self.columns)
+                writer.writeheader()
+
+    def get_processed_ids(self):
+        """读取已存在的CSV，获取已经处理过的PDB ID集合"""
+        if not os.path.exists(self.csv_path):
+            return set()
+
+        processed = set()
+        try:
+            # 只读取 PDB_ID 列，加快速度
+            df = pd.read_csv(self.csv_path, usecols=['PDB_ID'])
+            processed = set(df['PDB_ID'].unique())
+            print(f"检测到断点文件，已处理 {len(processed)} 个结构。")
+        except Exception as e:
+            print(f"读取断点文件失败（可能是空文件或格式错误）: {e}")
+        return processed
+
+    def save_record_incremental(self, record_list):
+        """实时追加写入数据到CSV"""
+        if not record_list:
+            return
+
+        with open(self.csv_path, 'a', newline='', encoding='utf-8-sig') as f:
+            writer = csv.DictWriter(f, fieldnames=self.columns)
+            # 过滤掉不在 self.columns 中的多余键，防止报错
+            clean_records = []
+            for item in record_list:
+                clean_item = {k: v for k, v in item.items() if k in self.columns}
+                clean_records.append(clean_item)
+
+            writer.writerows(clean_records)
+
     def search_rna_structures(self):
-        """使用 RCSB Search API 查找 RNA 结构（修复URL+增强错误处理）"""
+        """使用 RCSB Search API 查找 RNA 结构"""
         print("正在从 PDB 检索 RNA 结构列表...")
         query = {
             "query": {
@@ -77,71 +127,76 @@ class RNADatasetCurator:
                 CONFIG["rcsb_search_url"],
                 json=query,
                 timeout=30,
-                headers={"Content-Type": "application/json"}  # 新增：指定请求头
+                headers={"Content-Type": "application/json"}
             )
-            response.raise_for_status()  # 抛出HTTP错误
+            response.raise_for_status()
             result_set = response.json()['result_set']
             id_list = [entry['identifier'] for entry in result_set]
-            print(f"找到 {len(id_list)} 个包含 RNA 的结构 ID。")
+            print(f"从 PDB 找到 {len(id_list)} 个包含 RNA 的结构 ID。")
             return id_list
         except requests.exceptions.RequestException as e:
             print(f"检索ID失败: {e}")
             return []
 
     def get_metadata_from_cif(self, filepath):
-        """增强：更鲁棒的元数据提取"""
+        """鲁棒的元数据提取"""
         try:
             mmcif_dict = MMCIF2Dict(filepath)
-            # 标题处理：保留换行
             title = mmcif_dict.get('_struct.title', ['Unknown Title'])
             title = "\n".join([t.strip() for t in title]).strip() if isinstance(title, list) else title.strip()
-            # 实验方法
+
             method = mmcif_dict.get('_exptl.method', ['Unknown'])
             method = ", ".join([m.strip() for m in method]) if isinstance(method, list) else method.strip()
-            # 新增：分辨率（RNA结构重要指标）
+
             resolution = mmcif_dict.get('_refine.ls_d_res_high', ['Unknown'])
             resolution = resolution[0] if isinstance(resolution, list) and resolution else 'Unknown'
+
             return title, method, resolution
         except Exception as e:
-            print(f"提取元数据失败 {filepath}: {e}")
+            # print(f"提取元数据警告 {filepath}: {e}") # 减少日志输出
             return "Unknown Title", "Unknown", "Unknown"
 
     def _unzip_gz_file(self, gz_filepath):
-        """增强：解压+校验+清理压缩包"""
+        """解压gz文件"""
         cif_filepath = gz_filepath.replace('.gz', '')
-        if os.path.exists(cif_filepath):
-            # 校验文件是否损坏（简单大小检查）
-            if os.path.getsize(cif_filepath) > 0:
-                return cif_filepath
-            else:
-                os.remove(cif_filepath)  # 删除损坏文件
+        if os.path.exists(cif_filepath) and os.path.getsize(cif_filepath) > 0:
+            return cif_filepath
 
         try:
             with gzip.open(gz_filepath, 'rb') as f_in:
                 with open(cif_filepath, 'wb') as f_out:
                     shutil.copyfileobj(f_in, f_out)
-            os.remove(gz_filepath)  # 解压后删除压缩包
+            # 解压成功后删除gz，节省空间
+            try:
+                os.remove(gz_filepath)
+            except:
+                pass
             return cif_filepath
         except Exception as e:
             print(f"解压失败 {gz_filepath}: {e}")
             return None
 
-    @retry(max_retries=3, delay=1)  # 新增：重试机制
+    @retry(max_retries=3, delay=1)
     def download_structure(self, pdb_id):
-        """增强：适配Biopython版本+重试+校验"""
+        """下载结构"""
         pdb_id_lower = pdb_id.lower()
         target_cif = os.path.join(self.save_dir, f"{pdb_id_lower}.cif")
 
-        # 检查目标文件是否存在且有效
+        # 1. 检查已解压的 cif
         if os.path.exists(target_cif) and os.path.getsize(target_cif) > 0:
             return target_cif
 
+        # 2. 检查可能存在的 gz (可能上次下载了没解压)
+        target_gz = target_cif + ".gz"
+        if os.path.exists(target_gz) and os.path.getsize(target_gz) > 0:
+            return self._unzip_gz_file(target_gz)
+
+        # 3. 下载
         try:
-            # 适配Biopython新版本：file_format='cif'
             file_path = self.pdbl.retrieve_pdb_file(
                 pdb_code=pdb_id_lower,
                 pdir=self.save_dir,
-                file_format='mmCif',  # 新版本参数
+                file_format='mmCif',
                 overwrite=False
             )
         except Exception as e:
@@ -151,135 +206,173 @@ class RNADatasetCurator:
         if not file_path or not os.path.exists(file_path):
             return None
 
-        # 处理压缩包
+        # 4. 解压
         if file_path.endswith('.gz'):
-            cif_filepath = self._unzip_gz_file(file_path)
-        else:
-            cif_filepath = file_path
+            return self._unzip_gz_file(file_path)
 
-        # 最终校验
-        if cif_filepath and os.path.exists(cif_filepath) and os.path.getsize(cif_filepath) > 0:
-            return cif_filepath
-        else:
-            return None
+        return file_path
 
     def analyze_rna_integrity(self, filepath, pdb_id):
-        """增强：优化RNA判定逻辑+保留多Model信息+完善错误处理"""
+        """分析 RNA 完整性"""
         if not filepath:
             return []
 
         try:
+            # 增加一个超时保护机制的替代方案：
+            # 这里不方便加 signal alarm (Windows不支持)，
+            # 我们假设如果文件太大 (>100MB)，先跳过分析或者仅仅提取元数据
+            file_size_mb = os.path.getsize(filepath) / (1024 * 1024)
+            if file_size_mb > 200:  # 200MB 以上的文件非常可能是核糖体且会卡死
+                print(f"警告: {pdb_id} 文件过大 ({file_size_mb:.2f} MB)，跳过结构分析以防卡死。")
+                return []
+
             structure = self.parser.get_structure(pdb_id, filepath)
         except Exception as e:
-            print(f"解析错误 {pdb_id}: {str(e)}")
+            print(f"解析错误 {pdb_id}: {str(e)[:100]}")
             return []
 
-        # 获取元数据
         structure_title, method, resolution = self.get_metadata_from_cif(filepath)
         rna_chains_info = []
 
-        for model_idx, model in enumerate(structure):
-            for chain in model:
-                # 过滤杂原子（只保留标准残基）
-                residues = [res for res in chain if res.id[0] == " "]
-                if not residues:
-                    continue
+        # 优化逻辑：只取第一个 Model (通常是 Model 0)
+        # 对于 NMR 即使有多个 Model，只分析第一个可以节省大量时间且对清洗足够
+        try:
+            model = next(iter(structure))
+            model_idx = 0  # 默认为0
+        except StopIteration:
+            return []
 
-                res_names = [res.get_resname().strip() for res in residues]
-                # 优化RNA判定逻辑
-                has_rna_base = any(any(base in res for base in CONFIG["rna_bases"]) for res in res_names)
-                has_dna_base = any(any(marker in res for marker in CONFIG["dna_markers"]) for res in res_names)
-                has_uracil = any('U' in res for res in res_names)
+        for chain in model:
+            residues = [res for res in chain if res.id[0] == " "]
+            if not residues:
+                continue
 
-                # 判定规则：优先基于RNA特征，DNA特征仅作为排除项
-                is_rna = has_rna_base and not (has_dna_base and not has_uracil)
+            res_names = [res.get_resname().strip() for res in residues]
 
-                if is_rna:
-                    seq_len = len(residues)
-                    res_ids = [res.id[1] for res in residues]
+            # 快速筛选：必须包含 RNA 碱基
+            has_rna = False
+            for r in res_names:
+                if r in CONFIG["rna_bases"]:
+                    has_rna = True
+                    break
 
-                    if len(res_ids) > 1:
-                        min_id, max_id = min(res_ids), max(res_ids)
-                        theoretical_len = max_id - min_id + 1
-                        missing_count = theoretical_len - seq_len
-                        completeness = round(seq_len / theoretical_len, 4) if theoretical_len > 0 else 0.0
-                    else:
-                        missing_count = 0
-                        completeness = 1.0
+            if not has_rna:
+                continue
 
-                    rna_chains_info.append({
-                        'PDB_ID': pdb_id,
-                        'Title': structure_title,
-                        'Method': method,
-                        'Resolution': resolution,  # 新增
-                        'Model_Idx': model_idx,    # 新增：保留Model索引
-                        'Chain_ID': chain.id,
-                        'Length': seq_len,
-                        'Completeness': completeness,
-                        'Missing_Residues': missing_count
-                    })
+            # DNA 排除逻辑
+            has_dna_marker = any(d in res_names for d in CONFIG["dna_markers"])
+            has_uracil = any('U' in r for r in res_names)
+
+            # 如果含有T但没有U，判定为DNA，跳过
+            if has_dna_marker and not has_uracil:
+                continue
+
+            # 是 RNA
+            seq_len = len(residues)
+            res_ids = [res.id[1] for res in residues]
+
+            if len(res_ids) > 1:
+                min_id, max_id = min(res_ids), max(res_ids)
+                theoretical_len = max_id - min_id + 1
+                missing_count = theoretical_len - seq_len
+                completeness = round(seq_len / theoretical_len, 4) if theoretical_len > 0 else 0.0
+            else:
+                missing_count = 0
+                completeness = 1.0
+
+            rna_chains_info.append({
+                'PDB_ID': pdb_id,
+                'Title': structure_title,
+                'Method': method,
+                'Resolution': resolution,
+                'Model_Idx': model_idx,
+                'Chain_ID': chain.id,
+                'Length': seq_len,
+                'Completeness': completeness,
+                'Missing_Residues': missing_count
+            })
 
         return rna_chains_info
 
     def run_pipeline(self, max_files=None):
-        """主流程：新增进度条+参数化筛选+统一输出路径"""
+        """主流程：支持断点续传和增量保存"""
         all_ids = self.search_rna_structures()
         if not all_ids:
-            print("未找到任何RNA结构ID")
             return
 
-        target_ids = all_ids[:max_files] if max_files else all_ids
-        results = []
+        # 1. 获取已处理列表
+        processed_ids = self.get_processed_ids()
 
-        print(f"\n开始处理 {len(target_ids)} 个结构...")
-        # 新增：进度条
+        # 2. 过滤待处理列表
+        target_ids = [pid for pid in all_ids if pid not in processed_ids]
+
+        if max_files:
+            target_ids = target_ids[:max_files]
+
+        print(f"总共 {len(all_ids)} 个，已处理 {len(processed_ids)} 个，本次计划处理 {len(target_ids)} 个。")
+
+        if not target_ids:
+            print("所有任务已完成！")
+            return
+
+        # 3. 开始循环
         for pdb_id in tqdm(target_ids, desc="处理进度"):
-            # 下载结构
+            # 下载 (内部会自动跳过已存在的有效文件)
             filepath = self.download_structure(pdb_id)
             if not filepath:
+                # 下载失败也要记录一下吗？
+                # 如果不需要记录失败的，就直接 continue
+                # 如果想避免下次卡在这里，可以记录一个空的记录，或者手动加入黑名单
                 continue
 
-            # 分析RNA完整性
+            # 分析
             chain_data = self.analyze_rna_integrity(filepath, pdb_id)
+
+            # 4. 关键：实时写入 CSV
             if chain_data:
-                results.extend(chain_data)
+                self.save_record_incremental(chain_data)
+            else:
+                # 即使没有链数据（比如全DNA或解析失败），
+                # 也可以选择是否把这个ID写入另一个 'failed.csv'，
+                # 否则下次还会尝试分析它。
+                # 为简单起见，这里我们只追加有效数据。
+                # ⚠️ 进阶技巧：为了防止反复处理坏文件，我们追加一条只含 PDB_ID 的记录到 CSV
+                # 这样下次 get_processed_ids 就能识别它。
+                self.save_record_incremental([{'PDB_ID': pdb_id, 'Title': 'No Valid RNA / Parse Error'}])
 
             # 遵守速率限制
             time.sleep(CONFIG["rate_limit_s"])
 
-        if not results:
-            print("未解析到任何RNA链数据")
+        print(f"\n所有处理完成。数据已保存至: {self.csv_path}")
+
+        # 5. 最后生成一个清洗后的推荐列表（读取完整的CSV）
+        self.generate_recommendation()
+
+    def generate_recommendation(self):
+        """读取生成的全量CSV，筛选出高质量数据"""
+        if not os.path.exists(self.csv_path):
             return
 
-        # 整理数据
-        df = pd.DataFrame(results)
-        # 确保列顺序
-        cols = ['PDB_ID', 'Title', 'Method', 'Resolution', 'Model_Idx', 'Chain_ID',
-                'Length', 'Completeness', 'Missing_Residues']
-        df = df[[c for c in cols if c in df.columns]]
+        print("正在生成推荐列表...")
+        try:
+            df = pd.read_csv(self.csv_path)
+            # 过滤掉刚才为了占位写入的空行
+            df = df[df['Length'].notna()]
 
-        # 统一输出路径到save_dir
-        output_all = os.path.join(self.save_dir, "all_rna_structures.csv")
-        df.to_csv(output_all, index=False, encoding='utf-8-sig')
-        print(f"\n所有RNA数据已保存至: {output_all}")
-        print(f"共解析到 {len(df)} 条RNA链")
+            recommended = df[
+                (df['Completeness'] >= CONFIG["recommended_min_completeness"]) &
+                (df['Length'] >= CONFIG["recommended_min_len"]) &
+                (df['Length'] <= CONFIG["recommended_max_len"])
+                ].drop_duplicates(subset=['PDB_ID', 'Chain_ID'])
 
-        # 推荐列表（参数化筛选）
-        recommended = df[
-            (df['Completeness'] >= CONFIG["recommended_min_completeness"]) &
-            (df['Length'] >= CONFIG["recommended_min_len"]) &
-            (df['Length'] <= CONFIG["recommended_max_len"])
-        ].drop_duplicates(subset=['PDB_ID', 'Chain_ID'])
-
-        output_recommended = os.path.join(self.save_dir, "recommended_rna_clean.csv")
-        recommended.to_csv(output_recommended, index=False, encoding='utf-8-sig')
-        print(f"高完整性RNA列表已保存至: {output_recommended}")
-        print(f"推荐列表共 {len(recommended)} 条RNA链")
+            output_rec = os.path.join(self.save_dir, "recommended_rna_clean.csv")
+            recommended.to_csv(output_rec, index=False, encoding='utf-8-sig')
+            print(f"高质量数据已筛选: {len(recommended)} 条，保存至 {output_rec}")
+        except Exception as e:
+            print(f"生成推荐列表出错: {e}")
 
 
 if __name__ == "__main__":
-    # 安装依赖（首次运行）
-    # pip install biopython pandas requests tqdm
     curator = RNADatasetCurator()
-    # 测试时建议设置max_files=10，全量运行设为None
+    # 设置为 None 以跑完剩余所有数据
     curator.run_pipeline(max_files=None)
