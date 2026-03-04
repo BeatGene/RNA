@@ -9,21 +9,7 @@
 
 2.protenix 参数说明
 ```
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
-# ==============================================================================
 # Protenix Model Inference Test Script
 #
 # Purpose:
@@ -357,3 +343,46 @@ echo "All inference tests completed."
 #     --model.N_cycle ${N_cycle} \
 #     --sample_diffusion.N_sample ${N_sample} \
 #     --sample_diffusion.N_step ${N_step}
+```
+
+## 2026.3.3
+1.实现了PDB的RNA数据的初步分类
+
+2.Alphafold2的数据库下载失败
+
+## 2026.3.4
+1.完整下载Alphafold2的数据库
+    1.UniRef90
+    2.MGnify
+    3.PDB Seqres
+    4.BFD 巨型库
+    5.rnacentral
+    6.rfam
+    7.pdb_mmcif
+    pdbj最新的3D模板结构
+# Q&A
+
+1.清洗PDB数据库
+2.所有的筛选出来的RNA序列扔给protenix生成结构
+3.聚类，相似的放在一起 按照一定比例划分数据集 测试集 验证集  protenix生成的结构VS真实的结构，针对protenix生成的结构做refinement
+4.选择一个模型训练 证明更好了 相应的测试标准？也许可以用protenix的工具集?
+
+
+## Q1:我所使用的扒取RNA的脚本是怎样的原理？
+
+## Q2:RNA的cif的数据结构是怎样的?
+
+## Q3:RNA的cif包含上传日期吗？protenix的默认模型训练数据截止到2021.9.30 防止用于生成的模型记住结构
+
+## Q4:我所使用的分类RNA的脚本是怎样的原理？ 分类是否正确？
+
+## Q5:如何展示我的RNA数据  分类？ 长度 缺失率
+
+## Q6:protenix的原理？模型架构 论文看一看
+
+## Q7:目前protenix已经安装 还差alphafold的数据库？
+alphafold的数据库已经安装
+
+## Q8:模型选择哪个？
+
+## Q9:做ppt 好的流程图
