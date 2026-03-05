@@ -360,6 +360,9 @@ echo "All inference tests completed."
     6.rfam
     7.pdb_mmcif
     pdbj最新的3D模板结构
+
+## 2026.3.5
+1.下载完成protenix的数据库并且跑通了protenix  注意:本质还是拿云端API跑的，没有用到下载到本地的数据库  Todo
 # Q&A
 
 1.清洗PDB数据库
@@ -381,8 +384,10 @@ echo "All inference tests completed."
 ## Q6:protenix的原理？模型架构 论文看一看
 
 ## Q7:目前protenix已经安装 还差alphafold的数据库？
-alphafold的数据库已经安装
+alphafold的数据库已经安装  并且跑通了protenix  注意:本质还是拿云端API跑的，没有用到下载到本地的数据库  Todo
 
 ## Q8:模型选择哪个？
+参考流匹配 pro-matching 论文是用流匹配做抗体的 但是没有代码  去其他地方偷一个比较标准的代码
+
 
 ## Q9:做ppt 好的流程图
