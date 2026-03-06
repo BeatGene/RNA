@@ -359,32 +359,110 @@ echo "All inference tests completed."
     5.rnacentral
     6.rfam
     7.pdb_mmcif
-    pdbj最新的3D模板结构
 
 ## 2026.3.5
-1.下载完成protenix的数据库并且跑通了protenix  注意:本质还是拿云端API跑的，没有用到下载到本地的数据库  Todo
+1.下载完成protenix的数据库并且跑通了protenix  注意:本质还是拿云端API跑的，没有用到下载到本地的数据库  
+
+## 2026.3.6
+1.理解了cif/mmcif文件
+
+2.下载了可视化cif文件的软件Pymol
+
+3.理清了扒取RNA数据的脚本
+
+4.理清了分类RNA数据的脚本
 # Q&A
 
 1.清洗PDB数据库
 2.所有的筛选出来的RNA序列扔给protenix生成结构
 3.聚类，相似的放在一起 按照一定比例划分数据集 测试集 验证集  protenix生成的结构VS真实的结构，针对protenix生成的结构做refinement
-4.选择一个模型训练 证明更好了 相应的测试标准？也许可以用protenix的工具集?
+4.选择流匹配pro-matching进行训练
 
 
-## Q1:我所使用的扒取RNA的脚本是怎样的原理？
+## Q1:我所使用的扒取RNA的脚本是怎样的原理？ DONE
+        query = {
+            "query": {
+                "type": "terminal",
+                "service": "text",
+                "parameters": {
+                    "attribute": "rcsb_entry_info.polymer_entity_count_RNA",
+                    "operator": "greater",
+                    "value": 0
+                }
+            },
+            "return_type": "entry",
+            "request_options": {
+                "return_all_hits": True
+            }
+        }
 
-## Q2:RNA的cif的数据结构是怎样的?
+        try:
+            response = requests.post(
+                CONFIG["rcsb_search_url"],
+                json=query,
+                timeout=30,
+                headers={"Content-Type": "application/json"}
+            )
+            response.raise_for_status()
+            result_set = response.json()['result_set']
+            id_list = [entry['identifier'] for entry in result_set]
+            print(f"从 PDB 找到 {len(id_list)} 个包含 RNA 的结构 ID。")
+            return id_list
 
-## Q3:RNA的cif包含上传日期吗？protenix的默认模型训练数据截止到2021.9.30 防止用于生成的模型记住结构
 
-## Q4:我所使用的分类RNA的脚本是怎样的原理？ 分类是否正确？
+        try:
+            file_path = self.pdbl.retrieve_pdb_file(
+                pdb_code=pdb_id_lower,
+                pdir=self.save_dir,
+                file_format='mmCif',
+                overwrite=False
+            )
+
+## Q2:RNA的cif的数据结构是怎样的? DONE
+
+详细见/RNA/Data/mmcif.md
+
+## Q3:RNA的cif包含上传日期吗？protenix的默认模型训练数据截止到2021.9.30 防止用于生成的模型记住结构 DONE
+RNA的cif文件包含文件的修改日期和修改内容
+
+但是先继续训练，因为RNA数据不多，用protenix跑出来的RNA应该和真实的RNA结构差距较大
+
+## Q4:我所使用的分类RNA的脚本是怎样的原理？ 分类是否正确？ DONE
+            has_rna = 'polyribonucleotide' in poly_types_str
+            has_protein = 'polypeptide' in poly_types_str
+            has_dna = 'polydeoxyribonucleotide' in poly_types_str
+
+            # 核糖体关键词匹配
+            ribosome_keywords = ['ribosome', 'ribosomal', '50s', '30s', '70s', '80s', '40s', '60s']
+            is_ribosome = any(kw in title for kw in ribosome_keywords) or any(
+                kw in entity_desc_str for kw in ribosome_keywords)
+
+            # 结合态RNA匹配 (tRNA, mRNA, sgRNA 等)
+            bound_rna_keywords = ['trna', 'mrna', 'transfer rna', 'messenger rna', 'aptamer']
+            has_bound_rna = any(kw in entity_desc_str for kw in bound_rna_keywords) or any(
+                kw in title for kw in bound_rna_keywords)
+
+            # --- 分类路由逻辑 ---
+            target_key = "others"
+
+            if is_ribosome:
+                if has_bound_rna:
+                    target_key = "ribosome_bound"  # 包含tRNA/mRNA的核糖体
+                else:
+                    target_key = "ribosome"  # 纯核糖体 (rRNA + rProteins)
+            elif has_protein and has_rna:
+                target_key = "rna_protein"  # 普通的 RNA-蛋白质复合体
+            elif has_rna and not has_protein and not has_dna:
+                target_key = "pure_rna"  # 纯 RNA (且不含DNA)
+            else:
+                target_key = "others"  # 包含 DNA-RNA 杂交链，或解析异常的文件
 
 ## Q5:如何展示我的RNA数据  分类？ 长度 缺失率
 
 ## Q6:protenix的原理？模型架构 论文看一看
 
 ## Q7:目前protenix已经安装 还差alphafold的数据库？
-alphafold的数据库已经安装  并且跑通了protenix  注意:本质还是拿云端API跑的，没有用到下载到本地的数据库  Todo
+alphafold的数据库已经安装  并且跑通了protenix  注意:本质还是拿云端API跑的，没有用到下载到本地的数据库
 
 ## Q8:模型选择哪个？
 参考流匹配 pro-matching 论文是用流匹配做抗体的 但是没有代码  去其他地方偷一个比较标准的代码
