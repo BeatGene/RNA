@@ -378,12 +378,53 @@ echo "All inference tests completed."
 ## 2026.3.9
 1.开始尝试跑protenix
 
+## 2026.3.16
+1.先把cif文件全部变成简单的protenix输入Json文件
+
+关于当前跑模型的选择:
+1.升级显卡驱动 用原版跑
+2.用网页端跑，每天限制100个 一个一个上传
+3.用降级版本的跑:
+要求是CUDA12
+python==3.11  ↓
+torch==2.5.0 ↓
+torchvision==0.20.0 ↓
+torchaudio==2.5.0 ↓
+cuequivariance-ops-torch-cu12==0.8.0 ✔
+cuequivariance-torch==0.8.0 ✔
+scipy==1.13.1  ✔
+ml_collections==1.1.0 ✔
+tqdm==4.66.5 ↓
+pandas==2.2.3 ↓
+PyYAML==6.0.2 ✔
+matplotlib==3.9.2 ↓
+ipywidgets==8.1.5 ↓
+py3Dmol==2.4.0 ↓
+rdkit==2024.03.5  ↓
+biopython==1.84 ↓
+biotite==1.3.0 ↓
+modelcif==1.4 ✔
+gemmi==0.6.7 ✔
+pdbeccdutils==1.0.0 ✔
+fair-esm==2.0.0 ✔
+scikit-learn==1.5.2 ↓
+scikit-learn-extra==0.3.0 ✔
+deepspeed==0.15.1 ↓
+pydantic==2.9.2 ✔
+triton==3.3.1
+optree==0.13.0 ↓
+protobuf==4.25.5 ↓
+icecream==2.1.7 ✔
+ipdb==0.13.13 ✔
+wandb==0.18.5 ↓
+numpy==1.26.4 ↓
+
 # Q&A
 
 1.清洗PDB数据库
 2.所有的筛选出来的RNA序列扔给protenix生成结构
 3.聚类，相似的放在一起 按照一定比例划分数据集 测试集 验证集  protenix生成的结构VS真实的结构，针对protenix生成的结构做refinement
-4.选择流匹配pro-matching进行训练
+4.选择流匹配pro-matching进行训练(旧模型？)
 
 
 ## Q1:我所使用的扒取RNA的脚本是怎样的原理？ DONE
