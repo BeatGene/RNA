@@ -401,7 +401,7 @@ echo "All inference tests completed."
 
 3.问模型 原来的模型还是看流匹配？ 流匹配  `DONE`
 
-4.看Java
+4.看Java  `DONE`
 
 5.看跟李沐学AI
 
