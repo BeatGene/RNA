@@ -21,7 +21,7 @@ DB_NTRNA = "/remote-home/share/protenix_database/af2_data/ntrna/nt_rna_2023_02_2
 # 2. 硬件与并发配置
 # 根据你的 nvidia-smi，8张卡都可以用。但注意每张卡似乎已经被占用了 9GB 显存。
 # 如果预测任务显存大于 14GB，可能会 OOM。你可以先设置少量 GPU 测试，例如 [4]
-AVAILABLE_GPUS = [0, 1, 2, 3,4,5,6,7]
+AVAILABLE_GPUS = [0, 1, 2, 3]
 MAX_WORKERS = len(AVAILABLE_GPUS)  # 并发数等于可用显卡数
 
 # 3. 初始化日志
@@ -145,12 +145,12 @@ def process_single_rna(json_path):
 
 
 def main():
-    # 查找所有以 9 开头的 json 文件
-    search_pattern = os.path.join(INPUT_DIR, "6*.json")
+    # 查找所有以 3 开头的 json 文件
+    search_pattern = os.path.join(INPUT_DIR, "3*.json")
     json_files = sorted(glob.glob(search_pattern))
 
     if not json_files:
-        logging.error(f"在 {INPUT_DIR} 中没有找到以 6 开头的 json 文件！")
+        logging.error(f"在 {INPUT_DIR} 中没有找到以 3 开头的 json 文件！")
         return
 
     logging.info(f"找到 {len(json_files)} 个匹配的文件。开始使用 {MAX_WORKERS} 个并发任务...")

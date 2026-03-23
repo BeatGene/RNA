@@ -413,13 +413,33 @@ echo "All inference tests completed."
 
 3.看流匹配的代码和文章
 
-4.看Java
+4.看Java `DONE` 
 
-5.看跟李沐学AI
+5.看跟李沐学AI `DONE` 
 
 6.看一周备忘录   专硕新生奖学金无需在ehall系统申请   `DONE`
 
 7.看elearning 课程任务  已下载lab的md文件  已申请加入华为云小组`DONE` 
+
+## 2026.3.23
+
+1.看实例跑的情况  8 7 6 5都跑完了 现在跑7  5  4  3  `DONE` 
+
+9中 9l0r   9lmf  9mds  9zc8 9zcb 9zca失败
+8中 没有失败的
+7中 几乎全部失败 没有连接外网 删除文件再重试 
+6中 没有失败的
+5中 几乎全部失败 没有连接外网 删除文件再重试
+1中 没有失败的
+
+7在protenix上重新跑  5在protenix_2上重新跑  4在protenix_3上跑  3在protenix_4上跑
+
+
+2.看流匹配的论文、代码  把模型搭建好 `DONE` 
+
+3.看Java  `DONE` 
+
+4.看跟李沐学AI  `DONE` 
 
 
 关于当前跑模型的选择:
