@@ -441,6 +441,13 @@ echo "All inference tests completed."
 
 4.看跟李沐学AI  `DONE` 
 
+## 2026.3.24
+
+1.只剩下2没跑完  `DONE` 
+
+2.看JAVA      `DONE` 
+
+3.跟李沐学AI    `DONE` 
 
 关于当前跑模型的选择:
 1.升级显卡驱动 用原版跑  不行
