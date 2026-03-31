@@ -98,41 +98,41 @@ def process_single_rna(json_path):
         # --- 步骤 2: 运行 protenix pred ---
         # 假设 prep 生成的更新文件在 prep_out_dir 下，名为 {prefix}-final-updated.json
         # 如果 protenix 默认生成在当前运行目录，请修改此路径
-        updated_json_path = os.path.join(INPUT_DIR, f"{prefix}-final-updated.json")
-
-        if not os.path.exists(updated_json_path):
-            logging.error(f"[{prefix}] 找不到 Prep 生成的文件: {updated_json_path}")
-            return False
-
-        pred_out_dir = os.path.join(BASE_OUTPUT_DIR, f"pred_output_{prefix}")
-        os.makedirs(pred_out_dir, exist_ok=True)
-
-        pred_cmd = [
-            "protenix", "pred",
-            "-i", updated_json_path,
-            "-o", pred_out_dir,
-            "-n", "protenix_base_default_v1.0.0",
-            "--use_msa", "True",
-            "--use_rna_msa", "True",
-            "--use_template", "True",
-            "--dtype", "bf16",
-            "--sample", "5",
-            "--step", "200",
-            "--cycle", "10",
-            "--enable_cache", "True"
-        ]
+        # updated_json_path = os.path.join(INPUT_DIR, f"{prefix}-final-updated.json")
+        #
+        # if not os.path.exists(updated_json_path):
+        #     logging.error(f"[{prefix}] 找不到 Prep 生成的文件: {updated_json_path}")
+        #     return False
+        #
+        # pred_out_dir = os.path.join(BASE_OUTPUT_DIR, f"pred_output_{prefix}")
+        # os.makedirs(pred_out_dir, exist_ok=True)
+        #
+        # pred_cmd = [
+        #     "protenix", "pred",
+        #     "-i", updated_json_path,
+        #     "-o", pred_out_dir,
+        #     "-n", "protenix_base_default_v1.0.0",
+        #     "--use_msa", "True",
+        #     "--use_rna_msa", "True",
+        #     "--use_template", "True",
+        #     "--dtype", "bf16",
+        #     "--sample", "50",
+        #     "--step", "200",
+        #     "--cycle", "10",
+        #     "--enable_cache", "True"
+        # ]
 
         # 设置环境变量，限制只能看到分配给它的那一块 GPU
         env = os.environ.copy()
         env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
 
-        success, pred_log = run_command(pred_cmd, env)
-        if not success:
-            logging.error(f"[{prefix}] Pred 阶段失败!\n{pred_log}")
-            return False
-
-        logging.info(f"[{prefix}] Pred 成功完成! 结果保存在: {pred_out_dir}")
-        return True
+        # success, pred_log = run_command(pred_cmd, env)
+        # if not success:
+        #     logging.error(f"[{prefix}] Pred 阶段失败!\n{pred_log}")
+        #     return False
+        #
+        # logging.info(f"[{prefix}] Pred 成功完成! 结果保存在: {pred_out_dir}")
+        # return True
 
     except Exception as e:
         logging.error(f"[{prefix}] 发生未知错误: {str(e)}")
@@ -145,12 +145,12 @@ def process_single_rna(json_path):
 
 
 def main():
-    # 查找所有以 2 开头的 json 文件
-    search_pattern = os.path.join(INPUT_DIR, "2*.json")
+    # 查找所有以 1 开头的 json 文件
+    search_pattern = os.path.join(INPUT_DIR, "1*.json")
     json_files = sorted(glob.glob(search_pattern))
 
     if not json_files:
-        logging.error(f"在 {INPUT_DIR} 中没有找到以 2 开头的 json 文件！")
+        logging.error(f"在 {INPUT_DIR} 中没有找到以 1 开头的 json 文件！")
         return
 
     logging.info(f"找到 {len(json_files)} 个匹配的文件。开始使用 {MAX_WORKERS} 个并发任务...")

@@ -13,7 +13,7 @@ INPUT_DIR = "/remote-home/jinxianwang/tinghaoxia/RNA/Data/Json_data/Simple_json/
 BASE_OUTPUT_DIR = "/remote-home/jinxianwang/tinghaoxia/RNA/Data/Json_data/Complex_json/01_Pure_RNA"
 
 # 2. 硬件与并发配置
-AVAILABLE_GPUS = [0, 1, 2, 3, 4, 5, 6, 7]
+AVAILABLE_GPUS = [0, 1, 2, 3]
 MAX_WORKERS = len(AVAILABLE_GPUS)  # 8并发
 
 # 3. 预测参数配置 (师兄的要求: 4个种子，每个50个sample)
@@ -114,8 +114,8 @@ def process_single_pred(task_info):
 
 
 def main():
-    # 查找所有已经完成了 prep 阶段的 updated json 文件
-    search_pattern = os.path.join(INPUT_DIR, "*-final-updated.json")
+    # 查找所有已经完成了 prep 阶段的 以9开头的updated json 文件
+    search_pattern = os.path.join(INPUT_DIR, "9*-final-updated.json")
     json_files = sorted(glob.glob(search_pattern))
 
     if not json_files:

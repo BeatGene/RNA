@@ -462,7 +462,32 @@ echo "All inference tests completed."
 
 2.看跟李沐学AI
 
-3.再跑纯RNA，每个序列跑200个，一个种子50个采样
+3.再跑纯RNA，每个序列跑200个，一个种子50个采样    `DONE`
+
+在84 protenix上跑2开头的 
+
+在86 protenix_4上跑3开头的
+
+在91 protenix_3上跑4开头的
+
+在82 protenix_2上跑5开头的
+
+## 2026.3.31
+1.再跑纯RNA，每个序列跑200个，一个种子50个采样  `DONE`
+
+在82 protenix_2上跑6开头的
+
+在84 protenix上跑7开头的
+
+在86 protenix_4上跑8开头的
+
+在91 protenix_3上跑9开头的
+
+在82 protenix_2上跑1开头的  先预测在跑
+
+2.看跟李沐学AI  `DONE`
+
+3.看JAVA    `DONE`
 
 
 
