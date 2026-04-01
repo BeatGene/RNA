@@ -489,7 +489,13 @@ echo "All inference tests completed."
 
 3.看JAVA    `DONE`
 
+## 2026.4.1
 
+1.RNA 跑完了    `DONE`
+
+2.看跟李沐学AI  `DONE`
+
+3.看JAVA    `DONE`
 
 关于当前跑模型的选择:
 1.升级显卡驱动 用原版跑  不行
