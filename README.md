@@ -501,6 +501,11 @@ echo "All inference tests completed."
 
 1.纯RNA全部跑完了 1979组 Json和prep都是1979没有问题 pred有点问题(问题不大)
 
+## 2026.4.3
+
+1.看跟李沐学AI  `DONE`
+
+2.看JAVA    `DONE`
 
 
 
