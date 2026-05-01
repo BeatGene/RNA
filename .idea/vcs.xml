@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Flow_matching/ETFlow" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Flow_matching/MolFM" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Protenix/Protenix" vcs="Git" />
   </component>
