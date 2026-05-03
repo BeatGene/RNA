@@ -82,7 +82,7 @@ def process_single_pred(task_info):
             "-n", "protenix_base_default_v1.0.0",
             "--use_msa", "True",
             "--use_rna_msa", "True",
-            "--use_template", "True",
+            "--use_template", "false",
             "--dtype", "bf16",
             "--sample", SAMPLES_PER_SEED,  # 修改为 50
             "--step", "200",
@@ -114,8 +114,8 @@ def process_single_pred(task_info):
 
 
 def main():
-    # 查找所有已经完成了 prep 阶段的 以1开头的updated json 文件
-    search_pattern = os.path.join(INPUT_DIR, "1*-final-updated.json")
+    # 查找所有已经完成了 prep 阶段的 以9开头的updated json 文件
+    search_pattern = os.path.join(INPUT_DIR, "9*-final-updated.json")
     json_files = sorted(glob.glob(search_pattern))
 
     if not json_files:

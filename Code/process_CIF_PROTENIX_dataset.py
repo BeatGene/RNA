@@ -1,301 +1,258 @@
 import os
 import shutil
+import random
 import subprocess
+import warnings
+from tqdm import tqdm
 from Bio.PDB.MMCIF2Dict import MMCIF2Dict
+from Bio.PDB import MMCIFParser
+from Bio.PDB.PDBExceptions import PDBConstructionException
 
-# ================= 配置区域 =================
-# 请在此处修改路径（如果你的路径有变动）
-CIF_DIR = "/remote-home/jinxianwang/tinghaoxia/RNA/Data/pdb_data/01_Pure_RNA"
-PRED_DIR = "/remote-home/jinxianwang/tinghaoxia/RNA/Data/Json_data/Complex_json/01_Pure_RNA"
-OUTPUT_BASE = "/remote-home/jinxianwang/tinghaoxia/RNA/Data"
-
-SEEDS = ['42', '43', '44', '45']
-CLUSTER_THRESHOLD = 0.8  # 序列相似性阈值 80%，可根据需要调整
+# 忽略 Biopython 解析时的警告信息，保持控制台整洁
+warnings.simplefilter('ignore', PDBConstructionException)
+warnings.filterwarnings('ignore', category=UserWarning)
 
 
-# ===========================================
-
-def parse_cif_for_rna(cif_path):
-    """
-    【增强版】解析 .cif 文件，获取 RNA 链的数量和第一条链的序列
-    逻辑向之前的分类脚本靠拢，提高兼容性
-    """
-    try:
-        mmcif_dict = MMCIF2Dict(cif_path)
-    except Exception as e:
-        print(f"[Warning] 无法解析文件 {cif_path}: {e}")
-        return 0, ""
-
-    # 1. 优先从 _entity_poly 入手 (这是之前分类脚本成功的依据)
-    # 获取所有 Polymer 的类型和序列
-    poly_entity_ids = mmcif_dict.get('_entity_poly.entity_id', [])
-    poly_types = mmcif_dict.get('_entity_poly.type', [])
-    poly_seqs = mmcif_dict.get('_entity_poly.pdbx_seq_one_letter_code', [])
-
-    # 确保是列表 (有些 CIF 解析出来可能是单字符串)
-    if isinstance(poly_entity_ids, str): poly_entity_ids = [poly_entity_ids]
-    if isinstance(poly_types, str): poly_types = [poly_types]
-    if isinstance(poly_seqs, str): poly_seqs = [poly_seqs]
-
-    # 2. 筛选出 RNA 的 Poly
-    rna_poly_indices = []
-    for i, ptype in enumerate(poly_types):
-        if 'polyribonucleotide' in ptype.lower():
-            rna_poly_indices.append(i)
-
-    if not rna_poly_indices:
-        # print(f"[Debug] {os.path.basename(cif_path)} 未在 _entity_poly 中找到 polyribonucleotide")
-        return 0, ""
-
-    # 3. 计算 RNA 链数 (通过 _struct_asym)
-    # 这里我们还是要数一下有多少条链，用于后面的 8:1:1 划分
-    asym_entity_ids = mmcif_dict.get('_struct_asym.entity_id', [])
-    if isinstance(asym_entity_ids, str): asym_entity_ids = [asym_entity_ids]
-
-    # 找到所有属于 RNA Entity 的 Asym ID
-    rna_entity_ids = [poly_entity_ids[i] for i in rna_poly_indices]
-    rna_chains_count = sum(1 for eid in asym_entity_ids if eid in rna_entity_ids)
-
-    # 如果通过 asym 没数到链（有些 CIF 这部分可能不规范），
-    # 至少我们知道有 RNA，姑且把链数算作 1，保证不丢弃数据
-    if rna_chains_count == 0:
-        rna_chains_count = 1
-
-    # 4. 获取序列 (拿第一条 RNA Poly 的序列)
-    # 直接从刚才筛选出的 rna_poly_indices 里拿第一个
-    first_rna_idx = rna_poly_indices[0]
-    representative_seq = ""
-
-    if first_rna_idx < len(poly_seqs):
-        representative_seq = poly_seqs[first_rna_idx].strip()
-
-    # 有时候 pdbx_seq_one_letter_code 可能是空的，
-    # 但我们可以尝试另一个字段: _entity_poly_seq (这是按残基排列的列表)
-    if not representative_seq:
-        # 尝试从 _entity_poly_seq 拼接 (高级补救措施)
-        seq_entity_ids = mmcif_dict.get('_entity_poly_seq.entity_id', [])
-        seq_mon_ids = mmcif_dict.get('_entity_poly_seq.mon_id', [])
-
-        target_eid = poly_entity_ids[first_rna_idx]
-        # 简单的单字母映射字典 (常用的)
-        # 注意：这只是一个简化的补救，不一定覆盖所有修饰碱基
-        map_3to1 = {
-            'A': 'A', 'ADE': 'A',
-            'U': 'U', 'URA': 'U',
-            'C': 'C', 'CYT': 'C',
-            'G': 'G', 'GUA': 'G',
-            'T': 'T', 'THY': 'T'  # 偶尔有 RNA 里写 T 的情况
-        }
-
-        rescue_seq = []
-        for eid, mon in zip(seq_entity_ids, seq_mon_ids):
-            if eid == target_eid:
-                rescue_seq.append(map_3to1.get(mon, 'X'))  # X 代表未知
-
-        representative_seq = "".join(rescue_seq)
-
-    # 最终检查：如果还是没序列，只要我们确定它是 RNA (在 Pure_RNA 文件夹里)，
-    # 可以考虑返回一个占位符，或者依然返回 0。
-    # 这里选择：如果是分类脚本分进来的，即使没序列也给个 'N' 占位，防止数据流失
-    if not representative_seq:
-        # print(f"[Warning] {os.path.basename(cif_path)} 未找到明确序列，使用占位符")
-        representative_seq = "N"
-
-    return rna_chains_count, representative_seq
+def check_cdhit_installed():
+    """检查系统是否安装了 cd-hit-est"""
+    if shutil.which("cd-hit-est") is None:
+        raise EnvironmentError(
+            "未找到 'cd-hit-est' 命令！\n"
+            "为了防止数据泄露，必须先进行聚类。请在终端执行以下命令安装：\n"
+            "conda install -c bioconda cd-hit"
+        )
 
 
-def main():
-    # 1. 扫描并解析所有 CIF 文件
-    print("[1/6] 正在扫描并解析 CIF 文件...")
-    cif_files = [f for f in os.listdir(CIF_DIR) if f.endswith('.cif')]
+def extract_sequences_to_fasta(src_dir, fasta_path):
+    """鲁棒地从 CIF 文件中提取序列，包含双重提取机制"""
+    print("步骤 1: 正在从 CIF 文件中提取 RNA 序列 (启动双重提取机制)...")
+    cif_files = [f for f in os.listdir(src_dir) if f.endswith('.cif')]
 
-    dataset = []  # 元素: (cif_filename, num_chains, seq)
-    fasta_content = []
+    parser = MMCIFParser(QUIET=True)
 
-    for cif_file in cif_files:
-        cif_path = os.path.join(CIF_DIR, cif_file)
-        num_chains, seq = parse_cif_for_rna(cif_path)
+    success_count = 0
+    fail_count = 0
+    seq_dict = {}  # 核心改动：用字典记录所有成功提取的序列
 
-        if num_chains > 0 and seq:
-            name_id = cif_file.replace('.cif', '')
-            dataset.append((cif_file, num_chains, name_id))
-            # 构建 FASTA 用于 CD-HIT
-            fasta_content.append(f">{name_id}\n{seq}")
-        else:
-            print(f"[Warning] 跳过 {cif_file} (未找到有效 RNA 链或序列)")
+    with open(fasta_path, 'w') as f_out:
+        for filename in tqdm(cif_files, desc="提取序列"):
+            filepath = os.path.join(src_dir, filename)
+            pdb_id = filename.split('.')[0]
+            full_seq = ""
 
-    if not dataset:
-        print("[Error] 没有找到有效的 RNA 数据！")
-        return
+            # 【提取方法 1】：字典极速提取（读取元数据）
+            try:
+                cif_dict = MMCIF2Dict(filepath)
+                seqs = cif_dict.get('_entity_poly.pdbx_seq_one_letter_code', [])
+                if isinstance(seqs, str):
+                    seqs = [seqs]
+                full_seq = "".join([s.replace('\n', '').replace(' ', '') for s in seqs])
+            except Exception:
+                pass
 
-    # 2. 运行 CD-HIT 进行聚类
-    print("[2/6] 正在运行序列聚类 (CD-HIT)...")
-    fasta_path = "temp_rna_seqs.fasta"
-    with open(fasta_path, 'w') as f:
-        f.write('\n'.join(fasta_content))
+            # 【提取方法 2】：直接解析 3D 坐标提取残基名
+            if not full_seq or len(full_seq) == 0:
+                try:
+                    structure = parser.get_structure(pdb_id, filepath)
+                    seq_list = []
+                    for model in structure:
+                        for chain in model:
+                            for res in chain:
+                                if res.id[0] == " ":
+                                    resname = res.get_resname().strip()
+                                    if resname:
+                                        seq_list.append(resname[0])
+                        break
+                    full_seq = "".join(seq_list)
+                except Exception:
+                    pass
 
-    cdhit_cmd = [
+            # 写入 FASTA 并且存入字典
+            if full_seq and len(full_seq) > 0:
+                f_out.write(f">{pdb_id}\n{full_seq}\n")
+                seq_dict[pdb_id] = full_seq
+                success_count += 1
+            else:
+                fail_count += 1
+
+    print(f"\n✅ 序列提取完成！成功提取: {success_count} 个，彻底失败: {fail_count} 个。")
+    return seq_dict
+
+
+def run_cdhit_clustering(fasta_path, out_prefix, identity_threshold=0.8):
+    """运行 cd-hit-est 进行聚类"""
+    print(f"\n步骤 2: 正在运行 CD-HIT-EST (相似度阈值: {identity_threshold * 100}%)...")
+    cmd = [
         "cd-hit-est",
         "-i", fasta_path,
-        "-o", "cdhit_output",
-        "-c", str(CLUSTER_THRESHOLD),
-        "-n", "7", "-T", "0", "-M", "0"
+        "-o", out_prefix,
+        "-c", str(identity_threshold),
+        "-n", "5",
+        "-M", "0",
+        "-d", "0",
+        "-l", "5"
     ]
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if result.returncode != 0:
+        print("CD-HIT 运行出错:\n", result.stderr)
+        raise RuntimeError("CD-HIT 聚类失败。")
+    print("CD-HIT 聚类完成！")
 
-    try:
-        subprocess.run(cdhit_cmd, check=True, capture_output=True)
-    except FileNotFoundError:
-        print("[Error] 未找到 cd-hit-est 命令！请先安装 CD-HIT。")
-        return
-    except subprocess.CalledProcessError:
-        print("[Error] CD-HIT 运行失败，请检查输入序列。")
-        return
 
-    # 3. 解析聚类结果 (.clstr 文件)
-    print("[3/6] 解析聚类结果...")
-    clusters = {}  # cluster_id -> list_of_cif_names
-    current_cluster_id = -1
+def parse_cdhit_clusters(clstr_path):
+    """解析 .clstr 文件，返回簇的列表"""
+    print("\n步骤 3: 解析聚类结果...")
+    clusters = []
+    current_cluster = []
+    clustered_ids = set()
 
-    # 建立 name_id 到完整信息的映射
-    info_map = {item[2]: item for item in dataset}  # name_id: (cif_file, num_chains, name_id)
-
-    with open("cdhit_output.clstr", 'r') as f:
+    with open(clstr_path, 'r') as f:
         for line in f:
             if line.startswith(">Cluster"):
-                current_cluster_id = line.strip().replace(">Cluster ", "")
-                clusters[current_cluster_id] = []
+                if current_cluster:
+                    clusters.append(current_cluster)
+                    current_cluster = []
             else:
-                # 解析类似: 0	100nt, >8d2a... *
-                parts = line.split(">")
+                parts = line.split(">", 1)
                 if len(parts) > 1:
-                    name_id = parts[1].split("...")[0]
-                    if name_id in info_map:
-                        clusters[current_cluster_id].append(info_map[name_id])
+                    pdb_id = parts[1].split()[0].replace('...', '').strip()
+                    current_cluster.append(pdb_id)
+                    clustered_ids.add(pdb_id)
 
-    # 4. 按 8:1:1 划分（基于链数，不拆分 cluster，均衡版）
-    print("[4/6] 按 8:1:1 划分数据集...")
+    if current_cluster:
+        clusters.append(current_cluster)
 
-    import random
-    random.seed(42)
+    print(f"CD-HIT 共生成 {len(clusters)} 个独立的 RNA 簇，涵盖 {len(clustered_ids)} 个结构。")
+    return clusters, clustered_ids
 
-    # 将所有簇打乱（完全随机顺序，避免第一个簇影响过大）
-    cluster_ids = list(clusters.keys())
-    random.shuffle(cluster_ids)
 
-    total_chains = sum(item[1] for item in dataset)
-    target_ratios = [0.8, 0.1, 0.1]  # 顺序：train, val, test
+def split_dataset_by_cluster(dst_dir, clusters, all_original_ids, clustered_ids, train_ratio=0.8, val_ratio=0.1,
+                             test_ratio=0.1, seed=42):
+    """基于聚类结果进行划分，并处理游离/失败文件"""
+    print("\n步骤 4: 正在按簇分配数据集，并创建对应文件夹...")
+    assert abs(train_ratio + val_ratio + test_ratio - 1.0) < 1e-5
 
-    # 初始化三个集合
-    sets = {
-        'train': [],
-        'val': [],
-        'test': []
+    random.seed(seed)
+    random.shuffle(clusters)
+
+    total_clustered_files = sum(len(c) for c in clusters)
+    target_counts = {
+        'train': int(total_clustered_files * train_ratio),
+        'val': int(total_clustered_files * val_ratio),
+        'test': total_clustered_files - int(total_clustered_files * train_ratio) - int(
+            total_clustered_files * val_ratio)
     }
-    current_chains = {'train': 0, 'val': 0, 'test': 0}
 
-    def assignment_penalty(chain_counts, assign_to, extra_chains, total_after):
-        """
-        计算如果将 extra_chains 分配给集合 assign_to 后，
-        三个集合链数比例的平方误差和（越小越好）。
-        """
-        # 临时拷贝
-        temp = chain_counts.copy()
-        temp[assign_to] += extra_chains
-        total = sum(temp.values())
-        # 防止除以零
-        if total == 0:
-            return float('inf')
+    clusters.sort(key=len, reverse=True)
 
-        error = 0
-        for i, key in enumerate(['train', 'val', 'test']):
-            actual_ratio = temp[key] / total
-            error += (actual_ratio - target_ratios[i]) ** 2
-        return error
+    current_counts = {'train': 0, 'val': 0, 'test': 0}
+    split_dict = {'train': [], 'val': [], 'test': []}
 
-    # 遍历每一个簇，贪心选择误差最小的集合
-    for cid in cluster_ids:
-        items = clusters[cid]
-        cluster_chain_count = sum(item[1] for item in items)
+    # 贪心分配
+    for cluster in clusters:
+        best_split = None
+        max_deficit = -float('inf')
+        for split in ['train', 'val', 'test']:
+            deficit = target_counts[split] - current_counts[split]
+            if deficit > max_deficit:
+                max_deficit = deficit
+                best_split = split
 
-        best_set = None
-        best_penalty = float('inf')
+        split_dict[best_split].extend(cluster)
+        current_counts[best_split] += len(cluster)
 
-        # 尝试分配给 train, val, test
-        for candidate in ['train', 'val', 'test']:
-            pen = assignment_penalty(
-                current_chains,
-                candidate,
-                cluster_chain_count,
-                sum(current_chains.values()) + cluster_chain_count
-            )
-            if pen < best_penalty:
-                best_penalty = pen
-                best_set = candidate
+    missing_ids = set(all_original_ids) - clustered_ids
 
-        # 将簇分配给最佳集合
-        sets[best_set].extend(items)
-        current_chains[best_set] += cluster_chain_count
+    splits = ['train', 'val', 'test']
+    dst_paths = {split: os.path.join(dst_dir, split) for split in splits}
+    failed_path = os.path.join(dst_dir, "failed_or_skipped")
 
-    train_list = sets['train']
-    val_list = sets['val']
-    test_list = sets['test']
+    for path in dst_paths.values():
+        os.makedirs(path, exist_ok=True)
 
-    current_train = current_chains['train']
-    current_val = current_chains['val']
-    current_test = current_chains['test']
-    print(f"    划分完成 (链数): Train={current_train}, Val={current_val}, Test={current_test}")
-    # 5. 创建目录结构
-    print("[5/6] 创建目录结构...")
-    rna_root = os.path.join(OUTPUT_BASE, "RNA")
-    dirs_to_create = [
-        os.path.join(rna_root, "train"),
-        os.path.join(rna_root, "val"),
-        os.path.join(rna_root, "test")
-    ]
-    for d in dirs_to_create:
-        os.makedirs(d, exist_ok=True)
+    print("\n--- 最终有效数据划分统计 ---")
+    for split in splits:
+        actual_ratio = current_counts[split] / total_clustered_files if total_clustered_files > 0 else 0
+        print(f"{split.capitalize()} 集: 分配了 {current_counts[split]} 个文件 (占比 {actual_ratio * 100:.1f}%)")
+    print("--------------------\n")
 
-    # 6. 复制文件
-    print("[6/6] 复制文件...")
+    # 在执行创建文件夹前，先清理一下可能存在的旧的 failed 文件夹，防止干扰视线
+    if os.path.exists(failed_path):
+        try:
+            shutil.rmtree(failed_path)
+        except:
+            pass
 
-    def copy_files(data_list, target_root):
-        for (cif_file, num_chains, name_id) in data_list:
-            # 1. 创建真实 CIF 对应的文件夹
-            # 例如: .../train/9zcc/
-            cif_target_dir = os.path.join(target_root, name_id)
-            os.makedirs(cif_target_dir, exist_ok=True)
+    for split in splits:
+        target_dir = dst_paths[split]
+        for pdb_id in tqdm(split_dict[split], desc=f"在 {split} 集中创建文件夹"):
+            folder_path = os.path.join(target_dir, pdb_id)
+            os.makedirs(folder_path, exist_ok=True)
 
-            # 2. 创建 sample 文件夹
-            sample_dir = os.path.join(cif_target_dir, "sample")
-            os.makedirs(sample_dir, exist_ok=True)
+    if missing_ids:
+        os.makedirs(failed_path, exist_ok=True)
+        print(f"\n⚠️ 发现 {len(missing_ids)} 个因严重异常未能提取序列的文件。")
+        for pdb_id in tqdm(missing_ids, desc="记录未划分结构"):
+            folder_path = os.path.join(failed_path, pdb_id)
+            os.makedirs(folder_path, exist_ok=True)
+        print(f"这部分文件已放入 {failed_path} 中。")
 
-            # 3. 复制真实的 .cif 文件 (可选，放在 cif_target_dir 下)
-            src_cif = os.path.join(CIF_DIR, cif_file)
-            shutil.copy2(src_cif, os.path.join(cif_target_dir, cif_file))
-
-            # 4. 复制四个 seed 的预测文件夹
-            for seed in SEEDS:
-                pred_folder_name = f"pred_output_{name_id}_seed_{seed}"
-                src_pred = os.path.join(PRED_DIR, pred_folder_name)
-                dst_pred = os.path.join(sample_dir, pred_folder_name)
-
-                if os.path.exists(src_pred):
-                    # 使用 dirs_exist_ok=True 防止中断 (Python 3.8+)
-                    shutil.copytree(src_pred, dst_pred, dirs_exist_ok=True)
-                else:
-                    print(f"[Warning] 预测文件夹不存在: {src_pred}")
-
-    copy_files(train_list, dirs_to_create[0])
-    copy_files(val_list, dirs_to_create[1])
-    copy_files(test_list, dirs_to_create[2])
-
-    # 清理临时文件
-    os.remove(fasta_path)
-    os.remove("cdhit_output")
-    os.remove("cdhit_output.clstr")
-
-    print("全部完成！数据已保存在: ", rna_root)
+    print(
+        f"\n✅ 全部处理完毕！总文件数核对: 成功划分 {total_clustered_files} + 异常丢弃 {len(missing_ids)} = {total_clustered_files + len(missing_ids)}")
 
 
 if __name__ == "__main__":
-    main()
+    SRC_DIRECTORY = "/remote-home/jinxianwang/tinghaoxia/RNA/Data/pdb_data/01_Pure_RNA"
+    DST_DIRECTORY = "/remote-home/jinxianwang/tinghaoxia/RNA/Data/RNA"
+
+    TEMP_DIR = os.path.join(DST_DIRECTORY, "clustering_temp")
+    os.makedirs(TEMP_DIR, exist_ok=True)
+
+    FASTA_FILE = os.path.join(TEMP_DIR, "all_rna.fasta")
+    CLSTR_PREFIX = os.path.join(TEMP_DIR, "rna_clustered")
+    CLSTR_FILE = f"{CLSTR_PREFIX}.clstr"
+
+    check_cdhit_installed()
+
+    # 1. 提取所有序列到字典
+    seq_dict = extract_sequences_to_fasta(SRC_DIRECTORY, FASTA_FILE)
+
+    # 2. CD-HIT 聚类 (它会自动丢弃过短的序列)
+    run_cdhit_clustering(FASTA_FILE, CLSTR_PREFIX, identity_threshold=0.8)
+
+    # 3. 解析 CD-HIT 结果
+    clusters, clustered_ids = parse_cdhit_clusters(CLSTR_FILE)
+
+    # ================= 核心修复逻辑 =================
+    missing_ids = set(seq_dict.keys()) - clustered_ids
+    if missing_ids:
+        print(f"\n⚠️ 检测到 {len(missing_ids)} 个由于长度过短被 CD-HIT 忽略的 RNA。启动原生序列精确匹配进行抢救...")
+        short_clusters_map = {}
+        for pid in missing_ids:
+            seq = seq_dict[pid].upper()  # 转大写匹配
+            if seq not in short_clusters_map:
+                short_clusters_map[seq] = []
+            short_clusters_map[seq].append(pid)
+
+        short_clusters = list(short_clusters_map.values())
+        print(f"✅ 抢救成功！已将这 {len(missing_ids)} 个短序列归纳为 {len(short_clusters)} 个新簇。")
+
+        # 并入总簇列表
+        clusters.extend(short_clusters)
+        clustered_ids.update(missing_ids)
+    # ================================================
+
+    # 4. 最终划分 (现在的 clusters 包含了长短序列所有的簇)
+    split_dataset_by_cluster(
+        dst_dir=DST_DIRECTORY,
+        clusters=clusters,
+        all_original_ids=list(seq_dict.keys()),
+        clustered_ids=clustered_ids,
+        train_ratio=0.8,
+        val_ratio=0.1,
+        test_ratio=0.1,
+        seed=42
+    )
+
+    if os.path.exists(TEMP_DIR):
+        shutil.rmtree(TEMP_DIR)
