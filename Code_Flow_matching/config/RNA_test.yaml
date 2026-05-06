@@ -1,0 +1,112 @@
+# task name for logging
+task_name: RNA_test_01
+
+# unique seed for experiment reproducibility
+seed: 42
+
+# data config
+datamodule: BaseDataModule
+datamodule_args:
+    # dataloader
+    data_dir: "/remote-home/jinxianwang/tinghaoxia/RNA/Data/RNA"
+    dataloader_args:
+        batch_size: 2
+        num_workers: 2
+        pin_memory: true
+        persistent_workers: true
+        drop_last: true
+
+# model config
+model: BaseFlow
+model_args:
+    # network args
+    network_type: TorchMDDynamics
+    hidden_channels: 128
+    num_layers: 6
+    num_rbf: 64
+    rbf_type: expnorm
+    trainable_rbf: true
+    activation: silu
+    neighbor_embedding: true
+    cutoff_lower: 0.0
+    cutoff_upper: 4.5
+    max_z: 100
+    node_attr_dim: 0
+    edge_attr_dim: 0
+    attn_activation: silu
+    num_heads: 8
+    distance_influence: both
+    reduce_op: sum
+    qk_norm: true
+    so3_equivariant: true
+    clip_during_norm: true
+
+    # flow matching specific
+    sigma: 0.1
+
+
+    # optimizer args
+    optimizer_type: AdamW
+    lr: 3.e-4
+    weight_decay: 1.e-8
+
+    # lr scheduler args
+    lr_scheduler_type: CosineAnnealingWarmupRestarts
+    first_cycle_steps: 100_000
+    cycle_mult: 1.0
+    max_lr: 3.e-4
+    min_lr: 1.e-8
+    warmup_steps: 1000
+    gamma: 0.05
+    last_epoch: -1
+    lr_scheduler_monitor: val/loss
+    lr_scheduler_interval: step
+    lr_scheduler_frequency: 1
+
+# callbacks
+callbacks:
+    -   callback: ModelCheckpoint
+        callback_args:
+            # 🚨【修改】强烈建议加上明确的实验名称，不要只用 './checkpoint'
+            # 否则你跑第二次实验时，会把第一次好不容易训练出来的权重覆盖掉！
+            dirpath: './checkpoints/rna_refinement_v1'
+            monitor: val/loss
+            mode: min
+            save_last: true     # 极好！会始终保留最新的一步，断点续传必备
+            every_n_epochs: 1
+            save_top_k: 3       # 极好！自动为你保留历史上 Loss 最低的 3 个模型，绝不弄丢最优解
+
+    -   callback: LearningRateMonitor
+        callback_args:
+            log_momentum: false
+            # 🚨【修改】从 null 改为 step。因为你的余弦调度器是按步(step)更新的，
+            # 这样你在 Wandb 上能看到平滑的学习率曲线，而不是每个 epoch 才打一个点的折线。
+            logging_interval: step
+
+# logger
+logger: WandbLogger
+logger_args:
+    project: RNA-Flow-Refinement
+
+
+
+trainer: Trainer
+trainer_args:
+    max_epochs: 200
+    devices: 1                   # 自动识别你有几张显卡，不会强行霸占 8 张导致报错
+    accelerator: gpu               # 自动识别是 GPU 还是 CPU
+    strategy: auto                  # 多卡情况下的并行策略，auto 会自动选 DDP
+    accumulate_grad_batches: 24     # 🚨 核心新增：梯度累加。模拟大 Batch Size 稳定收敛
+    precision: 16-mixed             # 🌟 强烈推荐新增：混合精度训练，节省显存利器！
+    num_sanity_val_steps: 0
+
+# eval config
+eval_args:
+    batch_size: 32
+    sampler_args:
+        sampler_type: ode
+        n_timesteps: 50
+        s_churn: 1.0
+        t_min: 0.0001
+        t_max: 0.9999
+        std: 1.0
