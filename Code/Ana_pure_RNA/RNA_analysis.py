@@ -157,7 +157,7 @@ def parse_rna_cif_directory(cif_dir, output_csv):
 if __name__ == '__main__':
     # 【注意】请将下面的路径替换为你服务器上纯RNA文件夹的实际路径
     CIF_DIRECTORY = "/remote-home/jinxianwang/tinghaoxia/RNA/Data/pdb_data/01_Pure_RNA"
-    OUTPUT_FILE = "./pure_rna_analysis_results.csv"
+    OUTPUT_FILE = "pure_rna_analysis_results.csv"
 
     if os.path.exists(CIF_DIRECTORY):
         parse_rna_cif_directory(CIF_DIRECTORY, OUTPUT_FILE)

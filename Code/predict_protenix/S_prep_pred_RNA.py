@@ -29,7 +29,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
     handlers=[
-        logging.FileHandler("protenix_batch_run.log"),
+        logging.FileHandler("../protenix_batch_run.log"),
         logging.StreamHandler()
     ]
 )

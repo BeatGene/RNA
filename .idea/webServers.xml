@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c5c703ad-3e10-4d7d-88eb-c46a37c84439" name="root@10.176.26.82">
+        <fileTransfer rootFolder="/remote-home/jinxianwang/tinghaoxia/RNA" accessType="SFTP" host="10.176.26.82" port="20033" sshConfigId="52533af4-67ae-404f-ab80-94a7139efe0e" sshConfig="root@10.176.26.82:20033 agent" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
