@@ -1,0 +1,7 @@
+nohup: ignoring input
+
+🚀 开始处理 train 集数据...
+🔍 仅处理以 '9' 开头的 PDB，本集共 141 个。
+Processing train:   0%|          | 0/141 [00:00<?, ?it/s]/remote-home/jinxianwang/tinghaoxia/RNA/Code/pt.py:142: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /pytorch/torch/csrc/utils/tensor_new.cpp:254.)
+  pos_tensor = torch.tensor(aligned_gt_pos, dtype=torch.float)
+Processing train:   1%|          | 1/141 [01:36<3:44:34, 96.24s/it]Processing train:   1%|▏         | 2/141 [01:37<1:33:34, 40.40s/it]Processing train:   2%|▏         | 3/141 [01:38<51:12, 22.26s/it]  Processing train:   3%|▎         | 4/141 [01:38<31:03, 13.60s/it]Processing train:   4%|▎         | 5/141 [01:39<20:38,  9.11s/it]Processing train:   4%|▍         | 6/141 [01:54<24:59, 11.10s/it]Processing train:   5%|▍         | 7/141 [01:55<16:57,  7.60s/it]Processing train:   6%|▌         | 8/141 [02:12<24:05, 10.87s/it]

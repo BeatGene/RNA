@@ -1,0 +1,229 @@
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/7
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 7 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1,2,3,5,6,7]
+2026-05-06 14:52:03.355 | INFO     | etflow.models.base:configure_optimizers:92 - Using AdamW optimizer with lr=0.0003
+2026-05-06 14:52:03.357 | INFO     | etflow.models.base:configure_optimizers:123 - Using CosineAnnealingWarmupRestarts withfirst_cycle_steps=100000, cycle_mult=1.0,max_lr=0.0003, min_lr=1e-08, warmup_steps=1000,gamma=0.05, last_epoch=-1
+/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name    | Type            | Params | Mode  | FLOPs
+------------------------------------------------------------
+0 | network | TorchMDDynamics | 1.8 M  | train | 0
+------------------------------------------------------------
+1.8 M     Trainable params
+0         Non-trainable params
+1.8 M     Total params
+7.207     Total estimated model params size (MB)
+162       Modules in train mode
+0         Modules in eval mode
+0         Total Flops
+/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=5` in the `DataLoader` to improve performance.
+/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:434: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=5` in the `DataLoader` to improve performance.
+Epoch 0:   0%|          | 161/41329 [00:20<1:27:07,  7.88it/s, v_num=x8yo]
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 1 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 2 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 16 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 24 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 12 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 23 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 19 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 3 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 18 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 25 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 22 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 27 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 4 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 5 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 20 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 14 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 17 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 6 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 21 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 13 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 11 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 9 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+2026-05-06 14:52:44.717 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 15 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 8 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 61 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 28 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 31 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 26 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+2026-05-06 14:53:15.887 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:53:17.984 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 7 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+2026-05-06 14:53:19.561 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:53:22.218 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:53:22.872 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 34 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+2026-05-06 14:53:45.404 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 38 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+2026-05-06 14:53:54.969 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:54:01.737 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:54:05.302 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:54:06.024 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 29 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+2026-05-06 14:54:15.598 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:54:19.994 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:54:44.142 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:54:47.313 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:54:53.137 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:54:53.725 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:54:59.975 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:55:13.780 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:55:19.295 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.0 while allowed 0.0
+2026-05-06 14:55:20.490 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.1 while allowed 0.0
+2026-05-06 14:55:24.652 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.1 while allowed 0.1
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 10 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+2026-05-06 14:55:25.255 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.1 while allowed 0.1
+2026-05-06 14:55:26.545 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.1 while allowed 0.1
+2026-05-06 14:55:28.100 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.1 while allowed 0.1
+2026-05-06 14:55:31.729 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.2 while allowed 0.1
+2026-05-06 14:55:32.565 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.1 while allowed 0.1
+2026-05-06 14:55:34.601 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.2 while allowed 0.1
+2026-05-06 14:55:35.285 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.2 while allowed 0.1
+/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/networks/torchmd_net/utils.py:307: UserWarning: Skipping gradients for 30 atoms due to vector features being zero. This is likely due to atoms being outside the cutoff radius of any other atom. These atoms will not interact with any other atom unless you change the cutoff.
+  warnings.warn(
+2026-05-06 14:55:36.606 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.1 while allowed 0.1
+2026-05-06 14:55:39.561 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.1 while allowed 0.1
+2026-05-06 14:55:45.760 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.1 while allowed 0.1
+2026-05-06 14:55:54.439 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.2 while allowed 0.2
+2026-05-06 14:55:59.791 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.3 while allowed 0.2
+2026-05-06 14:56:00.416 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.2 while allowed 0.2
+2026-05-06 14:56:03.104 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.4 while allowed 0.2
+2026-05-06 14:56:04.618 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.6 while allowed 0.2
+2026-05-06 14:56:05.850 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.4 while allowed 0.3
+2026-05-06 14:56:06.532 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.7 while allowed 0.3
+2026-05-06 14:56:07.145 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.8 while allowed 0.3
+2026-05-06 14:56:07.866 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 1.1 while allowed 0.3
+2026-05-06 14:56:09.506 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.6 while allowed 0.3
+2026-05-06 14:56:10.184 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.4 while allowed 0.3
+2026-05-06 14:56:10.903 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.8 while allowed 0.4
+2026-05-06 14:56:11.484 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 1.3 while allowed 0.4
+2026-05-06 14:56:12.214 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.7 while allowed 0.4
+2026-05-06 14:56:12.933 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 0.6 while allowed 0.4
+2026-05-06 14:56:13.532 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 1.0 while allowed 0.5
+2026-05-06 14:56:14.177 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 1.3 while allowed 0.5
+2026-05-06 14:56:14.897 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 1.5 while allowed 0.5
+2026-05-06 14:56:15.541 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 2.2 while allowed 0.5
+2026-05-06 14:56:16.191 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 1.6 while allowed 0.6
+2026-05-06 14:56:17.046 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 2.0 while allowed 0.6
+2026-05-06 14:56:17.866 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value 3.7 while allowed 0.6
+2026-05-06 14:56:18.457 | INFO     | etflow.models.base:configure_gradient_clipping:183 - Clipped gradient with value inf while allowed 0.7
+/opt/conda/envs/protenix_2/lib/python3.11/site-packages/numpy/_core/_methods.py:188: RuntimeWarning: invalid value encountered in subtract
+  x = um.subtract(arr, arrmean, out=...)
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/scripts/train.py", line 104, in <module>
+[rank0]:     run(config)
+[rank0]:   File "/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/scripts/train.py", line 86, in run
+[rank0]:     trainer.fit(model, datamodule=datamodule, ckpt_path=resume_ckpt_path)
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/trainer/trainer.py", line 584, in fit
+[rank0]:     call._call_and_handle_interrupt(
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank0]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank0]:     return function(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/trainer/trainer.py", line 630, in _fit_impl
+[rank0]:     self._run(model, ckpt_path=ckpt_path, weights_only=weights_only)
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/trainer/trainer.py", line 1079, in _run
+[rank0]:     results = self._run_stage()
+[rank0]:               ^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/trainer/trainer.py", line 1123, in _run_stage
+[rank0]:     self.fit_loop.run()
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py", line 217, in run
+[rank0]:     self.advance()
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/loops/fit_loop.py", line 465, in advance
+[rank0]:     self.epoch_loop.run(self._data_fetcher)
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 153, in run
+[rank0]:     self.advance(data_fetcher)
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 352, in advance
+[rank0]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 185, in run
+[rank0]:     closure()
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 146, in __call__
+[rank0]:     self._result = self.closure(*args, **kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 131, in closure
+[rank0]:     step_output = self._step_fn()
+[rank0]:                   ^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/loops/optimization/automatic.py", line 319, in _training_step
+[rank0]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank0]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/trainer/call.py", line 329, in _call_strategy_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/strategies/strategy.py", line 390, in training_step
+[rank0]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/strategies/strategy.py", line 641, in __call__
+[rank0]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1637, in forward
+[rank0]:     else self._run_ddp_forward(*inputs, **kwargs)
+[rank0]:          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1464, in _run_ddp_forward
+[rank0]:     return self.module(*inputs, **kwargs)  # type: ignore[index]
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/opt/conda/envs/protenix_2/lib/python3.11/site-packages/lightning/pytorch/strategies/strategy.py", line 634, in wrapped_forward
+[rank0]:     out = method(*_args, **_kwargs)
+[rank0]:           ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/models/base.py", line 77, in training_step
+[rank0]:     return self.generic_step(batch, batch_idx, "train")
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/etflow/models/model.py", line 222, in generic_step
+[rank0]:     raise ValueError("Loss 出现 NaN，请检查数据集是否异常！")
+[rank0]: ValueError: Loss 出现 NaN，请检查数据集是否异常！
