@@ -53,8 +53,7 @@ def parse_rna_cif_directory(cif_dir, output_csv):
             title = _get_cif_first(cif_dict, '_struct.title', 'Unknown')
             method = _get_cif_first(cif_dict, '_exptl.method', 'Unknown')
 
-            resolution = _get_cif_first(cif_dict, '_refine.ls_d_res_high',
-                                        _get_cif_first(cif_dict, '_reflns.d_resolution_high', 'N/A'))
+            resolution = _get_cif_first(cif_dict, '_refine.ls_d_res_high', _get_cif_first(cif_dict, '_reflns.d_resolution_high', 'N/A'))
             if resolution in ['?', '.', 'None']:
                 resolution = 'N/A'
 
@@ -155,7 +154,6 @@ def parse_rna_cif_directory(cif_dir, output_csv):
 
 
 if __name__ == '__main__':
-    # 【注意】请将下面的路径替换为你服务器上纯RNA文件夹的实际路径
     CIF_DIRECTORY = "/remote-home/jinxianwang/tinghaoxia/RNA/Data/pdb_data/01_Pure_RNA"
     OUTPUT_FILE = "pure_rna_analysis_results.csv"
 

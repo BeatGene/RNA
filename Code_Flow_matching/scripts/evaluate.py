@@ -30,6 +30,7 @@ def evaluate_rmsd(
         ckpt_path: str,
         data_dir: str,
         split: str = "test",
+        sample_files: str = None,
         num_samples: int = None,
         n_timesteps: int = 50,
         batch_size: int = 16,
@@ -70,14 +71,17 @@ def evaluate_rmsd(
     print(f"\n[2/3] Loading Dataloader from: {final_data_dir} (Split: {split})")
 
     dm = BaseDataModule(
-        data_dir=Path(final_data_dir),
-        dataloader_args={"batch_size": batch_size, "num_workers": num_workers}
+        data_dir=Path(final_data_dir) if final_data_dir else None,
+        dataloader_args={"batch_size": batch_size, "num_workers": num_workers},
+        sample_files=sample_files,
     )
 
     # Load the requested split
-    dm.setup(stage="fit" if split == "train" else "test")
+    dm.setup(stage="fit" if split in ("train", "val") else "test")
 
-    if split == "train":
+    if sample_files:
+        dataset = dm.train_dataset
+    elif split == "train":
         dataset = dm.train_dataset
     elif split == "val":
         dataset = dm.val_dataset
@@ -195,6 +199,8 @@ if __name__ == "__main__":
     # 新增参数
     parser.add_argument("--split", type=str, default="test", choices=["train", "val", "test"],
                         help="Dataset split to evaluate")
+    parser.add_argument("--sample_files", "-sf", type=str, default=None,
+                        help="Path to sample list file (one .pt per line). Overrides split-based loading.")
     parser.add_argument("--num_samples", type=int, default=None,
                         help="Randomly sample this many molecules. If None, evaluate all.")
 
@@ -210,8 +216,9 @@ if __name__ == "__main__":
         config_path=args.config,
         ckpt_path=args.ckpt,
         data_dir=args.data_dir,
-        split=args.split,  # 传递 split
-        num_samples=args.num_samples,  # 传递 num_samples
+        split=args.split,
+        sample_files=args.sample_files,
+        num_samples=args.num_samples,
         n_timesteps=args.n_timesteps,
         batch_size=args.batch_size,
         num_workers=args.num_workers,

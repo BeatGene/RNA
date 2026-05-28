@@ -9,19 +9,24 @@ class EuclideanDataset(Dataset):
         self,
         data_dir: Path | None = None,
         split: str = "train",
+        sample_files: list[str] | None = None,
     ):
         super().__init__()
 
-        self.data_dir = Path(data_dir)
+        self.data_dir = Path(data_dir) if data_dir is not None else None
         self.split = split
 
-        # 定位到对应的数据集划分目录，例如 /.../RNA/train
-        split_dir = self.data_dir / split
-        self.data_files = list(split_dir.rglob("*.pt"))
+        if sample_files is not None:
+            # 使用指定的文件列表，跳过目录扫描
+            self.data_files = [Path(f) for f in sample_files]
+        else:
+            # 定位到对应的数据集划分目录，例如 /.../RNA/train
+            split_dir = self.data_dir / split
+            self.data_files = list(split_dir.rglob("*.pt"))
 
         if len(self.data_files) == 0:
             raise ValueError(
-                f"在 {split_dir} 及其子目录下没有找到任何 .pt 文件！"
+                f"在 {self.data_dir / split if self.data_dir else 'sample_files'} 及其子目录下没有找到任何 .pt 文件！"
             )
 
         # Sort files for reproducibility

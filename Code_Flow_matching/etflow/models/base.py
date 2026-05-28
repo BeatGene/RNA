@@ -165,9 +165,12 @@ class BaseModel(LightningModule):
     ):
         """Gradient Clipping as done in the official EDM implementation."""
         # Allow gradient norm to be 150% + 2 * stdev of the recent history.
-        max_grad_norm = min(
-            1.5 * self.gradnorm_queue.mean() + 2 * self.gradnorm_queue.std(),
-            self.grad_norm_max_val,  # do not increase the gradient norm beyond 100
+        max_grad_norm = max(
+            min(
+                1.5 * self.gradnorm_queue.mean() + 2 * self.gradnorm_queue.std(),
+                self.grad_norm_max_val,  # do not increase the gradient norm beyond 100
+            ),
+            0.01,  # floor: prevent adaptive clipping from collapsing to zero
         )
         grad_norm = torch.nn.utils.clip_grad_norm_(
             self.parameters(), max_grad_norm, norm_type=2.0
