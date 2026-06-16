@@ -1,5 +1,5 @@
 # task name for logging
-task_name: RNA_test_01
+task_name: RNA_test_02_rmsd_less
 
 # unique seed for experiment reproducibility
 seed: 42
@@ -11,7 +11,7 @@ datamodule_args:
     data_dir: "/remote-home/jinxianwang/tinghaoxia/RNA/Data/RNA"
     dataloader_args:
         batch_size: 1
-        num_workers: 1
+        num_workers: 2
         pin_memory: true
         persistent_workers: true
         drop_last: true
@@ -30,7 +30,7 @@ model_args:
     neighbor_embedding: true
     cutoff_lower: 0.0
     cutoff_upper: 4.5
-    max_z: 100
+    max_z: 20
     node_attr_dim: 0
     edge_attr_dim: 0
     attn_activation: silu
@@ -55,9 +55,9 @@ model_args:
     first_cycle_steps: 100_000
     cycle_mult: 1.0
     max_lr: 3.e-4
-    min_lr: 1.e-8
+    min_lr: 3.e-5
     warmup_steps: 1000
-    gamma: 0.05
+    gamma: 1.0
     last_epoch: -1
     lr_scheduler_monitor: val/loss
     lr_scheduler_interval: step
@@ -111,4 +111,4 @@ eval_args:
         t_max: 0.9999
         std: 1.0
 
-ckpt_path: "/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/logs/RNA_test_01/runs/2026-05-06_15-02-19/checkpoints/rna_refinement_v1/last.ckpt"
+ckpt_path: "/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/logs/RNA_test_02_rmsd_less/runs/2026-06-09_01-36-29/checkpoints/rna_refinement_v1/last.ckpt"
