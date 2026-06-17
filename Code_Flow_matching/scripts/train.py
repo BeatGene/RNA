@@ -21,6 +21,11 @@ from etflow.data.datamodule import BaseDataModule
 
 torch.set_float32_matmul_precision("high")
 
+# NCCL timeout settings to prevent multi-GPU deadlocks
+os.environ.setdefault("NCCL_TIMEOUT", "1800")
+os.environ.setdefault("NCCL_BLOCKING_WAIT", "1")
+os.environ.setdefault("TORCH_DISTRIBUTED_TIMEOUT", "1800")
+
 
 def run(config: dict) -> None:
     # check if debug mode
@@ -56,8 +61,8 @@ def run(config: dict) -> None:
             no_logger=config.get("no_logger", False),
         )
 
-    # setup log directory
-    setup_log_dir(task_name)
+    # setup log directory (pass project_root to ensure absolute path)
+    setup_log_dir(task_name, project_root=project_root)
 
     # instantiate datamodule
     datamodule = BaseDataModule(**dm_args)

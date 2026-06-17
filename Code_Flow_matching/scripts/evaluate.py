@@ -208,7 +208,7 @@ if __name__ == "__main__":
     parser.add_argument("--num_workers", type=int, default=4, help="Dataloader workers")
     parser.add_argument("--n_timesteps", type=int, default=50, help="ODE steps")
     parser.add_argument("--device", type=str, default="cuda")
-    parser.add_argument("--csv_path", type=str, default="evaluation/rmsd_summary.csv")
+    parser.add_argument("--csv_path", type=str, default="evaluation/rmsd_summary_v2.csv")
 
     args = parser.parse_args()
 

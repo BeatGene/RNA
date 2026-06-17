@@ -94,12 +94,14 @@ def get_log_dir():
 
     return log_dir
 
-def setup_log_dir(task_name):
+def setup_log_dir(task_name, project_root=None):
     """Sets log directory for a given task
     and then moves to that directory
     """
     log_dir = get_log_dir()
-    # use time to create unique log diedge_indexrectory
+    if not os.path.isabs(log_dir) and project_root is not None:
+        log_dir = os.path.join(project_root, log_dir)
+    # use time to create unique log directory
     run_name = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     log_dir = os.path.join(log_dir, task_name, "runs", f"{run_name}")
     log.info(f"Log directory: {log_dir}")

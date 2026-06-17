@@ -95,7 +95,7 @@ trainer_args:
     max_epochs: 200
     devices: 8                   # 自动识别你有几张显卡，不会强行霸占 8 张导致报错
     accelerator: gpu               # 自动识别是 GPU 还是 CPU
-    strategy: auto                  # 多卡情况下的并行策略，auto 会自动选 DDP
+    strategy: ddp_find_unused_parameters_true  # 多卡策略，容忍checkpoint恢复时未使用的参数
     accumulate_grad_batches: 6     # 🚨 核心新增：梯度累加。模拟大 Batch Size 稳定收敛
     precision: bf16-mixed           # 🌟 强烈推荐新增：混合精度训练，节省显存利器！
     num_sanity_val_steps: 0
