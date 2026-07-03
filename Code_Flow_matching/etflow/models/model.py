@@ -165,7 +165,18 @@ class BaseFlow(BaseModel):
         """
         # 为了等变性，每次输入网络前都进行质心居中
         pos = center_of_mass(pos, batch=batch)
-
+        # ToDo
+        # edge_index, edge_type = extend_bond_index(
+        #     pos=pos,
+        #     bond_index=bond_index,
+        #     batch=batch,
+        #     bond_attr=edge_attr,
+        #     device=self.device,
+        #     one_hot=self.edge_one_hot,
+        #     one_hot_types=self.edge_one_hot_types,
+        #     cutoff=self.cutoff,
+        #     max_num_neighbors=self.max_num_neighbors,
+        # )
         # 【核心修改】：直接使用传入的 pre-computed edge_index
         # 摒弃了原版消耗极大的 extend_bond_index
         v_t = self.network(

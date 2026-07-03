@@ -93,7 +93,7 @@ logger_args:
 trainer: Trainer
 trainer_args:
     max_epochs: 200
-    devices: 8                   # 自动识别你有几张显卡，不会强行霸占 8 张导致报错
+    devices: 7                   # 自动识别你有几张显卡，不会强行霸占 8 张导致报错
     accelerator: gpu               # 自动识别是 GPU 还是 CPU
     strategy: ddp_find_unused_parameters_true  # 多卡策略，容忍checkpoint恢复时未使用的参数
     accumulate_grad_batches: 6     # 🚨 核心新增：梯度累加。模拟大 Batch Size 稳定收敛
@@ -111,4 +111,4 @@ eval_args:
         t_max: 0.9999
         std: 1.0
 
-ckpt_path: "/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/logs/RNA_test_02_rmsd_less/runs/2026-06-09_01-36-29/checkpoints/rna_refinement_v1/last.ckpt"
+ckpt_path: "/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/logs/RNA_test_02_rmsd_less/runs/2026-06-15_09-28-12/checkpoints/rna_refinement_v1/last.ckpt"
