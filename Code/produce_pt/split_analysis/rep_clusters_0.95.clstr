@@ -1,0 +1,2572 @@
+>Cluster 0
+0	787nt, >9lhk_G_train... at +/99.87%
+1	787nt, >9lhl_G_train... at +/99.87%
+2	788nt, >9mee_A_train... *
+>Cluster 1
+0	590nt, >8x9l_A_train... at +/99.32%
+1	589nt, >8x9n_A_train... at +/99.32%
+2	751nt, >8x9o_A_train... *
+3	746nt, >8xtq_A_train... at +/99.20%
+>Cluster 2
+0	727nt, >8x9k_A_train... at +/99.72%
+1	722nt, >8x9m_A_train... at +/99.72%
+2	727nt, >8x9q_A_train... at +/99.86%
+3	595nt, >8xtp_B_train... at +/100.00%
+4	595nt, >8xtr_B_train... at +/100.00%
+5	732nt, >8xts_A_train... *
+>Cluster 3
+0	720nt, >7ptk_B_train... *
+1	720nt, >7ptl_B_train... at +/100.00%
+>Cluster 4
+0	645nt, >9l0r_A_train... *
+1	336nt, >9lec_J_train... at +/100.00%
+2	336nt, >9lee_J_train... at +/100.00%
+3	317nt, >9lmf_A_train... at +/99.68%
+>Cluster 5
+0	630nt, >5g2y_A_train... *
+>Cluster 6
+0	34nt, >2f88_A_train... at +/100.00%
+1	34nt, >2lpt_A_train... at +/100.00%
+2	617nt, >4r0d_A_train... at +/100.00%
+3	621nt, >6chr_A_train... *
+4	616nt, >6cih_A_train... at +/100.00%
+>Cluster 7
+0	598nt, >9mds_A_train... *
+>Cluster 8
+0	582nt, >9is7_B_train... *
+>Cluster 9
+0	558nt, >7pts_A_train... *
+>Cluster 10
+0	553nt, >9zcb_A_train... *
+1	553nt, >9zcc_B_train... at +/100.00%
+>Cluster 11
+0	552nt, >7qdu_Q_train... *
+>Cluster 12
+0	545nt, >9zc9_A_test... *
+1	545nt, >9zca_A_test... at +/100.00%
+>Cluster 13
+0	544nt, >7ptq_C_train... *
+>Cluster 14
+0	542nt, >8k0p_A_train... at +/100.00%
+1	543nt, >8k0s_A_train... *
+>Cluster 15
+0	541nt, >9zc7_B_train... *
+1	541nt, >9zc8_B_train... at +/100.00%
+>Cluster 16
+0	521nt, >9mme_U_train... *
+>Cluster 17
+0	519nt, >9j3t_B_train... *
+1	494nt, >9mm6_A_train... at +/99.60%
+>Cluster 18
+0	496nt, >9j6y_C_train... at +/97.98%
+1	498nt, >9le3_A_train... *
+2	498nt, >9le5_A_train... at +/100.00%
+3	498nt, >9le6_A_train... at +/100.00%
+4	498nt, >9m78_A_train... at +/100.00%
+5	498nt, >9m79_A_train... at +/100.00%
+>Cluster 19
+0	470nt, >8k15_C_train... *
+>Cluster 20
+0	463nt, >9mmg_c_train... *
+>Cluster 21
+0	452nt, >9j3r_B_train... *
+>Cluster 22
+0	365nt, >8tjx_N_train... at +/99.18%
+1	440nt, >9dp9_A_train... *
+>Cluster 23
+0	158nt, >1gid_A_train... at +/99.37%
+1	247nt, >1grz_A_train... at +/95.95%
+2	158nt, >1hr2_B_train... at +/98.73%
+3	157nt, >1l8v_A_train... at +/98.09%
+4	158nt, >6bjx_A_train... at +/98.73%
+5	158nt, >6d8l_A_train... at +/98.73%
+6	159nt, >6d8m_B_train... at +/98.11%
+7	159nt, >6d8n_A_train... at +/97.48%
+8	158nt, >6d8o_A_train... at +/98.73%
+9	388nt, >6wls_A_train... at +/100.00%
+10	387nt, >7ez0_N_train... at +/100.00%
+11	392nt, >7ez2_N_val... at +/99.49%
+12	354nt, >7r6n_A_train... at +/97.74%
+13	386nt, >7uvt_A_train... at +/100.00%
+14	423nt, >7xd3_N_train... at +/98.11%
+15	423nt, >7xd4_N_train... at +/98.11%
+16	400nt, >7xd5_N_train... at +/100.00%
+17	434nt, >7xd6_N_train... *
+18	405nt, >7xd7_N_train... at +/100.00%
+19	388nt, >7xsk_N_train... at +/100.00%
+20	388nt, >7xsl_N_train... at +/100.00%
+21	388nt, >7xsm_N_train... at +/100.00%
+22	387nt, >7xsn_N_train... at +/100.00%
+23	388nt, >7yc8_N_train... at +/100.00%
+24	393nt, >7ycg_N_train... at +/99.49%
+25	393nt, >7ych_N_train... at +/99.49%
+26	389nt, >7yci_N_train... at +/100.00%
+27	387nt, >7yg8_N_train... at +/100.00%
+28	391nt, >7yg9_N_train... at +/100.00%
+29	393nt, >7yga_N_train... at +/99.49%
+30	393nt, >7ygb_N_test... at +/99.49%
+31	393nt, >7ygc_N_train... at +/99.49%
+32	384nt, >7ygd_N_train... at +/100.00%
+33	419nt, >8hd6_N_train... at +/97.85%
+34	419nt, >8hd7_N_train... at +/97.85%
+35	418nt, >8i7n_N_train... at +/97.85%
+36	387nt, >9cbu_N_train... at +/100.00%
+37	387nt, >9cbw_N_train... at +/100.00%
+38	387nt, >9cbx_N_train... at +/100.00%
+39	387nt, >9cby_N_train... at +/100.00%
+>Cluster 24
+0	434nt, >9lel_J_train... *
+1	434nt, >9lem_J_train... at +/100.00%
+>Cluster 25
+0	433nt, >8tjq_N_train... *
+>Cluster 26
+0	388nt, >3eog_A_train... at +/97.94%
+1	381nt, >3eoh_A_train... at +/97.64%
+2	389nt, >3g78_A_train... at +/97.94%
+3	389nt, >3igi_A_train... at +/97.94%
+4	393nt, >4ds6_A_train... at +/96.44%
+5	388nt, >4e8k_A_train... at +/97.94%
+6	394nt, >4e8m_A_train... at +/97.21%
+7	393nt, >4e8n_A_train... at +/97.20%
+8	393nt, >4e8p_A_train... at +/97.20%
+9	393nt, >4e8q_A_train... at +/97.20%
+10	393nt, >4e8r_A_train... at +/97.20%
+11	388nt, >4e8t_A_train... at +/97.94%
+12	389nt, >4e8v_A_train... at +/97.94%
+13	396nt, >4faq_A_train... at +/96.72%
+14	390nt, >4far_A_train... at +/97.95%
+15	393nt, >4fau_A_train... at +/96.95%
+16	390nt, >4faw_A_train... at +/97.95%
+17	392nt, >4fax_A_train... at +/97.19%
+18	393nt, >4fb0_A_train... at +/96.95%
+19	414nt, >5j01_A_train... *
+20	414nt, >5j02_A_val... at +/100.00%
+21	390nt, >6t3k_A_train... at +/97.18%
+22	394nt, >6t3n_A_train... at +/95.94%
+23	389nt, >6t3r_A_train... at +/97.17%
+24	393nt, >6t3s_A_train... at +/95.93%
+25	390nt, >8ols_A_train... at +/97.95%
+26	394nt, >8olv_A_train... at +/97.21%
+27	396nt, >8olw_A_train... at +/96.72%
+28	390nt, >8oly_A_train... at +/97.95%
+29	390nt, >8olz_A_train... at +/97.95%
+30	390nt, >8om0_A_train... at +/97.95%
+31	390nt, >8ruh_A_train... at +/97.95%
+32	390nt, >8rui_A_train... at +/97.95%
+33	390nt, >8ruj_A_train... at +/97.95%
+34	388nt, >8ruk_A_train... at +/97.94%
+35	393nt, >8rul_A_train... at +/97.20%
+36	393nt, >8rum_A_train... at +/97.20%
+37	393nt, >8run_A_train... at +/97.20%
+38	393nt, >9c6i_A_train... at +/96.44%
+39	387nt, >9c6j_A_train... at +/96.38%
+40	273nt, >9g4i_A_train... at +/96.70%
+41	267nt, >9g4l_A_train... at +/95.13%
+42	293nt, >9g54_A_train... at +/95.90%
+43	294nt, >9g56_A_train... at +/95.58%
+>Cluster 27
+0	412nt, >1h1k_I_train... *
+>Cluster 28
+0	409nt, >8tjv_A_train... *
+>Cluster 29
+0	374nt, >7zj4_E_train... *
+1	374nt, >7zj5_E_train... at +/100.00%
+>Cluster 30
+0	363nt, >8tvz_C_train... *
+>Cluster 31
+0	362nt, >9lcr_A_train... *
+>Cluster 32
+0	356nt, >3bwp_A_train... *
+>Cluster 33
+0	354nt, >8bu8_A_train... *
+>Cluster 34
+0	351nt, >9isv_A_train... *
+>Cluster 35
+0	14nt, >2koc_A_train... at +/100.00%
+1	14nt, >6by4_A_train... at +/100.00%
+2	14nt, >6by5_A_train... at +/100.00%
+3	349nt, >6wln_A_train... *
+4	338nt, >6wlo_A_train... at +/100.00%
+>Cluster 36
+0	316nt, >9zc6_A_val... *
+>Cluster 37
+0	308nt, >9mcw_A_train... *
+>Cluster 38
+0	304nt, >2a2e_A_train... *
+>Cluster 39
+0	298nt, >2a64_A_train... *
+>Cluster 40
+0	290nt, >9zbq_A_val... *
+1	290nt, >9zbr_A_test... at +/100.00%
+>Cluster 41
+0	267nt, >9kgg_U_test... *
+1	264nt, >9kgh_U_test... at +/100.00%
+>Cluster 42
+0	259nt, >4y1n_B_train... *
+1	258nt, >4y1o_A_train... at +/99.22%
+2	241nt, >9g4j_A_train... at +/97.10%
+>Cluster 43
+0	249nt, >9e74_A_train... *
+>Cluster 44
+0	249nt, >9kph_A_train... *
+1	249nt, >9kpo_B_train... at +/100.00%
+>Cluster 45
+0	243nt, >9mqs_A_train... at +/98.35%
+1	249nt, >9mqt_A_train... *
+2	249nt, >9mqu_A_train... at +/100.00%
+>Cluster 46
+0	247nt, >1x8w_B_train... *
+>Cluster 47
+0	238nt, >8btz_A_test... *
+>Cluster 48
+0	231nt, >6wlt_A_train... *
+1	231nt, >6wlu_A_train... at +/100.00%
+>Cluster 49
+0	229nt, >1y0q_A_train... *
+>Cluster 50
+0	224nt, >9g7c_A_train... *
+>Cluster 51
+0	222nt, >8qo2_A_train... *
+>Cluster 52
+0	221nt, >9g4v_A_train... *
+>Cluster 53
+0	215nt, >3dhs_A_train... *
+>Cluster 54
+0	192nt, >4gma_Z_train... at +/100.00%
+1	210nt, >8sa2_A_train... *
+2	210nt, >8sa3_A_train... at +/100.00%
+3	189nt, >8sa4_A_train... at +/98.94%
+4	210nt, >8sa5_A_train... at +/100.00%
+5	210nt, >8sa6_A_train... at +/100.00%
+>Cluster 55
+0	200nt, >9cxf_A_train... at +/100.00%
+1	204nt, >9e73_A_train... *
+2	202nt, >9ely_A_train... at +/100.00%
+>Cluster 56
+0	189nt, >4p9r_A_train... at +/100.00%
+1	132nt, >6g7z_A_train... at +/100.00%
+2	190nt, >6gyv_A_train... *
+>Cluster 57
+0	188nt, >4p8z_A_train... *
+>Cluster 58
+0	185nt, >4r4p_A_test... at +/98.38%
+1	185nt, >4r4v_A_val... at +/99.46%
+2	186nt, >5v3i_A_train... *
+>Cluster 59
+0	185nt, >8fw4_Z_train... *
+>Cluster 60
+0	173nt, >3dig_X_train... *
+1	173nt, >3dil_A_train... at +/100.00%
+2	173nt, >3dim_A_train... at +/100.00%
+3	173nt, >3dio_X_train... at +/100.00%
+4	173nt, >3diq_A_train... at +/100.00%
+5	172nt, >3dir_A_train... at +/100.00%
+6	173nt, >3dis_A_train... at +/100.00%
+7	173nt, >3dix_A_train... at +/100.00%
+8	172nt, >3diy_A_test... at +/100.00%
+9	173nt, >3diz_A_train... at +/100.00%
+10	173nt, >3dj0_A_train... at +/100.00%
+11	173nt, >3dj2_A_train... at +/100.00%
+>Cluster 61
+0	171nt, >6wll_A_test... *
+1	171nt, >6wlm_A_test... at +/100.00%
+>Cluster 62
+0	169nt, >7sam_A_train... *
+1	169nt, >8zmh_A_train... at +/100.00%
+>Cluster 63
+0	160nt, >6ufg_A_train... at +/99.38%
+1	165nt, >6ufh_A_train... *
+>Cluster 64
+0	161nt, >3d0u_A_train... *
+1	161nt, >3d0x_A_train... at +/100.00%
+2	161nt, >4erj_A_train... at +/100.00%
+3	161nt, >4erl_A_train... at +/100.00%
+>Cluster 65
+0	153nt, >2qbz_X_train... at +/100.00%
+1	161nt, >3pdr_X_train... *
+>Cluster 66
+0	161nt, >4gxy_A_test... *
+>Cluster 67
+0	156nt, >8qo4_A_train... *
+1	135nt, >8uyk_A_train... at +/98.52%
+2	135nt, >8uyl_A_train... at +/98.52%
+3	135nt, >8uym_A_train... at +/98.52%
+>Cluster 68
+0	155nt, >1u9s_A_train... *
+>Cluster 69
+0	19nt, >1esy_A_train... at +/100.00%
+1	155nt, >2n1q_A_train... *
+>Cluster 70
+0	155nt, >6pom_A_train... *
+>Cluster 71
+0	155nt, >9e75_A_train... *
+>Cluster 72
+0	152nt, >8t2p_B_train... *
+>Cluster 73
+0	150nt, >1nbs_B_val... *
+>Cluster 74
+0	147nt, >6vmy_A_test... *
+>Cluster 75
+0	14nt, >433d_A_train... at +/100.00%
+1	146nt, >8s95_C_train... *
+>Cluster 76
+0	145nt, >8qo5_A_train... *
+1	124nt, >8uys_A_train... at +/100.00%
+2	101nt, >9e9o_A_train... at +/96.04%
+3	101nt, >9e9q_A_train... at +/96.04%
+>Cluster 77
+0	143nt, >8uyp_A_train... *
+>Cluster 78
+0	142nt, >7lyg_A_train... *
+>Cluster 79
+0	139nt, >7lyf_A_train... *
+>Cluster 80
+0	14nt, >1roq_A_train... at +/100.00%
+1	136nt, >8sp9_C_train... *
+>Cluster 81
+0	135nt, >8uye_A_train... *
+1	135nt, >8uyg_A_train... at +/100.00%
+2	135nt, >8uyj_A_train... at +/100.00%
+>Cluster 82
+0	134nt, >7jrt_A_train... *
+>Cluster 83
+0	134nt, >8uo6_A_train... *
+>Cluster 84
+0	130nt, >6wlj_A_train... *
+1	130nt, >6wlk_A_train... at +/100.00%
+>Cluster 85
+0	129nt, >6vvj_A_test... *
+>Cluster 86
+0	129nt, >7jrs_A_train... *
+>Cluster 87
+0	120nt, >4qk8_A_test... at +/100.00%
+1	124nt, >6n5k_A_test... at +/97.58%
+2	124nt, >6n5n_A_val... at +/95.16%
+3	125nt, >6n5o_A_train... at +/96.00%
+4	126nt, >6n5p_A_test... at +/96.03%
+5	127nt, >6n5q_A_val... *
+6	122nt, >6n5s_A_train... at +/97.54%
+7	125nt, >6n5t_A_train... at +/100.00%
+8	123nt, >6wtl_A_val... at +/97.56%
+9	124nt, >6wtr_A_train... at +/96.77%
+>Cluster 88
+0	125nt, >7mlw_F_val... *
+>Cluster 89
+0	122nt, >2gcs_B_val... at +/99.18%
+1	122nt, >2gcv_B_train... at +/99.18%
+2	122nt, >2h0w_B_train... at +/99.18%
+3	122nt, >2h0x_B_val... at +/99.18%
+4	122nt, >2ho6_B_train... at +/99.18%
+5	122nt, >2ho7_B_train... at +/99.18%
+6	121nt, >3b4a_B_test... at +/100.00%
+7	123nt, >3b4b_B_train... *
+8	121nt, >3b4c_B_train... at +/99.17%
+9	121nt, >4meg_B_val... at +/96.69%
+10	122nt, >4meh_B_val... at +/96.72%
+>Cluster 90
+0	120nt, >9eww_A_test... *
+>Cluster 91
+0	119nt, >4kqy_A_train... *
+>Cluster 92
+0	119nt, >6ues_A_train... *
+1	119nt, >6uet_A_train... at +/100.00%
+2	119nt, >6wlq_A_train... at +/100.00%
+3	119nt, >6wlr_A_train... at +/100.00%
+>Cluster 93
+0	118nt, >4qka_A_test... *
+>Cluster 94
+0	118nt, >8qo3_A_train... *
+>Cluster 95
+0	118nt, >8vci_A_train... *
+>Cluster 96
+0	117nt, >4qln_A_train... *
+>Cluster 97
+0	116nt, >4qk9_A_val... *
+>Cluster 98
+0	24nt, >1lc6_A_train... at +/95.83%
+1	24nt, >1sy4_A_train... at +/95.83%
+2	24nt, >1syz_A_train... at +/95.83%
+3	24nt, >2kez_A_train... at +/95.83%
+4	24nt, >2kf0_A_train... at +/95.83%
+5	111nt, >2lkr_A_train... *
+>Cluster 99
+0	111nt, >6ol3_C_train... *
+>Cluster 100
+0	107nt, >3f2q_X_train... at +/100.00%
+1	107nt, >3f2t_X_train... at +/100.00%
+2	107nt, >3f2w_X_train... at +/100.00%
+3	107nt, >3f2x_X_train... at +/100.00%
+4	107nt, >3f2y_X_train... at +/100.00%
+5	107nt, >3f30_X_train... at +/100.00%
+6	56nt, >3f4e_Y_train... at +/98.21%
+7	56nt, >3f4g_Y_train... at +/98.21%
+8	56nt, >3f4h_Y_train... at +/98.21%
+9	56nt, >5c45_Y_train... at +/98.21%
+10	56nt, >5kx9_Y_train... at +/98.21%
+11	56nt, >6bfb_Y_train... at +/98.21%
+12	56nt, >6dn2_Y_train... at +/98.21%
+13	56nt, >6dn3_Y_train... at +/98.21%
+14	111nt, >6wjr_X_train... *
+15	109nt, >6wjs_X_train... at +/100.00%
+>Cluster 101
+0	107nt, >8syk_A_train... at +/99.07%
+1	111nt, >8t5o_A_train... *
+2	111nt, >8tkj_A_train... at +/100.00%
+3	107nt, >8tkk_A_train... at +/99.07%
+>Cluster 102
+0	109nt, >1foq_A_train... *
+1	69nt, >6qyz_D_train... at +/97.10%
+>Cluster 103
+0	108nt, >2nbx_A_train... *
+>Cluster 104
+0	108nt, >4qlm_A_train... *
+>Cluster 105
+0	108nt, >6ck4_B_train... *
+1	108nt, >6ck5_A_train... at +/98.15%
+>Cluster 106
+0	107nt, >4y1m_B_val... *
+>Cluster 107
+0	105nt, >6dlq_A_train... at +/100.00%
+1	106nt, >6dlr_A_train... *
+2	105nt, >6dls_A_train... at +/100.00%
+3	105nt, >6dlt_A_train... at +/100.00%
+4	105nt, >6dnr_A_train... at +/100.00%
+>Cluster 108
+0	105nt, >4wfl_A_test... *
+1	101nt, >4wfm_A_train... at +/100.00%
+>Cluster 109
+0	105nt, >9jgm_C_val... *
+>Cluster 110
+0	104nt, >9dib_B_train... *
+1	102nt, >9did_B_train... at +/99.02%
+>Cluster 111
+0	103nt, >7lva_A_val... *
+>Cluster 112
+0	102nt, >4frn_A_train... *
+>Cluster 113
+0	101nt, >1s9s_A_val... *
+>Cluster 114
+0	101nt, >1z43_A_train... *
+>Cluster 115
+0	101nt, >6mj0_A_train... *
+>Cluster 116
+0	100nt, >3suh_X_train... *
+1	100nt, >3sux_X_train... at +/100.00%
+2	100nt, >3suy_X_train... at +/100.00%
+>Cluster 117
+0	100nt, >4y1i_A_train... *
+1	100nt, >4y1j_A_train... at +/99.00%
+2	99nt, >6cb3_A_train... at +/100.00%
+3	100nt, >6cc1_B_train... at +/98.00%
+>Cluster 118
+0	100nt, >6cc3_A_train... *
+>Cluster 119
+0	100nt, >6dmc_A_train... *
+1	100nt, >6dmd_A_train... at +/100.00%
+2	100nt, >6dme_A_train... at +/100.00%
+>Cluster 120
+0	98nt, >4rzd_A_train... at +/98.98%
+1	95nt, >6xkn_A_val... at +/97.89%
+2	95nt, >8toz_A_train... at +/97.89%
+3	99nt, >8vpv_A_test... *
+>Cluster 121
+0	98nt, >6n2v_A_train... *
+>Cluster 122
+0	98nt, >6ufm_B_train... *
+>Cluster 123
+0	96nt, >4l81_A_train... at +/98.96%
+1	97nt, >4oqu_A_train... *
+>Cluster 124
+0	97nt, >6jxm_B_test... *
+>Cluster 125
+0	96nt, >9dig_A_train... *
+1	92nt, >9dii_A_train... at +/100.00%
+>Cluster 126
+0	94nt, >2gis_A_train... at +/96.81%
+1	94nt, >2ydh_A_train... at +/97.87%
+2	95nt, >2ygh_A_train... *
+3	94nt, >3gx2_A_train... at +/98.94%
+4	94nt, >3gx3_A_train... at +/98.94%
+5	94nt, >3gx5_A_train... at +/98.94%
+6	94nt, >3gx6_A_train... at +/98.94%
+7	94nt, >3iqn_A_train... at +/96.81%
+8	94nt, >3iqp_A_train... at +/97.87%
+9	94nt, >3iqr_A_train... at +/97.87%
+>Cluster 127
+0	95nt, >6dvk_H_train... *
+>Cluster 128
+0	94nt, >3gx7_A_train... *
+>Cluster 129
+0	94nt, >4aob_A_train... *
+>Cluster 130
+0	94nt, >4b5r_A_train... *
+1	93nt, >5fjc_A_test... at +/98.92%
+2	94nt, >5fk1_A_train... at +/98.94%
+3	94nt, >5fk2_A_train... at +/98.94%
+4	94nt, >5fk3_A_train... at +/97.87%
+5	93nt, >5fk4_A_train... at +/97.85%
+6	94nt, >5fk5_A_train... at +/98.94%
+7	94nt, >5fk6_A_train... at +/96.81%
+8	94nt, >5fkd_A_train... at +/97.87%
+9	94nt, >5fke_A_train... at +/97.87%
+10	94nt, >5fkf_A_train... at +/97.87%
+11	94nt, >5fkg_A_train... at +/97.87%
+12	94nt, >5fkh_A_train... at +/97.87%
+>Cluster 131
+0	94nt, >6xko_A_test... *
+>Cluster 132
+0	94nt, >7eaf_A_train... *
+>Cluster 133
+0	94nt, >7shx_A_train... *
+>Cluster 134
+0	92nt, >2n7m_X_test... *
+>Cluster 135
+0	92nt, >4rum_A_train... *
+>Cluster 136
+0	90nt, >5t83_A_train... *
+>Cluster 137
+0	90nt, >7kga_B_val... *
+>Cluster 138
+0	89nt, >3sd3_A_train... *
+1	89nt, >4lvv_A_train... at +/98.88%
+2	89nt, >4lvw_A_train... at +/98.88%
+3	89nt, >4lvx_A_train... at +/98.88%
+4	89nt, >4lvy_A_train... at +/98.88%
+5	89nt, >4lvz_A_train... at +/98.88%
+6	89nt, >4lw0_A_train... at +/98.88%
+7	89nt, >6q57_A_train... at +/98.88%
+8	89nt, >7kd1_A_train... at +/98.88%
+>Cluster 139
+0	88nt, >6xrz_A_train... *
+>Cluster 140
+0	87nt, >3owi_B_train... *
+1	86nt, >3oww_A_train... at +/100.00%
+2	86nt, >3owz_A_train... at +/100.00%
+3	87nt, >3ox0_B_train... at +/100.00%
+4	86nt, >3oxb_A_val... at +/98.84%
+5	86nt, >3oxd_A_train... at +/97.67%
+6	87nt, >3oxe_B_train... at +/100.00%
+7	86nt, >3oxj_A_val... at +/100.00%
+8	87nt, >3oxm_B_train... at +/100.00%
+>Cluster 141
+0	84nt, >9bz1_A_val... at +/100.00%
+1	87nt, >9bzc_A_val... *
+>Cluster 142
+0	87nt, >9j4o_A_test... *
+>Cluster 143
+0	86nt, >3a3a_A_val... *
+1	86nt, >3rg5_A_val... at +/98.84%
+>Cluster 144
+0	86nt, >7uz0_A_val... *
+>Cluster 145
+0	85nt, >4mgn_A_test... *
+>Cluster 146
+0	85nt, >7jnh_B_test... *
+>Cluster 147
+0	85nt, >7uq6_B_train... *
+>Cluster 148
+0	84nt, >4frg_B_train... *
+>Cluster 149
+0	84nt, >5u3g_B_val... *
+>Cluster 150
+0	84nt, >8hzl_A_train... *
+>Cluster 151
+0	78nt, >2gdi_X_train... at +/98.72%
+1	78nt, >2hoj_A_train... at +/100.00%
+2	79nt, >2hol_A_train... at +/100.00%
+3	80nt, >2hom_A_train... at +/100.00%
+4	83nt, >2hoo_A_train... *
+5	76nt, >2hop_A_train... at +/100.00%
+6	78nt, >4nya_A_train... at +/98.72%
+7	79nt, >4nyb_A_train... at +/100.00%
+8	79nt, >4nyc_A_train... at +/100.00%
+9	79nt, >4nyd_A_train... at +/100.00%
+10	78nt, >4nyg_A_train... at +/100.00%
+11	79nt, >7tda_A_train... at +/100.00%
+12	79nt, >7tdb_A_train... at +/100.00%
+13	79nt, >7tdc_A_train... at +/100.00%
+14	78nt, >7tzr_X_train... at +/98.72%
+15	78nt, >7tzs_X_train... at +/98.72%
+16	79nt, >7tzt_A_train... at +/100.00%
+17	79nt, >7tzu_A_train... at +/100.00%
+>Cluster 152
+0	83nt, >3t4b_A_val... *
+>Cluster 153
+0	83nt, >4p5j_A_test... *
+>Cluster 154
+0	83nt, >4yaz_R_val... *
+1	83nt, >4yb0_R_train... at +/100.00%
+>Cluster 155
+0	82nt, >6jq5_A_train... *
+1	81nt, >6jq6_U_train... at +/95.06%
+>Cluster 156
+0	82nt, >7kvt_B_train... *
+1	82nt, >7kvu_G_train... at +/100.00%
+2	82nt, >7kvv_D_train... at +/100.00%
+>Cluster 157
+0	81nt, >9j4n_A_train... *
+>Cluster 158
+0	80nt, >9c6k_X_train... *
+>Cluster 159
+0	80nt, >9ebp_A_train... *
+1	80nt, >9ebv_A_train... at +/100.00%
+2	80nt, >9ec4_M_train... at +/100.00%
+>Cluster 160
+0	79nt, >6cu1_A_test... *
+>Cluster 161
+0	78nt, >2hok_A_train... *
+1	78nt, >7td7_A_train... at +/97.44%
+2	72nt, >8f4o_A_train... at +/98.61%
+>Cluster 162
+0	77nt, >1p5o_A_train... *
+1	77nt, >1p5p_A_train... at +/100.00%
+>Cluster 163
+0	77nt, >2cky_A_train... *
+1	77nt, >3d2g_A_train... at +/100.00%
+2	77nt, >3d2v_A_train... at +/100.00%
+3	77nt, >3d2x_A_train... at +/100.00%
+>Cluster 164
+0	74nt, >4plx_A_train... at +/97.30%
+1	77nt, >6svs_A_train... *
+>Cluster 165
+0	77nt, >6ugg_A_train... *
+>Cluster 166
+0	77nt, >7kju_A_train... *
+>Cluster 167
+0	74nt, >1i9v_A_val... at +/100.00%
+1	76nt, >1zo3_A_train... *
+>Cluster 168
+0	17nt, >2jr4_A_train... at +/100.00%
+1	76nt, >2k4c_A_val... *
+2	76nt, >7eqj_A_val... at +/100.00%
+>Cluster 169
+0	76nt, >4jf2_A_val... *
+>Cluster 170
+0	76nt, >5d5l_A_val... *
+>Cluster 171
+0	76nt, >7ljy_B_train... *
+>Cluster 172
+0	75nt, >9e5h_A_train... at +/100.00%
+1	75nt, >9e5i_A_train... at +/100.00%
+2	75nt, >9e5j_A_train... at +/100.00%
+3	75nt, >9e5k_A_train... at +/100.00%
+4	75nt, >9e5l_A_train... at +/100.00%
+5	75nt, >9e5m_A_train... at +/100.00%
+6	75nt, >9e5o_A_train... at +/100.00%
+7	75nt, >9e5p_A_train... at +/100.00%
+8	75nt, >9e5q_A_train... at +/100.00%
+9	75nt, >9e5r_A_train... at +/100.00%
+10	75nt, >9e5s_A_train... at +/100.00%
+11	75nt, >9e5t_A_train... at +/100.00%
+12	75nt, >9elr_A_train... at +/100.00%
+13	76nt, >9mfh_A_train... *
+>Cluster 173
+0	74nt, >3q3z_V_train... *
+>Cluster 174
+0	17nt, >1j4y_A_train... at +/100.00%
+1	17nt, >1kka_A_train... at +/100.00%
+2	73nt, >3l0u_A_test... *
+>Cluster 175
+0	73nt, >4znp_A_val... *
+>Cluster 176
+0	73nt, >9obm_A_val... *
+>Cluster 177
+0	72nt, >3cw5_A_train... *
+1	72nt, >3cw6_A_train... at +/100.00%
+2	71nt, >5l4o_A_train... at +/97.18%
+>Cluster 178
+0	71nt, >1y26_X_train... *
+>Cluster 179
+0	71nt, >2oiu_P_val... *
+>Cluster 180
+0	71nt, >3la5_A_train... *
+1	71nt, >4lx5_A_train... at +/97.18%
+2	71nt, >4lx6_A_train... at +/98.59%
+>Cluster 181
+0	71nt, >4tzx_X_train... *
+1	71nt, >4tzy_X_train... at +/100.00%
+2	71nt, >4xnr_X_train... at +/100.00%
+3	68nt, >5e54_B_train... at +/100.00%
+4	68nt, >5swd_B_train... at +/100.00%
+5	71nt, >5swe_X_train... at +/100.00%
+6	69nt, >5uza_X_val... at +/98.55%
+7	71nt, >6vwt_A_train... at +/100.00%
+8	71nt, >6vwv_A_train... at +/100.00%
+>Cluster 182
+0	71nt, >5kpy_A_train... *
+>Cluster 183
+0	71nt, >5tpy_A_train... *
+1	70nt, >7u4a_A_train... at +/95.71%
+>Cluster 184
+0	71nt, >8fcs_A_train... *
+>Cluster 185
+0	71nt, >8keb_A_train... *
+1	71nt, >8ked_A_train... at +/100.00%
+2	71nt, >8khh_A_train... at +/98.59%
+3	69nt, >8z8q_A_train... at +/98.55%
+>Cluster 186
+0	71nt, >8v1h_A_train... *
+>Cluster 187
+0	71nt, >9ljn_A_train... *
+1	71nt, >9lkc_A_train... at +/100.00%
+2	70nt, >9lke_A_train... at +/100.00%
+3	71nt, >9lkf_A_train... at +/100.00%
+4	71nt, >9lmc_A_train... at +/100.00%
+5	71nt, >9v4u_A_train... at +/100.00%
+6	70nt, >9v4v_A_train... at +/100.00%
+7	71nt, >9v4x_A_train... at +/100.00%
+8	71nt, >9v4y_A_train... at +/100.00%
+9	70nt, >9v4z_A_train... at +/100.00%
+10	71nt, >9v50_A_train... at +/100.00%
+11	69nt, >9v51_A_train... at +/100.00%
+>Cluster 188
+0	63nt, >9lku_X_test... at +/96.83%
+1	71nt, >9lkv_X_test... *
+2	63nt, >9lkw_X_test... at +/96.83%
+3	63nt, >9uw0_X_val... at +/96.83%
+>Cluster 189
+0	70nt, >1kxk_A_train... *
+1	34nt, >1r2p_A_train... at +/100.00%
+2	34nt, >2lps_A_train... at +/100.00%
+>Cluster 190
+0	70nt, >2n8v_X_test... *
+>Cluster 191
+0	63nt, >4mgm_A_train... at +/98.41%
+1	70nt, >6pmo_B_test... *
+>Cluster 192
+0	70nt, >7umc_A_train... *
+>Cluster 193
+0	67nt, >9hrd_A_train... at +/100.00%
+1	70nt, >9hrf_A_train... *
+2	68nt, >9hrg_A_train... at +/98.53%
+>Cluster 194
+0	69nt, >3ivn_A_val... *
+>Cluster 195
+0	69nt, >5ob3_A_val... *
+1	69nt, >7l0z_G_val... at +/100.00%
+>Cluster 196
+0	69nt, >9iwf_A_train... *
+1	69nt, >9iwg_A_train... at +/95.65%
+>Cluster 197
+0	68nt, >2mqt_A_test... *
+>Cluster 198
+0	68nt, >2n6w_A_train... *
+>Cluster 199
+0	68nt, >2qus_A_train... *
+1	57nt, >2quw_B_val... at +/100.00%
+>Cluster 200
+0	68nt, >4pqv_A_train... *
+>Cluster 201
+0	68nt, >6p2h_A_test... *
+>Cluster 202
+0	30nt, >8scf_A_train... at +/100.00%
+1	68nt, >8sch_A_train... *
+>Cluster 203
+0	67nt, >7v9e_A_train... at +/97.01%
+1	68nt, >8zau_A_test... *
+>Cluster 204
+0	67nt, >1vtq_A_train... *
+1	65nt, >2tra_A_train... at +/100.00%
+2	64nt, >3tra_A_train... at +/100.00%
+>Cluster 205
+0	65nt, >2b57_A_train... at +/95.38%
+1	67nt, >2ees_A_train... *
+2	67nt, >2eet_A_train... at +/97.01%
+3	67nt, >2eew_A_train... at +/95.52%
+4	67nt, >2g9c_A_train... at +/95.52%
+5	65nt, >2xnw_A_train... at +/95.38%
+6	65nt, >2xnz_A_train... at +/95.38%
+7	65nt, >2xo0_A_train... at +/95.38%
+8	67nt, >3fo6_A_train... at +/97.01%
+9	67nt, >3g4m_A_train... at +/97.01%
+10	67nt, >3gao_A_train... at +/97.01%
+11	67nt, >3ger_A_train... at +/97.01%
+12	67nt, >3ges_A_train... at +/95.52%
+13	65nt, >3gog_A_train... at +/96.92%
+14	67nt, >3got_A_train... at +/95.52%
+15	67nt, >4fe5_B_train... at +/97.01%
+16	67nt, >4fej_B_train... at +/95.52%
+17	67nt, >5c7u_B_train... at +/97.01%
+18	67nt, >6ubu_B_train... at +/97.01%
+19	67nt, >6uc7_B_train... at +/97.01%
+20	67nt, >6uc8_B_train... at +/97.01%
+21	67nt, >6uc9_B_train... at +/97.01%
+>Cluster 206
+0	67nt, >2eeu_A_train... *
+1	67nt, >2eev_A_train... at +/97.01%
+>Cluster 207
+0	67nt, >2nc1_A_test... *
+>Cluster 208
+0	67nt, >3ds7_A_train... *
+>Cluster 209
+0	67nt, >3rkf_A_train... *
+>Cluster 210
+0	67nt, >3ski_B_train... *
+1	64nt, >3skl_A_train... at +/96.88%
+2	64nt, >3skr_A_train... at +/96.88%
+3	64nt, >3skt_A_train... at +/96.88%
+4	64nt, >3skw_A_train... at +/96.88%
+5	66nt, >3skz_A_train... at +/100.00%
+6	66nt, >3slm_A_train... at +/100.00%
+7	66nt, >3slq_A_train... at +/100.00%
+>Cluster 211
+0	67nt, >4fel_B_train... *
+1	67nt, >4fen_B_train... at +/98.51%
+2	67nt, >4feo_B_train... at +/98.51%
+3	67nt, >4fep_B_train... at +/97.01%
+>Cluster 212
+0	67nt, >6y3g_F_val... *
+>Cluster 213
+0	49nt, >9bci_A_val... at +/95.92%
+1	67nt, >9blm_A_train... *
+>Cluster 214
+0	66nt, >1y27_X_train... *
+>Cluster 215
+0	66nt, >2l1f_B_train... *
+>Cluster 216
+0	66nt, >3r4f_A_train... *
+>Cluster 217
+0	66nt, >7lyj_A_train... *
+1	66nt, >7mky_A_train... at +/100.00%
+>Cluster 218
+0	65nt, >2xo1_A_train... *
+1	63nt, >3fo4_A_train... at +/100.00%
+>Cluster 219
+0	65nt, >5c7w_C_val... *
+>Cluster 220
+0	64nt, >1yfg_A_test... *
+>Cluster 221
+0	64nt, >4xw7_A_train... *
+1	64nt, >4xwf_A_train... at +/100.00%
+2	64nt, >8vqv_A_train... at +/100.00%
+3	64nt, >8vvj_A_train... at +/100.00%
+>Cluster 222
+0	62nt, >5btp_B_train... at +/100.00%
+1	62nt, >6od9_A_train... at +/100.00%
+2	64nt, >6wzr_A_train... *
+3	62nt, >6wzs_A_train... at +/100.00%
+>Cluster 223
+0	61nt, >7vnv_A_test... at +/98.36%
+1	64nt, >7vnw_A_test... *
+>Cluster 224
+0	62nt, >1ehz_A_val... *
+1	62nt, >1evv_A_train... at +/100.00%
+2	62nt, >1fcw_A_train... at +/100.00%
+3	62nt, >1tn1_A_train... at +/100.00%
+4	62nt, >1tn2_A_train... at +/100.00%
+5	62nt, >1tra_A_train... at +/100.00%
+6	61nt, >2z9q_A_train... at +/100.00%
+7	62nt, >4tna_A_train... at +/100.00%
+8	62nt, >4tra_A_train... at +/100.00%
+9	62nt, >6tna_A_train... at +/100.00%
+>Cluster 225
+0	62nt, >2n3q_A_train... *
+1	62nt, >2n3r_A_train... at +/100.00%
+>Cluster 226
+0	61nt, >1fir_A_val... *
+>Cluster 227
+0	61nt, >6var_A_train... *
+>Cluster 228
+0	60nt, >7kub_A_test... *
+>Cluster 229
+0	59nt, >2miy_A_train... *
+>Cluster 230
+0	57nt, >8k1e_A_val... at +/100.00%
+1	59nt, >8vt5_A_train... *
+>Cluster 231
+0	58nt, >2m58_A_train... *
+>Cluster 232
+0	57nt, >5iem_A_test... *
+1	56nt, >5lys_A_train... at +/100.00%
+2	57nt, >5lyu_A_val... at +/98.25%
+3	56nt, >5lyv_A_train... at +/100.00%
+>Cluster 233
+0	56nt, >2yie_Z_train... at +/100.00%
+1	56nt, >2yif_Z_train... at +/100.00%
+2	57nt, >6dn1_Z_train... *
+>Cluster 234
+0	57nt, >6prv_A_train... *
+>Cluster 235
+0	57nt, >8k2z_A_train... *
+1	56nt, >8v1i_A_train... at +/98.21%
+>Cluster 236
+0	56nt, >9de6_A_test... at +/96.43%
+1	57nt, >9de7_A_test... *
+2	56nt, >9de8_A_train... at +/98.21%
+>Cluster 237
+0	56nt, >2lc8_A_test... *
+>Cluster 238
+0	56nt, >4jrc_A_val... *
+>Cluster 239
+0	56nt, >4rge_A_train... *
+1	56nt, >4rgf_A_train... at +/100.00%
+2	53nt, >5dun_A_train... at +/98.11%
+>Cluster 240
+0	56nt, >6noa_A_train... *
+>Cluster 241
+0	56nt, >8k85_A_val... *
+>Cluster 242
+0	56nt, >9fn2_A_train... *
+1	56nt, >9fn3_A_test... at +/100.00%
+>Cluster 243
+0	55nt, >1p5m_A_train... *
+>Cluster 244
+0	55nt, >2kzl_A_train... *
+>Cluster 245
+0	55nt, >4k27_U_train... *
+1	32nt, >6az4_A_train... at +/96.88%
+>Cluster 246
+0	55nt, >6mci_A_train... *
+>Cluster 247
+0	55nt, >8hb8_A_train... *
+>Cluster 248
+0	55nt, >9cfn_A_train... *
+>Cluster 249
+0	53nt, >2mhi_A_train... *
+>Cluster 250
+0	53nt, >2n4l_A_test... *
+>Cluster 251
+0	52nt, >2qwy_A_test... *
+>Cluster 252
+0	52nt, >3e5c_A_train... *
+1	52nt, >3e5e_A_train... at +/100.00%
+2	52nt, >3e5f_A_train... at +/100.00%
+>Cluster 253
+0	52nt, >3vrs_A_train... *
+1	52nt, >4en5_A_train... at +/100.00%
+2	51nt, >4ena_A_train... at +/100.00%
+3	51nt, >4enb_A_train... at +/100.00%
+4	52nt, >4enc_A_train... at +/100.00%
+>Cluster 254
+0	52nt, >4oji_A_val... *
+>Cluster 255
+0	52nt, >6tb7_A_train... *
+1	51nt, >6tf0_A_train... at +/98.04%
+2	52nt, >6tf1_A_train... at +/100.00%
+3	52nt, >6tf2_A_train... at +/100.00%
+4	52nt, >6tf3_A_train... at +/100.00%
+5	52nt, >6tfe_A_train... at +/100.00%
+6	52nt, >6tff_A_train... at +/100.00%
+7	52nt, >6tfg_A_train... at +/100.00%
+8	51nt, >6tfh_A_train... at +/98.04%
+>Cluster 256
+0	50nt, >8k0y_A_train... at +/98.00%
+1	52nt, >8k30_A_train... *
+>Cluster 257
+0	52nt, >8xze_A_train... *
+1	52nt, >8xzk_A_train... at +/100.00%
+2	52nt, >8xzl_A_train... at +/100.00%
+3	52nt, >8xzm_A_train... at +/100.00%
+4	52nt, >8xzn_A_train... at +/100.00%
+5	52nt, >8xzo_A_train... at +/100.00%
+6	52nt, >8xzp_A_train... at +/100.00%
+7	52nt, >8xzq_A_train... at +/100.00%
+8	52nt, >8xzr_A_train... at +/100.00%
+9	52nt, >8xzw_A_train... at +/100.00%
+>Cluster 258
+0	51nt, >3npq_A_train... *
+>Cluster 259
+0	51nt, >7d7w_A_train... *
+1	51nt, >7d7x_A_train... at +/100.00%
+2	51nt, >7d7y_A_train... at +/100.00%
+3	51nt, >7d7z_A_train... at +/100.00%
+>Cluster 260
+0	51nt, >7k16_P_train... *
+>Cluster 261
+0	51nt, >7oa3_A_train... *
+1	51nt, >7oav_A_train... at +/100.00%
+2	51nt, >7oaw_A_train... at +/100.00%
+3	51nt, >7oax_A_train... at +/100.00%
+>Cluster 262
+0	51nt, >9g4q_A_train... *
+>Cluster 263
+0	50nt, >3npn_A_train... *
+>Cluster 264
+0	50nt, >6qn3_A_train... *
+>Cluster 265
+0	49nt, >5ktj_A_train... at +/100.00%
+1	50nt, >6uey_A_val... *
+2	50nt, >6uf1_A_val... at +/100.00%
+3	50nt, >6ufj_A_train... at +/96.00%
+4	50nt, >6ufk_A_train... at +/96.00%
+>Cluster 266
+0	50nt, >7d81_A_train... *
+1	50nt, >7d82_A_train... at +/100.00%
+>Cluster 267
+0	50nt, >7jrr_A_test... *
+>Cluster 268
+0	50nt, >8hba_B_train... *
+>Cluster 269
+0	49nt, >1rmn_A_train... *
+>Cluster 270
+0	49nt, >2lu0_A_train... *
+>Cluster 271
+0	49nt, >6mxq_A_train... *
+>Cluster 272
+0	49nt, >6r47_A_train... *
+>Cluster 273
+0	48nt, >7eog_A_train... at +/100.00%
+1	48nt, >7eoh_A_train... at +/100.00%
+2	49nt, >7eoi_A_train... *
+3	48nt, >7eoj_A_train... at +/100.00%
+4	48nt, >7eok_A_train... at +/100.00%
+5	48nt, >7eol_A_train... at +/100.00%
+6	48nt, >7eom_A_train... at +/100.00%
+7	48nt, >7eon_A_train... at +/100.00%
+8	48nt, >7eoo_A_train... at +/100.00%
+9	48nt, >7eop_A_train... at +/100.00%
+>Cluster 274
+0	49nt, >7jju_A_val... *
+>Cluster 275
+0	49nt, >7wi9_V_train... *
+1	49nt, >7wia_V_val... at +/97.96%
+2	49nt, >7wib_V_train... at +/100.00%
+3	49nt, >7wie_V_train... at +/100.00%
+4	49nt, >7wif_V_train... at +/100.00%
+5	49nt, >7wii_V_train... at +/100.00%
+>Cluster 276
+0	49nt, >8eyu_A_train... *
+1	49nt, >8eyw_B_train... at +/100.00%
+2	49nt, >8f0n_B_train... at +/95.92%
+>Cluster 277
+0	49nt, >8k7w_A_train... *
+>Cluster 278
+0	30nt, >1na2_A_train... at +/100.00%
+1	47nt, >1ymo_A_train... at +/100.00%
+2	48nt, >2k95_A_train... *
+3	47nt, >2k96_A_train... at +/100.00%
+>Cluster 279
+0	48nt, >2ke6_A_train... *
+1	48nt, >2kur_A_train... at +/95.83%
+>Cluster 280
+0	48nt, >2kuu_A_train... *
+>Cluster 281
+0	48nt, >2kuv_A_train... *
+>Cluster 282
+0	48nt, >2kuw_A_train... *
+>Cluster 283
+0	48nt, >2m8k_A_val... *
+>Cluster 284
+0	48nt, >5dh7_A_val... *
+1	48nt, >5eao_A_train... at +/97.92%
+2	48nt, >5eaq_A_train... at +/97.92%
+>Cluster 285
+0	48nt, >6gzk_A_train... *
+1	48nt, >6gzr_A_train... at +/100.00%
+>Cluster 286
+0	48nt, >9bun_A_train... *
+1	48nt, >9dxl_A_train... at +/100.00%
+>Cluster 287
+0	47nt, >2mtj_A_train... *
+1	47nt, >2mtk_A_train... at +/100.00%
+>Cluster 288
+0	47nt, >4qjh_B_train... *
+>Cluster 289
+0	47nt, >5kh8_A_train... *
+>Cluster 290
+0	47nt, >5une_A_train... *
+>Cluster 291
+0	23nt, >1jtj_A_train... at +/95.65%
+1	23nt, >1ju1_A_train... at +/100.00%
+2	23nt, >1xpe_A_train... at +/100.00%
+3	23nt, >2b8r_A_train... at +/100.00%
+4	23nt, >2oij_A_train... at +/100.00%
+5	23nt, >2oiy_A_train... at +/100.00%
+6	23nt, >2oj0_A_train... at +/100.00%
+7	23nt, >3far_A_train... at +/100.00%
+8	47nt, >6bg9_A_train... *
+>Cluster 292
+0	47nt, >6fz0_A_test... *
+>Cluster 293
+0	46nt, >1xjr_A_test... *
+>Cluster 294
+0	46nt, >4qjd_B_val... *
+>Cluster 295
+0	46nt, >4ts0_Y_train... *
+1	46nt, >4ts2_Y_train... at +/100.00%
+>Cluster 296
+0	46nt, >6c27_A_val... *
+>Cluster 297
+0	46nt, >8its_A_train... *
+>Cluster 298
+0	45nt, >7elp_A_train... at +/100.00%
+1	45nt, >7elq_A_train... at +/100.00%
+2	45nt, >7elr_A_train... at +/100.00%
+3	45nt, >7els_A_train... at +/100.00%
+4	46nt, >8q6n_A_train... *
+>Cluster 299
+0	46nt, >9g4r_A_train... *
+>Cluster 300
+0	22nt, >1pjy_A_train... at +/100.00%
+1	45nt, >1z2j_A_train... *
+2	22nt, >2juk_A_train... at +/100.00%
+3	45nt, >2l94_A_train... at +/100.00%
+>Cluster 301
+0	45nt, >6d3p_A_test... *
+>Cluster 302
+0	45nt, >8eyv_A_train... *
+>Cluster 303
+0	44nt, >1a60_A_val... *
+>Cluster 304
+0	44nt, >1duh_A_val... *
+>Cluster 305
+0	44nt, >8cq1_A_train... *
+>Cluster 306
+0	43nt, >1cq5_A_train... *
+1	43nt, >1cql_A_train... at +/100.00%
+>Cluster 307
+0	43nt, >2adt_A_train... *
+1	43nt, >2i7e_A_train... at +/100.00%
+2	43nt, >2i7z_A_train... at +/100.00%
+3	43nt, >2jyf_A_train... at +/100.00%
+4	43nt, >2jyh_A_train... at +/100.00%
+5	43nt, >2jyj_A_train... at +/100.00%
+>Cluster 308
+0	43nt, >2fey_A_val... *
+>Cluster 309
+0	43nt, >2n6x_A_train... *
+>Cluster 310
+0	43nt, >5btm_A_train... *
+>Cluster 311
+0	43nt, >6hag_A_train... *
+>Cluster 312
+0	43nt, >7uga_A_train... *
+>Cluster 313
+0	43nt, >7v06_A_val... *
+>Cluster 314
+0	42nt, >1kh6_A_test... *
+>Cluster 315
+0	42nt, >1mnx_A_train... *
+>Cluster 316
+0	42nt, >2kx8_A_train... *
+>Cluster 317
+0	42nt, >2l2j_A_val... *
+>Cluster 318
+0	42nt, >2n6t_A_train... *
+>Cluster 319
+0	42nt, >2oeu_A_val... *
+1	42nt, >3zd4_A_train... at +/97.62%
+2	42nt, >3zd5_A_test... at +/100.00%
+3	42nt, >3zp8_A_test... at +/100.00%
+>Cluster 320
+0	42nt, >5m0h_A_train... *
+>Cluster 321
+0	21nt, >1a4d_A_train... at +/100.00%
+1	41nt, >1a51_A_train... *
+>Cluster 322
+0	41nt, >1zc5_A_train... *
+>Cluster 323
+0	41nt, >2au4_A_train... *
+>Cluster 324
+0	41nt, >5v16_A_train... *
+1	41nt, >6xb7_A_train... at +/100.00%
+>Cluster 325
+0	41nt, >5v17_A_train... *
+>Cluster 326
+0	41nt, >6w3m_A_test... *
+>Cluster 327
+0	41nt, >8z8u_A_train... *
+1	41nt, >8z9k_A_train... at +/97.56%
+>Cluster 328
+0	40nt, >2hua_A_train... *
+>Cluster 329
+0	40nt, >2nbz_A_train... *
+>Cluster 330
+0	40nt, >5nwq_A_train... *
+1	40nt, >5ny8_A_train... at +/100.00%
+2	39nt, >5nz3_A_train... at +/100.00%
+3	39nt, >5nz6_A_val... at +/97.44%
+4	39nt, >5nzd_A_train... at +/100.00%
+5	39nt, >5o62_A_train... at +/100.00%
+6	39nt, >5o69_A_test... at +/100.00%
+>Cluster 331
+0	40nt, >7umd_A_train... *
+>Cluster 332
+0	23nt, >1xp7_A_train... at +/95.65%
+1	16nt, >2d17_A_train... at +/100.00%
+2	17nt, >2d18_A_train... at +/100.00%
+3	17nt, >2d19_A_train... at +/100.00%
+4	39nt, >2d1a_A_train... *
+5	39nt, >2d1b_A_train... at +/100.00%
+6	23nt, >2qek_A_train... at +/95.65%
+7	23nt, >3c44_A_train... at +/95.65%
+>Cluster 333
+0	39nt, >2mxl_A_val... *
+>Cluster 334
+0	39nt, >2nby_A_train... *
+>Cluster 335
+0	39nt, >3p22_A_val... *
+>Cluster 336
+0	38nt, >1a9l_A_train... *
+1	38nt, >1u3k_A_train... at +/100.00%
+2	38nt, >2a9l_A_train... at +/100.00%
+>Cluster 337
+0	38nt, >1b36_A_val... *
+>Cluster 338
+0	38nt, >1m5l_A_train... *
+>Cluster 339
+0	38nt, >1q8n_A_test... *
+>Cluster 340
+0	38nt, >1txs_A_train... *
+>Cluster 341
+0	38nt, >1ykq_B_train... *
+1	38nt, >1ykv_B_train... at +/100.00%
+>Cluster 342
+0	38nt, >2khy_A_train... *
+>Cluster 343
+0	38nt, >2ktz_A_train... *
+1	38nt, >2ku0_A_train... at +/100.00%
+>Cluster 344
+0	38nt, >2zy6_A_train... *
+>Cluster 345
+0	38nt, >6e8s_A_train... *
+1	38nt, >6up0_C_train... at +/100.00%
+>Cluster 346
+0	38nt, >7rwr_A_val... *
+>Cluster 347
+0	37nt, >2lhp_A_test... *
+>Cluster 348
+0	37nt, >2lub_A_test... *
+>Cluster 349
+0	37nt, >6e8u_B_train... *
+1	37nt, >6pq7_C_train... at +/100.00%
+>Cluster 350
+0	37nt, >6u79_A_test... *
+>Cluster 351
+0	36nt, >1n8x_A_train... *
+>Cluster 352
+0	36nt, >1raw_A_train... *
+>Cluster 353
+0	36nt, >2fdt_A_test... *
+>Cluster 354
+0	36nt, >2l1v_A_train... *
+>Cluster 355
+0	36nt, >2n6s_A_test... *
+>Cluster 356
+0	36nt, >2tpk_A_train... *
+>Cluster 357
+0	19nt, >1x9c_D_train... at +/100.00%
+1	19nt, >1x9k_D_train... at +/100.00%
+2	19nt, >1zft_D_train... at +/100.00%
+3	19nt, >1zfv_D_train... at +/100.00%
+4	19nt, >1zfx_D_train... at +/100.00%
+5	19nt, >2bcy_D_train... at +/100.00%
+6	19nt, >2bcz_D_test... at +/100.00%
+7	19nt, >2fgp_D_train... at +/100.00%
+8	19nt, >2npy_D_test... at +/100.00%
+9	19nt, >2npz_D_train... at +/100.00%
+10	19nt, >2oue_D_train... at +/100.00%
+11	19nt, >2p7f_D_test... at +/100.00%
+12	19nt, >3gs1_D_train... at +/100.00%
+13	36nt, >3gs5_C_train... *
+14	19nt, >3gs8_D_train... at +/100.00%
+15	19nt, >4g6r_D_train... at +/100.00%
+>Cluster 358
+0	35nt, >5bjo_E_train... at +/100.00%
+1	36nt, >5bjp_E_train... *
+2	35nt, >6e80_A_train... at +/100.00%
+3	36nt, >6e81_A_train... at +/100.00%
+4	36nt, >6e82_A_train... at +/97.22%
+5	36nt, >6e84_A_train... at +/100.00%
+>Cluster 359
+0	36nt, >5kqe_A_train... *
+>Cluster 360
+0	36nt, >6c63_A_train... *
+1	36nt, >6c64_A_train... at +/100.00%
+2	36nt, >6c65_A_train... at +/97.22%
+3	36nt, >8u5k_A_train... at +/100.00%
+4	36nt, >8u5p_A_train... at +/100.00%
+5	36nt, >8u60_A_train... at +/97.22%
+6	36nt, >8vxx_A_train... at +/100.00%
+7	36nt, >8vxz_A_train... at +/100.00%
+8	36nt, >8vy0_A_train... at +/100.00%
+9	36nt, >8vy1_A_train... at +/100.00%
+>Cluster 361
+0	36nt, >6e8t_C_train... *
+1	36nt, >8u5j_A_train... at +/97.22%
+>Cluster 362
+0	36nt, >7dd4_A_test... *
+>Cluster 363
+0	36nt, >7k4l_A_val... *
+>Cluster 364
+0	36nt, >8hzd_A_test... *
+1	35nt, >8hze_A_train... at +/100.00%
+2	35nt, >8hzf_A_train... at +/100.00%
+3	35nt, >8hzj_A_train... at +/100.00%
+4	36nt, >8hzk_A_train... at +/100.00%
+5	35nt, >8hzm_A_train... at +/100.00%
+>Cluster 365
+0	36nt, >8s6w_A_train... *
+1	36nt, >9h82_B_test... at +/100.00%
+2	36nt, >9h86_A_train... at +/100.00%
+3	36nt, >9h8a_A_train... at +/100.00%
+>Cluster 366
+0	36nt, >8u5r_A_train... *
+1	36nt, >8u5t_A_train... at +/100.00%
+2	36nt, >8u5z_A_train... at +/100.00%
+>Cluster 367
+0	36nt, >9h83_C_train... *
+>Cluster 368
+0	35nt, >1ddy_A_val... *
+1	35nt, >1et4_A_val... at +/100.00%
+>Cluster 369
+0	35nt, >1fmn_A_val... *
+>Cluster 370
+0	35nt, >2gm0_A_train... *
+>Cluster 371
+0	35nt, >2l3e_A_test... *
+>Cluster 372
+0	35nt, >2m57_A_train... *
+>Cluster 373
+0	35nt, >2pcv_A_test... *
+1	35nt, >2pcw_A_test... at +/100.00%
+>Cluster 374
+0	35nt, >4fnj_A_train... *
+1	34nt, >4pcj_A_val... at +/100.00%
+2	22nt, >6u8f_A_train... at +/100.00%
+>Cluster 375
+0	35nt, >9hro_A_train... *
+>Cluster 376
+0	34nt, >1nbk_A_test... *
+>Cluster 377
+0	34nt, >1p5n_A_train... *
+>Cluster 378
+0	34nt, >1r7w_A_train... *
+1	34nt, >1r7z_A_train... at +/97.06%
+>Cluster 379
+0	34nt, >1rnk_A_train... *
+>Cluster 380
+0	34nt, >1t28_A_val... *
+>Cluster 381
+0	34nt, >1yls_B_test... *
+>Cluster 382
+0	34nt, >2euy_A_train... *
+1	34nt, >2p89_A_train... at +/100.00%
+>Cluster 383
+0	34nt, >2jtp_A_train... *
+>Cluster 384
+0	34nt, >2kpv_A_train... *
+>Cluster 385
+0	34nt, >2rvo_A_train... *
+>Cluster 386
+0	34nt, >7rex_A_test... *
+1	34nt, >8fb3_A_test... at +/100.00%
+>Cluster 387
+0	33nt, >1eht_A_train... *
+1	33nt, >1o15_A_train... at +/100.00%
+2	33nt, >8d28_B_train... at +/96.97%
+3	33nt, >8d2a_A_train... at +/96.97%
+4	33nt, >8d2b_A_train... at +/96.97%
+5	33nt, >8d5l_A_train... at +/96.97%
+6	33nt, >8d5o_A_train... at +/96.97%
+7	33nt, >9ja7_A_train... at +/96.97%
+8	33nt, >9ja9_A_train... at +/96.97%
+>Cluster 388
+0	33nt, >1f1t_A_train... *
+>Cluster 389
+0	33nt, >2jxv_A_train... *
+>Cluster 390
+0	33nt, >3fu2_B_train... *
+>Cluster 391
+0	33nt, >3gca_A_train... *
+1	33nt, >3q50_A_train... at +/100.00%
+2	32nt, >3q51_A_train... at +/100.00%
+3	33nt, >6vuh_A_train... at +/100.00%
+4	33nt, >6vui_A_train... at +/100.00%
+5	33nt, >7e9i_A_train... at +/100.00%
+>Cluster 392
+0	33nt, >5lwj_A_test... *
+>Cluster 393
+0	33nt, >6e1s_A_train... *
+1	33nt, >6e1t_A_train... at +/96.97%
+2	33nt, >6e1u_A_train... at +/100.00%
+3	33nt, >6e1v_A_train... at +/96.97%
+4	33nt, >6e1w_A_train... at +/100.00%
+5	33nt, >7e9e_A_train... at +/100.00%
+6	33nt, >8yam_A_train... at +/96.97%
+7	33nt, >8yan_A_train... at +/96.97%
+>Cluster 394
+0	33nt, >6vu1_A_train... *
+>Cluster 395
+0	33nt, >9fo9_A_train... *
+>Cluster 396
+0	33nt, >9g4p_B_test... *
+>Cluster 397
+0	32nt, >1kaj_A_train... *
+>Cluster 398
+0	32nt, >1xhp_A_train... *
+>Cluster 399
+0	32nt, >1z31_A_test... *
+>Cluster 400
+0	32nt, >2li4_A_train... *
+>Cluster 401
+0	31nt, >1jo7_A_train... at +/100.00%
+1	31nt, >1mfy_A_train... at +/96.77%
+2	32nt, >2lwk_A_train... *
+>Cluster 402
+0	32nt, >4rbq_A_train... *
+1	32nt, >5da6_A_train... at +/100.00%
+>Cluster 403
+0	32nt, >5a17_A_train... *
+1	32nt, >5a18_A_train... at +/100.00%
+>Cluster 404
+0	30nt, >1aju_A_train... at +/100.00%
+1	30nt, >1akx_A_train... at +/100.00%
+2	31nt, >1lvj_A_train... *
+3	29nt, >1qd3_A_train... at +/96.55%
+>Cluster 405
+0	31nt, >1ylg_A_train... *
+1	31nt, >1ync_A_train... at +/100.00%
+2	31nt, >1yne_A_train... at +/96.77%
+3	31nt, >1yng_A_train... at +/96.77%
+>Cluster 406
+0	31nt, >2ldt_A_val... *
+>Cluster 407
+0	31nt, >357d_C_test... *
+1	31nt, >364d_C_test... at +/100.00%
+>Cluster 408
+0	31nt, >5kmz_A_train... *
+>Cluster 409
+0	31nt, >5uzt_A_train... *
+>Cluster 410
+0	31nt, >5v3f_A_train... *
+>Cluster 411
+0	31nt, >6h0r_A_test... *
+>Cluster 412
+0	31nt, >6hyk_A_test... *
+>Cluster 413
+0	31nt, >6ugi_A_train... *
+>Cluster 414
+0	30nt, >8hb1_B_val... at +/100.00%
+1	31nt, >8hb3_B_val... *
+2	31nt, >8i3z_B_val... at +/100.00%
+>Cluster 415
+0	29nt, >1anr_A_train... at +/100.00%
+1	29nt, >1arj_N_train... at +/100.00%
+2	29nt, >1uts_B_train... at +/100.00%
+3	29nt, >1uud_B_train... at +/100.00%
+4	29nt, >1uui_B_train... at +/100.00%
+5	29nt, >2l8h_A_train... at +/100.00%
+6	29nt, >7ju1_X_train... at +/100.00%
+7	29nt, >8thv_A_train... at +/100.00%
+8	31nt, >8u3m_A_train... *
+>Cluster 416
+0	29nt, >1ebq_A_train... at +/100.00%
+1	30nt, >1ebr_A_train... *
+2	29nt, >1ebs_A_train... at +/100.00%
+>Cluster 417
+0	30nt, >1hwq_A_train... *
+>Cluster 418
+0	30nt, >1ldz_A_train... *
+1	30nt, >2ldz_A_train... at +/100.00%
+>Cluster 419
+0	30nt, >1rfr_A_train... *
+>Cluster 420
+0	30nt, >3k1v_A_train... *
+>Cluster 421
+0	30nt, >8fza_A_test... *
+>Cluster 422
+0	30nt, >8znq_A_train... *
+>Cluster 423
+0	29nt, >1aqo_A_train... *
+1	29nt, >1nbr_A_train... at +/100.00%
+>Cluster 424
+0	29nt, >1f84_A_train... *
+>Cluster 425
+0	28nt, >1d4r_B_val... at +/96.43%
+1	29nt, >1l1w_A_val... *
+>Cluster 426
+0	29nt, >1scl_A_train... *
+1	28nt, >430d_A_test... at +/100.00%
+>Cluster 427
+0	29nt, >2gio_A_train... *
+1	28nt, >2gip_A_train... at +/100.00%
+>Cluster 428
+0	29nt, >2jwv_A_test... *
+>Cluster 429
+0	29nt, >2k5z_A_val... *
+>Cluster 430
+0	29nt, >2m23_A_train... *
+1	29nt, >2m24_A_train... at +/100.00%
+>Cluster 431
+0	29nt, >3b31_A_train... *
+1	29nt, >3mj3_B_train... at +/100.00%
+2	29nt, >3mja_B_train... at +/100.00%
+3	29nt, >3mjb_A_train... at +/100.00%
+>Cluster 432
+0	29nt, >3b58_B_train... *
+1	29nt, >3b5a_B_train... at +/100.00%
+2	29nt, >3b5f_B_test... at +/100.00%
+3	29nt, >3b5s_B_train... at +/100.00%
+4	29nt, >3b91_B_test... at +/100.00%
+5	29nt, >3bbi_B_test... at +/100.00%
+6	29nt, >3bbk_B_train... at +/100.00%
+7	29nt, >3bbm_B_test... at +/100.00%
+8	29nt, >4g6p_B_test... at +/100.00%
+9	29nt, >4g6s_B_val... at +/100.00%
+>Cluster 433
+0	29nt, >5lsn_A_val... *
+>Cluster 434
+0	29nt, >6izp_A_train... *
+>Cluster 435
+0	29nt, >9eow_A_test... *
+>Cluster 436
+0	29nt, >9fo8_A_train... *
+>Cluster 437
+0	28nt, >28sp_A_train... *
+1	28nt, >28sr_A_train... at +/100.00%
+>Cluster 438
+0	28nt, >2nc0_A_train... *
+>Cluster 439
+0	28nt, >2nci_A_test... *
+>Cluster 440
+0	28nt, >6aas_A_val... *
+1	22nt, >6aau_A_val... at +/100.00%
+>Cluster 441
+0	28nt, >6ugj_A_train... *
+>Cluster 442
+0	28nt, >6v9b_B_train... *
+1	28nt, >6v9d_B_train... at +/100.00%
+>Cluster 443
+0	28nt, >6vzc_A_train... *
+>Cluster 444
+0	28nt, >7ume_A_val... *
+>Cluster 445
+0	14nt, >1a3m_A_train... at +/100.00%
+1	27nt, >1byj_A_train... *
+>Cluster 446
+0	27nt, >1f6x_A_train... *
+1	27nt, >1f6z_A_train... at +/96.30%
+2	27nt, >1f78_A_train... at +/100.00%
+3	27nt, >1f79_A_train... at +/96.30%
+4	27nt, >1f7f_A_train... at +/100.00%
+5	27nt, >1f7g_A_train... at +/96.30%
+6	27nt, >1f7h_A_train... at +/100.00%
+7	27nt, >1f7i_A_train... at +/96.30%
+8	27nt, >1xsg_A_train... at +/96.30%
+9	27nt, >1xst_A_train... at +/96.30%
+10	27nt, >2cd1_A_train... at +/100.00%
+11	27nt, >2cd3_A_train... at +/96.30%
+12	27nt, >2cd5_A_train... at +/100.00%
+13	27nt, >2cd6_A_train... at +/96.30%
+>Cluster 447
+0	27nt, >1kpy_A_val... *
+1	27nt, >1kpz_A_val... at +/100.00%
+2	26nt, >2rp0_A_test... at +/100.00%
+3	26nt, >2rp1_A_test... at +/100.00%
+>Cluster 448
+0	27nt, >1l2x_A_train... *
+1	27nt, >1l3d_A_train... at +/100.00%
+>Cluster 449
+0	27nt, >1msy_A_train... *
+1	25nt, >4y27_A_train... at +/100.00%
+2	26nt, >7jjd_A_val... at +/100.00%
+3	26nt, >7jje_A_train... at +/100.00%
+4	26nt, >7jjf_A_val... at +/96.15%
+>Cluster 450
+0	27nt, >1q93_A_train... *
+>Cluster 451
+0	27nt, >1q96_A_train... *
+>Cluster 452
+0	27nt, >1q9a_A_train... *
+1	27nt, >3dvz_A_train... at +/100.00%
+2	26nt, >3dw5_A_test... at +/100.00%
+3	26nt, >3dw7_A_test... at +/100.00%
+4	27nt, >480d_A_train... at +/100.00%
+5	27nt, >483d_A_train... at +/100.00%
+6	26nt, >5mrx_A_test... at +/100.00%
+7	26nt, >5nqi_A_test... at +/100.00%
+8	27nt, >6y0y_A_train... at +/96.30%
+9	26nt, >6zyb_A_test... at +/100.00%
+10	26nt, >7eem_A_train... at +/100.00%
+11	27nt, >7m3v_A_train... at +/100.00%
+12	26nt, >7qp2_A_test... at +/100.00%
+13	27nt, >7ucr_A_train... at +/100.00%
+>Cluster 453
+0	27nt, >1tob_A_train... *
+>Cluster 454
+0	27nt, >1xsh_A_train... *
+1	27nt, >1xsu_A_train... at +/100.00%
+>Cluster 455
+0	27nt, >1yg3_A_val... *
+1	27nt, >1yg4_A_val... at +/100.00%
+2	27nt, >2ap0_A_train... at +/96.30%
+3	27nt, >2ap5_A_train... at +/96.30%
+>Cluster 456
+0	27nt, >1ysv_A_val... *
+>Cluster 457
+0	27nt, >2aht_A_train... *
+>Cluster 458
+0	27nt, >2ixy_A_train... *
+>Cluster 459
+0	27nt, >2kxm_A_train... *
+1	27nt, >2mxs_A_train... at +/100.00%
+2	27nt, >2n0j_A_train... at +/100.00%
+>Cluster 460
+0	27nt, >2ldl_A_train... *
+>Cluster 461
+0	27nt, >2ljj_A_train... *
+>Cluster 462
+0	27nt, >2lqz_A_train... *
+>Cluster 463
+0	27nt, >6y0t_A_train... *
+>Cluster 464
+0	27nt, >8jhp_A_train... *
+>Cluster 465
+0	27nt, >8vfs_A_val... *
+>Cluster 466
+0	26nt, >1qwb_A_train... *
+>Cluster 467
+0	26nt, >2l5z_A_train... *
+1	26nt, >2mis_A_train... at +/100.00%
+>Cluster 468
+0	26nt, >387d_A_train... *
+>Cluster 469
+0	26nt, >3dw4_A_val... *
+1	26nt, >3dw6_A_val... at +/100.00%
+2	26nt, >3s7c_A_val... at +/100.00%
+3	26nt, >5d99_A_val... at +/100.00%
+>Cluster 470
+0	26nt, >3s8u_A_train... *
+1	25nt, >6zxz_A_val... at +/100.00%
+2	26nt, >7l3r_A_train... at +/100.00%
+>Cluster 471
+0	26nt, >4phy_A_val... *
+>Cluster 472
+0	18nt, >1zev_A_train... at +/100.00%
+1	18nt, >3gm7_G_train... at +/100.00%
+2	20nt, >4e48_A_train... at +/100.00%
+3	26nt, >5mwi_A_train... *
+4	14nt, >9kad_A_train... at -/100.00%
+>Cluster 473
+0	26nt, >6ymc_A_test... *
+>Cluster 474
+0	26nt, >8bwt_A_val... *
+>Cluster 475
+0	25nt, >1ei2_A_train... *
+1	25nt, >1qc8_A_train... at +/100.00%
+2	25nt, >2kgp_A_train... at +/100.00%
+>Cluster 476
+0	25nt, >1m82_A_train... *
+>Cluster 477
+0	25nt, >1mme_B_train... *
+1	24nt, >1nyi_B_train... at +/100.00%
+2	24nt, >1q29_B_train... at +/100.00%
+3	25nt, >299d_B_train... at +/100.00%
+4	25nt, >300d_B_train... at +/100.00%
+5	25nt, >301d_B_train... at +/100.00%
+6	25nt, >359d_B_train... at +/100.00%
+7	25nt, >379d_B_train... at +/100.00%
+8	25nt, >488d_D_train... at +/100.00%
+>Cluster 478
+0	25nt, >6k84_A_train... *
+>Cluster 479
+0	25nt, >6yl5_A_train... *
+1	25nt, >6ylb_A_train... at +/100.00%
+2	25nt, >6ymi_A_train... at +/100.00%
+3	25nt, >6ymj_A_train... at +/100.00%
+4	25nt, >6ymk_A_train... at +/100.00%
+5	25nt, >6yml_A_train... at +/100.00%
+6	25nt, >6ymm_A_train... at +/100.00%
+>Cluster 480
+0	25nt, >8tsv_A_train... *
+>Cluster 481
+0	25nt, >9fm4_A_train... *
+>Cluster 482
+0	24nt, >1e4p_A_train... *
+>Cluster 483
+0	16nt, >1ju7_A_train... at +/100.00%
+1	16nt, >1jwc_A_train... at +/100.00%
+2	24nt, >1kks_A_train... *
+>Cluster 484
+0	24nt, >1nc0_A_train... *
+1	23nt, >1nz1_A_train... at +/100.00%
+>Cluster 485
+0	24nt, >1rht_A_train... *
+1	24nt, >1tfn_A_train... at +/100.00%
+>Cluster 486
+0	24nt, >2f4x_A_train... *
+>Cluster 487
+0	24nt, >2lk3_A_train... *
+>Cluster 488
+0	24nt, >2lv0_A_train... *
+>Cluster 489
+0	24nt, >2nok_A_train... *
+1	24nt, >2pn3_A_test... at +/100.00%
+2	24nt, >2pn4_A_test... at +/100.00%
+>Cluster 490
+0	24nt, >2qh2_A_test... *
+1	23nt, >2qh3_A_test... at +/95.65%
+>Cluster 491
+0	24nt, >5fj1_A_train... *
+>Cluster 492
+0	24nt, >7q7x_B_train... *
+1	24nt, >7q7y_B_train... at +/100.00%
+2	24nt, >7q7z_B_test... at +/100.00%
+3	24nt, >7q80_B_train... at +/100.00%
+4	24nt, >7q81_B_train... at +/100.00%
+5	24nt, >7q82_B_train... at +/100.00%
+>Cluster 493
+0	23nt, >7mkt_A_train... at +/100.00%
+1	24nt, >8tns_A_train... *
+>Cluster 494
+0	23nt, >1bau_A_test... *
+>Cluster 495
+0	23nt, >1bgz_A_train... *
+>Cluster 496
+0	23nt, >1bvj_A_test... *
+>Cluster 497
+0	23nt, >1k9w_A_train... *
+>Cluster 498
+0	23nt, >1mfk_A_test... *
+>Cluster 499
+0	23nt, >1nem_A_test... *
+>Cluster 500
+0	23nt, >1nlc_A_train... *
+1	23nt, >1o3z_A_train... at +/100.00%
+2	23nt, >1wvd_A_train... at +/100.00%
+3	23nt, >1xpf_A_train... at +/100.00%
+4	23nt, >1y6s_A_train... at +/100.00%
+5	23nt, >1y6t_A_train... at +/100.00%
+6	23nt, >1y73_A_train... at +/100.00%
+7	22nt, >1y90_A_train... at +/95.45%
+8	23nt, >1y95_A_train... at +/100.00%
+9	23nt, >1y99_A_train... at +/100.00%
+10	23nt, >2b8s_A_train... at +/100.00%
+11	23nt, >462d_A_train... at +/100.00%
+>Cluster 501
+0	23nt, >1ow9_A_train... *
+>Cluster 502
+0	23nt, >1s2f_A_train... *
+1	23nt, >1s34_A_train... at +/100.00%
+>Cluster 503
+0	23nt, >1tlr_A_val... *
+>Cluster 504
+0	23nt, >2es5_A_val... *
+>Cluster 505
+0	21nt, >1j7t_A_train... at +/100.00%
+1	21nt, >1lc4_A_train... at +/100.00%
+2	21nt, >1mwl_A_train... at +/100.00%
+3	21nt, >2be0_A_train... at +/100.00%
+4	21nt, >2bee_A_train... at +/100.00%
+5	23nt, >2esi_A_train... *
+6	21nt, >2esj_A_train... at +/100.00%
+7	21nt, >2et3_A_train... at +/100.00%
+8	21nt, >2et4_A_train... at +/100.00%
+9	21nt, >2et5_A_train... at +/100.00%
+10	21nt, >2et8_A_train... at +/100.00%
+11	21nt, >2f4s_A_train... at +/100.00%
+12	23nt, >2f4t_B_train... at +/100.00%
+13	21nt, >2f4u_A_train... at +/100.00%
+>Cluster 506
+0	23nt, >2m12_A_train... *
+>Cluster 507
+0	23nt, >2m22_A_train... *
+>Cluster 508
+0	23nt, >2n0r_A_val... *
+>Cluster 509
+0	23nt, >2n2o_A_train... *
+>Cluster 510
+0	23nt, >2n2p_A_train... *
+>Cluster 511
+0	23nt, >2n7x_A_test... *
+>Cluster 512
+0	23nt, >2ro2_A_val... *
+>Cluster 513
+0	23nt, >3php_A_train... *
+>Cluster 514
+0	23nt, >5uf3_A_train... *
+>Cluster 515
+0	22nt, >5ux3_A_test... at +/95.45%
+1	23nt, >5uz6_A_val... *
+2	23nt, >5v0o_A_test... at +/95.65%
+3	23nt, >5v9z_A_test... at +/95.65%
+4	22nt, >6bmd_A_train... at +/100.00%
+>Cluster 516
+0	23nt, >5wq1_A_train... *
+>Cluster 517
+0	23nt, >7ps8_A_train... *
+>Cluster 518
+0	23nt, >7vft_A_train... *
+>Cluster 519
+0	23nt, >8q4o_A_train... *
+>Cluster 520
+0	23nt, >9od4_A_train... *
+1	23nt, >9od5_A_train... at +/100.00%
+>Cluster 521
+0	22nt, >1f9l_A_train... *
+>Cluster 522
+0	22nt, >1ie1_A_train... *
+1	22nt, >1ie2_A_train... at +/100.00%
+>Cluster 523
+0	22nt, >1ikd_A_val... *
+>Cluster 524
+0	22nt, >1jur_A_train... *
+>Cluster 525
+0	22nt, >1k2g_A_train... *
+>Cluster 526
+0	22nt, >1k6g_A_val... *
+>Cluster 527
+0	22nt, >1k6h_A_train... *
+>Cluster 528
+0	22nt, >1n66_A_train... *
+1	22nt, >2grw_A_test... at +/95.45%
+2	22nt, >2gv4_A_train... at +/95.45%
+>Cluster 529
+0	22nt, >1nta_A_train... *
+1	22nt, >1ntb_A_train... at +/100.00%
+>Cluster 530
+0	22nt, >1osw_A_val... *
+>Cluster 531
+0	22nt, >1tjz_A_train... *
+>Cluster 532
+0	22nt, >1y3o_A_train... *
+1	22nt, >1y3s_A_train... at +/100.00%
+2	22nt, >1yxp_A_train... at +/100.00%
+3	22nt, >1zci_A_test... at +/100.00%
+4	22nt, >2fcx_A_train... at +/100.00%
+5	22nt, >2fcy_A_train... at +/100.00%
+6	22nt, >2fcz_A_train... at +/100.00%
+7	22nt, >2fd0_A_train... at +/100.00%
+8	22nt, >3dvv_A_train... at +/100.00%
+>Cluster 533
+0	22nt, >2g1w_A_test... *
+>Cluster 534
+0	22nt, >2hns_A_train... *
+>Cluster 535
+0	22nt, >2jym_A_train... *
+>Cluster 536
+0	22nt, >2k66_A_train... *
+>Cluster 537
+0	22nt, >2kd8_A_train... *
+>Cluster 538
+0	22nt, >2m5u_A_test... *
+>Cluster 539
+0	22nt, >2mi0_A_test... *
+>Cluster 540
+0	22nt, >3mei_A_val... *
+>Cluster 541
+0	22nt, >4a4s_A_train... *
+>Cluster 542
+0	22nt, >4a4t_A_train... *
+>Cluster 543
+0	22nt, >4a4u_A_train... *
+>Cluster 544
+0	22nt, >4k31_B_train... *
+1	21nt, >4k32_A_train... at +/100.00%
+>Cluster 545
+0	22nt, >5vcf_A_train... *
+1	22nt, >5vci_A_train... at +/100.00%
+2	22nt, >5vgw_A_train... at +/100.00%
+3	20nt, >6u7y_A_val... at +/100.00%
+>Cluster 546
+0	22nt, >6e7l_A_train... *
+>Cluster 547
+0	22nt, >6ez0_A_test... *
+>Cluster 548
+0	22nt, >6l0y_A_train... *
+>Cluster 549
+0	22nt, >7edn_A_train... *
+>Cluster 550
+0	22nt, >7q48_A_train... *
+>Cluster 551
+0	22nt, >7q6l_A_train... *
+>Cluster 552
+0	22nt, >7qa2_A_train... *
+>Cluster 553
+0	22nt, >9j6p_A_train... *
+>Cluster 554
+0	21nt, >17ra_A_train... *
+>Cluster 555
+0	21nt, >1bj2_A_train... *
+1	21nt, >2bj2_A_train... at +/100.00%
+>Cluster 556
+0	21nt, >1d0u_A_test... *
+>Cluster 557
+0	21nt, >1jox_A_train... *
+1	21nt, >1jp0_A_train... at +/100.00%
+>Cluster 558
+0	21nt, >1szy_A_train... *
+>Cluster 559
+0	21nt, >2m21_A_test... *
+>Cluster 560
+0	21nt, >2rrc_A_val... *
+>Cluster 561
+0	21nt, >4a4r_A_val... *
+>Cluster 562
+0	21nt, >5ew4_B_train... *
+1	21nt, >5ew7_B_train... at +/100.00%
+>Cluster 563
+0	21nt, >6xwj_A_train... *
+1	21nt, >6xxa_A_train... at +/100.00%
+>Cluster 564
+0	21nt, >7sxp_A_train... *
+>Cluster 565
+0	21nt, >8utg_A_train... *
+>Cluster 566
+0	20nt, >1bn0_A_train... *
+>Cluster 567
+0	20nt, >1hlx_A_val... *
+>Cluster 568
+0	20nt, >1mfj_A_train... *
+>Cluster 569
+0	20nt, >1u2a_A_train... *
+1	20nt, >2u2a_A_train... at +/100.00%
+>Cluster 570
+0	20nt, >2o33_A_train... *
+>Cluster 571
+0	20nt, >2rpk_A_train... *
+>Cluster 572
+0	20nt, >2rpt_A_train... *
+>Cluster 573
+0	20nt, >2tob_A_train... *
+>Cluster 574
+0	20nt, >361d_A_train... *
+>Cluster 575
+0	20nt, >4kz2_B_train... *
+>Cluster 576
+0	20nt, >6pk9_A_train... *
+>Cluster 577
+0	20nt, >6u7z_A_val... *
+>Cluster 578
+0	20nt, >7d12_A_train... *
+>Cluster 579
+0	20nt, >7fhi_A_train... *
+>Cluster 580
+0	20nt, >7fj0_A_train... *
+>Cluster 581
+0	20nt, >9i8b_A_val... *
+>Cluster 582
+0	19nt, >1ato_A_train... *
+>Cluster 583
+0	19nt, >1f27_A_val... *
+>Cluster 584
+0	19nt, >1qc0_C_val... *
+>Cluster 585
+0	19nt, >1slo_A_train... *
+1	19nt, >1slp_A_train... at +/100.00%
+>Cluster 586
+0	19nt, >1uuu_A_train... *
+>Cluster 587
+0	19nt, >2b7g_A_train... *
+>Cluster 588
+0	19nt, >2d2k_D_test... *
+>Cluster 589
+0	19nt, >2mfd_A_train... *
+>Cluster 590
+0	19nt, >2rlu_A_train... *
+>Cluster 591
+0	19nt, >2xeb_A_val... *
+>Cluster 592
+0	19nt, >3sj2_A_train... *
+>Cluster 593
+0	19nt, >3syw_A_train... *
+1	19nt, >3szx_A_train... at +/100.00%
+>Cluster 594
+0	19nt, >4c40_A_train... *
+1	19nt, >4cs1_A_train... at +/100.00%
+2	19nt, >5fj0_A_train... at +/100.00%
+3	19nt, >7efg_A_train... at +/100.00%
+4	19nt, >7efh_A_train... at +/100.00%
+5	18nt, >7ei7_A_train... at +/100.00%
+6	18nt, >7ei9_A_val... at +/100.00%
+7	18nt, >7eia_A_val... at +/100.00%
+8	18nt, >7f8z_A_train... at +/100.00%
+>Cluster 595
+0	19nt, >4e5c_A_train... *
+>Cluster 596
+0	19nt, >4j50_A_train... *
+1	19nt, >4yn6_A_train... at +/100.00%
+>Cluster 597
+0	19nt, >5c5w_A_train... *
+>Cluster 598
+0	19nt, >5n5c_A_train... *
+>Cluster 599
+0	19nt, >5ndi_A_test... *
+>Cluster 600
+0	19nt, >6hu6_A_val... *
+>Cluster 601
+0	19nt, >6ia2_A_train... *
+>Cluster 602
+0	19nt, >6xww_A_train... *
+1	19nt, >6xxb_A_train... at +/100.00%
+>Cluster 603
+0	19nt, >7eag_C_train... *
+>Cluster 604
+0	19nt, >8i43_A_train... *
+>Cluster 605
+0	19nt, >8i44_A_train... *
+>Cluster 606
+0	19nt, >8i45_A_train... *
+>Cluster 607
+0	19nt, >8i46_A_train... *
+>Cluster 608
+0	19nt, >8k8b_A_train... *
+>Cluster 609
+0	19nt, >8tqx_A_train... *
+>Cluster 610
+0	19nt, >9io0_A_train... *
+>Cluster 611
+0	19nt, >9io1_A_train... *
+>Cluster 612
+0	19nt, >9ior_A_train... *
+>Cluster 613
+0	19nt, >9ios_A_train... *
+>Cluster 614
+0	19nt, >9iou_A_train... *
+>Cluster 615
+0	19nt, >9qzj_A_train... *
+>Cluster 616
+0	18nt, >1ajf_A_train... *
+>Cluster 617
+0	18nt, >1f5u_A_train... *
+>Cluster 618
+0	18nt, >1kfo_A_val... *
+>Cluster 619
+0	18nt, >1t0e_A_train... *
+>Cluster 620
+0	18nt, >1z30_A_train... *
+>Cluster 621
+0	18nt, >2d2l_D_train... *
+>Cluster 622
+0	18nt, >2gvo_A_train... *
+>Cluster 623
+0	18nt, >2qh4_A_train... *
+>Cluster 624
+0	18nt, >5nxt_U_train... *
+>Cluster 625
+0	18nt, >6q8v_A_test... *
+>Cluster 626
+0	17nt, >1atv_A_val... *
+>Cluster 627
+0	17nt, >1bz2_A_train... *
+1	17nt, >1bz3_A_train... at +/100.00%
+>Cluster 628
+0	17nt, >1tbk_A_train... *
+1	17nt, >1yn1_A_train... at +/100.00%
+2	17nt, >1yn2_A_train... at +/100.00%
+>Cluster 629
+0	17nt, >1wks_A_train... *
+>Cluster 630
+0	17nt, >2jlt_A_test... *
+>Cluster 631
+0	17nt, >2kpc_A_train... *
+>Cluster 632
+0	17nt, >2kpd_A_train... *
+>Cluster 633
+0	17nt, >2krp_A_train... *
+>Cluster 634
+0	17nt, >2krq_A_train... *
+1	16nt, >2krv_A_train... at +/100.00%
+>Cluster 635
+0	17nt, >2kvn_A_train... *
+>Cluster 636
+0	17nt, >2lac_A_train... *
+>Cluster 637
+0	17nt, >2lbj_A_train... *
+>Cluster 638
+0	17nt, >2lbk_A_train... *
+>Cluster 639
+0	17nt, >2lbl_A_train... *
+>Cluster 640
+0	17nt, >2m4w_A_train... *
+>Cluster 641
+0	17nt, >4kyy_A_train... *
+>Cluster 642
+0	17nt, >5nef_A_train... *
+1	17nt, >5neo_A_train... at +/100.00%
+2	17nt, >5nep_A_train... at +/100.00%
+3	17nt, >5neq_A_train... at +/100.00%
+4	17nt, >5nex_A_train... at +/100.00%
+5	17nt, >5nom_A_train... at +/100.00%
+6	17nt, >6hbt_A_train... at +/100.00%
+7	17nt, >6hbx_A_train... at +/100.00%
+8	17nt, >6hc5_A_train... at +/100.00%
+>Cluster 643
+0	17nt, >9ecq_A_train... *
+>Cluster 644
+0	16nt, >1am0_A_train... *
+>Cluster 645
+0	16nt, >1bzt_A_train... *
+1	16nt, >1bzu_A_train... at +/100.00%
+>Cluster 646
+0	16nt, >1d0t_A_test... *
+>Cluster 647
+0	16nt, >1feq_A_val... *
+>Cluster 648
+0	16nt, >1jtw_A_train... *
+>Cluster 649
+0	16nt, >1kis_A_train... *
+1	16nt, >2rn1_A_train... at +/100.00%
+>Cluster 650
+0	16nt, >1n53_A_train... *
+>Cluster 651
+0	16nt, >1t0d_A_val... *
+>Cluster 652
+0	16nt, >1xwu_A_train... *
+>Cluster 653
+0	16nt, >1z7f_A_train... *
+1	16nt, >405d_A_train... at +/100.00%
+>Cluster 654
+0	16nt, >2awq_A_test... *
+>Cluster 655
+0	16nt, >2g1g_A_train... *
+>Cluster 656
+0	16nt, >2jrq_A_val... *
+>Cluster 657
+0	16nt, >2jsg_A_train... *
+>Cluster 658
+0	16nt, >2krw_A_train... *
+>Cluster 659
+0	16nt, >2krz_A_test... *
+>Cluster 660
+0	16nt, >2kyd_A_train... *
+>Cluster 661
+0	16nt, >2l6i_A_train... *
+>Cluster 662
+0	16nt, >2la9_A_test... *
+>Cluster 663
+0	16nt, >2lbq_A_test... *
+>Cluster 664
+0	16nt, >2lp9_A_train... *
+>Cluster 665
+0	16nt, >2mnc_A_train... *
+>Cluster 666
+0	16nt, >2oom_A_train... *
+1	16nt, >2pn9_A_train... at +/100.00%
+>Cluster 667
+0	15nt, >3czw_X_train... at +/100.00%
+1	16nt, >3d0m_X_train... *
+>Cluster 668
+0	16nt, >3nd3_A_train... *
+>Cluster 669
+0	16nt, >3nd4_A_train... *
+1	16nt, >9mdw_A_train... at +/100.00%
+>Cluster 670
+0	16nt, >406d_A_train... *
+>Cluster 671
+0	16nt, >420d_A_train... *
+>Cluster 672
+0	16nt, >4nfo_A_train... *
+>Cluster 673
+0	16nt, >4p97_A_test... *
+>Cluster 674
+0	16nt, >5cnr_A_train... *
+>Cluster 675
+0	16nt, >5kvj_A_train... *
+>Cluster 676
+0	16nt, >5vj9_A_train... *
+>Cluster 677
+0	16nt, >7exy_A_train... *
+>Cluster 678
+0	16nt, >7kuc_A_train... *
+>Cluster 679
+0	16nt, >8feo_AAA_train... *
+>Cluster 680
+0	16nt, >8fep_AAA_train... *
+>Cluster 681
+0	16nt, >8za0_B_val... *
+>Cluster 682
+0	16nt, >8za4_B_val... *
+>Cluster 683
+0	16nt, >9ecr_A_val... *
+>Cluster 684
+0	15nt, >1atw_A_train... *
+>Cluster 685
+0	15nt, >1csl_B_val... *
+>Cluster 686
+0	15nt, >1kos_A_test... *
+>Cluster 687
+0	15nt, >1oq0_A_train... *
+>Cluster 688
+0	15nt, >1q75_A_train... *
+>Cluster 689
+0	15nt, >1xwp_A_train... *
+>Cluster 690
+0	15nt, >1yy0_A_train... *
+1	15nt, >1z79_B_train... at +/100.00%
+>Cluster 691
+0	15nt, >1yzd_B_train... *
+>Cluster 692
+0	15nt, >1zx7_A_train... *
+1	15nt, >1zz5_A_train... at +/100.00%
+2	15nt, >2a04_A_train... at +/100.00%
+>Cluster 693
+0	15nt, >2h1m_A_test... *
+>Cluster 694
+0	15nt, >2jrg_A_test... *
+>Cluster 695
+0	15nt, >2kry_A_train... *
+>Cluster 696
+0	15nt, >2l9e_A_test... *
+>Cluster 697
+0	15nt, >2lbr_A_test... *
+>Cluster 698
+0	15nt, >2lpa_A_train... *
+>Cluster 699
+0	15nt, >397d_A_train... *
+>Cluster 700
+0	15nt, >4nfp_A_val... *
+1	15nt, >4nfq_A_test... at +/100.00%
+2	15nt, >6bgb_A_test... at +/100.00%
+>Cluster 701
+0	15nt, >5ndh_A_train... *
+>Cluster 702
+0	15nt, >5v2r_A_train... *
+>Cluster 703
+0	15nt, >5vh7_A_train... *
+1	15nt, >5vh8_A_train... at -/100.00%
+>Cluster 704
+0	15nt, >5vjb_A_val... *
+>Cluster 705
+0	15nt, >7ei8_A_val... *
+>Cluster 706
+0	15nt, >8tdy_A_train... *
+1	15nt, >9mdx_A_val... at -/100.00%
+>Cluster 707
+0	15nt, >8tdz_A_train... *
+1	15nt, >9mdy_A_val... at -/100.00%
+>Cluster 708
+0	15nt, >8te0_A_test... *
+>Cluster 709
+0	15nt, >8te2_A_test... *
+>Cluster 710
+0	15nt, >9cso_A_test... *
+>Cluster 711
+0	15nt, >9csp_A_test... *
+>Cluster 712
+0	15nt, >9csq_A_val... *
+>Cluster 713
+0	15nt, >9csr_A_train... *
+>Cluster 714
+0	14nt, >9i9w_AAA_train... at +/100.00%
+1	15nt, >9if0_AAA_train... *
+2	15nt, >9if1_AAA_train... at +/100.00%
+>Cluster 715
+0	14nt, >1c0o_A_train... *
+>Cluster 716
+0	14nt, >1duq_B_train... *
+>Cluster 717
+0	14nt, >1f85_A_train... *
+>Cluster 718
+0	14nt, >1fhk_A_train... *
+>Cluster 719
+0	14nt, >1fl8_A_val... *
+>Cluster 720
+0	14nt, >1ik1_A_train... *
+>Cluster 721
+0	14nt, >1k4a_A_train... *
+>Cluster 722
+0	14nt, >1k4b_A_train... *
+>Cluster 723
+0	14nt, >1koc_B_train... *
+>Cluster 724
+0	14nt, >1kod_B_train... *
+>Cluster 725
+0	14nt, >1lux_A_train... *
+>Cluster 726
+0	14nt, >1mhk_L_val... *
+>Cluster 727
+0	14nt, >1my9_A_train... *
+>Cluster 728
+0	14nt, >1rna_A_train... *
+>Cluster 729
+0	14nt, >2evy_A_train... *
+>Cluster 730
+0	14nt, >2mn0_A_test... *
+>Cluster 731
+0	14nt, >2o32_A_test... *
+>Cluster 732
+0	14nt, >2y95_A_train... *
+>Cluster 733
+0	14nt, >3p59_A_test... *
+>Cluster 734
+0	14nt, >5xwg_A_test... *
+>Cluster 735
+0	14nt, >6jjh_B_train... *
+1	14nt, >6jji_B_train... at +/100.00%
+2	14nt, >6xrq_B_train... at +/100.00%
+>Cluster 736
+0	14nt, >8clr_A_train... *
+1	14nt, >9sxv_A_train... at +/100.00%
+2	14nt, >9sy4_A_train... at +/100.00%
+>Cluster 737
+0	14nt, >8feq_AAA_val... *
+>Cluster 738
+0	14nt, >8fer_AAA_val... *
+>Cluster 739
+0	13nt, >1elh_B_train... *
+>Cluster 740
+0	13nt, >1esh_A_train... *
+>Cluster 741
+0	13nt, >1fuf_A_val... *
+>Cluster 742
+0	13nt, >1hs1_A_train... *
+>Cluster 743
+0	13nt, >1hs2_A_train... *
+>Cluster 744
+0	13nt, >1hs3_A_train... *
+>Cluster 745
+0	13nt, >1hs4_A_train... *
+>Cluster 746
+0	13nt, >1hs8_A_train... *
+>Cluster 747
+0	13nt, >1i46_A_train... *
+>Cluster 748
+0	13nt, >1i4b_A_train... *
+>Cluster 749
+0	13nt, >1i4c_A_train... *
+>Cluster 750
+0	13nt, >1i9x_A_train... *
+>Cluster 751
+0	13nt, >1ik5_A_val... *
+>Cluster 752
+0	13nt, >1jzc_A_train... *
+>Cluster 753
+0	13nt, >1k8s_A_train... *
+>Cluster 754
+0	13nt, >1luu_A_val... *
+>Cluster 755
+0	13nt, >1nuj_A_train... *
+>Cluster 756
+0	13nt, >1nuv_A_train... *
+>Cluster 757
+0	13nt, >1qbp_A_val... *
+>Cluster 758
+0	13nt, >2r22_A_train... *
+>Cluster 759
+0	13nt, >3cgp_B_train... *
+>Cluster 760
+0	13nt, >3cgq_B_train... *
+>Cluster 761
+0	13nt, >3cgr_B_train... *
+>Cluster 762
+0	13nt, >3cgs_B_train... *
+>Cluster 763
+0	13nt, >413d_A_train... *
+>Cluster 764
+0	13nt, >429d_A_train... *
+>Cluster 765
+0	13nt, >7a3y_A_train... *
+>Cluster 766
+0	13nt, >7kud_A_train... *
+>Cluster 767
+0	13nt, >7pof_A_test... *
+>Cluster 768
+0	13nt, >7qtn_B_val... *
+>Cluster 769
+0	13nt, >7y2b_S_train... *
+>Cluster 770
+0	13nt, >7y2p_A_train... *
+>Cluster 771
+0	13nt, >9cpd_A_train... *
+>Cluster 772
+0	13nt, >9cpg_A_train... *
+>Cluster 773
+0	13nt, >9cpi_A_train... *
+>Cluster 774
+0	13nt, >9cpj_A_train... *
+>Cluster 775
+0	13nt, >9dll_A_train... *
+>Cluster 776
+0	12nt, >157d_A_train... *
+>Cluster 777
+0	12nt, >1ajl_A_train... *
+>Cluster 778
+0	12nt, >1ajt_A_train... *
+>Cluster 779
+0	12nt, >1al5_A_train... *
+>Cluster 780
+0	12nt, >1me1_A_train... *
+>Cluster 781
+0	12nt, >1rng_A_train... *
+>Cluster 782
+0	12nt, >1sdr_A_train... *
+>Cluster 783
+0	12nt, >1zif_A_train... *
+>Cluster 784
+0	12nt, >1zig_A_train... *
+>Cluster 785
+0	12nt, >1zih_A_train... *
+>Cluster 786
+0	12nt, >205d_A_train... *
+>Cluster 787
+0	12nt, >21cc_A_train... *
+>Cluster 788
+0	12nt, >255d_A_train... *
+>Cluster 789
+0	12nt, >280d_A_train... *
+>Cluster 790
+0	12nt, >283d_A_train... *
+>Cluster 791
+0	12nt, >2f87_A_train... *
+>Cluster 792
+0	12nt, >2k7e_A_val... *
+>Cluster 793
+0	12nt, >2kbp_A_train... *
+>Cluster 794
+0	12nt, >2q1r_A_train... *
+>Cluster 795
+0	12nt, >2r1s_A_train... *
+>Cluster 796
+0	12nt, >2r20_A_train... *
+>Cluster 797
+0	12nt, >2r21_A_train... *
+>Cluster 798
+0	12nt, >2rqj_A_train... *
+>Cluster 799
+0	12nt, >353d_A_val... *
+>Cluster 800
+0	12nt, >354d_A_test... *
+>Cluster 801
+0	12nt, >3cjz_A_test... *
+>Cluster 802
+0	12nt, >3ftm_B_train... *
+>Cluster 803
+0	12nt, >3mij_A_train... *
+>Cluster 804
+0	12nt, >422d_A_train... *
+>Cluster 805
+0	12nt, >4jrt_A_val... *
+>Cluster 806
+0	12nt, >6n8f_A_train... *
+>Cluster 807
+0	12nt, >6n8i_A_train... *
+>Cluster 808
+0	12nt, >7ecm_A_train... *
+>Cluster 809
+0	12nt, >7ecn_A_train... *
+>Cluster 810
+0	12nt, >7eco_E_train... *
+>Cluster 811
+0	12nt, >7ecp_A_train... *
+>Cluster 812
+0	12nt, >7edu_A_train... *
+>Cluster 813
+0	12nt, >8skq_A_train... *
+>Cluster 814
+0	11nt, >1kd3_A_train... *
+>Cluster 815
+0	11nt, >1kd4_A_train... *
+>Cluster 816
+0	11nt, >1kd5_A_train... *
+>Cluster 817
+0	11nt, >1lnt_A_test... *
+>Cluster 818
+0	11nt, >1qcu_A_train... *
+>Cluster 819
+0	11nt, >1tut_A_train... *
+>Cluster 820
+0	11nt, >1wts_A_train... *
+>Cluster 821
+0	11nt, >1wtt_A_train... *
+>Cluster 822
+0	11nt, >2g92_A_train... *
+>Cluster 823
+0	11nt, >2jxs_A_train... *
+>Cluster 824
+0	11nt, >2kxz_A_train... *
+>Cluster 825
+0	11nt, >2ky0_A_train... *
+>Cluster 826
+0	11nt, >2ky1_A_train... *
+>Cluster 827
+0	11nt, >2kye_A_train... *
+>Cluster 828
+0	11nt, >2l8f_A_train... *
+>Cluster 829
+0	11nt, >2lx1_A_train... *
+>Cluster 830
+0	11nt, >2mxj_A_train... *
+>Cluster 831
+0	11nt, >2q1o_A_val... *
+>Cluster 832
+0	11nt, >3fs0_B_train... *
+>Cluster 833
+0	11nt, >3ibk_A_test... *
+>Cluster 834
+0	11nt, >4jrd_A_train... *
+>Cluster 835
+0	11nt, >4mce_D_train... *
+>Cluster 836
+0	11nt, >4mcf_D_train... *
+>Cluster 837
+0	11nt, >4o41_B_val... *
+>Cluster 838
+0	11nt, >4rby_A_val... *
+>Cluster 839
+0	11nt, >5ay2_A_train... *
+>Cluster 840
+0	11nt, >5ay3_A_train... *
+>Cluster 841
+0	11nt, >5ay4_A_train... *
+>Cluster 842
+0	11nt, >5g4t_A_train... *
+>Cluster 843
+0	11nt, >5krg_A_train... *
+>Cluster 844
+0	11nt, >5l00_A_train... *
+>Cluster 845
+0	11nt, >5or0_B_train... *
+>Cluster 846
+0	11nt, >5ued_A_train... *
+>Cluster 847
+0	11nt, >5uee_A_train... *
+>Cluster 848
+0	11nt, >5uef_A_val... *
+>Cluster 849
+0	11nt, >5ueg_A_train... *
+>Cluster 850
+0	11nt, >5v0h_A_train... *
+>Cluster 851
+0	11nt, >5v1l_A_val... *
+>Cluster 852
+0	11nt, >6c8m_A_val... *
+>Cluster 853
+0	11nt, >6c8n_A_train... *
+>Cluster 854
+0	11nt, >6c8o_A_train... *
+>Cluster 855
+0	11nt, >6hmi_B_train... *
+>Cluster 856
+0	11nt, >6hmo_B_train... *
+>Cluster 857
+0	11nt, >6va1_A_train... *
+>Cluster 858
+0	11nt, >6va2_A_train... *
+>Cluster 859
+0	11nt, >6va3_A_train... *
+>Cluster 860
+0	11nt, >6va4_A_train... *
+>Cluster 861
+0	11nt, >6xur_A_val... *
+>Cluster 862
+0	11nt, >6xus_A_val... *
+>Cluster 863
+0	11nt, >7ecj_A_train... *
+>Cluster 864
+0	11nt, >7eck_A_train... *
+>Cluster 865
+0	11nt, >7ecl_A_train... *
+>Cluster 866
+0	11nt, >7edt_A_train... *
+>Cluster 867
+0	11nt, >7qua_A_train... *
+>Cluster 868
+0	11nt, >8cf2_B_train... *
+>Cluster 869
+0	11nt, >8pfk_A_val... *
+>Cluster 870
+0	11nt, >8pfq_A_val... *
+>Cluster 871
+0	11nt, >8r62_B_train... *
+>Cluster 872
+0	11nt, >8r63_B_train... *
+>Cluster 873
+0	11nt, >8r8p_B_train... *
+>Cluster 874
+0	11nt, >8x0s_A_train... *
+>Cluster 875
+0	11nt, >9bxe_A_train... *
+>Cluster 876
+0	11nt, >9yd3_A_train... *
