@@ -25,6 +25,7 @@ from Bio.PDB import MMCIFParser
 import warnings
 from Bio.PDB.PDBExceptions import PDBConstructionException
 warnings.simplefilter('ignore', PDBConstructionException)
+import numpy as np
 
 ELEMENT_TO_Z = {'C': 6, 'N': 7, 'O': 8, 'P': 15, 'S': 16, 'MG': 12, 'K': 19}
 
@@ -161,8 +162,8 @@ def build_pt_data(gt_residues, pred_residues, residue_map,
     total_gt_atoms = sum(len(r) for r in gt_residues)
     alignment_ratio = len(aligned_gt_pos) / total_gt_atoms if total_gt_atoms > 0 else 0
 
-    pos_tensor = torch.tensor(aligned_gt_pos, dtype=torch.float)
-    pos_pred_tensor = torch.tensor(aligned_pred_pos, dtype=torch.float)
+    pos_tensor = torch.from_numpy(np.array(aligned_gt_pos, dtype=np.float32))
+    pos_pred_tensor = torch.from_numpy(np.array(aligned_pred_pos, dtype=np.float32))
     z_tensor = torch.tensor(atomic_numbers, dtype=torch.long)
     edge_index = native_radius_graph(pos_pred_tensor, r=4.5)
 
@@ -218,6 +219,17 @@ def process_one_sample(pdb_id, seed, pred_cif, save_dir):
     处理单个 (pdb_id, seed, pred_cif)。
     返回 (saved: bool, csv_row: dict)
     """
+    # 如果输出 .pt 已存在，只提取序列写 CSV（不重新生成 .pt）
+    save_name = f"{pdb_id}_s{seed}_{pred_cif.replace('.cif', '.pt')}"
+    if os.path.exists(os.path.join(save_dir, save_name)):
+        gt_cif_path = os.path.join(CIF_DIR, f"{pdb_id}.cif")
+        gt_seq, _ = extract_residue_data(gt_cif_path, pdb_id) if os.path.exists(gt_cif_path) else ("", None)
+        return True, {'pdb_id': pdb_id, 'seed': seed, 'pred_cif': pred_cif,
+                       'gt_seq': gt_seq or '', 'pred_seq': '(skipped)',
+                       'gt_len': len(gt_seq) if gt_seq else 0, 'pred_len': 0,
+                       'alignment_identity': 0.0, 'n_matched_residues': 0,
+                       'note': 'skipped_existing'}
+
     gt_cif_path = os.path.join(CIF_DIR, f"{pdb_id}.cif")
     if not os.path.exists(gt_cif_path):
         return False, {'pdb_id': pdb_id, 'seed': seed, 'pred_cif': pred_cif,
