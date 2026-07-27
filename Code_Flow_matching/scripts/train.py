@@ -6,7 +6,7 @@ from pathlib import Path
 import torch
 from lightning.pytorch import seed_everything
 from loguru import logger as log
-# ToDo
+
 from utils import (
     instantiate_callbacks,
     instantiate_logger,
@@ -16,7 +16,7 @@ from utils import (
     read_yaml,
     setup_log_dir,
 )
-# ToDo
+
 from etflow.data.datamodule import BaseDataModule
 
 torch.set_float32_matmul_precision("high")

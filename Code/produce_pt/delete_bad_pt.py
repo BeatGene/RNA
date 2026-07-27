@@ -4,7 +4,7 @@ from glob import glob
 
 DATA_ROOT = "/remote-home/jinxianwang/tinghaoxia/RNA/Data/RNA"
 
-df = pd.read_csv('rmsd_all.csv')
+df = pd.read_csv('rmsd/rmsd_all.csv')
 bad = df[df['rmsd'] > 50]
 
 print(f"RMSD > 50 Å 的记录: {len(bad)} 条\n")

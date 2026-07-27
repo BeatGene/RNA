@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv('rmsd_all.csv')
+df = pd.read_csv('rmsd/rmsd_all.csv')
 
 thresholds = [10, 20, 30, 50, 100]
 total = len(df)

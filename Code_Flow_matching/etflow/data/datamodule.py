@@ -4,7 +4,6 @@ from typing import Dict
 import lightning.pytorch as pl
 from torch_geometric.loader import DataLoader
 
-# ToDo
 from .dataset import EuclideanDataset
 
 
