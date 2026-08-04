@@ -6,6 +6,7 @@
 
 # 忽略所有文本文件（如需保留重要txt，看下方例外规则）
 *.txt
+!Code/Download_PDB_RAW/requirements_pdb_pipeline.txt
 
 # 忽略wandb训练日志整个文件夹
 .wandb/
