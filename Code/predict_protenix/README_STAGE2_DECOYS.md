@@ -1,5 +1,10 @@
 # 第二阶段：Protenix RNA decoy 管线
 
+> 历史说明：本文记录旧的 4 seeds x 50 samples decoy 任务。当前要求的
+> FoldBench-style 第一阶段（prep + 5 seeds x 5 samples pred）请使用
+> `README_FOLDBENCH_STAGE1.md` 和 `run_foldbench_stage1.sh`，不要执行本文的
+> 旧预测命令。
+
 ## 目标与判定标准
 
 当前目标来自第一阶段 `pdb_cif_manifest.csv` 中

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit and incrementally complete the Protenix RNA decoy pipeline.
+"""Audit and incrementally complete the Protenix RNA prediction pipeline.
 
 The script is intended to run on the new laboratory server.  It never deletes
 existing prep/prediction results.  A task is skipped only after its output has
@@ -12,6 +12,7 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import os
 import queue
 import re
@@ -40,6 +41,8 @@ CONFIDENCE_RE = re.compile(
 )
 TRUE_VALUES = {"1", "TRUE", "T", "YES", "Y"}
 MODEL_NAME = "protenix_base_default_v1.0.0"
+FOLDBENCH_SEEDS = "42,66,101,2024,8888"
+FOLDBENCH_SAMPLES = 5
 
 
 def utc_now() -> str:
@@ -229,6 +232,11 @@ def index_output_dirs(
                 kept.append(dirname)
         dirnames[:] = kept
     return prep, pred
+
+
+def prediction_output_root(args: argparse.Namespace) -> Path:
+    """Return the prediction root, falling back for older callers/tests."""
+    return getattr(args, "pred_output_dir", None) or args.complex_json_dir
 
 
 def read_json_info(path: Path | None) -> JsonInfo:
@@ -428,7 +436,7 @@ def inspect_seed(
     pred_dir = prediction_dirs[0]
     primary: dict[int, list[Path]] = {}
     unresolved: set[int] = set()
-    confidence: set[int] = set()
+    confidence: dict[int, list[Path]] = {}
     for path in pred_dir.iterdir():
         if not path.is_file():
             continue
@@ -442,10 +450,11 @@ def inspect_seed(
             continue
         confidence_match = CONFIDENCE_RE.fullmatch(path.name)
         if confidence_match:
-            confidence.add(int(confidence_match.group(1)))
+            confidence.setdefault(int(confidence_match.group(1)), []).append(path)
 
     validator = full_validate_cif if validation == "full" else quick_validate_cif
     invalid_reasons: list[str] = []
+    invalid_confidence_reasons: list[str] = []
     valid_count = 0
     for index, paths in sorted(primary.items()):
         if len(paths) != 1:
@@ -457,21 +466,45 @@ def inspect_seed(
         else:
             invalid_reasons.append(f"{paths[0].name}: {reason}")
 
+    valid_confidence_count = 0
+    for index, paths in sorted(confidence.items()):
+        if len(paths) != 1:
+            invalid_confidence_reasons.append(
+                f"confidence sample_{index} 重复={len(paths)}"
+            )
+            continue
+        try:
+            payload = json.loads(paths[0].read_text(encoding="utf-8"))
+            score = float(payload["ranking_score"])
+            if not math.isfinite(score):
+                raise ValueError("ranking_score 不是有限数值")
+            valid_confidence_count += 1
+        except Exception as exc:
+            invalid_confidence_reasons.append(
+                f"{paths[0].name}: {type(exc).__name__}: {exc}"
+            )
+
     expected_indices = set(range(expected_samples))
     actual_indices = set(primary)
     missing_indices = sorted(expected_indices - actual_indices)
     extra_indices = sorted(actual_indices - expected_indices)
+    confidence_indices = set(confidence)
+    missing_confidence = sorted(expected_indices - confidence_indices)
+    extra_confidence = sorted(confidence_indices - expected_indices)
     primary_count = sum(len(paths) for paths in primary.values())
+    confidence_count = sum(len(paths) for paths in confidence.values())
     if (
         not missing_indices
         and not extra_indices
+        and not missing_confidence
+        and not extra_confidence
         and primary_count == expected_samples
         and valid_count == expected_samples
+        and confidence_count == expected_samples
+        and valid_confidence_count == expected_samples
     ):
         status = "COMPLETE"
         reason = "OK"
-        if len(confidence) != expected_samples:
-            reason = f"结构完整；confidence JSON={len(confidence)}/{expected_samples}"
     else:
         status = "INCOMPLETE"
         pieces = [
@@ -482,8 +515,14 @@ def inspect_seed(
             pieces.append(f"缺少sample={missing_indices[:10]}")
         if extra_indices:
             pieces.append(f"额外sample={extra_indices[:10]}")
+        if missing_confidence:
+            pieces.append(f"缺少confidence sample={missing_confidence[:10]}")
+        if extra_confidence:
+            pieces.append(f"额外confidence sample={extra_confidence[:10]}")
         if invalid_reasons:
             pieces.append("; ".join(invalid_reasons[:3]))
+        if invalid_confidence_reasons:
+            pieces.append("; ".join(invalid_confidence_reasons[:3]))
         reason = "；".join(pieces)
 
     return SeedInfo(
@@ -495,7 +534,7 @@ def inspect_seed(
         valid_primary_count=valid_count,
         invalid_primary_count=primary_count - valid_count,
         unresolved_count=len(unresolved),
-        confidence_count=len(confidence),
+        confidence_count=confidence_count,
         sample_indices=",".join(str(i) for i in sorted(actual_indices)),
     )
 
@@ -608,7 +647,8 @@ def build_audit(
     started = utc_now()
     targets = load_targets(args.manifest)
     raw_index, updated_index = index_json_files(args.simple_json_dir)
-    prep_index, pred_index = index_output_dirs(args.complex_json_dir)
+    prep_index, _ = index_output_dirs(args.complex_json_dir)
+    _, pred_index = index_output_dirs(prediction_output_root(args))
 
     summary_rows: list[dict[str, Any]] = []
     seed_rows: list[dict[str, Any]] = []
@@ -1039,7 +1079,9 @@ def run_pred(args: argparse.Namespace) -> None:
     executable = locate_executable(args.protenix)
     targets = load_targets(args.manifest)
     _, updated_index = index_json_files(args.simple_json_dir)
-    prep_index, pred_index = index_output_dirs(args.complex_json_dir)
+    prep_index, _ = index_output_dirs(args.complex_json_dir)
+    pred_root = prediction_output_root(args)
+    _, pred_index = index_output_dirs(pred_root)
     tasks: list[tuple[Target, int, PrepInfo]] = []
     for target in targets:
         updated = choose_indexed_path(updated_index.get(target.pdb_id, []))
@@ -1070,7 +1112,7 @@ def run_pred(args: argparse.Namespace) -> None:
         try:
             input_json = runtime_json(target.pdb_id, prep, args.report_dir)
             out = (
-                args.complex_json_dir
+                pred_root
                 / f"pred_output_{target.pdb_id.lower()}_seed_{seed}"
             )
             log = (
@@ -1095,7 +1137,7 @@ def run_pred(args: argparse.Namespace) -> None:
                 "--use_template",
                 "False",
                 "--use_default_params",
-                "False",
+                "True",
                 "--dtype",
                 "bf16",
                 "--sample",
@@ -1105,6 +1147,10 @@ def run_pred(args: argparse.Namespace) -> None:
                 "--cycle",
                 "10",
                 "--enable_cache",
+                "True",
+                "--enable_fusion",
+                "True",
+                "--enable_tf32",
                 "True",
                 "--seeds",
                 str(seed),
@@ -1137,7 +1183,7 @@ def run_pred(args: argparse.Namespace) -> None:
         finally:
             gpu_queue.put(gpu)
 
-    args.complex_json_dir.mkdir(parents=True, exist_ok=True)
+    pred_root.mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(max_workers=len(args.gpus)) as pool:
         futures = [pool.submit(task, item) for item in tasks]
         results = [future.result() for future in as_completed(futures)]
@@ -1214,6 +1260,13 @@ def preflight(args: argparse.Namespace) -> None:
     add("manifest", str(args.manifest), args.manifest.is_file())
     add("simple_json_dir", str(args.simple_json_dir), args.simple_json_dir.is_dir())
     add("complex_json_dir", str(args.complex_json_dir), args.complex_json_dir.is_dir())
+    pred_root = prediction_output_root(args)
+    add(
+        "pred_output_dir",
+        str(pred_root),
+        pred_root.is_dir() or pred_root.parent.is_dir(),
+        "目录可不存在，但父目录必须存在",
+    )
     if args.command == "pred":
         add("CUDA_VISIBLE_GPUS", ",".join(args.gpus), bool(args.gpus))
 
@@ -1254,18 +1307,24 @@ def add_common_arguments(parser: argparse.ArgumentParser) -> None:
         "--complex-json-dir",
         type=Path,
         default=home / "Json_data/Complex_json",
-        help="prep_output/pred_output 根目录",
+        help="prep_output 根目录",
+    )
+    parser.add_argument(
+        "--pred-output-dir",
+        type=Path,
+        default=home / "Json_data/Foldbench_predictions",
+        help="FoldBench-style pred_output 根目录；与旧 4x50 结果隔离",
     )
     parser.add_argument(
         "--report-dir",
         type=Path,
-        default=home / "Code/pipeline_reports/DECOYS",
-        help="第二阶段报告与日志目录",
+        default=home / "Code/pipeline_reports/FOLDBENCH_STAGE1",
+        help="FoldBench-style 第一阶段报告与日志目录",
     )
     parser.add_argument(
-        "--seeds", type=parse_seeds, default=parse_seeds("42,43,44,45")
+        "--seeds", type=parse_seeds, default=parse_seeds(FOLDBENCH_SEEDS)
     )
-    parser.add_argument("--samples", type=int, default=50)
+    parser.add_argument("--samples", type=int, default=FOLDBENCH_SAMPLES)
     parser.add_argument(
         "--cif-validation",
         choices=("quick", "full"),
@@ -1289,6 +1348,7 @@ def normalize_args(args: argparse.Namespace) -> None:
         "cif_dir",
         "simple_json_dir",
         "complex_json_dir",
+        "pred_output_dir",
         "report_dir",
         "seqres_database",
         "ntrna_database",

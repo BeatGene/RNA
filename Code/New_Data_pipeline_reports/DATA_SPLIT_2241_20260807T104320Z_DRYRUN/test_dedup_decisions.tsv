@@ -1,0 +1,331 @@
+PDB_ID	INITIAL_SPLIT	FINAL_STATUS	REASON	MATCH_OR_REPRESENTATIVE_PDB_ID	CLUSTER_ID
+10ZT	test	KEPT		10ZT	TEST_CLUSTER_0001
+10ZU	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	10ZT	TEST_CLUSTER_0001
+11AG	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	10ZT	TEST_CLUSTER_0001
+11EH	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	10ZT	TEST_CLUSTER_0001
+12CI	test	KEPT		12CI	TEST_CLUSTER_0002
+12CJ	test	KEPT		12CJ	TEST_CLUSTER_0003
+21CC	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2KBP	
+21ET	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	5AY2	
+23JY	test	KEPT		23JY	TEST_CLUSTER_0004
+23JZ	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	23KA	TEST_CLUSTER_0005
+23KA	test	KEPT		23KA	TEST_CLUSTER_0005
+25SJ	test	KEPT		25SJ	TEST_CLUSTER_0006
+25SM	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	25SJ	TEST_CLUSTER_0006
+30SC	test	KEPT		30SC	TEST_CLUSTER_0007
+36LC	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	5UED	
+36LE	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	5UED	
+36LL	test	KEPT		36LL	TEST_CLUSTER_0008
+36LM	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	5UED	
+8K0Y	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8V1I	
+8K1E	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8VT5	
+8K2Z	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8V1I	
+8K30	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8V1I	
+8K7W	test	KEPT		8K7W	TEST_CLUSTER_0009
+8K85	test	KEPT		8K85	TEST_CLUSTER_0010
+8KEB	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9UW0	TEST_CLUSTER_0011
+8KED	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9UW0	TEST_CLUSTER_0011
+8KHH	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9UW0	TEST_CLUSTER_0011
+8S6W	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	9H82	
+8SYK	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8T5O	TEST_CLUSTER_0012
+8T5O	test	KEPT		8T5O	TEST_CLUSTER_0012
+8TKJ	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8T5O	TEST_CLUSTER_0012
+8TKK	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8T5O	TEST_CLUSTER_0012
+8VQV	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4XW7	
+8VVJ	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4XW7	
+8VXX	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	6C63	
+8VXZ	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	6C63	
+8VY0	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	6C63	
+8VY1	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	6C63	
+8X9K	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8XTS	TEST_CLUSTER_0013
+8X9L	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8XTR	TEST_CLUSTER_0014
+8X9M	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8XTS	TEST_CLUSTER_0013
+8X9N	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8XTR	TEST_CLUSTER_0014
+8X9O	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8XTS	TEST_CLUSTER_0013
+8X9Q	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8XTS	TEST_CLUSTER_0013
+8XTP	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8XTR	TEST_CLUSTER_0014
+8XTQ	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8XTS	TEST_CLUSTER_0013
+8XTR	test	KEPT		8XTR	TEST_CLUSTER_0014
+8XTS	test	KEPT		8XTS	TEST_CLUSTER_0013
+8YNP	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8YNO	
+8YZL	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4MS9	
+8Z8Q	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9UW0	TEST_CLUSTER_0011
+8Z8U	test	KEPT		8Z8U	TEST_CLUSTER_0015
+8Z9K	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8Z8U	TEST_CLUSTER_0015
+8ZA0	test	KEPT		8ZA0	TEST_CLUSTER_0016
+8ZA4	test	KEPT		8ZA4	TEST_CLUSTER_0017
+8ZAU	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	7V9E	
+8ZMH	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	7SAM	
+8ZNQ	test	KEPT		8ZNQ	TEST_CLUSTER_0018
+9BXE	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2LX1	
+9CFN	test	KEPT		9CFN	TEST_CLUSTER_0019
+9CSO	test	KEPT		9CSO	TEST_CLUSTER_0020
+9CSP	test	KEPT		9CSP	TEST_CLUSTER_0021
+9CSQ	test	KEPT		9CSQ	TEST_CLUSTER_0022
+9CSR	test	KEPT		9CSR	TEST_CLUSTER_0023
+9CXF	test	KEPT		9CXF	TEST_CLUSTER_0024
+9DE6	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9DE7	TEST_CLUSTER_0025
+9DE7	test	KEPT		9DE7	TEST_CLUSTER_0025
+9DE8	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9DE7	TEST_CLUSTER_0025
+9DIB	test	KEPT		9DIB	TEST_CLUSTER_0026
+9DID	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9DIB	TEST_CLUSTER_0026
+9DIG	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9DIB	TEST_CLUSTER_0026
+9DII	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9DIB	TEST_CLUSTER_0026
+9DKG	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	9DLL	
+9DLM	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	9DLL	
+9DLN	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	9DLL	
+9DP9	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8TJQ	
+9E5H	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5I	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5J	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5K	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5L	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5M	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5O	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5P	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5Q	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5R	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5S	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E5T	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9E73	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9ELY	TEST_CLUSTER_0027
+9E74	test	KEPT		9E74	TEST_CLUSTER_0028
+9E75	test	KEPT		9E75	TEST_CLUSTER_0029
+9E9O	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8UYS	
+9E9Q	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8UYS	
+9EBP	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9EBV	TEST_CLUSTER_0030
+9EBV	test	KEPT		9EBV	TEST_CLUSTER_0030
+9EC4	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9EBV	TEST_CLUSTER_0030
+9ECQ	test	KEPT		9ECQ	TEST_CLUSTER_0031
+9ECR	test	KEPT		9ECR	TEST_CLUSTER_0032
+9ELR	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9ELY	test	KEPT		9ELY	TEST_CLUSTER_0027
+9EWW	test	KEPT		9EWW	TEST_CLUSTER_0033
+9FM4	test	KEPT		9FM4	TEST_CLUSTER_0034
+9FN2	test	KEPT		9FN2	TEST_CLUSTER_0035
+9FN3	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9FN2	TEST_CLUSTER_0035
+9G4I	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4Y1N	
+9G4J	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FAU	
+9G4L	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FAU	
+9G4P	test	KEPT		9G4P	TEST_CLUSTER_0036
+9G4Q	test	KEPT		9G4Q	TEST_CLUSTER_0037
+9G4R	test	KEPT		9G4R	TEST_CLUSTER_0038
+9G4V	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4Y1N	
+9G54	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FAU	
+9G56	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4Y1N	
+9HRD	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9HRF	TEST_CLUSTER_0039
+9HRF	test	KEPT		9HRF	TEST_CLUSTER_0039
+9HRG	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9HRF	TEST_CLUSTER_0039
+9HRO	test	KEPT		9HRO	TEST_CLUSTER_0040
+9I8B	test	KEPT		9I8B	TEST_CLUSTER_0041
+9I9W	test	KEPT		9I9W	TEST_CLUSTER_0042
+9IF0	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9I9W	TEST_CLUSTER_0042
+9IF1	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9I9W	TEST_CLUSTER_0042
+9IO0	test	KEPT		9IO0	TEST_CLUSTER_0043
+9IO1	test	KEPT		9IO1	TEST_CLUSTER_0044
+9IOR	test	KEPT		9IOR	TEST_CLUSTER_0045
+9IOS	test	KEPT		9IOS	TEST_CLUSTER_0046
+9IOU	test	KEPT		9IOU	TEST_CLUSTER_0047
+9IS7	test	KEPT		9IS7	TEST_CLUSTER_0048
+9ISV	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9MM6	TEST_CLUSTER_0049
+9IWF	test	KEPT		9IWF	TEST_CLUSTER_0050
+9IWG	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9J3R	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9MM6	TEST_CLUSTER_0049
+9J3T	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9MM6	TEST_CLUSTER_0049
+9J4N	test	KEPT		9J4N	TEST_CLUSTER_0051
+9J4O	test	KEPT		9J4O	TEST_CLUSTER_0052
+9J6P	test	KEPT		9J6P	TEST_CLUSTER_0053
+9J6Y	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9M79	TEST_CLUSTER_0054
+9J9X	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	7EZ0	
+9JA7	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8D28	
+9JA9	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8D28	
+9JC8	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	7EZ0	
+9JGM	test	KEPT		9JGM	TEST_CLUSTER_0055
+9K9G	test	KEPT		9K9G	TEST_CLUSTER_0056
+9K9H	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9K9G	TEST_CLUSTER_0056
+9K9J	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9K9K	TEST_CLUSTER_0057
+9K9K	test	KEPT		9K9K	TEST_CLUSTER_0057
+9KAD	test	KEPT		9KAD	TEST_CLUSTER_0058
+9KGG	test	KEPT		9KGG	TEST_CLUSTER_0059
+9KGH	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9KGG	TEST_CLUSTER_0059
+9KPH	test	KEPT		9KPH	TEST_CLUSTER_0060
+9KPO	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9KPH	TEST_CLUSTER_0060
+9L0R	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9LMF	TEST_CLUSTER_0061
+9L8F	test	KEPT		9L8F	TEST_CLUSTER_0062
+9LCR	test	KEPT		9LCR	TEST_CLUSTER_0063
+9LE3	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9M79	TEST_CLUSTER_0054
+9LE5	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9M79	TEST_CLUSTER_0054
+9LE6	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9M79	TEST_CLUSTER_0054
+9LEC	test	KEPT		9LEC	TEST_CLUSTER_0064
+9LEE	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9LEC	TEST_CLUSTER_0064
+9LEL	test	KEPT		9LEL	TEST_CLUSTER_0065
+9LEM	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9LEL	TEST_CLUSTER_0065
+9LHK	test	KEPT		9LHK	TEST_CLUSTER_0066
+9LHL	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9LHK	TEST_CLUSTER_0066
+9LJN	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9LKC	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9LKE	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9LKF	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9LKU	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9UW0	TEST_CLUSTER_0011
+9LKV	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9UW0	TEST_CLUSTER_0011
+9LKW	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9UW0	TEST_CLUSTER_0011
+9LMC	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9LMF	test	KEPT		9LMF	TEST_CLUSTER_0061
+9M78	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9M79	TEST_CLUSTER_0054
+9M79	test	KEPT		9M79	TEST_CLUSTER_0054
+9MCW	test	KEPT		9MCW	TEST_CLUSTER_0067
+9MDS	test	KEPT		9MDS	TEST_CLUSTER_0068
+9MDW	test	KEPT		9MDW	TEST_CLUSTER_0069
+9MDX	test	KEPT		9MDX	TEST_CLUSTER_0070
+9MDY	test	KEPT		9MDY	TEST_CLUSTER_0071
+9MEE	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9LHK	TEST_CLUSTER_0066
+9MFH	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FRG	
+9MM6	test	KEPT		9MM6	TEST_CLUSTER_0049
+9MME	test	KEPT		9MME	TEST_CLUSTER_0072
+9MMG	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9MM6	TEST_CLUSTER_0049
+9MQS	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9MQT	TEST_CLUSTER_0073
+9MQT	test	KEPT		9MQT	TEST_CLUSTER_0073
+9MQU	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9MQT	TEST_CLUSTER_0073
+9NA1	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9DIB	TEST_CLUSTER_0026
+9NA7	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9DIB	TEST_CLUSTER_0026
+9NAK	test	KEPT		9NAK	TEST_CLUSTER_0074
+9NAM	test	KEPT		9NAM	TEST_CLUSTER_0075
+9NAP	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9NAM	TEST_CLUSTER_0075
+9NAS	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9DIB	TEST_CLUSTER_0026
+9NBC	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9NBH	TEST_CLUSTER_0076
+9NBH	test	KEPT		9NBH	TEST_CLUSTER_0076
+9NDD	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9NBH	TEST_CLUSTER_0076
+9NDV	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9NDW	TEST_CLUSTER_0077
+9NDW	test	KEPT		9NDW	TEST_CLUSTER_0077
+9NDX	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9NDW	TEST_CLUSTER_0077
+9O47	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	1XV6	
+9OBM	test	KEPT		9OBM	TEST_CLUSTER_0078
+9OD4	test	KEPT		9OD4	TEST_CLUSTER_0079
+9OD5	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9OD4	TEST_CLUSTER_0079
+9OL2	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	5UED	
+9OL3	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	5UED	
+9OV3	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OV6	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OV7	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OV8	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OVB	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OVC	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OWJ	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OWK	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OWL	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OWM	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OWN	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OWO	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4MGM	
+9OWP	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4MGM	
+9OWQ	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OY2	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OY3	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9OY4	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9PDE	test	KEPT		9PDE	TEST_CLUSTER_0080
+9PDF	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	1ANR	
+9PDG	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	1ANR	
+9Q0I	test	KEPT		9Q0I	TEST_CLUSTER_0081
+9Q0J	test	KEPT		9Q0J	TEST_CLUSTER_0082
+9Q3C	test	KEPT		9Q3C	TEST_CLUSTER_0083
+9QTJ	test	KEPT		9QTJ	TEST_CLUSTER_0084
+9QU6	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FAQ	
+9QU7	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	4FAQ	
+9QZJ	test	KEPT		9QZJ	TEST_CLUSTER_0085
+9R7Q	test	KEPT		9R7Q	TEST_CLUSTER_0086
+9R7W	test	KEPT		9R7W	TEST_CLUSTER_0087
+9R82	test	KEPT		9R82	TEST_CLUSTER_0088
+9RB4	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	3S7C	
+9S1D	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	7Q7X	
+9SD9	test	KEPT		9SD9	TEST_CLUSTER_0089
+9SXV	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8CLR	
+9SY4	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	8CLR	
+9SY8	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9I9W	TEST_CLUSTER_0042
+9SYC	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9I9W	TEST_CLUSTER_0042
+9SYD	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9I9W	TEST_CLUSTER_0042
+9SYE	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9I9W	TEST_CLUSTER_0042
+9SYF	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9I9W	TEST_CLUSTER_0042
+9TCA	test	KEPT		9TCA	TEST_CLUSTER_0090
+9TCG	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9TCA	TEST_CLUSTER_0090
+9UUG	test	KEPT		9UUG	TEST_CLUSTER_0091
+9UW0	test	KEPT		9UW0	TEST_CLUSTER_0011
+9V4U	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9V4V	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9V4X	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9V4Y	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9V4Z	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9V50	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9V51	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9IWF	TEST_CLUSTER_0050
+9V7N	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9V7O	TEST_CLUSTER_0092
+9V7O	test	KEPT		9V7O	TEST_CLUSTER_0092
+9V7P	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9X6B	TEST_CLUSTER_0093
+9V7Q	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9X6B	TEST_CLUSTER_0093
+9VMZ	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	8K7W	TEST_CLUSTER_0009
+9VSN	test	KEPT		9VSN	TEST_CLUSTER_0094
+9W1L	test	KEPT		9W1L	TEST_CLUSTER_0095
+9WHV	test	KEPT		9WHV	TEST_CLUSTER_0096
+9X6B	test	KEPT		9X6B	TEST_CLUSTER_0093
+9YD3	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	5UED	
+9Z6I	test	KEPT		9Z6I	TEST_CLUSTER_0097
+9ZBQ	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	6WLS	
+9ZBR	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	7EZ0	
+9ZC6	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	6WLS	
+9ZC7	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	7PTK	
+9ZC8	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	7PTK	
+9ZC9	test	KEPT		9ZC9	TEST_CLUSTER_0098
+9ZCA	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9ZC9	TEST_CLUSTER_0098
+9ZCB	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9ZC9	TEST_CLUSTER_0098
+9ZCC	test	REMOVED_INTERNAL_REDUNDANT	Non-representative member of a test homology component	9ZC9	TEST_CLUSTER_0098
+9ZDV	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZF2	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZF3	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZF5	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZF9	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZFC	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZFD	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGM	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGN	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGO	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGP	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGQ	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGR	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGS	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGT	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGU	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGV	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGW	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGX	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGY	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZGZ	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZH0	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZH1	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZH2	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZH5	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZH7	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZH9	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHA	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHB	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHC	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHD	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHE	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHF	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHG	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHI	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHJ	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHK	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHL	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHO	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHP	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHR	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHS	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHT	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHU	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHV	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHW	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHX	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZHZ	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZI0	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZI2	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZI3	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZI4	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZI5	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZI6	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	
+9ZI7	test	REMOVED_REFERENCE_REDUNDANT	RNA entity homologous to train/val at configured thresholds	2A64	

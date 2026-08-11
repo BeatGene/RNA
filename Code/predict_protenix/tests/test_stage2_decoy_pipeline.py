@@ -51,6 +51,7 @@ class Stage2AuditTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.simple = self.root / "simple"
         self.complex = self.root / "complex"
+        self.pred = self.root / "foldbench_predictions"
         self.report = self.root / "reports"
         self.cif_dir = self.root / "cif"
         self.manifest = self.root / "pdb_cif_manifest.csv"
@@ -106,6 +107,7 @@ class Stage2AuditTests(unittest.TestCase):
             cif_dir=self.cif_dir,
             simple_json_dir=self.simple,
             complex_json_dir=self.complex,
+            pred_output_dir=self.pred,
             report_dir=self.report,
             seeds=[42, 43],
             samples=2,
@@ -131,7 +133,7 @@ class Stage2AuditTests(unittest.TestCase):
         a3m.write_text(">query\nACGU\n", encoding="utf-8")
         for seed in (42, 43):
             pred = (
-                self.complex
+                self.pred
                 / f"pred_output_1abc_seed_{seed}"
                 / "1abc"
                 / f"seed_{seed}"
@@ -141,7 +143,7 @@ class Stage2AuditTests(unittest.TestCase):
                 write_cif(pred / f"1abc_sample_{rank}.cif")
                 write_cif(pred / f"1abc_sample_{rank}_wounresol.cif")
                 (pred / f"1abc_summary_confidence_sample_{rank}.json").write_text(
-                    "{}", encoding="utf-8"
+                    json.dumps({"ranking_score": 0.5}), encoding="utf-8"
                 )
 
     def test_audit_counts_primary_cifs_and_rebases_msa(self) -> None:
@@ -181,6 +183,20 @@ class Stage2AuditTests(unittest.TestCase):
         self.assertTrue((self.report / "decoy_manifest.csv").is_file())
         self.assertTrue((self.report / "decoy_seed_manifest.csv").is_file())
         self.assertTrue((self.report / "chain_id_mapping.csv").is_file())
+
+    def test_cli_defaults_to_foldbench_budget(self) -> None:
+        args = pipeline.build_parser().parse_args(["audit"])
+        self.assertEqual(args.seeds, [42, 66, 101, 2024, 8888])
+        self.assertEqual(args.samples, 5)
+        self.assertEqual(args.pred_output_dir.name, "Foldbench_predictions")
+
+    def test_missing_ranking_score_makes_seed_incomplete(self) -> None:
+        self.make_complete_target_with_stale_msa()
+        confidence = next(self.pred.rglob("*summary_confidence_sample_0.json"))
+        confidence.write_text("{}", encoding="utf-8")
+        info = pipeline.inspect_seed(confidence.parents[3], 2, "quick")
+        self.assertEqual(info.status, "INCOMPLETE")
+        self.assertIn("ranking_score", info.reason)
 
 
 if __name__ == "__main__":
