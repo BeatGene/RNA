@@ -14,7 +14,6 @@ import hashlib
 import json
 import math
 import os
-import queue
 import re
 import shutil
 import subprocess
@@ -32,6 +31,7 @@ import pandas as pd
 PDB_ID_RE = re.compile(r"^[A-Z0-9_]+$")
 PRED_FOLDER_RE = re.compile(r"^pred_output_(.+)_seed_(\d+)$", re.IGNORECASE)
 PREP_FOLDER_RE = re.compile(r"^prep_output_(.+)$", re.IGNORECASE)
+SEED_FOLDER_RE = re.compile(r"^seed_(\d+)$", re.IGNORECASE)
 PRIMARY_CIF_RE = re.compile(r"^.+_sample_(\d+)\.cif$", re.IGNORECASE)
 UNRESOLVED_CIF_RE = re.compile(
     r"^.+_sample_(\d+)_wounresol\.cif$", re.IGNORECASE
@@ -125,6 +125,7 @@ class JsonInfo:
     task_name: str = ""
     rna_entries: int = 0
     rna_chains: int = 0
+    token_count: int = 0
     sequences: list[str] | None = None
     msa_paths: list[str] | None = None
 
@@ -221,6 +222,7 @@ def index_output_dirs(
         for dirname in dirnames:
             prep_match = PREP_FOLDER_RE.fullmatch(dirname)
             pred_match = PRED_FOLDER_RE.fullmatch(dirname)
+            seed_match = SEED_FOLDER_RE.fullmatch(dirname)
             path = (Path(current) / dirname).resolve()
             if pred_match:
                 pdb_id = normalize_pdb_id(pred_match.group(1))
@@ -228,6 +230,16 @@ def index_output_dirs(
             elif prep_match:
                 pdb_id = normalize_pdb_id(prep_match.group(1))
                 prep.setdefault(pdb_id, []).append(path)
+            elif seed_match:
+                # Resident-worker/batch inference writes
+                #   <pred_root>/<pdb>/seed_<seed>/predictions
+                # instead of wrapping every task in pred_output_<pdb>_seed_*.
+                try:
+                    pdb_id = normalize_pdb_id(Path(current).name)
+                except ValueError:
+                    kept.append(dirname)
+                else:
+                    pred.setdefault((pdb_id, int(seed_match.group(1))), []).append(path)
             else:
                 kept.append(dirname)
         dirnames[:] = kept
@@ -263,6 +275,7 @@ def read_json_info(path: Path | None) -> JsonInfo:
                 raise ValueError("rnaSequence.count 必须大于 0")
             info.rna_entries += 1
             info.rna_chains += count
+            info.token_count += len(sequence) * count
             info.sequences.append(sequence)
             info.msa_paths.append(str(rna.get("unpairedMsaPath", "")).strip())
         if not info.rna_entries:
@@ -1075,122 +1088,279 @@ def runtime_json(
     return output.resolve()
 
 
+def prediction_weight(prep: PrepInfo) -> int:
+    """Cheap deterministic proxy for Pairformer/diffusion cost."""
+    tokens = max(1, prep.updated_json.token_count)
+    return tokens * tokens
+
+
+def write_pred_availability(
+    report_dir: Path,
+    rows: list[dict[str, Any]],
+) -> None:
+    fields = [
+        "PDB_ID",
+        "PREP_STATUS",
+        "ACTION",
+        "MISSING_SEEDS",
+        "ESTIMATED_WEIGHT",
+        "NOTE",
+    ]
+    report_dir.mkdir(parents=True, exist_ok=True)
+    for name, selected in (
+        ("pred_availability.csv", rows),
+        ("pred_deferred_prep.csv", [row for row in rows if row["ACTION"] == "DEFER_PREP"]),
+        ("pred_quarantined_oom.csv", [row for row in rows if row["ACTION"] == "QUARANTINE"]),
+        ("pred_scheduled.csv", [row for row in rows if row["ACTION"] == "SCHEDULE"]),
+    ):
+        with (report_dir / name).open("w", newline="", encoding="utf-8-sig") as handle:
+            writer = csv.DictWriter(handle, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(selected)
+
+
+def load_pdb_id_file(path: Path | None) -> set[str]:
+    if path is None:
+        return set()
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    result: set[str] = set()
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        value = raw.split("#", 1)[0].strip()
+        if value:
+            result.add(normalize_pdb_id(value))
+    return result
+
+
+def write_batch_json(
+    path: Path,
+    items: list[tuple[Target, PrepInfo]],
+) -> None:
+    payload: list[dict[str, Any]] = []
+    for target, prep in items:
+        source = Path(prep.updated_json.path)
+        task = json.loads(source.read_text(encoding="utf-8"))[0]
+        task["name"] = target.pdb_id.lower()
+        task.pop("modelSeeds", None)
+        rna_index = 0
+        for item in task["sequences"]:
+            if "rnaSequence" not in item:
+                continue
+            path_text = prep.resolved_msa_paths[rna_index]
+            if not path_text:
+                raise ValueError(f"{target.pdb_id}: 第 {rna_index} 个 RNA MSA 缺失")
+            item["rnaSequence"]["unpairedMsaPath"] = path_text
+            rna_index += 1
+        payload.append(task)
+    atomic_write_text(path, json.dumps(payload, ensure_ascii=False, indent=2))
+
+
 def run_pred(args: argparse.Namespace) -> None:
-    executable = locate_executable(args.protenix)
+    """Run resident per-GPU batches: one checkpoint load serves many PDBs/seeds."""
+    locate_executable(args.protenix)
     targets = load_targets(args.manifest)
     _, updated_index = index_json_files(args.simple_json_dir)
     prep_index, _ = index_output_dirs(args.complex_json_dir)
     pred_root = prediction_output_root(args)
     _, pred_index = index_output_dirs(pred_root)
-    tasks: list[tuple[Target, int, PrepInfo]] = []
+    excluded_pdbs = load_pdb_id_file(args.exclude_pdb_file)
+    ready: list[tuple[Target, tuple[int, ...], PrepInfo]] = []
+    availability: list[dict[str, Any]] = []
     for target in targets:
         updated = choose_indexed_path(updated_index.get(target.pdb_id, []))
         prep_dir = choose_indexed_path(prep_index.get(target.pdb_id, []))
         prep = inspect_prep(target.pdb_id, updated, prep_dir)
         if prep.status not in {"COMPLETE", "COMPLETE_REBASABLE"}:
             print(f"[PRED] {target.pdb_id}: 跳过，prep={prep.status}")
+            availability.append(
+                {
+                    "PDB_ID": target.pdb_id,
+                    "PREP_STATUS": prep.status,
+                    "ACTION": "DEFER_PREP",
+                    "MISSING_SEEDS": ",".join(map(str, args.seeds)),
+                    "ESTIMATED_WEIGHT": 0,
+                    "NOTE": prep.reason,
+                }
+            )
             continue
+        missing: list[int] = []
         for seed in args.seeds:
             out = choose_indexed_path(pred_index.get((target.pdb_id, seed), []))
             current = inspect_seed(out, args.samples, args.cif_validation)
             if current.status != "COMPLETE":
-                tasks.append((target, seed, prep))
-    print(f"需要执行 pred：{len(tasks)}/{len(targets) * len(args.seeds)} 个 seed 任务")
-    if not tasks:
+                missing.append(seed)
+        action = "COMPLETE" if not missing else "SCHEDULE"
+        if missing and target.pdb_id in excluded_pdbs:
+            action = "QUARANTINE"
+        availability.append(
+            {
+                "PDB_ID": target.pdb_id,
+                "PREP_STATUS": prep.status,
+                "ACTION": action,
+                "MISSING_SEEDS": ",".join(map(str, missing)),
+                "ESTIMATED_WEIGHT": prediction_weight(prep),
+                "NOTE": (
+                    "已有输出已通过校验"
+                    if not missing
+                    else "已知 OOM 目标，留待低内存专用策略"
+                    if action == "QUARANTINE"
+                    else "待批量推理"
+                ),
+            }
+        )
+        if missing and action == "SCHEDULE":
+            ready.append((target, tuple(missing), prep))
+
+    ready.sort(
+        key=lambda item: (
+            prediction_weight(item[2]) if args.prefer_shortest else -prediction_weight(item[2]),
+            item[0].pdb_id,
+        )
+    )
+    max_targets = int(getattr(args, "max_targets", 0) or 0)
+    if max_targets and len(ready) > max_targets:
+        selected_ids = {item[0].pdb_id for item in ready[:max_targets]}
+        ready = ready[:max_targets]
+        for row in availability:
+            if row["ACTION"] == "SCHEDULE" and row["PDB_ID"] not in selected_ids:
+                row["ACTION"] = "LIMITED_OUT"
+                row["NOTE"] = f"--max-targets={max_targets}；留待正式运行"
+
+    write_pred_availability(args.report_dir, availability)
+    seed_task_count = sum(len(item[1]) for item in ready)
+    deferred_count = sum(row["ACTION"] == "DEFER_PREP" for row in availability)
+    quarantine_count = sum(row["ACTION"] == "QUARANTINE" for row in availability)
+    print(f"本次可执行 pred：{len(ready)} PDB，{seed_task_count} 个 seed 任务")
+    print(f"因 prep 未完成而延期：{deferred_count} PDB")
+    print(f"因既往 OOM 而隔离：{quarantine_count} PDB")
+    print(f"延期清单：{args.report_dir / 'pred_deferred_prep.csv'}")
+    if not ready:
         audit_and_write(args)
         return
 
-    gpu_queue: queue.Queue[str] = queue.Queue()
-    for gpu in args.gpus:
-        gpu_queue.put(gpu)
-    print_lock = threading.Lock()
-    event_path = args.report_dir / "run_events.jsonl"
+    # A PDB is assigned to one GPU.  Grouping by identical missing-seed sets
+    # preserves checkpoint reuse on the common initial run while still making
+    # interrupted runs safely repairable.
+    loads = {gpu: 0 for gpu in args.gpus}
+    assignments: dict[tuple[str, tuple[int, ...]], list[tuple[Target, PrepInfo]]] = {}
+    for target, missing_seeds, prep in ready:
+        gpu = min(args.gpus, key=lambda value: (loads[value], value))
+        assignments.setdefault((gpu, missing_seeds), []).append((target, prep))
+        loads[gpu] += prediction_weight(prep) * len(missing_seeds)
 
-    def task(item: tuple[Target, int, PrepInfo]) -> tuple[str, int, bool]:
-        target, seed, prep = item
-        gpu = gpu_queue.get()
-        try:
-            input_json = runtime_json(target.pdb_id, prep, args.report_dir)
-            out = (
-                pred_root
-                / f"pred_output_{target.pdb_id.lower()}_seed_{seed}"
+    event_path = args.report_dir / "run_events.jsonl"
+    print_lock = threading.Lock()
+
+    def batch_task(
+        item: tuple[tuple[str, tuple[int, ...]], list[tuple[Target, PrepInfo]]]
+    ) -> tuple[str, tuple[int, ...], list[tuple[str, int, bool]]]:
+        (gpu, seeds), pdb_items = item
+        seed_label = "_".join(map(str, seeds))
+        batch_json = args.report_dir / "pred_batches" / f"gpu_{gpu}_seeds_{seed_label}.json"
+        write_batch_json(batch_json, pdb_items)
+        log = args.report_dir / "logs" / "pred_batch" / f"gpu_{gpu}_seeds_{seed_label}.log"
+        heartbeat_path = (
+            args.report_dir / "heartbeats" / f"gpu_{gpu}_seeds_{seed_label}.json"
+        )
+        command = [
+            sys.executable,
+            str(args.resident_worker),
+            "--input-json",
+            str(batch_json),
+            "--output-dir",
+            str(pred_root),
+            "--seeds",
+            ",".join(map(str, seeds)),
+            "--samples",
+            str(args.samples),
+            "--steps",
+            "200",
+            "--cycles",
+            "10",
+            "--dtype",
+            "bf16",
+            "--model",
+            MODEL_NAME,
+            "--heartbeat",
+            str(heartbeat_path),
+            "--memory-stop-percent",
+            str(args.memory_stop_percent),
+        ]
+        env = os.environ.copy()
+        env["CUDA_VISIBLE_DEVICES"] = str(gpu)
+        env["OMP_NUM_THREADS"] = str(args.cpu_threads_per_gpu)
+        env["MKL_NUM_THREADS"] = str(args.cpu_threads_per_gpu)
+        code = run_logged(
+            command,
+            log,
+            event_path,
+            {
+                "stage": "pred_resident_batch",
+                "gpu": gpu,
+                "model": MODEL_NAME,
+                "samples": args.samples,
+                "seeds": list(seeds),
+                "pdb_count": len(pdb_items),
+                "pdb_ids": [target.pdb_id for target, _ in pdb_items],
+            },
+            env=env,
+        )
+        if code != 0:
+            atomic_write_text(
+                heartbeat_path,
+                json.dumps(
+                    {
+                        "status": "FAILED",
+                        "return_code": code,
+                        "gpu": gpu,
+                        "seeds": list(seeds),
+                        "pdb_ids": [target.pdb_id for target, _ in pdb_items],
+                        "updated_at_utc": utc_now(),
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                ),
             )
-            log = (
-                args.report_dir
-                / "logs"
-                / "pred"
-                / f"{target.pdb_id}_seed_{seed}.log"
-            )
-            command = [
-                executable,
-                "pred",
-                "-i",
-                str(input_json),
-                "-o",
-                str(out),
-                "-n",
-                MODEL_NAME,
-                "--use_msa",
-                "True",
-                "--use_rna_msa",
-                "True",
-                "--use_template",
-                "False",
-                "--use_default_params",
-                "True",
-                "--dtype",
-                "bf16",
-                "--sample",
-                str(args.samples),
-                "--step",
-                "200",
-                "--cycle",
-                "10",
-                "--enable_cache",
-                "True",
-                "--enable_fusion",
-                "True",
-                "--enable_tf32",
-                "True",
-                "--seeds",
-                str(seed),
-            ]
-            env = os.environ.copy()
-            env["CUDA_VISIBLE_DEVICES"] = str(gpu)
-            code = run_logged(
-                command,
-                log,
-                event_path,
-                {
-                    "stage": "pred",
-                    "pdb_id": target.pdb_id,
-                    "seed": seed,
-                    "gpu": gpu,
-                    "model": MODEL_NAME,
-                    "samples": args.samples,
-                },
-                env=env,
-            )
-            verified = inspect_seed(out, args.samples, args.cif_validation)
-            ok = code == 0 and verified.status == "COMPLETE"
-            with print_lock:
-                print(
-                    f"[PRED GPU={gpu}] {target.pdb_id} seed={seed}: "
-                    f"{'OK' if ok else 'FAILED'} "
-                    f"(return={code}, verify={verified.status})"
+        batch_pred_index = index_output_dirs(pred_root)[1]
+        verified_rows: list[tuple[str, int, bool]] = []
+        for target, _ in pdb_items:
+            for seed in seeds:
+                paths = batch_pred_index.get((target.pdb_id, seed), [])
+                verified = inspect_seed(
+                    choose_indexed_path(paths), args.samples, args.cif_validation
                 )
-            return target.pdb_id, seed, ok
-        finally:
-            gpu_queue.put(gpu)
+                verified_rows.append(
+                    (target.pdb_id, seed, verified.status == "COMPLETE")
+                )
+        with print_lock:
+            ok_count = sum(row[2] for row in verified_rows)
+            print(
+                f"[PRED-BATCH GPU={gpu}] PDB={len(pdb_items)} seeds={list(seeds)} "
+                f"return={code} verified={ok_count}/{len(verified_rows)}"
+            )
+        return gpu, seeds, verified_rows
 
     pred_root.mkdir(parents=True, exist_ok=True)
-    with ThreadPoolExecutor(max_workers=len(args.gpus)) as pool:
-        futures = [pool.submit(task, item) for item in tasks]
-        results = [future.result() for future in as_completed(futures)]
+    grouped_by_gpu: dict[str, list[tuple[tuple[str, tuple[int, ...]], list[tuple[Target, PrepInfo]]]]] = {}
+    for item in assignments.items():
+        grouped_by_gpu.setdefault(item[0][0], []).append(item)
+
+    def gpu_worker(
+        batches: list[tuple[tuple[str, tuple[int, ...]], list[tuple[Target, PrepInfo]]]]
+    ) -> list[tuple[str, int, bool]]:
+        rows: list[tuple[str, int, bool]] = []
+        for batch in sorted(batches, key=lambda value: value[0][1]):
+            _, _, verified = batch_task(batch)
+            rows.extend(verified)
+        return rows
+
+    with ThreadPoolExecutor(max_workers=len(grouped_by_gpu)) as pool:
+        futures = [pool.submit(gpu_worker, batches) for batches in grouped_by_gpu.values()]
+        results = [row for future in as_completed(futures) for row in future.result()]
     failures = [item for item in results if not item[2]]
-    print(f"PRED 完成={len(results) - len(failures)}，失败={len(failures)}")
-    summary = audit_and_write(args)
-    if failures or not summary["all_complete"]:
+    print(f"PRED seed任务完成={len(results) - len(failures)}，失败={len(failures)}")
+    audit_and_write(args)
+    if failures:
         raise SystemExit(2)
 
 
@@ -1267,8 +1437,15 @@ def preflight(args: argparse.Namespace) -> None:
         pred_root.is_dir() or pred_root.parent.is_dir(),
         "目录可不存在，但父目录必须存在",
     )
-    if args.command == "pred":
+    if hasattr(args, "gpus"):
         add("CUDA_VISIBLE_GPUS", ",".join(args.gpus), bool(args.gpus))
+        worker = getattr(args, "resident_worker", None)
+        add(
+            "resident_worker",
+            str(worker or ""),
+            bool(worker and worker.is_file()),
+            "Protenix v1.0.5 官方 runner API 常驻 worker",
+        )
 
     frame = pd.DataFrame(checks)
     args.report_dir.mkdir(parents=True, exist_ok=True)
@@ -1354,6 +1531,8 @@ def normalize_args(args: argparse.Namespace) -> None:
         "ntrna_database",
         "rfam_database",
         "rnacentral_database",
+        "resident_worker",
+        "exclude_pdb_file",
     ):
         if hasattr(args, name):
             value = getattr(args, name)
@@ -1361,6 +1540,12 @@ def normalize_args(args: argparse.Namespace) -> None:
                 setattr(args, name, value.expanduser().resolve())
     if args.samples < 1:
         raise ValueError("--samples 必须大于 0")
+    if getattr(args, "max_targets", 0) < 0:
+        raise ValueError("--max-targets 不能小于 0")
+    if getattr(args, "cpu_threads_per_gpu", 1) < 1:
+        raise ValueError("--cpu-threads-per-gpu 必须大于 0")
+    if not 1 <= getattr(args, "memory_stop_percent", 80.0) <= 100:
+        raise ValueError("--memory-stop-percent 必须在 1 到 100 之间")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1390,10 +1575,54 @@ def build_parser() -> argparse.ArgumentParser:
         default=["0"],
         help="逗号分隔 GPU 编号；每张卡同一时间一个任务",
     )
+    pred_parser.add_argument(
+        "--max-targets",
+        type=int,
+        default=0,
+        help="本次最多调度多少个 PDB；0 表示不限制，冒烟测试可设为 1",
+    )
+    pred_parser.add_argument(
+        "--prefer-shortest",
+        action="store_true",
+        help="优先调度最短 PDB；正式运行也建议启用以降低并发内存峰值",
+    )
+    pred_parser.add_argument(
+        "--exclude-pdb-file",
+        type=Path,
+        help="按行列出暂不进入主队列的 PDB ID（支持 # 注释）",
+    )
+    pred_parser.add_argument(
+        "--cpu-threads-per-gpu",
+        type=int,
+        default=2,
+        help="每个常驻 GPU worker 的 OMP/MKL CPU 线程数",
+    )
+    pred_parser.add_argument(
+        "--memory-stop-percent",
+        type=float,
+        default=80.0,
+        help="常驻 worker 在每个 PDB 前允许的最大 cgroup 内存百分比",
+    )
+    pred_parser.add_argument(
+        "--resident-worker",
+        type=Path,
+        default=Path(__file__).with_name("resident_protenix_pred.py"),
+        help="常驻 GPU Protenix worker 脚本",
+    )
 
     preflight_parser = subparsers.add_parser("preflight", help="检查运行环境")
     add_common_arguments(preflight_parser)
     add_database_arguments(preflight_parser)
+    preflight_parser.add_argument(
+        "--gpus",
+        type=lambda text: [item.strip() for item in text.split(",") if item.strip()],
+        default=[],
+    )
+    preflight_parser.add_argument(
+        "--resident-worker",
+        type=Path,
+        default=Path(__file__).with_name("resident_protenix_pred.py"),
+    )
     return parser
 
 

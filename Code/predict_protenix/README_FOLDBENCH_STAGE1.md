@@ -25,6 +25,14 @@ PROTENIX_ROOT_DIR=/storage9920/home/tinghao.xia/protenix_data
 
 ```powershell
 scp -P 30063 Code/predict_protenix/stage2_decoy_pipeline.py `
+  Code/predict_protenix/cached_rna_prep.py `
+  Code/predict_protenix/resident_protenix_pred.py `
+  Code/predict_protenix/run_foldbench_pred.sh `
+  Code/predict_protenix/start_foldbench_pred.sh `
+  Code/predict_protenix/monitor_foldbench_pred.sh `
+  Code/predict_protenix/check_pred_environment.sh `
+  Code/predict_protenix/start_foldbench_prep.sh `
+  Code/predict_protenix/monitor_foldbench_prep.sh `
   Code/predict_protenix/run_foldbench_stage1.sh `
   tinghao.xia@dubhe.lglab.ac.cn:~/Code/predict_protenix/
 ```
@@ -54,40 +62,65 @@ cat ~/Code/pipeline_reports/FOLDBENCH_STAGE1/preflight.exit_code
 
 输出 `0`。
 
-### 2. 增量补 prep
+### 2. 按旧数据库口径增量补 prep
 
-当前预计从 1974/2241 补到 2241/2241，即执行约 267 个目标。已有完整 prep
-会被审计后跳过，不会删除或覆盖。
+新版 prep 按唯一 RNA 序列解析 MSA。为了与既有自定义数据库结果保持一致，
+默认优先级为：已有有效 MSA、一次新的 nhmmer 搜索；官方包只有显式传入
+`--allow-official-msa` 才会启用。每个 PDB 仍会生成独立的
+`*-final-updated.json`，并尽可能在 `prep_output_<pdb>` 下建立指向共享 A3M 的
+兼容符号链接。不会删除或覆盖任何已通过审计的完整 prep。
+
+已有完整 prep 会被审计后跳过，不会删除或覆盖。中断后重复同一命令即可；
+已经进入序列缓存的搜索不会重跑。
+
+使用宿主机启动与监控脚本。每次运行写入独立时间戳目录，并每 30 秒更新
+heartbeat；即使容器停止，宿主机 launcher 也会记录 `docker exec` 的退出码：
 
 ```bash
-docker exec -d protenix_test bash -lc \
-  '/storage9920/home/tinghao.xia/Code/predict_protenix/run_foldbench_stage1.sh prep \
-  > /storage9920/home/tinghao.xia/Code/pipeline_reports/FOLDBENCH_STAGE1/prep_console.log 2>&1'
+chmod +x ~/Code/predict_protenix/{run_foldbench_stage1,start_foldbench_prep,monitor_foldbench_prep}.sh
+bash ~/Code/predict_protenix/start_foldbench_prep.sh
+watch -n 30 bash ~/Code/predict_protenix/monitor_foldbench_prep.sh
 ```
 
-查看进度：
+监控输出会同时显示宿主机 launcher、容器状态、prep/nhmmer 进程、heartbeat
+新鲜度和最新 30 行日志。单次运行的全部日志位于：
 
-```bash
-tail -f ~/Code/pipeline_reports/FOLDBENCH_STAGE1/prep_console.log
-cat ~/Code/pipeline_reports/FOLDBENCH_STAGE1/prep.exit_code
-cat ~/Code/pipeline_reports/FOLDBENCH_STAGE1/summary.json
+```text
+~/Code/pipeline_reports/FOLDBENCH_STAGE1/prep_runs/<UTC时间戳>/
 ```
 
-开始 pred 前必须满足 `prep_complete=2241`、`need_json=0`、`need_prep=0`，且
-`prep.exit_code` 为 `0`。prep 命令退出码为 2 通常表示至少一个目标失败；重复
-同一命令只会补失败或不完整项。
+其中 `launcher.exit_code=RUNNING` 表示仍在运行，`0` 表示正常完成，非零表示
+异常或任务失败；`heartbeat.json` 超过 120 秒未更新会显示 `STALE`。重复启动
+只会补失败或不完整项。完成后再运行一次 `audit`，确认
+`prep_complete=2241`、`need_json=0`、`need_prep=0`。
 
 ### 3. 八卡运行 FoldBench-style pred
 
+先执行只读资源/API 检查：
+
 ```bash
-docker exec -d protenix_test bash -lc \
-  '/storage9920/home/tinghao.xia/Code/predict_protenix/run_foldbench_stage1.sh pred \
-  > /storage9920/home/tinghao.xia/Code/pipeline_reports/FOLDBENCH_STAGE1/pred_console.log 2>&1'
+bash ~/Code/predict_protenix/check_pred_environment.sh
 ```
 
-每张 GPU 同时只运行一个 `(PDB, seed)` 任务，每个任务生成 5 个样本。中断后
-重复同一命令即可断点续跑；只有通过 CIF 数量和基本可读性校验的 seed 才会
-跳过。
+再用 GPU 1 对当前最短且 prep 完成的 PDB 做完整 5 seeds x 5 samples 冒烟；
+产生的 25 个 CIF 会计入正式结果：
+
+```bash
+bash ~/Code/predict_protenix/start_foldbench_pred.sh pred-smoke
+watch -n 30 bash ~/Code/predict_protenix/monitor_foldbench_pred.sh
+```
+
+冒烟完成且 `LAUNCHER_EXIT=0`、`PRED_EXIT=0` 后启动正式八卡增量任务：
+
+```bash
+bash ~/Code/predict_protenix/start_foldbench_pred.sh pred
+watch -n 30 bash ~/Code/predict_protenix/monitor_foldbench_pred.sh
+```
+
+每张 GPU 启动一个常驻 worker，checkpoint 只加载一次，然后连续运行分配给该
+GPU 的 PDB 和 seeds。中断后重复启动即可断点续跑；只有通过 CIF 数量和基本
+可读性校验的 seed 才会跳过。尚未完成 prep 的条目写入每次运行目录下的
+`pred_deferred_prep.csv`，待 prep 完成后再次启动即可补算。
 
 ```bash
 tail -f ~/Code/pipeline_reports/FOLDBENCH_STAGE1/pred_console.log

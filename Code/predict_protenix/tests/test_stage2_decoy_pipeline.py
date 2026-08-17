@@ -175,6 +175,40 @@ class Stage2AuditTests(unittest.TestCase):
         msa = payload[0]["sequences"][0]["rnaSequence"]["unpairedMsaPath"]
         self.assertTrue(Path(msa).is_file())
 
+    def test_batch_json_rebases_msa_and_removes_json_seeds(self) -> None:
+        self.make_complete_target_with_stale_msa()
+        source = self.simple / "1abc-final-updated.json"
+        payload = json.loads(source.read_text(encoding="utf-8"))
+        payload[0]["modelSeeds"] = [999]
+        source.write_text(json.dumps(payload), encoding="utf-8")
+        _, updated_index = pipeline.index_json_files(self.simple)
+        prep_index, _ = pipeline.index_output_dirs(self.complex)
+        prep = pipeline.inspect_prep(
+            "1ABC",
+            pipeline.choose_indexed_path(updated_index["1ABC"]),
+            pipeline.choose_indexed_path(prep_index["1ABC"]),
+        )
+        output = self.report / "batch.json"
+        target = pipeline.Target("1ABC", "", True)
+        pipeline.write_batch_json(output, [(target, prep)])
+        batch = json.loads(output.read_text(encoding="utf-8"))
+        self.assertEqual(batch[0]["name"], "1abc")
+        self.assertNotIn("modelSeeds", batch[0])
+        msa = batch[0]["sequences"][0]["rnaSequence"]["unpairedMsaPath"]
+        self.assertTrue(Path(msa).is_file())
+
+    def test_indexes_resident_worker_layout(self) -> None:
+        pred = self.pred / "1abc" / "seed_42" / "predictions"
+        pred.mkdir(parents=True)
+        _, index = pipeline.index_output_dirs(self.pred)
+        self.assertIn(("1ABC", 42), index)
+        self.assertEqual(pipeline.choose_indexed_path(index[("1ABC", 42)]).name, "seed_42")
+
+    def test_load_pdb_id_file_normalizes_and_ignores_comments(self) -> None:
+        path = self.root / "quarantine.txt"
+        path.write_text("# known failures\n1abc\n 2def # gpu oom\n", encoding="utf-8")
+        self.assertEqual(pipeline.load_pdb_id_file(path), {"1ABC", "2DEF"})
+
     def test_writes_readable_reports(self) -> None:
         self.make_complete_target_with_stale_msa()
         summary = pipeline.audit_and_write(self.args())
