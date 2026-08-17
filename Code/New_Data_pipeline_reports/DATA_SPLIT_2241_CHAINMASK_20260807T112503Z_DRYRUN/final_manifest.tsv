@@ -1,0 +1,2242 @@
+PDB_ID	RELEASE_DATE	INITIAL_SPLIT	FINAL_SPLIT	FINAL_STATUS	EXCLUSION_REASON	EVALUATE_CHAIN_IDS	MASKED_CHAIN_IDS	TARGET_DIRECTORY
+10ZT	2026-05-27	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/10zt
+10ZU	2026-05-27	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+11AG	2026-05-27	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,C	
+11EH	2026-05-27	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+12CI	2026-05-13	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/12ci
+12CJ	2026-05-13	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/12cj
+157D	1994-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/157d
+165D	1994-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/165d
+17RA	1999-04-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/17ra
+1A3M	1998-04-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1a3m
+1A4D	1998-04-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1a4d
+1A51	1998-05-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1a51
+1A60	1998-05-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1a60
+1A9L	1998-06-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1a9l
+1AFX	1997-05-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1afx
+1AJF	1997-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ajf
+1AJL	1997-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ajl
+1AJT	1997-08-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ajt
+1AJU	1997-12-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1aju
+1AKX	1997-11-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1akx
+1AL5	1997-12-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1al5
+1AM0	1997-07-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1am0
+1ANR	1997-01-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1anr
+1AQO	1998-02-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1aqo
+1ARJ	1996-11-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1arj
+1ATO	1997-11-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ato
+1ATV	1998-02-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1atv
+1ATW	1998-02-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1atw
+1B36	1998-12-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1b36
+1BAU	1999-04-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1bau
+1BGZ	1999-01-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1bgz
+1BJ2	1999-02-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1bj2
+1BN0	1999-04-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1bn0
+1BVJ	1998-12-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1bvj
+1BYJ	1999-10-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1byj
+1BZ2	1999-04-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1bz2
+1BZ3	1999-04-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1bz3
+1BZT	1999-04-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1bzt
+1BZU	1999-04-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1bzu
+1C0O	1999-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1c0o
+1C2W	2000-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1c2w
+1C2X	2000-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1c2x
+1C4L	2000-08-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1c4l
+1CQ5	1999-08-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1cq5
+1CQL	2000-01-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1cql
+1CSL	2000-02-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1csl
+1D0T	2000-05-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1d0t
+1D0U	2000-05-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1d0u
+1D4R	1999-12-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1d4r
+1DDY	2000-01-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ddy
+1DQF	2000-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1dqf
+1DQH	2000-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1dqh
+1DUH	2000-05-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1duh
+1DUQ	2000-05-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1duq
+1E4P	2001-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1e4p
+1E95	2001-08-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1e95
+1EBQ	1997-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ebq
+1EBR	1997-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ebr
+1EBS	1997-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ebs
+1EHT	1997-12-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1eht
+1EHZ	2000-10-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ehz
+1EI2	2000-03-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ei2
+1EKA	2000-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1eka
+1EKD	2000-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ekd
+1ELH	1994-01-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1elh
+1ESH	2000-04-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1esh
+1ESY	2000-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1esy
+1ET4	2000-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1et4
+1EVV	2000-05-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1evv
+1F1T	2000-09-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f1t
+1F27	2000-06-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f27
+1F5G	2000-06-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f5g
+1F5H	2000-06-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f5h
+1F5U	2000-08-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f5u
+1F6X	2000-10-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f6x
+1F6Z	2000-10-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f6z
+1F78	2000-10-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f78
+1F79	2000-10-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f79
+1F7F	2000-10-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f7f
+1F7G	2000-10-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f7g
+1F7H	2000-10-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f7h
+1F7I	2000-10-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f7i
+1F84	2000-11-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f84
+1F85	2000-11-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f85
+1F9L	2000-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1f9l
+1FCW	2000-08-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fcw
+1FEQ	2000-11-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1feq
+1FG0	2000-08-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fg0
+1FHK	2001-03-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fhk
+1FIR	2001-01-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fir
+1FL8	2000-10-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fl8
+1FMN	1996-07-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fmn
+1FOQ	2000-12-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1foq
+1FQZ	2001-01-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fqz
+1FUF	2001-11-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fuf
+1FYO	2001-03-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fyo
+1FYP	2001-03-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1fyp
+1G2J	2000-12-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1g2j
+1G3A	2001-08-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1g3a
+1GID	1996-12-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1gid
+1GRZ	1998-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1grz
+1GUC	1997-02-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1guc
+1H0Q	2003-07-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1h0q
+1H1K	2002-09-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1h1k
+1HLX	1995-09-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1hlx
+1HR2	2001-04-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1hr2
+1HS1	2003-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1hs1
+1HS2	2001-08-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1hs2
+1HS3	2003-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1hs3
+1HS4	2003-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1hs4
+1HS8	2003-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1hs8
+1HWQ	2001-05-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1hwq
+1I3X	2001-04-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1i3x
+1I3Y	2001-04-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1i3y
+1I46	2001-04-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1i46
+1I4B	2001-04-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1i4b
+1I4C	2001-04-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1i4c
+1I7J	2001-09-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1i7j
+1I9K	2001-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1i9k
+1I9V	2001-06-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1i9v
+1I9X	2001-09-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1i9x
+1IDV	2001-10-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1idv
+1IE1	2001-06-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ie1
+1IE2	2001-06-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ie2
+1IK1	2001-07-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ik1
+1IK5	2001-11-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ik5
+1IKD	1997-04-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ikd
+1J4Y	2002-07-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1j4y
+1J6S	2003-08-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1j6s
+1J7T	2002-05-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1j7t
+1J8G	2001-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1j8g
+1J9H	2001-10-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1j9h
+1JO7	2001-09-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1jo7
+1JOX	2002-05-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1jox
+1JP0	2002-05-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1jp0
+1JTJ	2002-12-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1jtj
+1JTW	2001-12-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1jtw
+1JU1	2002-08-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ju1
+1JU7	2002-03-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ju7
+1JUR	2002-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1jur
+1JWC	2002-03-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1jwc
+1JZC	2003-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1jzc
+1JZV	2003-11-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1jzv
+1K2G	2002-05-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1k2g
+1K4A	2001-12-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1k4a
+1K4B	2001-12-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1k4b
+1K5I	2001-10-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1k5i
+1K6G	2001-12-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1k6g
+1K6H	2001-12-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1k6h
+1K8S	2001-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1k8s
+1K9W	2001-11-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1k9w
+1KAJ	1996-07-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kaj
+1KD3	2003-03-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kd3
+1KD4	2003-03-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kd4
+1KD5	2003-03-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kd5
+1KFO	2001-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kfo
+1KH6	2002-04-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kh6
+1KIS	1997-10-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kis
+1KKA	2002-07-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kka
+1KKS	2002-03-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kks
+1KOC	1996-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1koc
+1KOD	1996-11-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kod
+1KOS	1999-10-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kos
+1KP7	2002-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kp7
+1KPD	1997-04-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kpd
+1KPY	2002-01-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kpy
+1KPZ	2002-01-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kpz
+1KXK	2002-03-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1kxk
+1L1W	2002-05-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1l1w
+1L2X	2002-03-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1l2x
+1L3D	2002-03-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1l3d
+1L3Z	2003-02-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1l3z
+1L8V	2002-08-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1l8v
+1LC4	2003-04-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1lc4
+1LC6	2002-05-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1lc6
+1LDZ	1998-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ldz
+1LMV	2002-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1lmv
+1LNT	2003-06-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1lnt
+1LPW	2002-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1lpw
+1LU3	2002-06-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1lu3
+1LUU	2003-09-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1luu
+1LUX	2003-09-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1lux
+1LVJ	2002-12-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1lvj
+1M5L	2002-09-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1m5l
+1M82	2003-06-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1m82
+1MDG	2003-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mdg
+1ME1	2003-08-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1me1
+1MFJ	2002-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mfj
+1MFK	2002-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mfk
+1MFY	2002-09-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mfy
+1MHK	2002-09-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mhk
+1MIS	1997-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mis
+1MME	1996-02-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mme
+1MNX	2003-01-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mnx
+1MSY	2003-02-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1msy
+1MT4	2003-01-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mt4
+1MUV	2002-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1muv
+1MV1	2002-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mv1
+1MV2	2002-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mv2
+1MV6	2002-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mv6
+1MWG	1997-03-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mwg
+1MWL	2003-02-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1mwl
+1MY9	2003-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1my9
+1N53	2003-04-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1n53
+1N66	2003-08-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1n66
+1N8X	2003-04-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1n8x
+1NA2	2003-01-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1na2
+1NBK	2003-12-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nbk
+1NBR	2003-03-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nbr
+1NBS	2003-02-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nbs
+1NC0	2003-02-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nc0
+1NEM	1999-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nem
+1NJN	2003-02-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1njn
+1NJO	2003-02-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1njo
+1NLC	2003-05-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nlc
+1NTA	2003-05-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nta
+1NTB	2003-05-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ntb
+1NUJ	2003-08-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nuj
+1NUV	2003-08-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nuv
+1NYI	2004-02-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nyi
+1NZ1	2003-05-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1nz1
+1O15	2003-02-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1o15
+1O3Z	2003-05-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1o3z
+1O9M	2003-03-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1o9m
+1OQ0	2003-05-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1oq0
+1OSU	1996-04-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1osu
+1OSW	2003-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1osw
+1OW9	2003-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ow9
+1P5M	2003-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1p5m
+1P5N	2003-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1p5n
+1P5O	2003-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1p5o
+1P5P	2003-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1p5p
+1P79	2003-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1p79
+1P9X	2003-08-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1p9x
+1PBL	1997-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1pbl
+1PBM	1997-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1pbm
+1PBR	1997-09-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1pbr
+1PJY	2003-08-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1pjy
+1Q29	2004-02-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1q29
+1Q75	2003-12-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1q75
+1Q8N	2004-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1q8n
+1Q93	2003-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1q93
+1Q96	2003-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1q96
+1Q9A	2003-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1q9a
+1QBP	1999-11-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qbp
+1QC0	1999-11-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qc0
+1QC8	1999-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qc8
+1QCU	1999-11-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qcu
+1QD3	2000-07-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qd3
+1QES	1997-06-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qes
+1QET	1997-06-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qet
+1QWA	2003-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qwa
+1QWB	2003-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qwb
+1QZA	2003-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qza
+1QZB	2003-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1qzb
+1R2P	2004-02-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1r2p
+1R3O	2003-12-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1r3o
+1R4H	2004-10-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1r4h
+1R7W	2004-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1r7w
+1R7Z	2004-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1r7z
+1RAU	1994-01-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rau
+1RAW	1997-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1raw
+1RFR	2004-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rfr
+1RHT	1995-06-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rht
+1RMN	1995-01-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rmn
+1RNA	1991-04-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rna
+1RNG	1995-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rng
+1RNK	1995-02-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rnk
+1ROQ	2004-05-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1roq
+1RRR	1998-04-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rrr
+1RXA	1996-10-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rxa
+1RXB	1996-08-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1rxb
+1S2F	2004-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1s2f
+1S34	2004-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1s34
+1S9L	2004-06-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1s9l
+1S9S	2004-04-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1s9s
+1SA9	2004-05-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1sa9
+1SAQ	2004-05-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1saq
+1SCL	1995-01-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1scl
+1SDR	1995-02-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1sdr
+1SLO	1996-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1slo
+1SLP	1997-04-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1slp
+1SY4	2004-04-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1sy4
+1SYZ	2004-11-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1syz
+1SZY	2004-04-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1szy
+1T0D	2004-06-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1t0d
+1T0E	2004-06-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1t0e
+1T1O	2004-06-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1t1o
+1T28	2004-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1t28
+1T4X	2004-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1t4x
+1TBK	2005-03-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1tbk
+1TFN	1997-02-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1tfn
+1TJZ	2004-09-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1tjz
+1TLR	1997-11-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1tlr
+1TN1	1987-01-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1tn1
+1TN2	1986-10-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1tn2
+1TOB	1997-06-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1tob
+1TRA	1986-07-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1tra
+1TUT	2004-12-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1tut
+1TXS	2004-10-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1txs
+1U2A	1998-03-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1u2a
+1U3K	2005-07-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1u3k
+1U9S	2004-10-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1u9s
+1UTS	2004-02-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1uts
+1UUD	2004-03-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1uud
+1UUI	2004-02-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1uui
+1UUU	1998-02-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1uuu
+1VOP	1997-12-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1vop
+1VTQ	2011-07-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1vtq
+1WKS	2004-06-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1wks
+1WTS	1999-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1wts
+1WTT	1999-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1wtt
+1WVD	2004-12-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1wvd
+1X8W	2004-11-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1x8w
+1X9C	2005-11-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1x9c
+1X9K	2005-11-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1x9k
+1XHP	2004-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xhp
+1XJR	2005-02-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xjr
+1XP7	2005-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xp7
+1XPE	2005-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xpe
+1XPF	2005-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xpf
+1XSG	2004-12-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xsg
+1XSH	2004-12-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xsh
+1XST	2004-12-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xst
+1XSU	2004-12-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xsu
+1XV0	2004-11-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xv0
+1XV6	2005-04-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xv6
+1XWP	2005-02-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xwp
+1XWU	2005-02-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1xwu
+1Y0Q	2004-12-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y0q
+1Y26	2004-12-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y26
+1Y27	2004-12-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y27
+1Y3O	2005-11-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y3o
+1Y3S	2005-11-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y3s
+1Y6S	2004-12-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y6s
+1Y6T	2004-12-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y6t
+1Y73	2004-12-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y73
+1Y90	2004-12-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y90
+1Y95	2004-12-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y95
+1Y99	2004-12-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1y99
+1YFG	1997-09-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yfg
+1YFV	1997-10-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yfv
+1YG3	2005-12-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yg3
+1YG4	2005-12-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yg4
+1YKQ	2005-02-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ykq
+1YKV	2005-02-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ykv
+1YLG	2005-02-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ylg
+1YLS	2005-02-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yls
+1YMO	2005-03-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ymo
+1YN1	2006-01-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yn1
+1YN2	2006-01-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yn2
+1YNC	2005-02-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ync
+1YNE	2005-02-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yne
+1YNG	2005-02-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yng
+1YRJ	2005-06-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yrj
+1YSV	2005-07-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1ysv
+1YXP	2006-01-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yxp
+1YY0	2005-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yy0
+1YZD	2005-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1yzd
+1Z2J	2005-06-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1z2j
+1Z30	2005-04-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1z30
+1Z31	2005-03-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1z31
+1Z43	2005-06-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1z43
+1Z58	2005-06-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1z58
+1Z79	2005-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1z79
+1Z7F	2005-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1z7f
+1ZC5	2005-06-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zc5
+1ZCI	2006-01-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zci
+1ZEV	2005-10-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zev
+1ZFT	2006-02-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zft
+1ZFV	2006-02-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zfv
+1ZFX	2006-02-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zfx
+1ZIF	1997-03-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zif
+1ZIG	1997-03-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zig
+1ZIH	1997-03-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zih
+1ZO3	2005-06-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zo3
+1ZX7	2005-09-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zx7
+1ZZ5	2005-09-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/1zz5
+205D	1995-09-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/205d
+21CC	2025-12-17	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+21ET	2026-07-15	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D,E,F	
+23JY	2026-05-06	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/23jy
+23JZ	2026-05-06	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+23KA	2026-05-06	test	test	KEEP_ALL_CHAINS		A,B,C		/storage9920/home/tinghao.xia/Data/test/23ka
+255D	1995-02-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/255d
+259D	1996-08-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/259d
+25SJ	2026-04-29	test	test	KEEP_ALL_CHAINS		S,A		/storage9920/home/tinghao.xia/Data/test/25sj
+25SM	2026-04-29	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		S,A	
+280D	1996-09-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/280d
+283D	1996-09-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/283d
+28SP	1999-04-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/28sp
+28SR	1999-04-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/28sr
+299D	1997-01-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/299d
+2A04	2005-09-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2a04
+2A0P	2005-08-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2a0p
+2A2E	2005-09-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2a2e
+2A43	2005-09-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2a43
+2A64	2005-09-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2a64
+2A9L	1998-06-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2a9l
+2ADT	2005-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2adt
+2AGN	2006-07-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2agn
+2AHT	2006-10-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2aht
+2AO5	2006-03-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ao5
+2AP0	2006-09-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ap0
+2AP5	2006-09-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ap5
+2AU4	2006-03-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2au4
+2AWE	2006-02-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2awe
+2AWQ	2006-01-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2awq
+2B57	2006-05-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2b57
+2B7G	2006-01-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2b7g
+2B8R	2005-10-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2b8r
+2B8S	2005-10-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2b8s
+2BCY	2006-02-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2bcy
+2BCZ	2006-02-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2bcz
+2BE0	2005-12-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2be0
+2BEE	2005-12-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2bee
+2BJ2	1999-02-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2bj2
+2CD1	2007-05-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2cd1
+2CD3	2007-05-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2cd3
+2CD5	2007-05-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2cd5
+2CD6	2007-05-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2cd6
+2CKY	2006-05-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2cky
+2D17	2005-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2d17
+2D18	2005-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2d18
+2D19	2005-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2d19
+2D1A	2005-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2d1a
+2D1B	2005-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2d1b
+2D2K	2005-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2d2k
+2D2L	2005-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2d2l
+2DD1	2006-06-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2dd1
+2DD2	2006-06-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2dd2
+2DD3	2006-06-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2dd3
+2EES	2007-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ees
+2EET	2007-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2eet
+2EEU	2007-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2eeu
+2EEV	2007-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2eev
+2EEW	2007-11-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2eew
+2ES5	2006-01-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2es5
+2ESI	2005-12-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2esi
+2ESJ	2005-12-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2esj
+2ET3	2005-12-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2et3
+2ET4	2005-12-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2et4
+2ET5	2005-12-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2et5
+2ET8	2005-12-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2et8
+2EUY	2006-01-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2euy
+2EVY	2006-08-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2evy
+2F4S	2006-05-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2f4s
+2F4T	2006-05-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2f4t
+2F4U	2006-05-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2f4u
+2F4X	2006-02-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2f4x
+2F87	2006-08-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2f87
+2F88	2006-02-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2f88
+2FCX	2006-05-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2fcx
+2FCY	2006-05-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2fcy
+2FCZ	2006-05-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2fcz
+2FD0	2006-05-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2fd0
+2FDT	2006-12-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2fdt
+2FEY	2006-06-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2fey
+2FGP	2006-02-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2fgp
+2FQN	2006-02-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2fqn
+2G1G	2006-06-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2g1g
+2G1W	2006-04-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2g1w
+2G32	2006-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2g32
+2G3S	2007-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2g3s
+2G5K	2006-06-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2g5k
+2G91	2007-04-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2g91
+2G92	2006-04-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2g92
+2G9C	2006-11-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2g9c
+2GBH	2006-04-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gbh
+2GCS	2006-09-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gcs
+2GCV	2006-09-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gcv
+2GDI	2006-07-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gdi
+2GIO	2006-06-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gio
+2GIP	2006-06-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gip
+2GIS	2006-07-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gis
+2GM0	2006-04-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gm0
+2GPM	2006-06-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gpm
+2GQ4	2006-06-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gq4
+2GQ5	2006-06-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gq5
+2GQ6	2006-06-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gq6
+2GQ7	2006-06-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gq7
+2GRB	2006-11-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2grb
+2GRW	2007-03-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2grw
+2GV3	2006-08-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gv3
+2GV4	2007-03-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gv4
+2GVO	2007-05-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2gvo
+2H0W	2006-09-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2h0w
+2H0X	2006-09-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2h0x
+2H1M	2006-07-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2h1m
+2H49	2006-11-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2h49
+2HEM	2006-09-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2hem
+2HNS	2006-10-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2hns
+2HO6	2006-09-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ho6
+2HO7	2006-09-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ho7
+2HOJ	2006-09-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2hoj
+2HOK	2006-09-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2hok
+2HOL	2006-09-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2hol
+2HOM	2006-09-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2hom
+2HOO	2006-09-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2hoo
+2HOP	2006-09-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2hop
+2HUA	2007-04-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2hua
+2I7E	2007-04-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2i7e
+2I7Z	2007-04-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2i7z
+2IL9	2007-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2il9
+2IRN	2007-02-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2irn
+2IRO	2007-02-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2iro
+2IXY	2006-09-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ixy
+2IXZ	2006-09-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ixz
+2JJA	2008-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jja
+2JLT	2009-08-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jlt
+2JR4	2007-07-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jr4
+2JRG	2007-07-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jrg
+2JRQ	2007-07-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jrq
+2JSE	2007-11-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jse
+2JSG	2007-08-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jsg
+2JTP	2007-10-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jtp
+2JUK	2007-11-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2juk
+2JWV	2008-01-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jwv
+2JXQ	2008-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jxq
+2JXS	2008-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jxs
+2JXV	2008-04-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jxv
+2JYF	2008-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jyf
+2JYH	2008-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jyh
+2JYJ	2008-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jyj
+2JYM	2008-04-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2jym
+2K3Z	2008-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2k3z
+2K41	2008-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2k41
+2K4C	2008-12-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2k4c
+2K5Z	2009-07-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2k5z
+2K65	2009-07-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2k65
+2K66	2009-07-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2k66
+2K7E	2008-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2k7e
+2K95	2008-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2k95
+2K96	2008-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2k96
+2KBP	2009-03-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kbp
+2KD4	2009-04-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kd4
+2KD8	2010-01-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kd8
+2KE6	2010-01-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ke6
+2KEZ	2009-07-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kez
+2KF0	2009-07-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kf0
+2KGP	2009-06-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kgp
+2KHY	2010-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2khy
+2KOC	2009-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2koc
+2KP3	2010-02-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kp3
+2KPC	2010-06-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kpc
+2KPD	2010-06-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kpd
+2KPV	2010-08-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kpv
+2KRL	2011-02-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2krl
+2KRP	2010-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2krp
+2KRQ	2010-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2krq
+2KRV	2010-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2krv
+2KRW	2010-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2krw
+2KRY	2010-08-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kry
+2KRZ	2010-08-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2krz
+2KTZ	2010-04-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ktz
+2KU0	2010-04-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ku0
+2KUR	2010-05-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kur
+2KUU	2010-05-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kuu
+2KUV	2010-05-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kuv
+2KUW	2010-05-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kuw
+2KVN	2010-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kvn
+2KWG	2010-07-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kwg
+2KX8	2010-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kx8
+2KXM	2011-04-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kxm
+2KXZ	2010-06-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kxz
+2KY0	2010-06-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ky0
+2KY1	2010-06-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ky1
+2KY2	2010-06-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ky2
+2KYD	2010-07-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kyd
+2KYE	2010-06-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kye
+2KZL	2011-02-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2kzl
+2L1F	2010-10-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l1f
+2L1V	2010-09-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l1v
+2L2J	2010-10-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l2j
+2L3E	2010-11-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l3e
+2L5Z	2011-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l5z
+2L6I	2011-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l6i
+2L8C	2011-02-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l8c
+2L8F	2011-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l8f
+2L8H	2011-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l8h
+2L8U	2011-02-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l8u
+2L8W	2011-02-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l8w
+2L94	2011-06-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l94
+2L9E	2011-03-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2l9e
+2LA9	2011-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2la9
+2LAC	2011-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lac
+2LBJ	2012-04-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lbj
+2LBK	2012-04-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lbk
+2LBL	2012-04-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lbl
+2LBQ	2011-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lbq
+2LBR	2011-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lbr
+2LC8	2011-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lc8
+2LDL	2011-12-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ldl
+2LDT	2011-09-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ldt
+2LDZ	1999-02-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ldz
+2LHP	2012-07-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lhp
+2LI4	2012-08-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2li4
+2LJJ	2012-09-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ljj
+2LK3	2012-02-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lk3
+2LKR	2012-02-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lkr
+2LP9	2012-05-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lp9
+2LPA	2012-05-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lpa
+2LPS	2012-08-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lps
+2LPT	2012-08-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lpt
+2LQZ	2012-08-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lqz
+2LU0	2013-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lu0
+2LUB	2012-07-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lub
+2LUN	2013-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lun
+2LV0	2013-06-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lv0
+2LVY	2013-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lvy
+2LWK	2012-08-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lwk
+2LX1	2012-11-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2lx1
+2M12	2013-10-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m12
+2M18	2013-04-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m18
+2M1O	2013-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m1o
+2M21	2013-03-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m21
+2M22	2013-03-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m22
+2M23	2013-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m23
+2M24	2013-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m24
+2M39	2013-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m39
+2M4Q	2013-03-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m4q
+2M4W	2014-03-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m4w
+2M57	2014-02-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m57
+2M58	2013-04-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m58
+2M5U	2014-04-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m5u
+2M8K	2013-06-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2m8k
+2MEQ	2014-01-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2meq
+2MER	2014-01-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mer
+2MFD	2014-10-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mfd
+2MHI	2013-12-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mhi
+2MI0	2014-01-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mi0
+2MIS	2014-01-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mis
+2MIY	2014-01-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2miy
+2MN0	2015-04-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mn0
+2MNC	2014-10-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mnc
+2MQT	2014-09-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mqt
+2MS5	2015-01-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ms5
+2MTJ	2014-10-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mtj
+2MTK	2014-10-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mtk
+2MVS	2015-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mvs
+2MVY	2015-09-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mvy
+2MXJ	2015-05-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mxj
+2MXK	2015-05-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mxk
+2MXL	2015-05-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mxl
+2MXS	2015-12-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2mxs
+2N0J	2016-02-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n0j
+2N0R	2015-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n0r
+2N1Q	2015-05-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n1q
+2N2O	2015-08-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n2o
+2N2P	2015-08-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n2p
+2N3Q	2015-07-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n3q
+2N3R	2015-07-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n3r
+2N4J	2015-07-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n4j
+2N4L	2015-12-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n4l
+2N6S	2016-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n6s
+2N6T	2016-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n6t
+2N6W	2016-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n6w
+2N6X	2016-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n6x
+2N7M	2015-12-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n7m
+2N7X	2016-04-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n7x
+2N8V	2015-11-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2n8v
+2NBX	2016-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2nbx
+2NBY	2016-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2nby
+2NBZ	2016-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2nbz
+2NC0	2016-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2nc0
+2NC1	2016-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2nc1
+2NCI	2016-09-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2nci
+2NCQ	2017-04-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ncq
+2NCR	2017-04-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ncr
+2NOK	2007-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2nok
+2NPY	2007-08-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2npy
+2NPZ	2007-08-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2npz
+2O32	2007-02-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o32
+2O33	2007-02-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o33
+2O3V	2007-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o3v
+2O3W	2007-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o3w
+2O3X	2007-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o3x
+2O3Y	2007-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o3y
+2O43	2007-12-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o43
+2O44	2007-12-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o44
+2O45	2007-12-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o45
+2O81	2007-07-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o81
+2O83	2007-07-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2o83
+2OE5	2007-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oe5
+2OE6	2007-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oe6
+2OE8	2007-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oe8
+2OEU	2007-02-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oeu
+2OIJ	2007-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oij
+2OIU	2007-03-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oiu
+2OIY	2007-12-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oiy
+2OJ0	2007-12-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oj0
+2OJ7	2007-05-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oj7
+2OJ8	2007-05-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oj8
+2OOM	2008-01-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oom
+2OUE	2007-03-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2oue
+2P7F	2007-05-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2p7f
+2P89	2007-04-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2p89
+2PCV	2007-05-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2pcv
+2PCW	2007-05-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2pcw
+2PN3	2008-04-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2pn3
+2PN4	2008-04-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2pn4
+2PN9	2007-10-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2pn9
+2PWT	2007-09-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2pwt
+2Q1O	2007-10-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2q1o
+2Q1R	2007-10-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2q1r
+2QBZ	2007-09-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2qbz
+2QEK	2008-05-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2qek
+2QH2	2007-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2qh2
+2QH3	2007-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2qh3
+2QH4	2007-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2qh4
+2QUS	2008-07-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2qus
+2QUW	2008-07-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2quw
+2QWY	2008-01-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2qwy
+2R1S	2007-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2r1s
+2R20	2007-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2r20
+2R21	2007-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2r21
+2R22	2007-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2r22
+2RLU	2008-02-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2rlu
+2RN1	2008-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2rn1
+2RO2	2008-12-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ro2
+2RP0	2009-03-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2rp0
+2RP1	2009-03-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2rp1
+2RPK	2008-12-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2rpk
+2RPT	2009-08-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2rpt
+2RQJ	2009-11-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2rqj
+2RRC	2011-06-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2rrc
+2RVO	2017-02-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2rvo
+2TOB	1999-06-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2tob
+2TPK	1998-11-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2tpk
+2TRA	1987-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2tra
+2U2A	1998-03-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2u2a
+2V6W	2007-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2v6w
+2V7R	2008-03-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2v7r
+2VAL	2007-10-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2val
+2VUQ	2009-03-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2vuq
+2W89	2009-11-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2w89
+2WNA	2010-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2wna
+2X2Q	2011-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2x2q
+2XC6	2011-05-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2xc6
+2XEB	2010-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2xeb
+2XNW	2011-04-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2xnw
+2XNZ	2011-04-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2xnz
+2XO0	2011-04-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2xo0
+2XO1	2011-04-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2xo1
+2XSL	2011-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2xsl
+2Y95	2011-10-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2y95
+2YDH	2011-09-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ydh
+2YGH	2011-09-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2ygh
+2YIE	2011-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2yie
+2YIF	2011-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2yif
+2Z9Q	2007-10-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2z9q
+2ZY6	2009-06-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/2zy6
+300D	1997-01-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/300d
+301D	1997-01-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/301d
+30SC	2026-07-22	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/30sc
+310D	1997-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/310d
+333D	1997-10-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/333d
+353D	1997-11-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/353d
+354D	1997-11-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/354d
+357D	1997-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/357d
+359D	1997-11-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/359d
+361D	1998-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/361d
+364D	1998-01-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/364d
+36LC	2026-07-01	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+36LE	2026-07-01	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D	
+36LL	2026-07-01	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/36ll
+36LM	2026-07-01	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+377D	1998-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/377d
+379D	1998-02-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/379d
+387D	2003-08-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/387d
+397D	1998-09-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/397d
+3A3A	2009-08-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3a3a
+3B31	2007-12-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3b31
+3B4A	2007-12-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3b4a
+3B4B	2007-12-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3b4b
+3B4C	2007-12-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3b4c
+3B58	2008-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3b58
+3B5A	2008-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3b5a
+3B5F	2008-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3b5f
+3B5S	2008-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3b5s
+3B91	2008-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3b91
+3BBI	2008-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bbi
+3BBK	2008-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bbk
+3BBM	2008-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bbm
+3BBV	2008-10-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bbv
+3BNL	2008-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bnl
+3BNN	2008-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bnn
+3BNO	2008-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bno
+3BNP	2008-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bnp
+3BNQ	2008-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bnq
+3BNR	2008-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bnr
+3BNS	2008-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bns
+3BNT	2008-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bnt
+3BWP	2008-04-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3bwp
+3C44	2008-05-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3c44
+3CGP	2008-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3cgp
+3CGQ	2008-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3cgq
+3CGR	2008-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3cgr
+3CGS	2008-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3cgs
+3CJZ	2008-10-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3cjz
+3CW5	2008-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3cw5
+3CW6	2008-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3cw6
+3CZW	2008-09-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3czw
+3D0M	2008-09-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3d0m
+3D0U	2008-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3d0u
+3D0X	2008-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3d0x
+3D2G	2008-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3d2g
+3D2V	2008-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3d2v
+3D2X	2008-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3d2x
+3DG0	2009-02-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dg0
+3DG2	2009-02-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dg2
+3DG4	2009-02-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dg4
+3DG5	2009-02-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dg5
+3DHS	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dhs
+3DIG	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dig
+3DIL	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dil
+3DIM	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dim
+3DIO	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dio
+3DIQ	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3diq
+3DIR	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dir
+3DIS	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dis
+3DIX	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dix
+3DIY	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3diy
+3DIZ	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3diz
+3DJ0	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dj0
+3DJ2	2008-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dj2
+3DS7	2009-02-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3ds7
+3DVV	2008-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dvv
+3DVZ	2009-03-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dvz
+3DW4	2009-03-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dw4
+3DW5	2009-03-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dw5
+3DW6	2009-03-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dw6
+3DW7	2009-03-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3dw7
+3E5C	2008-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3e5c
+3E5E	2008-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3e5e
+3E5F	2008-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3e5f
+3EOG	2008-10-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3eog
+3EOH	2008-10-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3eoh
+3F2Q	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3f2q
+3F2T	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3f2t
+3F2W	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3f2w
+3F2X	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3f2x
+3F2Y	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3f2y
+3F30	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3f30
+3F4E	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3f4e
+3F4G	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3f4g
+3F4H	2009-01-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3f4h
+3FAR	2009-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3far
+3FO4	2009-06-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3fo4
+3FO6	2009-06-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3fo6
+3FS0	2009-02-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3fs0
+3FTM	2009-02-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3ftm
+3FU2	2009-03-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3fu2
+3FWO	2010-01-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3fwo
+3G4M	2009-06-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3g4m
+3G78	2010-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3g78
+3GAO	2009-06-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gao
+3GCA	2009-03-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gca
+3GER	2009-06-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3ger
+3GES	2009-06-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3ges
+3GLP	2009-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3glp
+3GM7	2009-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gm7
+3GOG	2009-06-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gog
+3GOT	2009-06-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3got
+3GS1	2009-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gs1
+3GS5	2009-04-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gs5
+3GS8	2009-04-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gs8
+3GVN	2009-07-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gvn
+3GX2	2010-01-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gx2
+3GX3	2010-01-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gx3
+3GX5	2010-01-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gx5
+3GX6	2010-01-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gx6
+3GX7	2010-01-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3gx7
+3HGA	2009-08-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3hga
+3IBK	2010-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3ibk
+3IGI	2009-12-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3igi
+3IQN	2010-08-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3iqn
+3IQP	2010-08-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3iqp
+3IQR	2010-08-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3iqr
+3IVN	2010-01-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3ivn
+3IZD	2010-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3izd
+3J28	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j28
+3J29	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j29
+3J2A	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j2a
+3J2B	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j2b
+3J2C	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j2c
+3J2D	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j2d
+3J2E	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j2e
+3J2F	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j2f
+3J2G	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j2g
+3J2H	2013-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3j2h
+3JQ4	2010-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3jq4
+3JXQ	2010-02-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3jxq
+3JXR	2010-02-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3jxr
+3K1V	2009-10-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3k1v
+3L0U	2010-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3l0u
+3LA5	2010-01-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3la5
+3LOA	2010-08-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3loa
+3MEI	2011-01-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3mei
+3MIJ	2011-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3mij
+3MJ3	2010-05-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3mj3
+3MJA	2010-05-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3mja
+3MJB	2010-05-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3mjb
+3ND3	2011-09-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3nd3
+3ND4	2011-09-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3nd4
+3NJ6	2010-08-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3nj6
+3NJ7	2010-08-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3nj7
+3NPN	2010-10-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3npn
+3NPQ	2010-10-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3npq
+3OWI	2010-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3owi
+3OWW	2010-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3oww
+3OWZ	2010-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3owz
+3OX0	2010-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3ox0
+3OXB	2010-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3oxb
+3OXD	2010-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3oxd
+3OXE	2010-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3oxe
+3OXJ	2010-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3oxj
+3OXM	2010-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3oxm
+3P22	2010-12-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3p22
+3P4A	2011-01-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3p4a
+3P4B	2011-01-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3p4b
+3P4C	2011-01-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3p4c
+3P4D	2011-01-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3p4d
+3P59	2011-04-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3p59
+3PDR	2011-02-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3pdr
+3PHP	1998-10-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3php
+3Q3Z	2011-05-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3q3z
+3Q50	2011-05-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3q50
+3Q51	2011-05-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3q51
+3R1C	2011-06-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3r1c
+3R1D	2011-06-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3r1d
+3R1E	2011-06-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3r1e
+3R4F	2011-04-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3r4f
+3RG5	2011-06-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3rg5
+3RKF	2011-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3rkf
+3S49	2011-06-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3s49
+3S4P	2011-09-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3s4p
+3S7C	2012-04-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3s7c
+3S8U	2012-04-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3s8u
+3SD3	2011-09-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3sd3
+3SJ2	2011-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3sj2
+3SKI	2011-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3ski
+3SKL	2011-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3skl
+3SKR	2011-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3skr
+3SKT	2011-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3skt
+3SKW	2011-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3skw
+3SKZ	2011-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3skz
+3SLM	2011-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3slm
+3SLQ	2011-08-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3slq
+3SUH	2011-09-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3suh
+3SUX	2011-09-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3sux
+3SUY	2011-09-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3suy
+3SYW	2012-04-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3syw
+3SZX	2012-04-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3szx
+3T4B	2011-10-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3t4b
+3TD0	2011-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3td0
+3TD1	2011-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3td1
+3TRA	1987-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3tra
+3TZR	2012-03-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3tzr
+3VRS	2012-05-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3vrs
+3WRU	2014-11-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3wru
+3ZD4	2012-12-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3zd4
+3ZD5	2012-12-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3zd5
+3ZP8	2013-03-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/3zp8
+402D	1998-06-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/402d
+405D	1999-01-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/405d
+406D	1999-02-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/406d
+409D	1999-01-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/409d
+413D	1998-07-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/413d
+420D	1999-01-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/420d
+422D	2003-06-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/422d
+429D	1999-03-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/429d
+430D	1998-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/430d
+433D	1998-12-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/433d
+434D	1999-06-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/434d
+435D	1999-06-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/435d
+437D	1998-12-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/437d
+438D	1999-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/438d
+439D	2001-09-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/439d
+462D	1999-12-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/462d
+464D	1999-08-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/464d
+466D	1999-08-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/466d
+468D	1999-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/468d
+469D	1999-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/469d
+470D	1999-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/470d
+471D	1999-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/471d
+472D	2000-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/472d
+480D	1999-10-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/480d
+483D	1999-10-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/483d
+486D	1999-10-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/486d
+488D	2000-03-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/488d
+4A4R	2012-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4a4r
+4A4S	2012-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4a4s
+4A4T	2012-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4a4t
+4A4U	2012-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4a4u
+4AOB	2012-05-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4aob
+4B5R	2013-01-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4b5r
+4C40	2013-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4c40
+4C4Q	2013-10-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4c4q
+4CS1	2014-11-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4cs1
+4DS6	2012-04-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4ds6
+4E48	2012-07-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e48
+4E58	2012-12-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e58
+4E59	2012-12-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e59
+4E5C	2012-07-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e5c
+4E6B	2012-07-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e6b
+4E8K	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e8k
+4E8M	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e8m
+4E8N	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e8n
+4E8P	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e8p
+4E8Q	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e8q
+4E8R	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e8r
+4E8T	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e8t
+4E8V	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4e8v
+4EN5	2012-05-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4en5
+4ENA	2012-05-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4ena
+4ENB	2012-05-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4enb
+4ENC	2012-05-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4enc
+4ERJ	2012-07-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4erj
+4ERL	2012-07-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4erl
+4F8U	2012-08-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4f8u
+4F8V	2012-08-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4f8v
+4FAQ	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4faq
+4FAR	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4far
+4FAU	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4fau
+4FAW	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4faw
+4FAX	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4fax
+4FB0	2012-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4fb0
+4FE5	2012-06-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4fe5
+4FEJ	2013-02-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4fej
+4FEL	2013-02-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4fel
+4FEN	2013-02-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4fen
+4FEO	2013-02-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4feo
+4FEP	2013-02-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4fep
+4FNJ	2012-10-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4fnj
+4FRG	2012-10-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4frg
+4FRN	2012-10-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4frn
+4G6P	2012-08-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4g6p
+4G6R	2012-08-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4g6r
+4G6S	2012-08-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4g6s
+4GMA	2012-10-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4gma
+4GPW	2013-04-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4gpw
+4GPX	2013-04-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4gpx
+4GPY	2013-04-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4gpy
+4GXY	2012-10-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4gxy
+4IQS	2013-12-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4iqs
+4J50	2013-02-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4j50
+4JAB	2014-01-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4jab
+4JAH	2014-01-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4jah
+4JF2	2013-04-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4jf2
+4JIY	2013-09-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4jiy
+4JRC	2013-04-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4jrc
+4JRD	2013-06-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4jrd
+4JRT	2013-06-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4jrt
+4K27	2013-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4k27
+4K31	2013-07-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4k31
+4K32	2013-07-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4k32
+4KQY	2013-08-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4kqy
+4KYY	2013-06-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4kyy
+4KZ2	2013-10-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4kz2
+4L81	2014-05-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4l81
+4LVV	2014-03-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4lvv
+4LVW	2014-03-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4lvw
+4LVX	2014-03-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4lvx
+4LVY	2014-03-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4lvy
+4LVZ	2014-03-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4lvz
+4LW0	2014-03-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4lw0
+4LX5	2014-07-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4lx5
+4LX6	2014-07-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4lx6
+4MCE	2014-09-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4mce
+4MCF	2014-11-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4mcf
+4MEG	2013-10-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4meg
+4MEH	2013-10-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4meh
+4MGM	2013-10-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4mgm
+4MGN	2013-10-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4mgn
+4MS9	2014-02-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4ms9
+4MSB	2014-02-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4msb
+4MSR	2014-02-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4msr
+4NFO	2014-07-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nfo
+4NFP	2014-07-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nfp
+4NFQ	2014-07-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nfq
+4NLF	2014-11-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nlf
+4NMG	2014-11-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nmg
+4NXH	2014-12-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nxh
+4NYA	2014-06-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nya
+4NYB	2014-06-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nyb
+4NYC	2014-06-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nyc
+4NYD	2014-06-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nyd
+4NYG	2014-06-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4nyg
+4O41	2014-07-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4o41
+4OJI	2014-07-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4oji
+4OQU	2014-06-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4oqu
+4P20	2014-05-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4p20
+4P3S	2016-05-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4p3s
+4P3T	2016-05-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4p3t
+4P3U	2016-05-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4p3u
+4P43	2016-05-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4p43
+4P5J	2014-06-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4p5j
+4P8Z	2014-05-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4p8z
+4P97	2015-03-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4p97
+4P9R	2014-05-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4p9r
+4PCJ	2014-10-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4pcj
+4PCO	2015-10-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4pco
+4PDQ	2015-01-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4pdq
+4PHY	2015-02-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4phy
+4PLX	2014-06-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4plx
+4PQV	2014-04-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4pqv
+4QJD	2014-09-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4qjd
+4QJH	2014-09-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4qjh
+4QK8	2014-08-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4qk8
+4QK9	2014-08-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4qk9
+4QKA	2014-08-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4qka
+4QLM	2014-08-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4qlm
+4QLN	2014-08-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4qln
+4R0D	2014-10-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4r0d
+4R4P	2015-09-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4r4p
+4R4V	2015-09-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4r4v
+4RBQ	2015-11-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rbq
+4RBY	2015-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rby
+4RBZ	2015-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rbz
+4RC0	2015-09-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rc0
+4RGE	2014-12-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rge
+4RGF	2014-12-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rgf
+4RJ1	2014-11-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rj1
+4RKV	2014-11-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rkv
+4RNE	2014-11-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rne
+4RUM	2015-04-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rum
+4RZD	2015-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4rzd
+4TNA	1978-04-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4tna
+4TRA	1987-11-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4tra
+4TS0	2014-07-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4ts0
+4TS2	2014-07-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4ts2
+4TZX	2014-09-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4tzx
+4TZY	2014-09-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4tzy
+4U34	2014-08-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u34
+4U35	2014-08-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u35
+4U37	2014-08-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u37
+4U38	2014-08-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u38
+4U3L	2015-07-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u3l
+4U3O	2015-07-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u3o
+4U3P	2015-07-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u3p
+4U3R	2015-07-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u3r
+4U47	2015-08-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u47
+4U78	2015-08-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4u78
+4WFL	2014-10-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4wfl
+4WFM	2014-10-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4wfm
+4XK0	2015-02-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4xk0
+4XNR	2015-05-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4xnr
+4XW0	2016-01-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4xw0
+4XW1	2016-01-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4xw1
+4XW7	2015-09-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4xw7
+4XWF	2015-09-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4xwf
+4Y1I	2015-04-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4y1i
+4Y1J	2015-04-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4y1j
+4Y1M	2015-04-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4y1m
+4Y1N	2015-10-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4y1n
+4Y1O	2015-10-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4y1o
+4Y27	2015-11-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4y27
+4YAZ	2015-04-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4yaz
+4YB0	2015-04-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4yb0
+4YN6	2015-04-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4yn6
+4ZC7	2015-08-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4zc7
+4ZNP	2015-08-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/4znp
+5A17	2015-05-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5a17
+5A18	2015-05-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5a18
+5AY2	2015-10-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ay2
+5AY3	2015-10-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ay3
+5AY4	2015-10-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ay4
+5BJO	2017-09-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5bjo
+5BJP	2017-09-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5bjp
+5BTM	2015-07-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5btm
+5BTP	2015-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5btp
+5C45	2015-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5c45
+5C5W	2015-10-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5c5w
+5C7U	2015-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5c7u
+5C7W	2015-08-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5c7w
+5CNR	2016-03-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5cnr
+5D5L	2016-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5d5l
+5D8T	2016-06-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5d8t
+5D99	2016-04-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5d99
+5DA6	2016-04-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5da6
+5DER	2016-06-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5der
+5DH7	2015-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5dh7
+5DHB	2016-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5dhb
+5DHC	2016-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5dhc
+5DO5	2016-09-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5do5
+5DUN	2015-10-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5dun
+5E54	2016-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5e54
+5EAO	2016-02-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5eao
+5EAQ	2016-02-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5eaq
+5EW4	2016-02-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ew4
+5EW7	2016-02-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ew7
+5FJ0	2016-09-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fj0
+5FJ1	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fj1
+5FJC	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fjc
+5FK1	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fk1
+5FK2	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fk2
+5FK3	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fk3
+5FK4	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fk4
+5FK5	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fk5
+5FK6	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fk6
+5FKD	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fkd
+5FKE	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fke
+5FKF	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fkf
+5FKG	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fkg
+5FKH	2016-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5fkh
+5G2Y	2016-05-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5g2y
+5G4T	2016-09-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5g4t
+5HBW	2016-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5hbw
+5HBX	2016-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5hbx
+5HBY	2016-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5hby
+5HN2	2016-04-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5hn2
+5HNJ	2016-04-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5hnj
+5HNQ	2016-04-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5hnq
+5IEM	2016-11-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5iem
+5J01	2016-12-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5j01
+5J02	2016-12-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5j02
+5K8H	2016-07-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5k8h
+5KH8	2017-07-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5kh8
+5KMZ	2016-10-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5kmz
+5KPY	2017-01-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5kpy
+5KQE	2016-08-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5kqe
+5KRG	2016-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5krg
+5KTJ	2016-10-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ktj
+5KVJ	2016-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5kvj
+5KX9	2016-08-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5kx9
+5L00	2016-12-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5l00
+5L4O	2017-03-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5l4o
+5LQO	2017-06-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lqo
+5LQT	2017-06-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lqt
+5LR3	2017-06-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lr3
+5LR4	2017-06-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lr4
+5LR5	2017-06-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lr5
+5LSN	2017-09-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lsn
+5LWJ	2016-12-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lwj
+5LYS	2017-01-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lys
+5LYU	2017-01-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lyu
+5LYV	2017-01-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5lyv
+5M0H	2017-01-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5m0h
+5ML7	2017-12-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ml7
+5MRX	2018-01-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5mrx
+5MWI	2017-03-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5mwi
+5N5C	2018-03-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5n5c
+5NDH	2017-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ndh
+5NDI	2017-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ndi
+5NEF	2017-06-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nef
+5NEO	2017-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5neo
+5NEP	2017-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nep
+5NEQ	2017-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5neq
+5NEX	2017-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nex
+5NOM	2017-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nom
+5NQI	2017-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nqi
+5NWQ	2017-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nwq
+5NXT	2017-11-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nxt
+5NY8	2017-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ny8
+5NZ3	2017-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nz3
+5NZ6	2017-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nz6
+5NZD	2017-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5nzd
+5O62	2017-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5o62
+5O69	2017-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5o69
+5OB3	2017-10-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ob3
+5OR0	2017-08-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5or0
+5SWD	2016-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5swd
+5SWE	2016-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5swe
+5T3K	2017-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5t3k
+5T83	2017-01-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5t83
+5TDJ	2017-01-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5tdj
+5TDK	2017-01-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5tdk
+5TGP	2017-10-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5tgp
+5TKO	2017-10-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5tko
+5TPY	2016-12-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5tpy
+5U3G	2017-02-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5u3g
+5UED	2017-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ued
+5UEE	2017-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5uee
+5UEF	2017-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5uef
+5UEG	2017-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ueg
+5UF3	2017-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5uf3
+5UNE	2017-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5une
+5UX3	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5ux3
+5UZ6	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5uz6
+5UZA	2018-02-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5uza
+5UZT	2017-05-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5uzt
+5V0H	2017-03-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v0h
+5V0J	2017-03-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v0j
+5V0K	2017-03-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v0k
+5V0O	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v0o
+5V16	2017-07-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v16
+5V17	2017-07-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v17
+5V1K	2017-06-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v1k
+5V1L	2017-06-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v1l
+5V2H	2017-06-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v2h
+5V2R	2017-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v2r
+5V3F	2017-05-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v3f
+5V3I	2017-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v3i
+5V9Z	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5v9z
+5VCF	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5vcf
+5VCI	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5vci
+5VGW	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5vgw
+5VH7	2017-06-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5vh7
+5VH8	2017-06-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5vh8
+5VJ9	2017-06-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5vj9
+5VJB	2017-06-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5vjb
+5VR4	2017-10-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5vr4
+5WQ1	2017-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5wq1
+5XI1	2018-08-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5xi1
+5XWG	2017-10-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5xwg
+5XZ1	2018-07-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5xz1
+5Z1H	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5z1h
+5Z1I	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5z1i
+5Z71	2019-01-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5z71
+5ZEG	2018-03-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5zeg
+5ZEI	2018-03-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5zei
+5ZEJ	2018-03-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5zej
+5ZEM	2018-03-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/5zem
+6AAS	2019-06-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6aas
+6AAU	2019-06-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6aau
+6AZ4	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6az4
+6BFB	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6bfb
+6BG9	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6bg9
+6BGB	2017-12-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6bgb
+6BJX	2018-07-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6bjx
+6BMD	2018-02-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6bmd
+6BY4	2018-06-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6by4
+6BY5	2018-06-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6by5
+6C27	2019-01-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c27
+6C63	2018-08-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c63
+6C64	2018-08-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c64
+6C65	2018-08-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c65
+6C8D	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c8d
+6C8E	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c8e
+6C8I	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c8i
+6C8J	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c8j
+6C8K	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c8k
+6C8L	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c8l
+6C8M	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c8m
+6C8N	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c8n
+6C8O	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6c8o
+6CAB	2018-05-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cab
+6CB3	2018-06-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cb3
+6CC1	2018-06-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cc1
+6CC3	2018-06-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cc3
+6CHR	2018-11-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6chr
+6CIH	2018-11-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cih
+6CK4	2018-06-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ck4
+6CK5	2018-06-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ck5
+6CU1	2018-10-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cu1
+6CXZ	2018-08-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cxz
+6CY0	2018-08-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cy0
+6CY2	2018-08-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cy2
+6CY4	2018-08-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6cy4
+6D3P	2018-06-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6d3p
+6D8L	2018-07-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6d8l
+6D8M	2018-07-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6d8m
+6D8N	2018-07-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6d8n
+6D8O	2018-07-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6d8o
+6DLQ	2018-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dlq
+6DLR	2018-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dlr
+6DLS	2018-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dls
+6DLT	2018-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dlt
+6DMC	2018-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dmc
+6DMD	2018-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dmd
+6DME	2018-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dme
+6DN1	2018-09-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dn1
+6DN2	2018-09-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dn2
+6DN3	2018-09-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dn3
+6DNR	2018-11-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dnr
+6DVK	2019-06-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6dvk
+6E1S	2019-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e1s
+6E1T	2019-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e1t
+6E1U	2019-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e1u
+6E1V	2019-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e1v
+6E1W	2019-04-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e1w
+6E7L	2019-07-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e7l
+6E80	2019-07-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e80
+6E81	2019-07-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e81
+6E82	2019-07-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e82
+6E84	2019-07-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e84
+6E8S	2019-04-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e8s
+6E8T	2019-04-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e8t
+6E8U	2019-04-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6e8u
+6EZ0	2018-01-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ez0
+6FZ0	2018-07-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6fz0
+6G7Z	2018-12-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6g7z
+6GE1	2018-10-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ge1
+6GYV	2018-08-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6gyv
+6GZK	2019-07-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6gzk
+6GZR	2019-07-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6gzr
+6H0R	2019-04-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6h0r
+6HAG	2019-01-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6hag
+6HBT	2019-02-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6hbt
+6HBX	2019-02-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6hbx
+6HC5	2019-02-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6hc5
+6HMI	2019-08-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6hmi
+6HMO	2019-08-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6hmo
+6HU6	2018-11-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6hu6
+6HYK	2019-04-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6hyk
+6I1V	2019-11-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6i1v
+6I1W	2019-11-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6i1w
+6IA2	2019-03-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ia2
+6IZP	2019-12-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6izp
+6JBF	2020-01-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6jbf
+6JBG	2020-01-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6jbg
+6JJH	2020-02-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6jjh
+6JJI	2020-02-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6jji
+6JQ5	2019-06-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6jq5
+6JQ6	2019-06-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6jq6
+6JXM	2019-08-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6jxm
+6K84	2020-04-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6k84
+6L0Y	2020-09-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6l0y
+6MCI	2018-10-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6mci
+6MJ0	2019-01-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6mj0
+6MXQ	2020-05-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6mxq
+6N2V	2019-10-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n2v
+6N5K	2019-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n5k
+6N5N	2019-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n5n
+6N5O	2019-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n5o
+6N5P	2019-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n5p
+6N5Q	2019-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n5q
+6N5S	2019-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n5s
+6N5T	2019-11-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n5t
+6N8F	2019-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n8f
+6N8H	2019-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n8h
+6N8I	2019-02-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6n8i
+6NOA	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6noa
+6OD9	2019-07-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6od9
+6OL3	2019-07-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ol3
+6OWL	2020-02-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6owl
+6P2H	2019-10-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6p2h
+6PK9	2020-07-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6pk9
+6PMO	2019-11-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6pmo
+6POM	2019-11-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6pom
+6PQ7	2019-07-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6pq7
+6PRV	2020-01-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6prv
+6Q57	2019-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6q57
+6Q8V	2019-07-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6q8v
+6QIQ	2019-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6qiq
+6QIR	2019-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6qir
+6QIS	2019-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6qis
+6QIT	2019-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6qit
+6QIV	2019-09-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6qiv
+6QN3	2019-06-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6qn3
+6QYZ	2019-06-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6qyz
+6R47	2019-07-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6r47
+6SVS	2020-01-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6svs
+6T3K	2020-05-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6t3k
+6T3N	2020-05-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6t3n
+6T3R	2020-05-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6t3r
+6T3S	2020-05-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6t3s
+6TB7	2020-09-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tb7
+6TF0	2020-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tf0
+6TF1	2020-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tf1
+6TF2	2020-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tf2
+6TF3	2020-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tf3
+6TFE	2020-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tfe
+6TFF	2020-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tff
+6TFG	2020-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tfg
+6TFH	2020-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tfh
+6TNA	1979-01-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6tna
+6U6J	2019-11-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6u6j
+6U79	2020-08-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6u79
+6U7Y	2020-12-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6u7y
+6U7Z	2020-12-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6u7z
+6U89	2020-12-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6u89
+6U8F	2020-12-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6u8f
+6U8U	2020-12-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6u8u
+6UBU	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ubu
+6UC7	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6uc7
+6UC8	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6uc8
+6UC9	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6uc9
+6UES	2019-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ues
+6UET	2019-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6uet
+6UEY	2019-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6uey
+6UF1	2019-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6uf1
+6UFG	2019-11-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ufg
+6UFH	2019-11-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ufh
+6UFJ	2019-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ufj
+6UFK	2019-12-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ufk
+6UFM	2019-12-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ufm
+6UGG	2020-01-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ugg
+6UGI	2020-01-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ugi
+6UGJ	2020-01-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ugj
+6UP0	2020-10-21	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6up0
+6V9B	2020-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6v9b
+6V9D	2020-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6v9d
+6VA1	2020-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6va1
+6VA2	2020-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6va2
+6VA3	2020-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6va3
+6VA4	2020-05-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6va4
+6VAR	2020-12-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6var
+6VEM	2020-11-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6vem
+6VMY	2020-06-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6vmy
+6VU1	2020-04-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6vu1
+6VUH	2020-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6vuh
+6VUI	2020-06-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6vui
+6VVJ	2020-04-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6vvj
+6VWT	2020-11-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6vwt
+6VWV	2020-11-11	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6vwv
+6VZC	2020-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6vzc
+6W3M	2020-09-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6w3m
+6WJR	2020-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wjr
+6WJS	2020-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wjs
+6WLJ	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wlj
+6WLK	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wlk
+6WLL	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wll
+6WLM	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wlm
+6WLN	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wln
+6WLO	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wlo
+6WLQ	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wlq
+6WLR	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wlr
+6WLS	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wls
+6WLT	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wlt
+6WLU	2020-07-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wlu
+6WTL	2021-05-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wtl
+6WTR	2021-05-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wtr
+6WY2	2020-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wy2
+6WY3	2020-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wy3
+6WZR	2021-03-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wzr
+6WZS	2021-03-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6wzs
+6XB7	2020-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xb7
+6XKN	2021-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xkn
+6XKO	2021-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xko
+6XRQ	2021-07-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xrq
+6XRZ	2020-08-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xrz
+6XUR	2020-02-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xur
+6XUS	2021-02-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xus
+6XWJ	2020-05-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xwj
+6XWW	2020-05-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xww
+6XXA	2020-05-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xxa
+6XXB	2020-05-27	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6xxb
+6Y0T	2021-02-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6y0t
+6Y0Y	2021-02-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6y0y
+6Y3G	2020-12-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6y3g
+6YL5	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6yl5
+6YLB	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ylb
+6YMC	2022-04-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ymc
+6YMI	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ymi
+6YMJ	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ymj
+6YMK	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ymk
+6YML	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6yml
+6YMM	2020-07-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6ymm
+6Z18	2020-09-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6z18
+6ZPF	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zpf
+6ZQ9	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zq9
+6ZR1	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zr1
+6ZRL	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zrl
+6ZRS	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zrs
+6ZW3	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zw3
+6ZWU	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zwu
+6ZX5	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zx5
+6ZX8	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zx8
+6ZXZ	2020-12-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zxz
+6ZYB	2020-12-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/6zyb
+7A3Y	2021-03-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7a3y
+7A9L	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7a9l
+7A9N	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7a9n
+7A9O	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7a9o
+7A9P	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7a9p
+7A9Q	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7a9q
+7A9R	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7a9r
+7A9S	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7a9s
+7A9T	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7a9t
+7D12	2021-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7d12
+7D7W	2020-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7d7w
+7D7X	2020-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7d7x
+7D7Y	2020-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7d7y
+7D7Z	2020-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7d7z
+7D81	2020-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7d81
+7D82	2020-11-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7d82
+7DD4	2021-06-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7dd4
+7E9E	2021-11-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7e9e
+7E9I	2021-11-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7e9i
+7EAF	2021-06-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eaf
+7EAG	2021-06-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eag
+7ECJ	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ecj
+7ECK	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eck
+7ECL	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ecl
+7ECM	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ecm
+7ECN	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ecn
+7ECO	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eco
+7ECP	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ecp
+7EDL	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7edl
+7EDM	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7edm
+7EDN	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7edn
+7EDT	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7edt
+7EDU	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7edu
+7EEM	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eem
+7EFG	2022-04-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7efg
+7EFH	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7efh
+7EI7	2022-03-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ei7
+7EI8	2022-03-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ei8
+7EI9	2022-03-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ei9
+7EIA	2022-03-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eia
+7ELP	2021-06-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7elp
+7ELQ	2021-06-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7elq
+7ELR	2021-06-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7elr
+7ELS	2021-06-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7els
+7EOG	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eog
+7EOH	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eoh
+7EOI	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eoi
+7EOJ	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eoj
+7EOK	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eok
+7EOL	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eol
+7EOM	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eom
+7EON	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eon
+7EOO	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eoo
+7EOP	2021-11-24	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eop
+7EQJ	2022-01-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7eqj
+7EXY	2022-03-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7exy
+7EZ0	2021-08-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ez0
+7EZ2	2021-08-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ez2
+7F8Z	2022-07-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7f8z
+7FHI	2021-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7fhi
+7FJ0	2021-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7fj0
+7JJD	2020-12-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7jjd
+7JJE	2020-12-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7jje
+7JJF	2020-12-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7jjf
+7JJU	2020-09-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7jju
+7JNH	2021-01-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7jnh
+7JRR	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7jrr
+7JRS	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7jrs
+7JRT	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7jrt
+7JU1	2020-10-07	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ju1
+7K16	2020-10-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7k16
+7K4L	2021-09-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7k4l
+7KD1	2021-03-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kd1
+7KGA	2021-06-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kga
+7KJU	2020-12-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kju
+7KUB	2022-06-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kub
+7KUC	2022-06-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kuc
+7KUD	2022-06-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kud
+7KUK	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kuk
+7KUM	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kum
+7KUN	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kun
+7KUO	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kuo
+7KUP	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kup
+7KVT	2022-01-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kvt
+7KVU	2022-01-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kvu
+7KVV	2022-01-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7kvv
+7L0Z	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7l0z
+7L3R	2021-05-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7l3r
+7LJY	2021-04-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ljy
+7LNE	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7lne
+7LNF	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7lnf
+7LNG	2021-09-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7lng
+7LO9	2021-12-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7lo9
+7LVA	2021-03-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7lva
+7LYF	2021-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7lyf
+7LYG	2021-05-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7lyg
+7LYJ	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7lyj
+7M3V	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7m3v
+7MKT	2022-11-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7mkt
+7MKY	2021-05-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7mky
+7MLW	2022-01-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7mlw
+7OA3	2021-06-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7oa3
+7OAV	2021-06-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7oav
+7OAW	2021-06-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7oaw
+7OAX	2021-06-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7oax
+7OUO	2022-03-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ouo
+7POF	2022-03-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7pof
+7PS8	2023-04-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ps8
+7PTK	2022-10-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ptk
+7PTL	2022-10-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ptl
+7PTQ	2022-10-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ptq
+7PTS	2022-10-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7pts
+7Q48	2022-11-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7q48
+7Q6L	2022-11-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7q6l
+7Q7X	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7q7x
+7Q7Y	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7q7y
+7Q7Z	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7q7z
+7Q80	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7q80
+7Q81	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7q81
+7Q82	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7q82
+7QA2	2022-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7qa2
+7QDU	2022-12-14	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7qdu
+7QP2	2022-07-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7qp2
+7QSH	2023-01-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7qsh
+7QTN	2023-01-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7qtn
+7QUA	2023-01-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7qua
+7R6N	2022-05-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7r6n
+7REX	2021-12-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7rex
+7RWR	2022-07-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7rwr
+7SAM	2021-12-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7sam
+7SHX	2022-10-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7shx
+7SXP	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7sxp
+7TD7	2022-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7td7
+7TDA	2022-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7tda
+7TDB	2022-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7tdb
+7TDC	2022-02-16	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7tdc
+7TZR	2022-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7tzr
+7TZS	2022-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7tzs
+7TZT	2022-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7tzt
+7TZU	2022-05-25	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7tzu
+7U4A	2023-09-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7u4a
+7U87	2023-03-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7u87
+7U88	2023-03-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7u88
+7U89	2023-03-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7u89
+7U8A	2023-03-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7u8a
+7U8B	2023-03-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7u8b
+7UCR	2022-07-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ucr
+7UGA	2022-04-13	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7uga
+7UMC	2022-07-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7umc
+7UMD	2022-07-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7umd
+7UME	2022-07-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ume
+7UQ6	2022-06-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7uq6
+7UR5	2022-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ur5
+7URI	2022-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7uri
+7URM	2022-08-10	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7urm
+7UVT	2022-08-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7uvt
+7UZ0	2022-06-08	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7uz0
+7V06	2022-06-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7v06
+7V9E	2022-03-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7v9e
+7VFT	2022-06-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7vft
+7VNV	2022-05-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7vnv
+7VNW	2022-05-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7vnw
+7WI9	2023-01-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7wi9
+7WIA	2023-01-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7wia
+7WIB	2023-01-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7wib
+7WIE	2023-01-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7wie
+7WIF	2023-01-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7wif
+7WII	2023-01-18	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7wii
+7XD3	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7xd3
+7XD4	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7xd4
+7XD5	2023-04-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7xd5
+7XD6	2023-04-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7xd6
+7XD7	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7xd7
+7XSK	2022-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7xsk
+7XSL	2022-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7xsl
+7XSM	2022-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7xsm
+7XSN	2022-08-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7xsn
+7Y2B	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7y2b
+7Y2P	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7y2p
+7Y8P	2023-05-03	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7y8p
+7YC8	2023-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7yc8
+7YCG	2023-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ycg
+7YCH	2023-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ych
+7YCI	2023-07-05	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7yci
+7YG8	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7yg8
+7YG9	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7yg9
+7YGA	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7yga
+7YGB	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ygb
+7YGC	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ygc
+7YGD	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7ygd
+7ZFW	2022-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7zfw
+7ZJ4	2023-04-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7zj4
+7ZJ5	2023-04-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/7zj5
+8AMG	2022-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8amg
+8AMI	2022-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8ami
+8AMJ	2022-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8amj
+8AMK	2022-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8amk
+8AML	2022-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8aml
+8AMM	2022-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8amm
+8AMN	2022-11-23	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8amn
+8BTZ	2022-12-28	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8btz
+8BU8	2024-01-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8bu8
+8BWT	2023-08-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8bwt
+8CF2	2024-02-21	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8cf2
+8CLM	2023-03-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8clm
+8CLR	2023-07-19	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8clr
+8CQ1	2023-09-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8cq1
+8D28	2022-11-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8d28
+8D2A	2022-11-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8d2a
+8D2B	2022-11-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8d2b
+8D5L	2022-11-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8d5l
+8D5O	2022-11-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8d5o
+8EYU	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8eyu
+8EYV	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8eyv
+8EYW	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8eyw
+8F0N	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8f0n
+8F24	2023-04-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8f24
+8F4O	2023-05-17	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8f4o
+8FB3	2023-02-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8fb3
+8FCS	2023-02-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8fcs
+8FEO	2024-01-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8feo
+8FEP	2024-01-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8fep
+8FEQ	2024-01-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8feq
+8FER	2024-01-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8fer
+8FW4	2023-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8fw4
+8FZA	2023-08-30	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8fza
+8HB1	2023-03-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8hb1
+8HB3	2023-03-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8hb3
+8HB8	2023-03-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8hb8
+8HBA	2023-03-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8hba
+8HD6	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8hd6
+8HD7	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8hd7
+8HZD	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8hzd
+8HZE	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8hze
+8HZF	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8hzf
+8HZJ	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8hzj
+8HZK	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8hzk
+8HZL	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8hzl
+8HZM	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8hzm
+8I3Z	2023-03-22	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8i3z
+8I43	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8i43
+8I44	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8i44
+8I45	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8i45
+8I46	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8i46
+8I7N	2023-03-29	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8i7n
+8ITS	2024-03-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8its
+8JHP	2024-05-29	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8jhp
+8K0P	2024-05-15	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8k0p
+8K0S	2024-05-01	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8k0s
+8K0Y	2025-01-15	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+8K15	2024-05-15	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8k15
+8K1E	2025-01-15	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+8K2Z	2025-01-15	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+8K30	2025-01-15	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+8K7W	2025-01-29	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/8k7w
+8K85	2025-02-12	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/8k85
+8K8B	2024-06-05	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8k8b
+8KEB	2025-02-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8KED	2025-02-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8KHH	2025-02-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+8OLS	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8ols
+8OLV	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8olv
+8OLW	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8olw
+8OLY	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8oly
+8OLZ	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8olz
+8OM0	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8om0
+8PFK	2024-01-31	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8pfk
+8PFQ	2024-01-31	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8pfq
+8Q4O	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8q4o
+8Q6N	2024-08-28	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8q6n
+8QMH	2024-05-01	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8qmh
+8QMI	2024-05-01	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8qmi
+8QO2	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8qo2
+8QO3	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8qo3
+8QO4	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8qo4
+8QO5	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8qo5
+8R62	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8r62
+8R63	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8r63
+8R8P	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8r8p
+8RUH	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8ruh
+8RUI	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8rui
+8RUJ	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8ruj
+8RUK	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8ruk
+8RUL	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8rul
+8RUM	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8rum
+8RUN	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8run
+8S6W	2025-01-29	test	test	KEEP_PARTIAL_CHAINS		C,D	A,B	/storage9920/home/tinghao.xia/Data/test/8s6w
+8S95	2023-08-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8s95
+8SA2	2023-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sa2
+8SA3	2023-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sa3
+8SA4	2023-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sa4
+8SA5	2023-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sa5
+8SA6	2023-07-26	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sa6
+8SCF	2023-07-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8scf
+8SCH	2023-07-12	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sch
+8SKQ	2024-02-14	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8skq
+8SP9	2023-08-09	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sp9
+8SWG	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8swg
+8SWO	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8swo
+8SX5	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sx5
+8SX6	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sx6
+8SXL	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sxl
+8SY1	2023-05-31	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8sy1
+8SYK	2025-02-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D	
+8T2P	2024-01-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8t2p
+8T5O	2025-02-19	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/8t5o
+8TDY	2024-06-12	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8tdy
+8TDZ	2024-06-12	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8tdz
+8TE0	2024-06-12	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8te0
+8TE2	2024-06-12	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8te2
+8THV	2023-08-02	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8thv
+8TJQ	2023-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8tjq
+8TJV	2023-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8tjv
+8TJX	2023-11-01	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8tjx
+8TKJ	2025-02-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8TKK	2025-02-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8TNS	2023-11-15	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8tns
+8TOZ	2024-08-07	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8toz
+8TQX	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8tqx
+8TSV	2024-03-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8tsv
+8TVZ	2024-04-03	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8tvz
+8U3M	2023-10-04	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8u3m
+8U5J	2024-03-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8u5j
+8U5K	2024-03-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8u5k
+8U5P	2024-03-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8u5p
+8U5R	2024-03-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8u5r
+8U5T	2024-03-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8u5t
+8U5Z	2024-03-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8u5z
+8U60	2024-03-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8u60
+8UO6	2024-06-05	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8uo6
+8UPT	2024-01-10	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8upt
+8UPY	2024-09-04	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8upy
+8UTG	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8utg
+8UYE	2023-12-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8uye
+8UYG	2023-12-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8uyg
+8UYJ	2023-12-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8uyj
+8UYK	2023-12-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8uyk
+8UYL	2023-12-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8uyl
+8UYM	2023-12-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8uym
+8UYP	2023-12-20	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8uyp
+8UYS	2023-12-06	train	train	KEPT				/storage9920/home/tinghao.xia/Data/train/8uys
+8V1H	2024-07-10	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8v1h
+8V1I	2024-07-10	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8v1i
+8VAW	2024-04-17	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8vaw
+8VAX	2024-04-17	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8vax
+8VCI	2024-01-17	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8vci
+8VFS	2024-12-25	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8vfs
+8VJT	2024-10-16	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8vjt
+8VPV	2024-10-02	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8vpv
+8VQV	2025-06-11	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8VT5	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8vt5
+8VVJ	2025-06-11	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8VXX	2025-02-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C	
+8VXZ	2025-02-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C	
+8VY0	2025-02-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C	
+8VY1	2025-02-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C	
+8X0S	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8x0s
+8X9K	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8X9L	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		E,A	
+8X9M	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8X9N	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		E,A	
+8X9O	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8X9Q	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8XTP	2025-02-12	test	test	KEEP_PARTIAL_CHAINS		A	B	/storage9920/home/tinghao.xia/Data/test/8xtp
+8XTQ	2025-02-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8XTR	2025-02-12	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/8xtr
+8XTS	2025-02-12	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/8xts
+8XZE	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xze
+8XZK	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xzk
+8XZL	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xzl
+8XZM	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xzm
+8XZN	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xzn
+8XZO	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xzo
+8XZP	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xzp
+8XZQ	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xzq
+8XZR	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xzr
+8XZW	2024-07-24	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8xzw
+8YAM	2024-09-11	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8yam
+8YAN	2024-09-11	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8yan
+8YNO	2024-11-20	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/8yno
+8YNP	2025-01-22	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+8YZL	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+8Z8Q	2025-03-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+8Z8U	2025-03-19	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/8z8u
+8Z9K	2025-03-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+8ZA0	2025-03-19	test	test	KEEP_ALL_CHAINS		A,C,E,B,D,F		/storage9920/home/tinghao.xia/Data/test/8za0
+8ZA4	2025-03-19	test	test	KEEP_ALL_CHAINS		A,C,E,B,D,F		/storage9920/home/tinghao.xia/Data/test/8za4
+8ZAU	2025-03-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8ZMH	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+8ZNQ	2025-06-04	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/8znq
+9BCI	2024-11-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9bci
+9BLM	2024-11-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9blm
+9BUN	2024-06-05	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9bun
+9BXE	2025-04-02	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9BZ1	2024-11-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9bz1
+9BZC	2024-11-27	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9bzc
+9C6I	2024-12-04	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9c6i
+9C6J	2024-12-04	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9c6j
+9C6K	2024-12-04	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9c6k
+9CBU	2024-11-20	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9cbu
+9CBW	2024-11-20	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9cbw
+9CBX	2024-11-20	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9cbx
+9CBY	2024-11-20	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9cby
+9CFN	2025-07-16	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9cfn
+9CPD	2024-08-07	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9cpd
+9CPG	2024-08-07	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9cpg
+9CPI	2024-08-07	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9cpi
+9CPJ	2024-08-07	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9cpj
+9CSO	2025-05-14	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9cso
+9CSP	2025-05-14	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9csp
+9CSQ	2025-05-14	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9csq
+9CSR	2025-05-14	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9csr
+9CXF	2025-01-29	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9cxf
+9DE6	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9DE7	2025-03-12	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9de7
+9DE8	2025-03-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9DIB	2025-04-09	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9dib
+9DID	2025-04-09	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9DIG	2025-04-09	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9DII	2025-04-09	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9DKG	2026-04-08	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9DLL	2024-09-25	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9dll
+9DLM	2026-04-08	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9DLN	2026-05-06	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9DP9	2025-05-28	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9DXL	2024-10-23	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9dxl
+9E5H	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5I	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5J	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5K	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D	
+9E5L	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5M	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5O	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5P	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5Q	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5R	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5S	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E5T	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9E73	2025-11-05	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9E74	2025-11-05	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9e74
+9E75	2025-11-05	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9e75
+9E9O	2025-11-05	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9E9Q	2025-07-09	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9EBP	2025-11-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,M	
+9EBV	2025-11-19	test	test	KEEP_ALL_CHAINS		A,M		/storage9920/home/tinghao.xia/Data/test/9ebv
+9EC4	2025-11-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		M,A	
+9ECQ	2025-04-16	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9ecq
+9ECR	2025-04-16	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9ecr
+9ELR	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9ELY	2025-04-23	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9ely
+9EN6	2024-05-01	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9en6
+9EOW	2024-06-19	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9eow
+9EWW	2025-04-16	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9eww
+9FM4	2025-05-07	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9fm4
+9FN2	2025-01-22	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9fn2
+9FN3	2025-02-05	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9FO8	2024-11-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9fo8
+9FO9	2024-11-06	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9fo9
+9G4I	2025-11-05	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9G4J	2025-11-05	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9G4L	2025-11-05	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9G4P	2025-07-30	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9g4p
+9G4Q	2025-07-30	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9g4q
+9G4R	2025-07-30	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9g4r
+9G4V	2025-11-05	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9G54	2025-11-05	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9G56	2025-12-17	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9G7C	2024-10-30	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9g7c
+9H82	2024-12-04	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9h82
+9H83	2024-12-04	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9h83
+9H86	2024-12-04	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9h86
+9H8A	2024-12-04	val	val	KEPT				/storage9920/home/tinghao.xia/Data/val/9h8a
+9HRD	2026-01-14	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D	
+9HRF	2026-01-14	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9hrf
+9HRG	2026-01-14	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D	
+9HRO	2025-10-01	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9hro
+9I8B	2025-03-12	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9i8b
+9I9W	2025-09-24	test	test	KEEP_ALL_CHAINS		AAA,BBB		/storage9920/home/tinghao.xia/Data/test/9i9w
+9IF0	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		AAA,BBB	
+9IF1	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		AAA,BBB	
+9IO0	2025-04-02	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9io0
+9IO1	2025-04-02	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9io1
+9IOR	2025-04-02	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9ior
+9IOS	2025-04-02	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9ios
+9IOU	2025-04-02	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9iou
+9IS7	2025-02-12	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9is7
+9ISV	2025-03-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9IWF	2025-06-04	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9iwf
+9IWG	2025-06-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9J3R	2025-03-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		B,A,D,C	
+9J3T	2025-03-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		B,A,D,C,E,F,G,H	
+9J4N	2025-07-09	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9j4n
+9J4O	2025-07-09	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9j4o
+9J6P	2025-01-15	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9j6p
+9J6Y	2025-03-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		C,F,B,E,A,D	
+9J9X	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		N	
+9JA7	2025-09-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9JA9	2025-09-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9JC8	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		N	
+9JGM	2025-06-04	test	test	KEEP_ALL_CHAINS		C,A,D,B		/storage9920/home/tinghao.xia/Data/test/9jgm
+9K9G	2026-04-22	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9k9g
+9K9H	2026-04-22	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9K9J	2026-04-22	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9K9K	2026-04-22	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9k9k
+9KAD	2025-01-22	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9kad
+9KGG	2025-11-12	test	test	KEEP_ALL_CHAINS		U		/storage9920/home/tinghao.xia/Data/test/9kgg
+9KGH	2025-11-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		U	
+9KPH	2025-03-19	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9kph
+9KPO	2025-03-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		B,A	
+9L0R	2025-03-19	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D,E,F,G,H,I,J,K,L	
+9L8F	2026-07-01	test	test	KEEP_ALL_CHAINS		U		/storage9920/home/tinghao.xia/Data/test/9l8f
+9LCR	2025-03-19	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9lcr
+9LE3	2025-09-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D,E,F	
+9LE5	2025-09-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9LE6	2025-09-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D,E,F	
+9LEC	2025-09-10	test	test	KEEP_ALL_CHAINS		J		/storage9920/home/tinghao.xia/Data/test/9lec
+9LEE	2025-09-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		J,A,B,C,D,E,F,G,H,I	
+9LEL	2025-09-10	test	test	KEEP_ALL_CHAINS		J		/storage9920/home/tinghao.xia/Data/test/9lel
+9LEM	2025-09-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		J,A,B,C,D,E,F,G,H,I	
+9LHK	2025-09-10	test	test	KEEP_ALL_CHAINS		G		/storage9920/home/tinghao.xia/Data/test/9lhk
+9LHL	2025-09-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		G,A,B,C,D,E,F,H,I,J,K,L,M,N	
+9LJN	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9LKC	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9LKE	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9LKF	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9LKU	2025-08-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		X	
+9LKV	2025-08-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		X	
+9LKW	2025-08-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		X	
+9LMC	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9LMF	2025-03-19	test	test	KEEP_ALL_CHAINS		A,B,C,D,E,F,G,H,I,J		/storage9920/home/tinghao.xia/Data/test/9lmf
+9M78	2025-09-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D,E,F	
+9M79	2025-09-10	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9m79
+9MCW	2025-04-23	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9mcw
+9MDS	2025-04-30	test	test	KEEP_ALL_CHAINS		A,B,C,D,E,F,G,H		/storage9920/home/tinghao.xia/Data/test/9mds
+9MDW	2025-05-14	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9mdw
+9MDX	2025-05-14	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9mdx
+9MDY	2025-05-14	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9mdy
+9MEE	2025-04-30	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D,E,F,G,H,I,J,K,L,M,N	
+9MFH	2025-09-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9MM6	2025-06-04	test	test	KEEP_ALL_CHAINS		A,E,I,M,Q,U,Y,c		/storage9920/home/tinghao.xia/Data/test/9mm6
+9MME	2025-06-04	test	test	KEEP_ALL_CHAINS		U,Y,c,g,k,o,s,w		/storage9920/home/tinghao.xia/Data/test/9mme
+9MMG	2025-06-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		c	
+9MQS	2025-04-30	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9MQT	2025-04-30	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9mqt
+9MQU	2025-04-30	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9NA1	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9NA7	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9NAK	2026-03-04	test	test	KEEP_ALL_CHAINS		A,C		/storage9920/home/tinghao.xia/Data/test/9nak
+9NAM	2026-03-04	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9nam
+9NAP	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9NAS	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D	
+9NBC	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9NBH	2026-03-04	test	test	KEEP_ALL_CHAINS		A,B,C,D		/storage9920/home/tinghao.xia/Data/test/9nbh
+9NDD	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C,D	
+9NDV	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9NDW	2026-03-04	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9ndw
+9NDX	2026-03-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9O47	2026-04-22	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9OBM	2025-07-16	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9obm
+9OD4	2025-10-15	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9od4
+9OD5	2025-10-15	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9OL2	2025-10-22	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9OL3	2025-10-22	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9OV3	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9OV6	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9OV7	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9OV8	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9OVB	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9OVC	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9OWJ	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,C,E	
+9OWK	2026-06-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,C,E	
+9OWL	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,C	
+9OWM	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,C	
+9OWN	2026-05-06	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,C	
+9OWO	2026-06-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,C	
+9OWP	2026-06-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,C	
+9OWQ	2026-05-06	test	test	KEEP_PARTIAL_CHAINS		C	A	/storage9920/home/tinghao.xia/Data/test/9owq
+9OY2	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9OY3	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9OY4	2026-05-20	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9PDE	2026-02-04	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9pde
+9PDF	2026-02-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9PDG	2026-02-04	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9Q0I	2026-04-29	test	test	KEEP_ALL_CHAINS		A,B,C,D,E,F		/storage9920/home/tinghao.xia/Data/test/9q0i
+9Q0J	2026-04-29	test	test	KEEP_ALL_CHAINS		A,B,C		/storage9920/home/tinghao.xia/Data/test/9q0j
+9Q3C	2025-11-05	test	test	KEEP_ALL_CHAINS		A,B,C,D,E,F,G,H,I,J,K,L,M,N		/storage9920/home/tinghao.xia/Data/test/9q3c
+9QTJ	2026-02-18	test	test	KEEP_ALL_CHAINS		1		/storage9920/home/tinghao.xia/Data/test/9qtj
+9QU6	2026-02-25	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9QU7	2026-02-25	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9QZJ	2025-10-01	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9qzj
+9R7Q	2026-02-25	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9r7q
+9R7W	2026-02-25	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9r7w
+9R82	2026-02-25	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9r82
+9RB4	2026-06-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9S1D	2026-07-22	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B,C	
+9SD9	2026-06-10	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9sd9
+9SXV	2025-11-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9SY4	2025-11-12	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9SY8	2026-06-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9SYC	2026-06-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9SYD	2026-06-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9SYE	2026-06-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9SYF	2026-06-24	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9TCA	2026-02-11	test	test	KEEP_ALL_CHAINS		A,C,B,D		/storage9920/home/tinghao.xia/Data/test/9tca
+9TCG	2026-02-11	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,C,B,D	
+9UUG	2026-06-10	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9uug
+9UW0	2025-08-20	test	test	KEEP_ALL_CHAINS		X		/storage9920/home/tinghao.xia/Data/test/9uw0
+9V4U	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9V4V	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9V4X	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9V4Y	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9V4Z	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9V50	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9V51	2025-11-26	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9V7N	2026-03-25	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		B,D,E	
+9V7O	2026-03-25	test	test	KEEP_ALL_CHAINS		B,D,E		/storage9920/home/tinghao.xia/Data/test/9v7o
+9V7P	2026-03-25	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		B	
+9V7Q	2026-03-25	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		B	
+9VMZ	2026-07-01	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9VSN	2026-05-20	test	test	KEEP_ALL_CHAINS		A,B		/storage9920/home/tinghao.xia/Data/test/9vsn
+9W1L	2026-01-28	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9w1l
+9WHV	2025-10-15	test	test	KEEP_ALL_CHAINS		A,B,C,D,E,F,G,H		/storage9920/home/tinghao.xia/Data/test/9whv
+9X6B	2026-03-25	test	test	KEEP_ALL_CHAINS		B		/storage9920/home/tinghao.xia/Data/test/9x6b
+9YD3	2025-10-22	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9Z6I	2026-05-27	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9z6i
+9ZBQ	2025-12-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZBR	2025-12-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZC6	2025-12-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZC7	2025-12-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		B	
+9ZC8	2025-12-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		B,A	
+9ZC9	2025-12-03	test	test	KEEP_ALL_CHAINS		A		/storage9920/home/tinghao.xia/Data/test/9zc9
+9ZCA	2025-12-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9ZCB	2025-12-10	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A,B	
+9ZCC	2025-12-03	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		B,A	
+9ZDV	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZF2	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZF3	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZF5	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZF9	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZFC	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZFD	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGM	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGN	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGO	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGP	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGQ	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGR	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGS	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGT	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGU	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGV	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGW	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGX	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGY	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZGZ	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZH0	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZH1	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZH2	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZH5	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZH7	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZH9	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHA	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHB	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHC	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHD	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHE	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHF	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHG	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHI	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHJ	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHK	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHL	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHO	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHP	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHR	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHS	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHT	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHU	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHV	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHW	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHX	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZHZ	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZI0	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZI2	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZI3	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZI4	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZI5	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZI6	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	
+9ZI7	2026-05-13	test		DROP_NO_EVALUABLE_CHAINS	All RNA chains are masked from evaluation		A	

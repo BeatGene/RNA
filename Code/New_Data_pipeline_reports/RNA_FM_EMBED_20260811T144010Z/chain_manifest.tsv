@@ -1,0 +1,16 @@
+PDB_ID	CHAIN_INDEX	ORIGINAL_CHAIN_ID	EXPECTED_PROTENIX_CHAIN_ID	ENTITY_ID	SEQUENCE_LENGTH	SEQUENCE_SHA256	NON_ACGU_COUNT	UNK_TOKEN_COUNT	EMBEDDING_METHOD	WINDOW_COUNT	WINDOW_STARTS	OUTPUT_PATH
+1G2J	0	A	A	1	8	06279895551c87f82982a594b2cd84fc3102a7352232d29b8f3129a48914bf5f	1	0	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/1G2J/rnafm_t12_residue_embeddings.pt
+1SAQ	0	A	A	1	8	ac6b382cc7bbbe2ab702947f9cfada4cd26d13465a92902edeb5f53fed94e257	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/1SAQ/rnafm_t12_residue_embeddings.pt
+1SAQ	1	B	B	1	8	ac6b382cc7bbbe2ab702947f9cfada4cd26d13465a92902edeb5f53fed94e257	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/1SAQ/rnafm_t12_residue_embeddings.pt
+1SAQ	2	C	C	1	8	ac6b382cc7bbbe2ab702947f9cfada4cd26d13465a92902edeb5f53fed94e257	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/1SAQ/rnafm_t12_residue_embeddings.pt
+1SAQ	3	D	D	1	8	ac6b382cc7bbbe2ab702947f9cfada4cd26d13465a92902edeb5f53fed94e257	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/1SAQ/rnafm_t12_residue_embeddings.pt
+1SAQ	4	E	E	1	8	ac6b382cc7bbbe2ab702947f9cfada4cd26d13465a92902edeb5f53fed94e257	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/1SAQ/rnafm_t12_residue_embeddings.pt
+21ET	0	A	A	1	13	9faf762a47d443163d89880cbc11ad5984434e958b1f3ce6b1a389b806900239	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/21ET/rnafm_t12_residue_embeddings.pt
+21ET	1	B	B	1	13	9faf762a47d443163d89880cbc11ad5984434e958b1f3ce6b1a389b806900239	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/21ET/rnafm_t12_residue_embeddings.pt
+21ET	2	C	C	1	13	9faf762a47d443163d89880cbc11ad5984434e958b1f3ce6b1a389b806900239	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/21ET/rnafm_t12_residue_embeddings.pt
+21ET	3	D	D	1	13	9faf762a47d443163d89880cbc11ad5984434e958b1f3ce6b1a389b806900239	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/21ET/rnafm_t12_residue_embeddings.pt
+21ET	4	E	E	1	13	9faf762a47d443163d89880cbc11ad5984434e958b1f3ce6b1a389b806900239	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/21ET/rnafm_t12_residue_embeddings.pt
+21ET	5	F	F	1	13	9faf762a47d443163d89880cbc11ad5984434e958b1f3ce6b1a389b806900239	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/21ET/rnafm_t12_residue_embeddings.pt
+2LVY	0	A	A	1	9	a3928d8d215cf5dc9e72a6384270db2be955ae683537fecb65884d1a43e4fd9d	2	2	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/2LVY/rnafm_t12_residue_embeddings.pt
+2LVY	1	B	B	2	9	8d0064605b040fb99db18fefa5b191caa858f98d8c13ed762d93d96c497b459d	1	1	full_sequence	1	0	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/2LVY/rnafm_t12_residue_embeddings.pt
+7ZFW	0	L5	A	1	3774	5b83e295907a5a17ec97f03c9217e92a5370e140886814d8caf8c94dbbbef596	0	0	sliding_window_uniform_mean	5	0,766,1532,2298,2752	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/7ZFW/rnafm_t12_residue_embeddings.pt

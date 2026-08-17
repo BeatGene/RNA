@@ -1,0 +1,6 @@
+PDB_ID	STATUS	SPLIT	SPLIT_STATUS	CHAIN_COUNT	RESIDUE_COUNT	OUTPUT_PATH	METHODS	DETAIL
+1G2J	GENERATED	train	KEPT	1	8	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/1G2J/rnafm_t12_residue_embeddings.pt	full_sequence	VALID
+1SAQ	GENERATED	train	KEPT	5	40	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/1SAQ/rnafm_t12_residue_embeddings.pt	full_sequence	VALID
+21ET	GENERATED		DROP_NO_EVALUABLE_CHAINS	6	78	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/21ET/rnafm_t12_residue_embeddings.pt	full_sequence	VALID
+2LVY	GENERATED	train	KEPT	2	18	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/2LVY/rnafm_t12_residue_embeddings.pt	full_sequence	VALID
+7ZFW	GENERATED	train	KEPT	1	3774	/storage9920/home/tinghao.xia/Data_FM/RNA_FM_embeddings/7ZFW/rnafm_t12_residue_embeddings.pt	sliding_window_uniform_mean	VALID
