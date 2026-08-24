@@ -6,6 +6,7 @@ FOLDBENCH_ENV_PREFIX="${FOLDBENCH_ENV_PREFIX:-$HOME/miniconda3/envs/foldbench}"
 PYTHON_BIN="$FOLDBENCH_ENV_PREFIX/bin/python"
 SCRIPT_ROOT="${SCRIPT_ROOT:-$HOME/Code/predict_protenix}"
 OUTPUT_ROOT="${RMSD_OUTPUT_ROOT:-$HOME/Json_data/Foldbench_evaluation/rmsd}"
+MULTIMETRIC_REPORT_ROOT="${RMSD_MULTIMETRIC_REPORT_ROOT:-$HOME/Json_data/Foldbench_evaluation/foldbench_style_multimetric_report}"
 REPORT_ROOT="${RMSD_REPORT_ROOT:-$HOME/Code/pipeline_reports/FOLDBENCH_RNA_RMSD}"
 WORKERS="${RMSD_WORKERS:-16}"
 TIMEOUT_SECONDS="${RMSD_TIMEOUT_SECONDS:-1800}"
@@ -90,8 +91,21 @@ case "$MODE" in
             --expected-valid 2167
         )
         ;;
+    multimetric-report)
+        if [[ ! -f "$SCRIPT_ROOT/build_foldbench_rna_multimetric_report.py" ]]; then
+            echo "Multi-metric report script not found: $SCRIPT_ROOT/build_foldbench_rna_multimetric_report.py" >&2
+            exit 2
+        fi
+        COMMAND=(
+            "$PYTHON_BIN" "$SCRIPT_ROOT/build_foldbench_rna_multimetric_report.py"
+            --rmsd-root "$OUTPUT_ROOT"
+            --output-dir "$MULTIMETRIC_REPORT_ROOT"
+            --expected-targets 2199
+            --bootstrap-replicates "${RMSD_BOOTSTRAP_REPLICATES:-5000}"
+        )
+        ;;
     *)
-        echo "Usage: $0 {smoke|run|rescue|summarize|final-report}" >&2
+        echo "Usage: $0 {smoke|run|rescue|summarize|final-report|multimetric-report}" >&2
         exit 2
         ;;
 esac

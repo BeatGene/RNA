@@ -27,6 +27,7 @@ from summarize_foldbench_rna_rmsd import (
     select_strict_rank1,
 )
 from build_foldbench_rna_rmsd_final_report import run as run_final_report
+from build_foldbench_rna_multimetric_report import run as run_multimetric_report
 
 
 class FoldBenchRnaRmsdRunnerTests(unittest.TestCase):
@@ -416,6 +417,60 @@ class FoldBenchRnaRmsdSummaryTests(unittest.TestCase):
             self.assertEqual(supplement.loc[0, "failure_stage"], "RIGID_GDT")
             self.assertEqual(supplement.loc[0, "standard_result"], "FAILED")
             self.assertTrue(bool(supplement.loc[0, "lower_rank_valid_candidate_available"]))
+
+    def test_multimetric_report_uses_metric_specific_coverage(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "rmsd"
+            reports = root / "reports"
+            reports.mkdir(parents=True)
+            rows = []
+            lengths = [10, 30, 70, 150, 250, 35]
+            length_groups = ["1-20", "21-50", "51-100", "101-200", ">200", "21-50"]
+            chain_groups = ["1", "2", "3", "4", ">=5", "2"]
+            for index in range(6):
+                rows.append(
+                    {
+                        "pdb_id": f"2A0{index + 1}",
+                        "seed": 42,
+                        "sample": 0,
+                        "ranking_score": 0.9 - index * 0.01,
+                        "time_group": "pre_or_on_cutoff" if index < 3 else "post_cutoff",
+                        "rna_total_length": lengths[index],
+                        "length_group": length_groups[index],
+                        "chain_count_group": chain_groups[index],
+                        "lddt": np.nan if index == 5 else 0.82 - index * 0.09,
+                        "tm_score": np.nan if index == 5 else 0.77 - index * 0.08,
+                        "oligo_gdtts": 0.72 - index * 0.07,
+                        "rmsd": float(1 + index * 3),
+                        "prediction_path": f"/pred/2A0{index + 1}.cif",
+                        "reference_path": f"/ref/2A0{index + 1}.cif",
+                        "evaluation_protocol": "rigid_only_rescue" if index == 5 else "foldbench_full",
+                        "eval_status": "SUCCESS",
+                        "eval_issue": "",
+                    }
+                )
+            pd.DataFrame(rows).to_csv(reports / "rank1_targets.csv", index=False)
+
+            exit_code = run_multimetric_report(
+                argparse.Namespace(
+                    rmsd_root=str(root),
+                    output_dir=None,
+                    expected_targets=6,
+                    bootstrap_replicates=100,
+                )
+            )
+
+            self.assertEqual(exit_code, 0)
+            output = root.parent / "foldbench_style_multimetric_report"
+            self.assertTrue((output / "figures/Figure1_primary_LDDT.png").is_file())
+            self.assertTrue((output / "figures/Figure2_metrics_by_length_and_chain_count.pdf").is_file())
+            self.assertTrue((output / "figures/Figure3_local_vs_global_accuracy.svg").is_file())
+            self.assertTrue((output / "FoldBench_style_RNA_multimetric_report.xlsx").is_file())
+            summary = pd.read_csv(output / "tables/Table2_all_metrics.tsv", sep="\t")
+            lddt = summary[(summary["group"] == "All targets") & (summary["metric"] == "lddt")].iloc[0]
+            rmsd = summary[(summary["group"] == "All targets") & (summary["metric"] == "rmsd")].iloc[0]
+            self.assertEqual(int(lddt["n_valid"]), 5)
+            self.assertEqual(int(rmsd["n_valid"]), 6)
 
 
 if __name__ == "__main__":

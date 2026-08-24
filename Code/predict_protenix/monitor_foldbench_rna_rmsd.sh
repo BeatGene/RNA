@@ -3,6 +3,7 @@ set -euo pipefail
 
 REPORT_ROOT="${RMSD_REPORT_ROOT:-$HOME/Code/pipeline_reports/FOLDBENCH_RNA_RMSD}"
 OUTPUT_ROOT="${RMSD_OUTPUT_ROOT:-$HOME/Json_data/Foldbench_evaluation/rmsd}"
+MULTIMETRIC_REPORT_ROOT="${RMSD_MULTIMETRIC_REPORT_ROOT:-$HOME/Json_data/Foldbench_evaluation/foldbench_style_multimetric_report}"
 CURRENT_FILE="$REPORT_ROOT/current_run.txt"
 
 if [[ ! -f "$CURRENT_FILE" ]]; then
@@ -49,6 +50,11 @@ fi
 if [[ -f "$OUTPUT_ROOT/final_report/final_report_summary.txt" ]]; then
     echo "Final RMSD report summary:"
     cat "$OUTPUT_ROOT/final_report/final_report_summary.txt"
+fi
+
+if [[ -f "$MULTIMETRIC_REPORT_ROOT/multimetric_report_summary.txt" ]]; then
+    echo "FoldBench-style multi-metric report summary:"
+    cat "$MULTIMETRIC_REPORT_ROOT/multimetric_report_summary.txt"
 fi
 
 if [[ -f "$RUN_DIR/console.log" ]]; then
