@@ -1,7 +1,5 @@
 import argparse
-import os
 import os.path as osp
-from pathlib import Path
 
 import torch
 from lightning.pytorch import seed_everything
@@ -21,11 +19,6 @@ from etflow.data.datamodule import BaseDataModule
 
 torch.set_float32_matmul_precision("high")
 
-# NCCL timeout settings to prevent multi-GPU deadlocks
-os.environ.setdefault("NCCL_TIMEOUT", "1800")
-os.environ.setdefault("NCCL_BLOCKING_WAIT", "1")
-os.environ.setdefault("TORCH_DISTRIBUTED_TIMEOUT", "1800")
-
 
 def run(config: dict) -> None:
     # check if debug mode
@@ -34,21 +27,11 @@ def run(config: dict) -> None:
     # seed everything for reproducibility
     seed_everything(config.get("seed", 42))
 
-    # 保存项目根目录 (setup_log_dir 会 os.chdir 到日志目录)
-    project_root = os.getcwd()
-
     # task name for logger, if not provided use default
     task_name = config.get("task_name", None)
     if debug:
         task_name = "debug-run"
     assert task_name is not None, "Task name not provided"
-
-    # 提前解析 sample_files 的相对路径，防止 os.chdir 后找不到
-    dm_args = config.get("datamodule_args", {})
-    if "sample_files" in dm_args and isinstance(dm_args["sample_files"], str):
-        sf_path = Path(dm_args["sample_files"])
-        if not sf_path.is_absolute():
-            dm_args["sample_files"] = str((Path(project_root) / sf_path).resolve())
 
     # instantiate logger (skip if debug mode)
     logger = None
@@ -62,13 +45,16 @@ def run(config: dict) -> None:
         )
 
     # setup log directory (pass project_root to ensure absolute path)
-    setup_log_dir(task_name, project_root=project_root)
+    setup_log_dir(task_name)
 
     # instantiate datamodule
-    datamodule = BaseDataModule(**dm_args)
+
+    datamodule = BaseDataModule(**config["datamodule_args"])
 
     # instantiate model
+    # ToDo
     model = instantiate_model(config["model"], config["model_args"])
+
     pretrained_ckpt = config.get("pretrained_ckpt", None)
     if pretrained_ckpt is not None:
         assert osp.exists(

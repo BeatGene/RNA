@@ -8,13 +8,13 @@ seed: 42
 datamodule: BaseDataModule
 datamodule_args:
     # dataloader
-    data_dir: "/remote-home/jinxianwang/tinghaoxia/RNA/Data/RNA"
+    data_dir: "/storage9920/home/tinghao.xia/Data_V1"
     dataloader_args:
         batch_size: 1
         num_workers: 2
         pin_memory: true
         persistent_workers: true
-        drop_last: true
+        drop_last: false
 
 # model config
 model: BaseFlow
@@ -67,20 +67,16 @@ model_args:
 callbacks:
     -   callback: ModelCheckpoint
         callback_args:
-            # 🚨【修改】强烈建议加上明确的实验名称，不要只用 './checkpoint'
-            # 否则你跑第二次实验时，会把第一次好不容易训练出来的权重覆盖掉！
             dirpath: './checkpoints/rna_refinement_v1'
             monitor: val/loss
             mode: min
-            save_last: true     # 极好！会始终保留最新的一步，断点续传必备
+            save_last: true
             every_n_epochs: 1
-            save_top_k: 3       # 极好！自动为你保留历史上 Loss 最低的 3 个模型，绝不弄丢最优解
+            save_top_k: 3
 
     -   callback: LearningRateMonitor
         callback_args:
             log_momentum: false
-            # 🚨【修改】从 null 改为 step。因为你的余弦调度器是按步(step)更新的，
-            # 这样你在 Wandb 上能看到平滑的学习率曲线，而不是每个 epoch 才打一个点的折线。
             logging_interval: step
 
 # logger
@@ -93,11 +89,11 @@ logger_args:
 trainer: Trainer
 trainer_args:
     max_epochs: 200
-    devices: 7                   # 自动识别你有几张显卡，不会强行霸占 8 张导致报错
-    accelerator: gpu               # 自动识别是 GPU 还是 CPU
-    strategy: ddp_find_unused_parameters_true  # 多卡策略，容忍checkpoint恢复时未使用的参数
-    accumulate_grad_batches: 6     # 🚨 核心新增：梯度累加。模拟大 Batch Size 稳定收敛
-    precision: bf16-mixed           # 🌟 强烈推荐新增：混合精度训练，节省显存利器！
+    devices: 7
+    accelerator: gpu
+    strategy: ddp_find_unused_parameters_true
+    accumulate_grad_batches: 6
+    precision: bf16-mixed
     num_sanity_val_steps: 0
 
 # eval config
@@ -110,5 +106,3 @@ eval_args:
         t_min: 0.0001
         t_max: 0.9999
         std: 1.0
-
-ckpt_path: "/remote-home/jinxianwang/tinghaoxia/RNA/Code_Flow_matching/logs/RNA_test_02_rmsd_less/runs/2026-06-15_09-28-12/checkpoints/rna_refinement_v1/last.ckpt"

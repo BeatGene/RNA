@@ -43,15 +43,19 @@ class BaseFlow(BaseModel):
             qk_norm: bool = False,
             output_layer_norm: bool = False,
             clip_during_norm: bool = False,
+            # max_num_neighbors: int = 32,
             so3_equivariant: bool = False,
             # flow matching args
             sigma: float = 0.1,
+            # prior_type: str = "gaussian",
             sample_time_dist: str = "uniform",
+            edge_one_hot: bool = False,
+            edge_one_hot_types: int = 3,
             **kwargs,
     ):
         super().__init__(**kwargs)
 
-        # 1. 搭建等变图神经网络主干
+        # setup network
         if network_type == "TorchMDDynamics":
             self.network = TorchMDDynamics(
                 hidden_channels=hidden_channels,
@@ -81,6 +85,9 @@ class BaseFlow(BaseModel):
 
         self.sigma = sigma
         self.sample_time_dist = sample_time_dist
+        self.cutoff = cutoff_upper
+        self.edge_one_hot = edge_one_hot
+        self.edge_one_hot_types = edge_one_hot_types
 
     @classmethod
     def from_config(cls, cfg: Config):
@@ -156,7 +163,8 @@ class BaseFlow(BaseModel):
             z: Tensor,
             t: Tensor,
             pos: Tensor,
-            edge_index: Tensor,
+            bond_index: Tensor,
+            edge_attr: Optional[Tensor] = None,
             node_attr: Optional[Tensor] = None,
             batch: Optional[Tensor] = None,
     ):
@@ -179,12 +187,14 @@ class BaseFlow(BaseModel):
         # )
         # 【核心修改】：直接使用传入的 pre-computed edge_index
         # 摒弃了原版消耗极大的 extend_bond_index
+        edge_index=bond_index
+        edge_type=edge_attr
         v_t = self.network(
             z=z,
             t=t[batch],
             pos=pos,
             edge_index=edge_index,
-            edge_attr=None,  # 我们暂时没有对 RNA 提取边特征，设为 None
+            edge_attr=edge_type,
             node_attr=node_attr,
             batch=batch,
         )
@@ -196,16 +206,17 @@ class BaseFlow(BaseModel):
         核心训练步。
         """
         # 从 Dataloader 中获取数据
-        z = batched_data["z"]
+        z = batched_data[" atomic_numbers"]
         pos = batched_data["pos"]  # X_1: 真实目标坐标
         pos_pred = batched_data["pos_pred"]  # X_0: 流的起点（Protenix预测坐标）
-        edge_index = batched_data["edge_index"]  # 空间邻居边
+        bond_index = batched_data["edge_index"]  # 边
         node_attr = batched_data.get("node_attr", None)
+        edge_attr = batched_data.get("edge_attr", None)
         batch = batched_data.get("batch", None)
 
         batch_size = batch.max().item() + 1 if batch is not None else 1
 
-        # 【核心修改】：流匹配的起点不再是噪声，而是你的预测结构！
+        # 【核心修改】：流匹配的起点不再是噪声，而是预测结构
         x0 = pos_pred
 
         # 采样时间步 t
@@ -221,12 +232,12 @@ class BaseFlow(BaseModel):
             z=z,
             t=t,
             pos=x_t,
-            edge_index=edge_index,
+            bond_index=bond_index,
+            edge_attr=edge_attr,
             node_attr=node_attr,
             batch=batch,
         )
 
-        # 计算 MSE 损失：让模型预测的 v_t 逼近真实的推移方向 u_t
         loss = batchwise_l2_loss(v_t, u_t, batch=batch, reduce="mean")
 
         if torch.isnan(loss):
@@ -249,10 +260,14 @@ class BaseFlow(BaseModel):
             self,
             z: Tensor,
             pos_pred: Tensor,
-            edge_index: Tensor,
+            bond_index: Tensor,
             batch: Tensor,
             node_attr: Tensor = None,
+            edge_attr: Tensor = None,
             n_timesteps: int = 50,
+
+            s_churn: float = 1.0,
+            std: float = 1.0,
     ):
         """
         推理 (Inference) / Refinement 阶段。
@@ -279,7 +294,8 @@ class BaseFlow(BaseModel):
                 z=z,
                 t=t,
                 pos=x,
-                edge_index=edge_index,
+                bond_index=bond_index,
+                edge_attr=edge_attr,
                 node_attr=node_attr,
                 batch=batch,
             )

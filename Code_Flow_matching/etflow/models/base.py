@@ -6,9 +6,7 @@ from loguru import logger as log
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
 
-# ToDo
 from etflow.commons.utils import Queue
-# ToDo
 from etflow.schedulers import CosineAnnealingWarmupRestarts
 
 
@@ -161,29 +159,41 @@ class BaseModel(LightningModule):
         )
 
     def configure_gradient_clipping(
-        self, optimizer, gradient_clip_val, gradient_clip_algorithm
+            self,
+            optimizer,
+            gradient_clip_val,
+            gradient_clip_algorithm,
     ):
-        """Gradient Clipping as done in the official EDM implementation."""
-        # Allow gradient norm to be 150% + 2 * stdev of the recent history.
+        """Adaptive global gradient-norm clipping."""
+
+        # 根据最近的梯度历史动态计算裁剪阈值
         max_grad_norm = max(
             min(
-                1.5 * self.gradnorm_queue.mean() + 2 * self.gradnorm_queue.std(),
-                self.grad_norm_max_val,  # do not increase the gradient norm beyond 100
+                1.5 * self.gradnorm_queue.mean()
+                + 2.0 * self.gradnorm_queue.std(),
+                self.grad_norm_max_val,
             ),
-            0.01,  # floor: prevent adaptive clipping from collapsing to zero
+            0.01,
         )
+
+        # 返回值是裁剪前的全局梯度范数
         grad_norm = torch.nn.utils.clip_grad_norm_(
-            self.parameters(), max_grad_norm, norm_type=2.0
+            self.parameters(),
+            max_norm=max_grad_norm,
+            norm_type=2.0,
+            error_if_nonfinite=True,
         )
 
-        if float(grad_norm) > max_grad_norm and grad_norm < self.grad_norm_max_val:
-            # only update if grad_norm is not too large
-            self.gradnorm_queue.add(max_grad_norm)
-        else:
-            self.gradnorm_queue.add(grad_norm.cpu().item())
+        grad_norm_value = grad_norm.detach().cpu().item()
+        max_grad_norm_value = float(max_grad_norm)
 
-        if float(grad_norm) > max_grad_norm:
+        # 队列只记录裁剪后的有效范数，避免极端异常值污染历史
+        self.gradnorm_queue.add(
+            min(grad_norm_value, max_grad_norm_value)
+        )
+
+        if grad_norm_value > max_grad_norm_value:
             log.info(
-                f"Clipped gradient with value {grad_norm:.1f} "
-                f"while allowed {max_grad_norm:.1f}"
+                f"Clipped gradient with value {grad_norm_value:.1f} "
+                f"while allowed {max_grad_norm_value:.1f}"
             )
