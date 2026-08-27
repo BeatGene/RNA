@@ -1,0 +1,38 @@
+pdb_id	seed	sample	missing_metrics	time_group	rna_total_length	length_group	chain_count_group	evaluation_protocol	eval_status	eval_issue
+1H1K	8888	0	lddt;tm_score	pre_or_on_cutoff	1906.0	>200	>=5	rigid_only_rescue	SUCCESS	
+1MDG	101	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	6.0	1-20	1	unavailable	missing_output	output JSON does not exist
+1OSU	8888	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	6.0	1-20	1	unavailable	missing_output	output JSON does not exist
+1P79	101	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	6.0	1-20	1	unavailable	missing_output	output JSON does not exist
+1QC0	66	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	57.0	51-100	4	unavailable	missing_output	output JSON does not exist
+1QCU	2024	0	lddt;tm_score	pre_or_on_cutoff	44.0	21-50	4	rigid_only_rescue	SUCCESS	
+1QZA	8888	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	75.0	51-100	1	unavailable	missing_output	output JSON does not exist
+1QZB	2024	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	76.0	51-100	1	unavailable	missing_output	output JSON does not exist
+1T1O	8888	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	73.0	51-100	3	unavailable	missing_output	output JSON does not exist
+1XV6	2024	0	lddt;tm_score	pre_or_on_cutoff	12.0	1-20	1	rigid_only_rescue	SUCCESS	
+2AGN	42	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	203.0	>200	>=5	unavailable	missing_output	output JSON does not exist
+2JJA	101	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	8.0	1-20	1	unavailable	missing_output	output JSON does not exist
+2JXS	66	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	21.0	21-50	2	unavailable	missing_output	output JSON does not exist
+2K7E	2024	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	24.0	21-50	2	unavailable	missing_output	output JSON does not exist
+2KD4	101	0	lddt;tm_score	pre_or_on_cutoff	16.0	1-20	2	rigid_only_rescue	SUCCESS	
+2KHY	8888	0	lddt	pre_or_on_cutoff	38.0	21-50	1	foldbench_full	SUCCESS	
+2M1O	2024	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	14.0	1-20	2	unavailable	missing_output	output JSON does not exist
+2N4J	66	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	16.0	1-20	2	unavailable	missing_output	output JSON does not exist
+2VUQ	2024	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	14.0	1-20	2	unavailable	missing_output	output JSON does not exist
+2WNA	42	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	6.0	1-20	1	unavailable	missing_output	output JSON does not exist
+2XC6	42	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	8.0	1-20	1	unavailable	missing_output	output JSON does not exist
+2Z9Q	101	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	75.0	51-100	1	unavailable	missing_output	output JSON does not exist
+3BBK	2024	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	62.0	51-100	3	unavailable	missing_output	output JSON does not exist
+3GS8	2024	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	62.0	51-100	4	unavailable	missing_output	output JSON does not exist
+3HGA	42	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	6.0	1-20	1	unavailable	missing_output	output JSON does not exist
+3P4A	101	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	48.0	21-50	>=5	unavailable	missing_output	output JSON does not exist
+488D	101	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	66.0	51-100	4	unavailable	missing_output	output JSON does not exist
+4FAW	8888	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	402.0	>200	2	unavailable	missing_output	output JSON does not exist
+4JIY	2024	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	6.0	1-20	1	unavailable	missing_output	output JSON does not exist
+5K8H	66	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	7.0	1-20	1	unavailable	missing_output	output JSON does not exist
+7EAG	2024	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	114.0	101-200	>=5	unavailable	missing_output	output JSON does not exist
+7EZ2	8888	0	lddt;tm_score;gdt_ts;rmsd	pre_or_on_cutoff	406.0	>200	3	unavailable	missing_output	output JSON does not exist
+7YG9	42	0	lddt;tm_score;gdt_ts;rmsd	post_cutoff	407.0	>200	3	unavailable	missing_output	output JSON does not exist
+7YGA	42	0	lddt;tm_score;gdt_ts;rmsd	post_cutoff	407.0	>200	3	unavailable	missing_output	output JSON does not exist
+8F24	42	0	lddt;tm_score;gdt_ts;rmsd	post_cutoff	48.0	21-50	>=5	unavailable	missing_output	output JSON does not exist
+8OLZ	8888	0	lddt;tm_score;gdt_ts;rmsd	post_cutoff	397.0	>200	2	unavailable	missing_output	output JSON does not exist
+9H83	42	0	lddt;tm_score;gdt_ts;rmsd	post_cutoff	144.0	101-200	4	unavailable	missing_output	output JSON does not exist
