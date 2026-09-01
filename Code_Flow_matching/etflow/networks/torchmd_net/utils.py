@@ -302,7 +302,7 @@ class GatedEquivariantBlock(nn.Module):
         )
 
         # mask = (vec1_buffer != 0).view(vec1_buffer.size(0), -1).any(dim=1)
-        mask = (vec1_buffer != 0).view(vec1_buffer.size(0), -1).all(dim=1)
+        mask = (vec1_buffer != 0).reshape(vec1_buffer.size(0), -1).any(dim=1)
         if not mask.all():
             warnings.warn(
                 (

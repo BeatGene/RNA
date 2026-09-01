@@ -112,9 +112,7 @@ class EquivariantVectorOutput(OutputModel):
         for layer in self.output_network:
             x, v = layer(x, v)
 
-        v = v.squeeze() + pos
-
-        return x, v
+        return x, v.squeeze(-1)
 
 # 联合输出头，同时预测「分子标量属性 + 3D 向量属性」
 class EquivariantVectorAndScalarOutput(OutputModel):

@@ -206,7 +206,7 @@ class BaseFlow(BaseModel):
         核心训练步。
         """
         # 从 Dataloader 中获取数据
-        z = batched_data[" atomic_numbers"]
+        z = batched_data["atomic_numbers"]
         pos = batched_data["pos"]  # X_1: 真实目标坐标
         pos_pred = batched_data["pos_pred"]  # X_0: 流的起点（Protenix预测坐标）
         bond_index = batched_data["edge_index"]  # 边

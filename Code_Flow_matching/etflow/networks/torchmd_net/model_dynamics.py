@@ -409,7 +409,7 @@ class TorchMD_ET_dynamics(nn.Module):
 
         # compute distances
         edge_vec = pos[edge_index[0]] - pos[edge_index[1]]
-        edge_weight = (edge_vec**2).sum(dim=-1, keepdim=False)
+        edge_weight = torch.linalg.vector_norm(edge_vec,dim=-1,)
 
         # update edge_attributes with user input if they are given
         if edge_attr is not None:
@@ -621,4 +621,4 @@ class TorchMDDynamics(nn.Module):
 
         # latent representation
         _, v = self.output_model.pre_reduce(x, v, z, pos, batch)
-        return center(v - pos, batch)
+        return center(v, batch)
