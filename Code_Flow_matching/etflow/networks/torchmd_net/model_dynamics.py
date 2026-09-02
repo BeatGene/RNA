@@ -64,6 +64,12 @@ class EquivariantMultiHeadAttention(MessagePassing):
             nn.Linear(hidden_channels, hidden_channels),
         )
 
+        # Modify_1
+        self.source_node_proj = nn.Linear(
+            hidden_channels,
+            hidden_channels,
+            bias=False,
+        )
         if qk_norm:
             # add layer norm to q and k projections
             # based on https://arxiv.org/pdf/2302.05442.pdf
@@ -91,6 +97,7 @@ class EquivariantMultiHeadAttention(MessagePassing):
         self.reset_parameters()
 
     def reset_parameters(self):
+
         self.layernorm.reset_parameters()
         if self.qk_norm:
             self.q_proj[0].bias.data.fill_(0)
@@ -107,6 +114,8 @@ class EquivariantMultiHeadAttention(MessagePassing):
         nn.init.xavier_uniform_(self.o_proj.weight)
         self.o_proj.bias.data.fill_(0)
         nn.init.xavier_uniform_(self.vec_proj.weight)
+        #Modify_1
+        nn.init.xavier_uniform_(self.source_node_proj.weight)
         if self.dk_proj:
             nn.init.xavier_uniform_(self.dk_proj.weight)
             self.dk_proj.bias.data.fill_(0)
@@ -114,9 +123,12 @@ class EquivariantMultiHeadAttention(MessagePassing):
             nn.init.xavier_uniform_(self.dv_proj.weight)
             self.dv_proj.bias.data.fill_(0)
 
-    def forward(self, x, vec, edge_index, r_ij, f_ij, d_ij, t, node_attr):
+    def forward(self, x, vec, edge_index, r_ij, f_ij, d_ij, t, node_attr,source_x=None):
         # Mix x with node_attr and time
         # 修复后的代码：
+        #Modify_1
+        if source_x is not None:
+            x = x + self.source_node_proj(source_x)
         if node_attr is not None:
             x = self.mixing_mlp(torch.cat([x, t, node_attr], dim=1))
         else:
@@ -293,6 +305,7 @@ class TorchMD_ET_dynamics(nn.Module):
         norm_coors_scale_init: float = 1e-2,
         clip_during_norm: bool = False,
         so3_equivariant: bool = False,
+        source_conditioning: bool = True,
     ):
         super(TorchMD_ET_dynamics, self).__init__()
 
@@ -309,7 +322,7 @@ class TorchMD_ET_dynamics(nn.Module):
             f'Unknown attention activation function "{attn_activation}". '
             f'Choose from {", ".join(act_class_mapping.keys())}.'
         )
-
+        self.source_conditioning = source_conditioning
         self.hidden_channels = hidden_channels
         self.num_layers = num_layers
         self.num_rbf = num_rbf
@@ -325,11 +338,21 @@ class TorchMD_ET_dynamics(nn.Module):
         self.max_z = max_z
         self.node_attr_dim = node_attr_dim
         self.edge_attr_dim = edge_attr_dim
+        # Modify_1
+        self.edge_feature_dim = num_rbf + edge_attr_dim
         self.clip_during_norm = clip_during_norm
 
         act_class = act_class_mapping[activation]
 
         self.embedding = nn.Embedding(self.max_z, self.hidden_channels)
+
+        # Modify_1
+        self.source_edge_fusion = nn.Sequential(
+            nn.Linear(self.edge_feature_dim + num_rbf, self.edge_feature_dim),
+            act_class(),
+            nn.Linear(self.edge_feature_dim, self.edge_feature_dim),
+        )
+
 
         self.distance_expansion = rbf_class_mapping[rbf_type](
             cutoff_lower, cutoff_upper, num_rbf, trainable_rbf
@@ -374,6 +397,12 @@ class TorchMD_ET_dynamics(nn.Module):
             self.attention_layers.append(layer)
 
         self.out_norm = nn.LayerNorm(hidden_channels)
+        # Modify_1
+        self.source_delta_mlp = nn.Sequential(
+            nn.Linear(2, hidden_channels),
+            act_class(),
+            nn.Linear(hidden_channels, hidden_channels),
+        )
 
         self.reset_parameters()
 
@@ -386,11 +415,26 @@ class TorchMD_ET_dynamics(nn.Module):
             attn.reset_parameters()
         self.out_norm.reset_parameters()
 
+        nn.init.xavier_uniform_(self.source_edge_fusion[0].weight)
+        nn.init.zeros_(self.source_edge_fusion[0].bias)
+
+        # residual branch 初始为零
+        nn.init.zeros_(self.source_edge_fusion[2].weight)
+        nn.init.zeros_(self.source_edge_fusion[2].bias)
+
+        nn.init.xavier_uniform_(self.source_delta_mlp[0].weight)
+        nn.init.zeros_(self.source_delta_mlp[0].bias)
+
+        nn.init.xavier_uniform_(self.source_delta_mlp[2].weight)
+        nn.init.zeros_(self.source_delta_mlp[2].bias)
+
     def forward(
         self,
         z: Tensor,
         t: Tensor,
         pos: Tensor,
+        # Modify_1
+        pos_source: Tensor,
         batch: Tensor,
         edge_index: Optional[Tensor] = None,
         node_attr: Optional[Tensor] = None,
@@ -399,7 +443,9 @@ class TorchMD_ET_dynamics(nn.Module):
         # embed atomic numbers using an embedding layer
         if z.dim() > 1:
             z = z.squeeze()  # (num_atoms,)
-        x = self.embedding(z)  # (num_atoms, hidden_channels)
+
+        # Modify_1
+        x_initial = self.embedding(z)  # (num_atoms, hidden_channels)
 
         # append time to node features
         if self.node_attr_dim > 0:
@@ -407,45 +453,120 @@ class TorchMD_ET_dynamics(nn.Module):
         else:
             node_attr = None
 
-        # compute distances
+        # compute distances of the current structure
         edge_vec = pos[edge_index[0]] - pos[edge_index[1]]
         edge_weight = torch.linalg.vector_norm(edge_vec,dim=-1,)
 
-        # update edge_attributes with user input if they are given
+        current_rbf = self.distance_expansion(edge_weight)
+
+        # Combine current RBF features with the original edge attributes.
         if edge_attr is not None:
             if edge_attr.dim() == 1:
-                edge_attr = edge_attr.unsqueeze(1)  # (num_edges, 1)
-            # (num_edges, num_rbf + edge_attr_dim)
-            edge_attr = torch.cat(
-                [self.distance_expansion(edge_weight), edge_attr], dim=-1
-            )
+                edge_attr = edge_attr.unsqueeze(1)
+
+            if edge_attr.size(1) != self.edge_attr_dim:
+                raise ValueError(
+                    f"edge_attr has dim {edge_attr.size(1)}, "
+                    f"but edge_attr_dim={self.edge_attr_dim}"
+                )
+
+            current_edge_attr = torch.cat([current_rbf, edge_attr],dim=-1,)
         else:
-            edge_attr = self.distance_expansion(edge_weight)
+            if self.edge_attr_dim != 0:
+                raise ValueError(
+                    f"edge_attr_dim={self.edge_attr_dim}, "
+                    "but edge_attr is None"
+                )
 
+            current_edge_attr = current_rbf
+
+        # Source-structure conditioning branch
+        if self.source_conditioning:
+            source_edge_vec = (pos_source[edge_index[0]]- pos_source[edge_index[1]])
+            source_edge_dist = torch.linalg.vector_norm(source_edge_vec,dim=-1,)
+            source_rbf = self.distance_expansion(source_edge_dist)
+
+            if edge_attr is not None:
+                source_edge_attr = torch.cat([source_rbf, edge_attr],dim=-1,)
+            else:
+                source_edge_attr = source_rbf
+
+            source_distance_delta = source_rbf - current_rbf
+            source_edge_update = self.source_edge_fusion(torch.cat([current_edge_attr, source_distance_delta],dim=-1,))
+            f_ij = current_edge_attr + source_edge_update
+        else:
+            source_edge_dist = None
+            source_edge_attr = None
+            f_ij = current_edge_attr
+
+        # Normalize the current edge vectors.
         mask = edge_index[0] == edge_index[1]
-        masked_edge_weight = edge_weight.masked_fill(mask, 1).unsqueeze(1)
+        masked_edge_weight = edge_weight.masked_fill(mask,1,).unsqueeze(1)
 
-        if self.clip_during_norm:
-            # clip edge_weight to avoid exploding values if two nodes are close
-            masked_edge_weight = masked_edge_weight.clamp(min=1.0e-2)
+        if self.clip_during_norm:masked_edge_weight = masked_edge_weight.clamp(min=1.0e-2)
 
         edge_vec = edge_vec / masked_edge_weight
-
+        # Current/source node embeddings
         if self.neighbor_embedding is not None:
-            x = self.neighbor_embedding(z, x, edge_index, edge_weight, edge_attr)
+            x = self.neighbor_embedding(
+                z=z,
+                x=x_initial,
+                edge_index=edge_index,
+                edge_weight=edge_weight,
+                edge_attr=current_edge_attr,
+            )
 
-        # vec here is invariant values, we are not modifying the vectors.
-        # (num_atoms, 3, hidden_channels)
-        vec = torch.zeros(x.size(0), 3, x.size(1), device=x.device)
+            if self.source_conditioning:
+                source_x = self.neighbor_embedding(
+                    z=z,
+                    x=x_initial,
+                    edge_index=edge_index,
+                    edge_weight=source_edge_dist,
+                    edge_attr=source_edge_attr,
+                )
+            else:
+                source_x = None
+        else:
+            x = x_initial
+            source_x = None
+
+        # Initialize the vector features.
+        if self.source_conditioning:
+            delta = pos - pos_source
+
+            delta_norm = torch.linalg.vector_norm(delta,dim=-1,keepdim=True,)
+
+            delta_dir = delta / delta_norm.clamp(min=1.0e-8)
+
+            delta_scalar = torch.cat([delta_norm / self.cutoff_upper,t,],dim=-1,)
+
+            delta_channels = self.source_delta_mlp(
+                delta_scalar
+            )
+
+            vec = (
+                    delta_dir.unsqueeze(-1)
+                    * delta_channels.unsqueeze(1)
+            )
+        else:
+            vec = torch.zeros(
+                x.size(0),
+                3,
+                x.size(1),
+                dtype=x.dtype,
+                device=x.device,
+            )
+        #Modify_1
         for attn in self.attention_layers:
             dx, dvec = attn(
-                x,
-                vec,
-                edge_index,
-                edge_weight,
-                edge_attr,
-                edge_vec,
+                x=x,
+                vec=vec,
+                edge_index=edge_index,
+                r_ij=edge_weight,
+                f_ij=f_ij,
+                d_ij=edge_vec,
                 node_attr=node_attr,
+                source_x=source_x,
                 t=t,
             )
             x = x + dx
@@ -543,6 +664,7 @@ class TorchMDDynamics(nn.Module):
         output_layer_norm: bool = True,
         clip_during_norm: bool = False,
         so3_equivariant: bool = False,
+        source_conditioning: bool = True,
     ):
         super().__init__()
         self.representation_model = TorchMD_ET_dynamics(
@@ -564,6 +686,7 @@ class TorchMDDynamics(nn.Module):
             qk_norm=qk_norm,
             clip_during_norm=clip_during_norm,
             so3_equivariant=so3_equivariant,
+            source_conditioning=source_conditioning,
         )
         self.output_model = EquivariantVectorOutput(
             hidden_channels=hidden_channels,
@@ -582,6 +705,8 @@ class TorchMDDynamics(nn.Module):
         z: Tensor,
         t: Tensor,
         pos: Tensor,
+        # Modify_1
+        pos_source: Tensor,
         edge_index: Tensor,
         batch: Tensor,
         edge_attr: Optional[Tensor] = None,
@@ -613,6 +738,8 @@ class TorchMDDynamics(nn.Module):
             z=z,
             t=t,
             pos=pos,
+            # Modify_1
+            pos_source=pos_source,
             batch=batch,
             node_attr=node_attr,
             edge_index=edge_index,

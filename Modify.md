@@ -23,7 +23,7 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
 ## evaluate 当前无法按接口正常调用 DONE
 当前evaluate是之前版本的脚本，等到当前版本模型训练好了之后，再写新的evaluate脚本
 
-## 网络没有显式看到原始预测结构
+## 网络没有显式看到原始预测结构 Modify_1  DONE
 应加入 source encoder，显式输入：
 $$
 \Delta x_t = x_t - x_{\mathrm{pred}},\quad
@@ -32,7 +32,59 @@ $$
 
 并在每个 block 中与当前状态交互。
 
-Q:当前的模型中具体如何修改代码？
+ ### 14. 必须增加的测试
+
+  至少验证下面四项：
+
+  #### 1. source 能否影响输出
+  v1 = model(pos=x_t, pos_source=source_1, ...)
+  v2 = model(pos=x_t, pos_source=source_2, ...)
+  assert not torch.allclose(v1, v2)
+
+  #### 2. 平移不变
+  v_shift = model(
+      pos=x_t + shift,
+      pos_source=source + shift,
+      ...
+  )
+  assert torch.allclose(v, v_shift, atol=...)
+
+  #### 3. 旋转等变
+  v_rot = model(
+      pos=x_t @ R.T,
+      pos_source=source @ R.T,
+      ...
+  )
+  assert torch.allclose(v_rot, v @ R.T, atol=...)
+
+  #### 4. 输出零质心
+  assert center(v, batch).abs().max() < tolerance
+
+  另外应单独验证 identity pair：
+
+  [
+  x_{\mathrm{pred}}=x_{\mathrm{native}}
+  ]
+
+  训练后输出速度应接近零。
+
+  总结来说，当前代码最合理的修改不是“再建一个完整网络”，而是：
+
+  [
+  \boxed{
+  v_\theta\big(
+  x_t,,
+  x_{\mathrm{pred}},,
+  x_t-x_{\mathrm{pred}},,
+  d_t,,
+  d_{\mathrm{pred}},,
+  t
+  \big)
+  }
+  ]
+
+  其中 source distance 进入每层 edge attention，source node context 进入每层 scalar channel，(\Delta x_t) 进入 vector
+  channel。这样既保留当前 TorchMD-ET，又实现了真正的 prediction-conditioned refinement。
 
 ## 静态radius graph不适合中尺度 refinement
 图由初始预测坐标构建并在50步中固定：

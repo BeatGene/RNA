@@ -45,6 +45,7 @@ class BaseFlow(BaseModel):
             clip_during_norm: bool = False,
             # max_num_neighbors: int = 32,
             so3_equivariant: bool = False,
+            source_conditioning: bool = True,
             # flow matching args
             sigma: float = 0.1,
             # prior_type: str = "gaussian",
@@ -78,6 +79,7 @@ class BaseFlow(BaseModel):
                 output_layer_norm=output_layer_norm,
                 clip_during_norm=clip_during_norm,
                 so3_equivariant=so3_equivariant,
+                source_conditioning=source_conditioning,
             )
         else:
             raise NotImplementedError(f"Network {network_type} not implemented.")
@@ -133,16 +135,21 @@ class BaseFlow(BaseModel):
 
     def compute_conditional_vector_field(self, x0, x1, t, batch=None):
         if batch is None:
-            batch = torch.zeros((x1.size(0),), dtype=torch.long, device=self.device)
+            batch = torch.zeros(x1.size(0), dtype=torch.long, device=self.device)
 
+        # Modify_1
+        x0_centered = center_of_mass(x0, batch=batch)
+        x1_centered = center_of_mass(x1, batch=batch)
         # 获取 t 时刻的扰动坐标 x_t 和噪声 eps
-        x_t, eps = self.sample_conditional_pt(x0, x1, t, batch=batch)
-        t = unsqueeze_like(t[batch], x1)
+        # Modify_1
+        x_t, eps = self.sample_conditional_pt(x0_centered, x1_centered, t, batch=batch)
 
-        x0_c = center_of_mass(x0, batch=batch)
-        x1_c = center_of_mass(x1, batch=batch)
+        # Modify_1
+        t_atom = unsqueeze_like(t[batch], x1_centered)
+
         # 真实的目标向量场 u_t：指向 x1 - x0 的方向，并加上噪声的导数
-        u_t = x1_c - x0_c + self.sigma_dot_t(t) * eps
+        # Modify_1
+        u_t = x1_centered - x0_centered + self.sigma_dot_t(t_atom) * eps
 
         return x_t, u_t
 
@@ -166,6 +173,8 @@ class BaseFlow(BaseModel):
             t: Tensor,
             pos: Tensor,
             bond_index: Tensor,
+            # Modify_1
+            pos_source: Tensor,
             edge_attr: Optional[Tensor] = None,
             node_attr: Optional[Tensor] = None,
             batch: Optional[Tensor] = None,
@@ -175,6 +184,8 @@ class BaseFlow(BaseModel):
         """
         # 为了等变性，每次输入网络前都进行质心居中
         pos = center_of_mass(pos, batch=batch)
+        # Modify_1
+        pos_source = center_of_mass(pos_source, batch=batch)
         # ToDo
         # edge_index, edge_type = extend_bond_index(
         #     pos=pos,
@@ -195,6 +206,8 @@ class BaseFlow(BaseModel):
             z=z,
             t=t[batch],
             pos=pos,
+            # Modify_1
+            pos_source=pos_source,
             edge_index=edge_index,
             edge_attr=edge_type,
             node_attr=node_attr,
@@ -234,6 +247,8 @@ class BaseFlow(BaseModel):
             z=z,
             t=t,
             pos=x_t,
+            # Modify_1
+            pos_source=x0,
             bond_index=bond_index,
             edge_attr=edge_attr,
             node_attr=node_attr,
@@ -281,7 +296,9 @@ class BaseFlow(BaseModel):
         t_schedule = torch.linspace(0, 1.0, steps=n_timesteps + 1, device=self.device)
 
         # 【核心修改】：推理起点从随机噪声变成了质心居中的 pos_pred
-        x = center_of_mass(pos_pred, batch=batch)
+        # Modify_1
+        source = center_of_mass(pos_pred, batch=batch)
+        x = source.clone()
 
         n = t_schedule.size(0) - 1
 
@@ -296,6 +313,8 @@ class BaseFlow(BaseModel):
                 z=z,
                 t=t,
                 pos=x,
+                # Modify_1
+                pos_source=source,
                 bond_index=bond_index,
                 edge_attr=edge_attr,
                 node_attr=node_attr,
