@@ -7,7 +7,7 @@
       --sample_list config/sample_10_files.txt \
       --output_dir /remote-home/jinxianwang/tinghaoxia/RNA/Data/RNA_10sample
 """
-
+# ToDo 当前这个生成pt的不可用 缺少对应的数据 具体请参考数据读取模块
 import argparse
 import os
 import sys

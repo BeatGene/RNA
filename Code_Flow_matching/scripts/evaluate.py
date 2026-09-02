@@ -1,3 +1,4 @@
+# ToDo 当前这个脚本不可用
 import argparse
 import csv
 import os
@@ -30,7 +31,6 @@ def evaluate_rmsd(
         ckpt_path: str,
         data_dir: str,
         split: str = "test",
-        sample_files: str = None,
         num_samples: int = None,
         n_timesteps: int = 50,
         batch_size: int = 16,
@@ -73,15 +73,13 @@ def evaluate_rmsd(
     dm = BaseDataModule(
         data_dir=Path(final_data_dir) if final_data_dir else None,
         dataloader_args={"batch_size": batch_size, "num_workers": num_workers},
-        sample_files=sample_files,
     )
 
     # Load the requested split
     dm.setup(stage="fit" if split in ("train", "val") else "test")
 
-    if sample_files:
-        dataset = dm.train_dataset
-    elif split == "train":
+
+    if split == "train":
         dataset = dm.train_dataset
     elif split == "val":
         dataset = dm.val_dataset
@@ -118,9 +116,9 @@ def evaluate_rmsd(
         try:
             # 批量前向传播 (ODE 积分)
             pos_refined = model.sample(
-                z=batch.z,
+                z=batch.atomic_numbers,
                 pos_pred=batch.pos_pred,
-                edge_index=batch.edge_index,
+                bond_index=batch.edge_index,
                 batch=batch.batch,
                 n_timesteps=n_timesteps,
             )
@@ -199,8 +197,6 @@ if __name__ == "__main__":
     # 新增参数
     parser.add_argument("--split", type=str, default="test", choices=["train", "val", "test"],
                         help="Dataset split to evaluate")
-    parser.add_argument("--sample_files", "-sf", type=str, default=None,
-                        help="Path to sample list file (one .pt per line). Overrides split-based loading.")
     parser.add_argument("--num_samples", type=int, default=None,
                         help="Randomly sample this many molecules. If None, evaluate all.")
 
@@ -217,7 +213,6 @@ if __name__ == "__main__":
         ckpt_path=args.ckpt,
         data_dir=args.data_dir,
         split=args.split,
-        sample_files=args.sample_files,
         num_samples=args.num_samples,
         n_timesteps=args.n_timesteps,
         batch_size=args.batch_size,

@@ -52,7 +52,7 @@ def run(config: dict) -> None:
     datamodule = BaseDataModule(**config["datamodule_args"])
 
     # instantiate model
-    # ToDo
+    # ToDo 注意node_attr_dim、edge_attr_dim参数的修改
     model = instantiate_model(config["model"], config["model_args"])
 
     pretrained_ckpt = config.get("pretrained_ckpt", None)

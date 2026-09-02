@@ -139,8 +139,10 @@ class BaseFlow(BaseModel):
         x_t, eps = self.sample_conditional_pt(x0, x1, t, batch=batch)
         t = unsqueeze_like(t[batch], x1)
 
+        x0_c = center_of_mass(x0, batch=batch)
+        x1_c = center_of_mass(x1, batch=batch)
         # 真实的目标向量场 u_t：指向 x1 - x0 的方向，并加上噪声的导数
-        u_t = x1 - x0 + self.sigma_dot_t(t) * eps
+        u_t = x1_c - x0_c + self.sigma_dot_t(t) * eps
 
         return x_t, u_t
 
