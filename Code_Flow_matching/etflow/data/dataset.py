@@ -31,7 +31,7 @@ class EuclideanDataset(Dataset):
     def get(self, idx):
         # Load the data file
         data_path = self.data_files[idx]
-        data = torch.load(data_path)
+        data = torch.load(data_path,map_location="cpu",)
 
         # Modify_3
         pos = data['pos'].float() # [N, 3] 真实的晶体结构坐标 (Ground Truth)

@@ -57,6 +57,7 @@ class BaseFlow(BaseModel):
             max_num_neighbors: int = 32,
             num_edge_types: int = 7,
             dynamic_edge_type: int = 3,
+            dynamic_radius_cutoff: float = 4.5,
             # max_num_neighbors: int = 32,
             so3_equivariant: bool = False,
             source_conditioning: bool = True,
@@ -98,6 +99,16 @@ class BaseFlow(BaseModel):
         if flow_path == "stochastic" and sigma <= 0:
             raise ValueError(
                 "stochastic flow requires sigma > 0"
+            )
+
+        if dynamic_radius_cutoff <= 0:
+            raise ValueError(
+                "dynamic_radius_cutoff must be positive"
+            )
+
+        if dynamic_radius_cutoff > cutoff_upper:
+            raise ValueError(
+                "dynamic_radius_cutoff should not exceed cutoff_upper"
             )
 
         # Modify_3
@@ -159,7 +170,7 @@ class BaseFlow(BaseModel):
         self.dynamic_edge_type = dynamic_edge_type
         self.sigma = sigma
         self.sample_time_dist = sample_time_dist
-        self.cutoff = cutoff_upper
+        self.cutoff = dynamic_radius_cutoff
         self.edge_one_hot = edge_one_hot
         self.edge_one_hot_types = edge_one_hot_types
 
@@ -464,7 +475,7 @@ class BaseFlow(BaseModel):
                 + self.plane_loss_weight * plane_loss
         )
 
-        if torch.isnan(loss):
+        if not torch.isfinite(loss):
             raise ValueError("Loss 出现 NaN，请检查数据集是否异常！")
 
         # 记录 Loss

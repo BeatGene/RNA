@@ -16,87 +16,41 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
 
 ## 网络显式看到原始预测结构 Modify_1  DONE
 
- ### 必须增加的测试
+必须增加的测试
 
-  至少验证下面四项：
-
-  #### 1. source 能否影响输出
+  至少验证下面四项： 
+  
+1.source能否影响输出
   v1 = model(pos=x_t, pos_source=source_1, ...)
   v2 = model(pos=x_t, pos_source=source_2, ...)
   assert not torch.allclose(v1, v2)
 
-  #### 2. 平移不变
-  v_shift = model(
-      pos=x_t + shift,
-      pos_source=source + shift,
-      ...
-  )
-  assert torch.allclose(v, v_shift, atol=...)
+2.平移不变
+v_shift = model(pos=x_t + shift, pos_source=source + shift, ...)
+assert torch.allclose(v, v_shift, atol=...)
 
-  #### 3. 旋转等变
-  v_rot = model(
-      pos=x_t @ R.T,
-      pos_source=source @ R.T,
-      ...
-  )
-  assert torch.allclose(v_rot, v @ R.T, atol=...)
+3.旋转等变
+v_rot = model(pos=x_t @ R.T, pos_source=source @ R.T, ...)
+assert torch.allclose(v_rot, v @ R.T, atol=...)
 
-  #### 4. 输出零质心
-  assert center(v, batch).abs().max() < tolerance
+4. 输出零质心
+assert center(v, batch).abs().max() < tolerance
 
-  另外应单独验证 identity pair：
+另外应单独验证 identity pair:x_pred=x_native 训练后输出速度应接近零。
 
-  [
-  x_{\mathrm{pred}}=x_{\mathrm{native}}
-  ]
 
-  训练后输出速度应接近零。
+## 多样图 Modify_2 DONE->PT
+covalent graph； 
+sequence-neighbor graph；
+动态 radius graph；
 
-  总结来说，当前代码最合理的修改不是“再建一个完整网络”，而是：
+1. covalent graph->生成.pt文件时生成
 
-  [
-  \boxed{
-  v_\theta\big(
-  x_t,,
-  x_{\mathrm{pred}},,
-  x_t-x_{\mathrm{pred}},,
-  d_t,,
-  d_{\mathrm{pred}},,
-  t
-  \big)
-  }
-  ]
-
-  其中 source distance 进入每层 edge attention，source node context 进入每层 scalar channel，(\Delta x_t) 进入 vector
-  channel。这样既保留当前 TorchMD-ET，又实现了真正的 prediction-conditioned refinement。
-
-## 静态radius graph不适合中尺度 refinement Modify_2 DONE->PT
-图由初始预测坐标构建并在 50步 中固定：
-  - native 中应形成的新接触不在图中；
-  - 错误初始接触会长期占据图；
-  - 只有 6 层局部 message passing，长 RNA 的 helix/domain 之间难以通信。
-
-建议拆为：
-  - 永久 covalent graph；
-  - sequence-neighbor graph；
-  - 动态 radius graph；
-  - residue-level base-pair/stacking/global graph。-->放到第二阶段 代码改动太大了
-
-  ### 一、四类图分别是什么意思
-
-  #### 1. 永久 covalent graph->生成.pt文件时生成
-
-  表示真实化学键，在整个 flow/ODE 过程中永远存在，不能因为原子距离变远就删除。
-
+  表示真实化学键
   包括：
 
   - 同一核苷酸内部的共价键；
   - 相邻核苷酸之间的磷酸二酯键：
-    O3'(i) — P(i+1)。
-
-  例如：
-
-  P—O5'—C5'—C4'—C3'—O3'—P(next)
 
   生成时需要：
 
@@ -104,9 +58,6 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
   - atom_name
   - 核苷酸类型 A/C/G/U
   - 标准 RNA 原子键模板
-
-
-  ##### 1. 标准 RNA 原子键模板如何获得
 
   不要手工维护 A/C/G/U 的键表，推荐直接使用 wwPDB Chemical Component Dictionary（CCD）。
 
@@ -434,7 +385,7 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
 
   因此不建议和动态 radius graph 一次性一起改。
 
-## 自由Cartesian原子流没有化学约束 & stochastic path未必适合当前确定性任务 Modify_3
+## 自由Cartesian原子流没有化学约束 & stochastic path未必适合当前确定性任务 Modify_3 DONE->PT
 (\sigma_t=\sigma\sqrt{t(1-t)}) 的导数在两端趋于无穷。当前采样到 1e-4/0.9999 附近时，noise velocity 可明显大于真实 correction。
 
 建议首先消融：
@@ -605,37 +556,6 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
 
   各辅助 loss 最好先单独归一化，并使它们在训练初期的梯度量级明显小于主要的 flow loss。
 
-
-  ### 7. 如果还想保证 ODE 中间步骤也合理
-
-  终点几何 loss 主要保证最终结构，不保证所有中间 x_t 都严格合法。可以进一步采用两种方法。
-
-  #### 轻量方案：每步或最终进行约束优化
-
-  在 ODE 输出后，对以下能量做少量梯度优化：
-
-  bond energy
-  angle energy
-  clash energy
-  plane energy
-  与模型输出之间的 restraint
-
-  最后一项非常重要，否则能量最小化可能把结构拉离模型预测结果。
-
-  也可以使用 RNA force field 做 restrained minimization。
-
-  #### 最严格方案：改成内部坐标 flow
-
-  不直接预测每个原子的自由 Cartesian 位移，而是预测：
-
-  - backbone torsion；
-  - sugar pucker；
-  - nucleotide rigid frame；
-  - 碱基相对位姿。
-
-  这样键长和大部分键角可以天然固定。但这相当于更换坐标表示和输出头，改动远大于增加辅助 loss，适合作为后续版本。
-
-  
   #### Protenix CCD 是否提供理想键长
 
   分两层看：
@@ -1889,8 +1809,7 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
 
   比较稳妥的创新表述是：
 
-  > 面向 Protenix/AF3-like predictor errors 的 prediction-conditioned RNA correction flow，通过学习型置信度门控保护正确
-  > 区域，并联合更新 RNA interaction topology、nucleotide geometry 和 refinement QA。
+  > 面向 Protenix/AF3-like predictor errors 的 prediction-conditioned RNA correction flow，通过学习型置信度门控保护正确 区域，并联合更新 RNA interaction topology、nucleotide geometry 和 refinement QA。
 
   这是比单纯“把起点改为 pos_pred”强得多的贡献组合。
 
@@ -1903,7 +1822,7 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
 
   ## 6. 推荐实施顺序
 
-  1. 修正 schema、质心监督、evaluate 和 graph；
+  1. 修正 schema、质心监督、evaluate 和 graph； 
   2. 做三条可信 baseline：
       - direct residual EGNN；
       - deterministic paired flow；
