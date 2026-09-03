@@ -14,15 +14,6 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
 
 # 模型修改
 
-## 训练目标的质心处理不一致 DONE
-已经统一为“x0_c = center_of_mass(x0, batch=batch)  x1_c = center_of_mass(x1, batch=batch)  u_t = x1_c - x0_c + ...”
-
-## sequence = data['sequence'], DONE
-逗号已经删除
-
-## evaluate 当前无法按接口正常调用 DONE
-当前evaluate是之前版本的脚本，等到当前版本模型训练好了之后，再写新的evaluate脚本
-
 ## 网络没有显式看到原始预测结构 Modify_1  DONE
 应加入 source encoder，显式输入：
 $$
@@ -86,8 +77,8 @@ $$
   其中 source distance 进入每层 edge attention，source node context 进入每层 scalar channel，(\Delta x_t) 进入 vector
   channel。这样既保留当前 TorchMD-ET，又实现了真正的 prediction-conditioned refinement。
 
-## 静态radius graph不适合中尺度 refinement
-图由初始预测坐标构建并在50步中固定：
+## 静态radius graph不适合中尺度 refinement Modify_2 DONE->PT
+图由初始预测坐标构建并在 50步 中固定：
   - native 中应形成的新接触不在图中；
   - 错误初始接触会长期占据图；
   - 只有 6 层局部 message passing，长 RNA 的 helix/domain 之间难以通信。
@@ -96,9 +87,359 @@ $$
   - 永久 covalent graph；
   - sequence-neighbor graph；
   - 动态 radius graph；
-  - residue-level base-pair/stacking/global graph。
+  - residue-level base-pair/stacking/global graph。-->放到第二阶段 代码改动太大了
 
-Q:这些图什么含义？如何形成？当前的模型中具体如何修改代码？
+  ### 一、四类图分别是什么意思
+
+  #### 1. 永久 covalent graph->生成.pt文件时生成
+
+  表示真实化学键，在整个 flow/ODE 过程中永远存在，不能因为原子距离变远就删除。
+
+  包括：
+
+  - 同一核苷酸内部的共价键；
+  - 相邻核苷酸之间的磷酸二酯键：
+    O3'(i) — P(i+1)。
+
+  例如：
+
+  P—O5'—C5'—C4'—C3'—O3'—P(next)
+
+  生成时需要：
+
+  - residue_index
+  - atom_name
+  - 核苷酸类型 A/C/G/U
+  - 标准 RNA 原子键模板
+
+
+  ##### 1. 标准 RNA 原子键模板如何获得
+
+  不要手工维护 A/C/G/U 的键表，推荐直接使用 wwPDB Chemical Component Dictionary（CCD）。
+
+  CCD 的 _chem_comp_bond 表提供：
+
+  - atom_id_1
+  - atom_id_2
+  - value_order
+  - 芳香键、立体化学等信息
+
+  这是标准化学组分的权威定义。wwPDB CCD、chem_comp_bond 定义
+
+  你的 Protenix 项目已经提供了 CCD 下载和读取代码：
+
+  - Protenix/Protenix/scripts/gen_ccd_cache.py:32：从 wwPDB 下载 components.cif.gz
+  - Protenix/Protenix/protenix/data/core/ccd.py:75：get_component_atom_array() 读取指定组分及其 bonds
+
+  以后生成 .pt 时可以使用：
+
+  from protenix.data.core import ccd
+
+
+  def get_rna_bond_template(residue_name):
+      component = ccd.get_component_atom_array(
+          ccd_code=residue_name,
+          keep_leaving_atoms=False,
+          keep_hydrogens=False,
+      )
+
+      if component is None or component.bonds is None:
+          raise ValueError(
+              f"Cannot obtain CCD bonds for {residue_name}"
+          )
+
+      atom_names = component.atom_name.tolist()
+      bond_array = component.bonds.as_array()
+      # bond_array 每行为 [atom_index_1, atom_index_2, bond_type]
+
+      bond_template = []
+
+      for atom_index_1, atom_index_2, bond_type in bond_array:
+          bond_template.append(
+              (
+                  atom_names[atom_index_1],
+                  atom_names[atom_index_2],
+                  int(bond_type),
+              )
+          )
+
+      return bond_template
+
+  标准残基直接读取：
+
+  rna_bond_templates = {
+      residue_name: get_rna_bond_template(residue_name)
+      for residue_name in ["A", "C", "G", "U"]
+  }
+
+  注意两点：
+
+  - CCD 主要提供单个核苷酸内部的键。
+  - 相邻残基之间的 O3'(i)—P(i+1) 磷酸二酯键仍需根据 residue_index 显式加入。
+
+    安装时要让 torch_cluster 与服务器的 PyTorch/CUDA 版本严格匹配，不建议直接随意使用一个不匹配的 wheel。
+
+  建议统一原子名称：
+
+  atom_name = atom_name.replace("*", "'")
+
+  避免旧结构中的 C4* 和 CCD 中的 C4' 对不上。
+
+  所有边最好是双向的：
+
+  i -> j
+  j -> i
+
+  这部分应当在生成 .pt 文件时完成，而不是在模型中根据距离猜测。
+
+  ———
+
+  #### 2. sequence-neighbor graph->生成.pt文件时生成
+
+  它表示“序列上相邻”，并不等同于化学键。
+
+  虽然相邻残基已经通过 O3'—P 相连，但如果只靠原子化学键传播，一个残基的信息传到下一个残基的碱基部分需要经过很多层。
+
+  因此可以给相邻残基的代表原子增加 shortcut：
+
+  C4'(i) ↔ C4'(i+1)
+  C4'(i) ↔ C4'(i+2)   # 可选
+
+  不建议把相邻两个残基的全部原子两两相连，边数会非常大。
+
+  第一版建议：
+
+  sequence_window = 1
+  anchor_atom = "C4'"
+
+  即只连接相邻残基的 C4' 原子。
+
+  ———
+
+  #### 3. 动态 radius graph->每一步实时生成
+
+  表示当前 flow 状态 x_t 中的空间近邻：
+
+  distance(x_t[i], x_t[j]) < radius
+
+  它和目前图的关键区别是：
+
+  - 现在：由 pos_pred 生成一次，50 个 ODE step 都不变。
+  - 修改后：由当前的 x_t 在 forward() 中重新生成。
+
+  这样：
+
+  - 两个原子逐渐靠近后，可以产生新边；
+  - 原来错误靠近、后来分开的原子，边可以消失；
+  - 图能够随 refinement 轨迹变化。
+
+  训练时，每次随机得到新的 x_t 后构图。
+
+  推理时，每次：
+
+  v_t = model(pos=x, ...)
+
+  都会基于更新后的 x 构图。因此 sample() 本身不需要额外改循环。
+
+  ———
+
+  #### 4. residue-level base-pair/stacking/global graph->第二阶段目标
+
+  这里节点不再是原子，而是核苷酸残基。
+
+  #### Base-pair 边
+
+  表示可能形成碱基配对的两个残基，例如：
+
+  A-U
+  G-C
+  G-U
+  非 canonical pairing
+
+  候选边可来自：
+
+  - Protenix 的 contact probability/PAE；
+  - 从 pos_pred 计算的宽松空间候选；
+  - RNA 二级结构预测；
+  - 模型自己预测的 interaction logits。
+
+  注意：不能训练时根据 native 结构构图、推理时却没有 native，这会造成标签泄漏。
+
+  #### Stacking 边
+
+  表示碱基堆积。通常根据：
+
+  - 碱基中心距离；
+  - 碱基平面法向量夹角；
+  - 两个碱基的相对位姿
+
+  生成候选边。
+
+  #### Global 边
+
+  用于长距离通信。例如连接：
+
+  i ↔ i+4
+  i ↔ i+8
+  i ↔ i+16
+  i ↔ i+32
+
+  这种 dilated sequence graph 能让长 RNA 的远距离残基在较少层数内通信。
+
+  ———
+
+  ### 二、建议的新 .pt 数据格式
+
+  你当前的数据生成代码只有原子坐标和 radius graph，无法可靠生成 sequence/residue graph。新版本至少需要保存：
+
+  {
+      "pos": pos,
+      "pos_pred": pos_pred,
+      "atomic_numbers": atomic_numbers,
+
+      # 原子所属残基，范围 0 ... num_residues-1
+      "residue_index": residue_index,
+
+      # 建议保存整数编码，PyG batching 更方便
+      "atom_name_id": atom_name_id,
+
+      # 静态图：化学边 + sequence shortcut + 静态 interaction candidates
+      "edge_index": edge_index,
+
+      # 每条静态边的类型
+      "edge_attr": edge_attr,
+
+      "node_attr": node_attr,
+      "sequence": sequence,
+  }
+
+  边类型建议用 one-hot，而不是用一个整数直接输入网络：
+
+   下标    边类型
+  ━━━━━━  ━━━━━━━━━━━━━━━━━━━━━
+      0    核苷酸内部共价键
+  ──────  ─────────────────────
+      1    磷酸二酯键
+  ──────  ─────────────────────
+      2    sequence-neighbor
+  ──────  ─────────────────────
+      3    dynamic spatial
+  ──────  ─────────────────────
+      4    base-pair candidate
+  ──────  ─────────────────────
+      5    stacking candidate
+  ──────  ─────────────────────
+      6    global/dilated
+    
+你当前不使用后三类边也没关系，静态 .pt 中第 4～6 列保持为零即可。提前保留这三列可以避免以后增加边类型时改变模型输入维度。
+
+  因此：
+
+  edge_attr.shape == [num_edges, 7]
+
+  如果用单个整数 0～6 直接作为连续特征，网络会错误地认为类型 6 在数值上“大于”类型 1，所以应该使用 one-hot 或 embedding。
+#### 6. 当前阶段的 .pt 数据要求
+
+  按你目前“不加入 base-pair/stacking/global 图”的计划，建议最终生成：
+
+  {
+      # 必需坐标，二者原子顺序必须完全一致
+      "pos": FloatTensor[N, 3],
+      "pos_pred": FloatTensor[N, 3],
+
+      "atomic_numbers": LongTensor[N],
+      "sequence": str,
+
+      # 建议从 0 开始、连续编号
+      "residue_index": LongTensor[N],
+
+      # 必须使用整个数据集统一的 atom-name 编码表
+      "atom_name_id": LongTensor[N],
+
+      # 只保存永久静态边
+      "edge_index": LongTensor[2, E_static],
+
+      # 7 维 one-hot；目前只允许第 0、1、2 列为 1
+      "edge_attr": FloatTensor[E_static, 7],
+
+      "node_attr": FloatTensor[N, node_attr_dim],
+  }
+
+  静态边要求：
+
+  - 双向；
+  - 无 self-loop；
+  - 无重复边；
+  - 索引范围在 [0, N)；
+  - edge_attr.shape[0] == edge_index.shape[1]。
+
+  目前静态 one-hot 分别为：
+
+   核苷酸内部共价键
+  [1, 0, 0, 0, 0, 0, 0]
+
+   相邻残基 O3'—P 磷酸二酯键
+  [0, 1, 0, 0, 0, 0, 0]
+
+  相邻残基 C4'—C4' sequence edge
+  [0, 0, 1, 0, 0, 0, 0]
+
+  .pt 中不要保存 radius graph。第 3 列 dynamic spatial edge 由模型在运行时生成。
+
+  atom_name_id 必须采用全数据集固定映射，例如：
+
+  ATOM_NAME_TO_ID = {
+      "P": 0,
+      "OP1": 1,
+      "OP2": 2,
+      "O5'": 3,
+      "C5'": 4,
+      "C4'": 5,
+      # ...
+  }
+
+  不能每个样本单独按照出现顺序编号，否则同一个 ID 在不同 RNA 中会代表不同原子。
+
+  当前 EuclideanDataset 还没有把 residue_index 和 atom_name_id 放入返回的 Data。这不影响当前版本，因为静态边已经在 .pt 中构建好，模型尚
+  未直接使用这两个字段；以后加入 atom-role embedding 或 residue-level network 时，再同步增加即可。
+
+  ### 五、base-pair/stacking 图怎样接入当前模型
+
+  第一版不用立即写真正的 residue GNN，可以使用“代表原子代理”：
+
+  残基 i 的代表节点 = C4'(i) 或 C1'(i)
+
+  例如预测残基 5 和残基 38 可能配对，则加入：
+
+  C1'(5) ↔ C1'(38)
+  edge type = base-pair
+
+  预测发生 stacking，则加入：
+
+  C1'(i) ↔ C1'(j)
+  edge type = stacking
+
+  这样当前 TorchMD 完全不需要新的 residue block。
+
+  但它只是近似。真正的 residue-level 实现需要：
+
+  atomic scalar/vector features
+          ↓ scatter/mean by residue_index
+  residue scalar/vector features
+          ↓ residue graph message passing
+  broadcast back to atoms
+          ↓
+  atomic TorchMD blocks/output
+
+  这会涉及：
+
+  - PyG batch 中残基索引的全局偏移；
+  - atom-to-residue pooling；
+  - residue-level equivariant block；
+  - residue-to-atom broadcasting；
+  - interaction prediction head。
+
+  因此不建议和动态 radius graph 一次性一起改。
 
 ## 自由 Cartesian 原子流没有化学约束
 线性插值本身可能穿过：

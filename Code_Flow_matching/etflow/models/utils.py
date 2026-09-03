@@ -1,6 +1,7 @@
 from typing import Tuple
 
 import torch
+from torch_cluster import radius_graph
 from torch.nn.functional import pad
 from torch_geometric.utils import get_laplacian, scatter, to_dense_adj
 
@@ -20,6 +21,132 @@ def linear_schedule(low, high, max_steps, total_steps) -> torch.Tensor:
         schedule = pad(schedule, pad=(0, pad_size), mode="constant", value=high)
 
     return schedule
+
+
+#Modify_2
+@torch.no_grad()
+def build_dynamic_radius_graph(
+    pos: torch.Tensor,
+    batch: torch.Tensor,
+    cutoff: float,
+    max_num_neighbors: int = 32,
+) -> torch.Tensor:
+    if cutoff <= 0:
+        raise ValueError(f"cutoff must be positive, but got {cutoff}")
+    if max_num_neighbors <= 0:
+        raise ValueError(
+            "max_num_neighbors must be positive, "
+            f"but got {max_num_neighbors}"
+        )
+
+    if batch is None:
+        batch = torch.zeros(
+            pos.size(0),
+            dtype=torch.long,
+            device=pos.device,
+        )
+
+    edge_index = radius_graph(
+        x=pos,
+        r=cutoff,
+        batch=batch,
+        loop=False,
+        max_num_neighbors=max_num_neighbors,
+        flow="source_to_target",
+    )
+
+    # radius_graph may become asymmetric when the neighbor cap is reached.
+    # Explicitly add reverse edges and remove duplicates.
+    edge_index = torch.cat(
+        [edge_index, edge_index.flip(0)],
+        dim=1,
+    )
+
+    num_nodes = pos.size(0)
+    edge_id = edge_index[0] * num_nodes + edge_index[1]
+    edge_id = torch.unique(edge_id)
+
+    return torch.stack(
+        [
+            torch.div(edge_id, num_nodes, rounding_mode="floor"),
+            edge_id % num_nodes,
+        ],
+        dim=0,
+    )
+
+#Modify_2
+@torch.no_grad()
+def merge_dynamic_radius_edges(
+    pos: torch.Tensor,
+    batch: torch.Tensor,
+    bond_index: torch.Tensor,
+    edge_attr: torch.Tensor,
+    cutoff: float,
+    max_num_neighbors: int,
+    num_edge_types: int,
+    dynamic_edge_type: int = 3,
+):
+    if edge_attr.dim() != 2:
+        raise ValueError(
+            "edge_attr must have shape [num_edges, num_edge_types], "
+            f"but got {tuple(edge_attr.shape)}"
+        )
+    if edge_attr.size(0) != bond_index.size(1):
+        raise ValueError(
+            f"edge_attr has {edge_attr.size(0)} rows, but bond_index "
+            f"contains {bond_index.size(1)} edges"
+        )
+    if edge_attr.size(1) != num_edge_types:
+        raise ValueError(
+            f"edge_attr has dim {edge_attr.size(1)}, but "
+            f"num_edge_types={num_edge_types}"
+        )
+    if not 0 <= dynamic_edge_type < num_edge_types:
+        raise ValueError(
+            f"dynamic_edge_type={dynamic_edge_type} must be in "
+            f"[0, {num_edge_types})"
+        )
+
+    dynamic_edge_index = build_dynamic_radius_graph(
+        pos=pos,
+        batch=batch,
+        cutoff=cutoff,
+        max_num_neighbors=max_num_neighbors,
+    )
+
+    num_nodes = pos.size(0)
+
+    # 删除与永久静态边重复的 dynamic edges。
+    static_edge_id = bond_index[0] * num_nodes + bond_index[1]
+    dynamic_edge_id = (
+        dynamic_edge_index[0] * num_nodes
+        + dynamic_edge_index[1]
+    )
+
+    keep = ~torch.isin(
+        dynamic_edge_id,
+        static_edge_id,
+    )
+    dynamic_edge_index = dynamic_edge_index[:, keep]
+
+    dynamic_edge_attr = torch.zeros(
+        dynamic_edge_index.size(1),
+        num_edge_types,
+        dtype=edge_attr.dtype,
+        device=edge_attr.device,
+    )
+    dynamic_edge_attr[:, dynamic_edge_type] = 1
+
+    edge_index = torch.cat(
+        [bond_index, dynamic_edge_index],
+        dim=1,
+    )
+    edge_type = torch.cat(
+        [edge_attr, dynamic_edge_attr],
+        dim=0,
+    )
+
+    return edge_index, edge_type
 
 
 def center_of_mass(x, dim=0, batch=None):

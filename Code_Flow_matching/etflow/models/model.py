@@ -7,10 +7,12 @@ from pytorch_lightning import seed_everything
 
 from etflow.models.base import BaseModel
 from etflow.models.loss import batchwise_l2_loss
+#Modify_2
 from etflow.models.utils import (
-    center_of_mass,
-    unsqueeze_like,
-)
+      center_of_mass,
+      merge_dynamic_radius_edges,
+      unsqueeze_like,
+  )
 from etflow.networks.torchmd_net import TorchMDDynamics
 
 __all__ = ["BaseFlow"]
@@ -35,7 +37,7 @@ class BaseFlow(BaseModel):
             cutoff_upper: float = 10.0,
             max_z: int = 100,
             node_attr_dim: int = 0,
-            edge_attr_dim: int = 0,
+            edge_attr_dim: int = 7,
             attn_activation: str = "silu",
             num_heads: int = 8,
             distance_influence: str = "both",
@@ -43,6 +45,11 @@ class BaseFlow(BaseModel):
             qk_norm: bool = False,
             output_layer_norm: bool = False,
             clip_during_norm: bool = False,
+            # Modify_2
+            dynamic_graph: bool = True,
+            max_num_neighbors: int = 32,
+            num_edge_types: int = 7,
+            dynamic_edge_type: int = 3,
             # max_num_neighbors: int = 32,
             so3_equivariant: bool = False,
             source_conditioning: bool = True,
@@ -55,6 +62,14 @@ class BaseFlow(BaseModel):
             **kwargs,
     ):
         super().__init__(**kwargs)
+
+        # Modify_2
+        if dynamic_graph and edge_attr_dim != num_edge_types:
+            raise ValueError(
+                f"dynamic_graph=True requires edge_attr_dim "
+                f"({edge_attr_dim}) to equal num_edge_types "
+                f"({num_edge_types})"
+            )
 
         # setup network
         if network_type == "TorchMDDynamics":
@@ -84,7 +99,11 @@ class BaseFlow(BaseModel):
         else:
             raise NotImplementedError(f"Network {network_type} not implemented.")
 
-
+        # Modify_2
+        self.dynamic_graph = dynamic_graph
+        self.max_num_neighbors = max_num_neighbors
+        self.num_edge_types = num_edge_types
+        self.dynamic_edge_type = dynamic_edge_type
         self.sigma = sigma
         self.sample_time_dist = sample_time_dist
         self.cutoff = cutoff_upper
@@ -200,8 +219,26 @@ class BaseFlow(BaseModel):
         # )
         # 【核心修改】：直接使用传入的 pre-computed edge_index
         # 摒弃了原版消耗极大的 extend_bond_index
-        edge_index=bond_index
-        edge_type=edge_attr
+        # Modify_2
+        if self.dynamic_graph:
+            if edge_attr is None:
+                raise ValueError(
+                    "dynamic_graph=True requires typed static edge_attr"
+                )
+
+            edge_index, edge_type = merge_dynamic_radius_edges(
+                pos=pos,
+                batch=batch,
+                bond_index=bond_index,
+                edge_attr=edge_attr,
+                cutoff=self.cutoff,
+                max_num_neighbors=self.max_num_neighbors,
+                num_edge_types=self.num_edge_types,
+                dynamic_edge_type=self.dynamic_edge_type,
+            )
+        else:
+            edge_index = bond_index
+            edge_type = edge_attr
         v_t = self.network(
             z=z,
             t=t[batch],
