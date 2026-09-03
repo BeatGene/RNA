@@ -6,7 +6,14 @@ from pytorch_lightning import seed_everything
 
 
 from etflow.models.base import BaseModel
-from etflow.models.loss import batchwise_l2_loss
+from etflow.data.constants import BASE_ATOM_NAME_IDS
+# Modify_3
+from etflow.models.loss import (
+      base_plane_loss,
+      batchwise_l2_loss,
+      bond_length_loss,
+      steric_clash_loss,
+  )
 #Modify_2
 from etflow.models.utils import (
       center_of_mass,
@@ -59,6 +66,12 @@ class BaseFlow(BaseModel):
             sample_time_dist: str = "uniform",
             edge_one_hot: bool = False,
             edge_one_hot_types: int = 3,
+            # Modify_3
+            training_objective: str = "flow",
+            flow_path: str = "deterministic",
+            bond_loss_weight: float = 0.1,
+            clash_loss_weight: float = 0.01,
+            plane_loss_weight: float = 0.1,
             **kwargs,
     ):
         super().__init__(**kwargs)
@@ -71,6 +84,46 @@ class BaseFlow(BaseModel):
                 f"({num_edge_types})"
             )
 
+        # Modify_3
+        if training_objective not in {"flow", "residual"}:
+            raise ValueError(
+                f"Unknown training_objective: {training_objective}"
+            )
+
+        if flow_path not in {"deterministic", "stochastic"}:
+            raise ValueError(
+                f"Unknown flow_path: {flow_path}"
+            )
+
+        if flow_path == "stochastic" and sigma <= 0:
+            raise ValueError(
+                "stochastic flow requires sigma > 0"
+            )
+
+        # Modify_3
+        vdw_radius_table = torch.zeros(max_z)
+
+        for atomic_number, radius in {
+            6: 1.70,
+            7: 1.55,
+            8: 1.52,
+            15: 1.80,
+            16: 1.80,
+        }.items():
+            if atomic_number < max_z:
+                vdw_radius_table[atomic_number] = radius
+
+        self.register_buffer(
+            "vdw_radius_table",
+            vdw_radius_table,
+        )
+        self.register_buffer(
+            "base_atom_name_ids",
+            torch.tensor(
+                BASE_ATOM_NAME_IDS,
+                dtype=torch.long,
+            ),
+        )
         # setup network
         if network_type == "TorchMDDynamics":
             self.network = TorchMDDynamics(
@@ -110,6 +163,15 @@ class BaseFlow(BaseModel):
         self.edge_one_hot = edge_one_hot
         self.edge_one_hot_types = edge_one_hot_types
 
+        # Modify_3
+        self.bond_loss_weight = bond_loss_weight
+        self.clash_loss_weight = clash_loss_weight
+        self.plane_loss_weight = plane_loss_weight
+
+        # Modify_3
+        self.training_objective = training_objective
+        self.flow_path = flow_path
+
     @classmethod
     def from_config(cls, cfg: Config):
         import yaml
@@ -121,11 +183,23 @@ class BaseFlow(BaseModel):
         else:
             raise ValueError("cfg should be a dictionary or a path to a yaml file")
 
+    # Modify_3
     def sigma_t(self, t):
+        if self.flow_path == "deterministic":
+            return torch.zeros_like(t)
+
         return self.sigma * torch.sqrt(t * (1 - t))
 
     def sigma_dot_t(self, t):
-        return self.sigma * 0.5 * (1 - 2 * t) / torch.sqrt(t * (1 - t))
+        if self.flow_path == "deterministic":
+            return torch.zeros_like(t)
+
+        return (
+                self.sigma
+                * 0.5
+                * (1 - 2 * t)
+                / torch.sqrt(t * (1 - t))
+        )
 
     def sample_conditional_pt(self, x0: Tensor, x1: Tensor, t: Tensor, batch: Tensor):
         """
@@ -141,8 +215,13 @@ class BaseFlow(BaseModel):
         t = unsqueeze_like(t, target=x0)
 
         # 采样高斯噪声
-        eps = torch.randn_like(x1)
-        eps = center_of_mass(eps, batch=batch)
+
+        # Modify_3
+        if self.flow_path == "deterministic":
+            eps = torch.zeros_like(x1)
+        else:
+            eps = torch.randn_like(x1)
+            eps = center_of_mass(eps, batch=batch)
 
         # 线性插值轨迹: t=0 时是 x0(预测), t=1 时是 x1(真实)
         mu_t = (1 - t) * x0 + t * x1
@@ -170,7 +249,8 @@ class BaseFlow(BaseModel):
         # Modify_1
         u_t = x1_centered - x0_centered + self.sigma_dot_t(t_atom) * eps
 
-        return x_t, u_t
+        # Modify_3
+        return x_t, u_t, eps
 
     def sample_time(
             self,
@@ -265,19 +345,49 @@ class BaseFlow(BaseModel):
         node_attr = batched_data.get("node_attr", None)
         edge_attr = batched_data.get("edge_attr", None)
         batch = batched_data.get("batch", None)
-
+        # Modify_3
+        geometry_bond_index = batched_data["geometry_bond_index"]
+        ideal_bond_length = batched_data["ideal_bond_length"]
+        residue_index = batched_data["residue_index"]
+        atom_name_id = batched_data["atom_name_id"]
+        clash_exclusion_index = batched_data[
+            "clash_exclusion_index"
+        ]
         batch_size = batch.max().item() + 1 if batch is not None else 1
 
         # 【核心修改】：流匹配的起点不再是噪声，而是预测结构
         x0 = pos_pred
 
-        # 采样时间步 t
-        t = self.sample_time(num_samples=batch_size, stage=stage)
+        # Modify_3
+        x0_centered = center_of_mass(x0, batch=batch)
+        x1_centered = center_of_mass(pos, batch=batch)
 
-        # 获取 t 时刻的加噪状态 x_t，以及模型应该去回归的真实向量场 u_t
-        x_t, u_t = self.compute_conditional_vector_field(
-            x0=x0, x1=pos, t=t, batch=batch
-        )
+        if self.training_objective == "residual":
+            t = torch.zeros(
+                batch_size,
+                1,
+                dtype=x0.dtype,
+                device=x0.device,
+            )
+
+            x_t = x0_centered
+            u_t = x1_centered - x0_centered
+            eps = torch.zeros_like(x_t)
+
+        else:
+            t = self.sample_time(
+                num_samples=batch_size,
+                stage=stage,
+            )
+
+            x_t, u_t, eps = (
+                self.compute_conditional_vector_field(
+                    x0=x0,
+                    x1=pos,
+                    t=t,
+                    batch=batch,
+                )
+            )
 
         # 模型前向传播，预测向量场 v_t
         v_t = self(
@@ -292,14 +402,98 @@ class BaseFlow(BaseModel):
             batch=batch,
         )
 
-        loss = batchwise_l2_loss(v_t, u_t, batch=batch, reduce="mean")
+        # Modify_3
+        # 根据网络输出构造几何 loss 使用的预测终点
+        t_atom = unsqueeze_like(
+            t[batch] if batch is not None else t,
+            target=x_t,
+        )
+
+        if self.training_objective == "residual":
+            # v_t 直接表示 x1 - x0
+            pos_estimate = x0_centered + v_t
+
+        elif self.flow_path == "deterministic":
+            # x_t = (1 - t) * x0 + t * x1
+            # 理想情况下 v_t = x1 - x0
+            pos_estimate = x_t + (1 - t_atom) * v_t
+
+        else:
+            # 去掉随机路径中的已知噪声速度
+            clean_displacement = (
+                    v_t
+                    - self.sigma_dot_t(t_atom) * eps
+            )
+            pos_estimate = x0_centered + clean_displacement
+
+        # Modify_3
+        flow_matching_loss = batchwise_l2_loss(
+            v_t,
+            u_t,
+            batch=batch,
+            reduce="mean",
+        )
+
+        bond_loss = bond_length_loss(
+            prediction=pos_estimate,
+            geometry_bond_index=geometry_bond_index,
+            ideal_bond_length=ideal_bond_length,
+        )
+
+        clash_loss = steric_clash_loss(
+            prediction=pos_estimate,
+            atomic_numbers=z,
+            batch=batch,
+            geometry_bond_index=geometry_bond_index,
+            vdw_radius_table=self.vdw_radius_table,
+            clash_exclusion_index=clash_exclusion_index,
+        )
+
+        plane_loss = base_plane_loss(
+            prediction=pos_estimate,
+            residue_index=residue_index,
+            atom_name_id=atom_name_id,
+            batch=batch,
+            base_atom_name_ids=self.base_atom_name_ids,
+        )
+
+        loss = (
+                flow_matching_loss
+                + self.bond_loss_weight * bond_loss
+                + self.clash_loss_weight * clash_loss
+                + self.plane_loss_weight * plane_loss
+        )
 
         if torch.isnan(loss):
             raise ValueError("Loss 出现 NaN，请检查数据集是否异常！")
 
         # 记录 Loss
-        self.log_helper(f"{stage}/flow_matching_loss", loss, batch_size=batch_size)
-        self.log_helper(f"{stage}/loss", loss, batch_size=batch_size)
+        #Modify_3
+        self.log_helper(
+            f"{stage}/flow_matching_loss",
+            flow_matching_loss,
+            batch_size=batch_size,
+        )
+        self.log_helper(
+            f"{stage}/bond_loss",
+            bond_loss,
+            batch_size=batch_size,
+        )
+        self.log_helper(
+            f"{stage}/clash_loss",
+            clash_loss,
+            batch_size=batch_size,
+        )
+        self.log_helper(
+            f"{stage}/plane_loss",
+            plane_loss,
+            batch_size=batch_size,
+        )
+        self.log_helper(
+            f"{stage}/loss",
+            loss,
+            batch_size=batch_size,
+        )
 
         return loss
 
@@ -330,6 +524,12 @@ class BaseFlow(BaseModel):
         输出：
             x: 经过模型优化 (ODE积分) 后的最终精细坐标
         """
+        #Modify_3
+        batch_size = (
+            int(batch.max().item()) + 1
+            if batch is not None
+            else 1
+        )
         t_schedule = torch.linspace(0, 1.0, steps=n_timesteps + 1, device=self.device)
 
         # 【核心修改】：推理起点从随机噪声变成了质心居中的 pos_pred
@@ -339,10 +539,37 @@ class BaseFlow(BaseModel):
 
         n = t_schedule.size(0) - 1
 
+        # Modify_3
+        if self.training_objective == "residual":
+            t = torch.zeros(
+                batch_size,
+                1,
+                dtype=source.dtype,
+                device=source.device,
+            )
+
+            residual = self(
+                z=z,
+                t=t,
+                pos=source,
+                pos_source=source,
+                bond_index=bond_index,
+                edge_attr=edge_attr,
+                node_attr=node_attr,
+                batch=batch,
+            )
+
+            return source + residual
+
         # 欧拉法 (Euler Method) 解常微分方程 (ODE)
         for i in range(n):
-            t = t_schedule[i].repeat(x.size(0))
-            t = unsqueeze_like(t, x)
+            # Modify_3
+            t = torch.full(
+                (batch_size, 1),
+                fill_value=t_schedule[i].item(),
+                dtype=x.dtype,
+                device=x.device,
+            )
             delta_t = self._compute_delta_t(t_schedule, t=i)
 
             # 获取当前 t 下的向量场方向

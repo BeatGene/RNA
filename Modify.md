@@ -14,16 +14,9 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
 
 # 模型修改
 
-## 网络没有显式看到原始预测结构 Modify_1  DONE
-应加入 source encoder，显式输入：
-$$
-\Delta x_t = x_t - x_{\mathrm{pred}},\quad
-d(x_t),\quad d(x_{\mathrm{pred}})
-$$
+## 网络显式看到原始预测结构 Modify_1  DONE
 
-并在每个 block 中与当前状态交互。
-
- ### 14. 必须增加的测试
+ ### 必须增加的测试
 
   至少验证下面四项：
 
@@ -247,7 +240,7 @@ $$
 
   这里节点不再是原子，而是核苷酸残基。
 
-  #### Base-pair 边
+  ##### Base-pair 边
 
   表示可能形成碱基配对的两个残基，例如：
 
@@ -265,7 +258,7 @@ $$
 
   注意：不能训练时根据 native 结构构图、推理时却没有 native，这会造成标签泄漏。
 
-  #### Stacking 边
+  ##### Stacking 边
 
   表示碱基堆积。通常根据：
 
@@ -275,7 +268,7 @@ $$
 
   生成候选边。
 
-  #### Global 边
+  ##### Global 边
 
   用于长距离通信。例如连接：
 
@@ -403,7 +396,7 @@ $$
   当前 EuclideanDataset 还没有把 residue_index 和 atom_name_id 放入返回的 Data。这不影响当前版本，因为静态边已经在 .pt 中构建好，模型尚
   未直接使用这两个字段；以后加入 atom-role embedding 或 residue-level network 时，再同步增加即可。
 
-  ### 五、base-pair/stacking 图怎样接入当前模型
+  ##### 五、base-pair/stacking 图怎样接入当前模型
 
   第一版不用立即写真正的 residue GNN，可以使用“代表原子代理”：
 
@@ -441,19 +434,7 @@ $$
 
   因此不建议和动态 radius graph 一次性一起改。
 
-## 自由 Cartesian 原子流没有化学约束
-线性插值本身可能穿过：
-
-  - 非法键长和键角；
-  - 糖环变形；
-  - 碱基非平面；
-  - backbone chain break；
-  - steric clash。
-
-当前 loss 只有 velocity MSE，因此即使 RMSD 改善，也可能得到化学上更差的 RNA。
-
-## stochastic path未必适合当前确定性任务
-
+## 自由Cartesian原子流没有化学约束 & stochastic path未必适合当前确定性任务 Modify_3
 (\sigma_t=\sigma\sqrt{t(1-t)}) 的导数在两端趋于无穷。当前采样到 1e-4/0.9999 附近时，noise velocity 可明显大于真实 correction。
 
 建议首先消融：
@@ -464,6 +445,1367 @@ $$
   如果每个 pos_pred 只有一个 native，必须加入“一步 residual EGNN”基线，否则 reviewer 很容易质疑为什么需要 50-step flow，
   而不是直接预测 pos-pos_pred。
 
+  ### 建议加入的四种几何 loss
+
+  #### 共价键长度 loss
+
+  只使用以下两类边：
+
+  edge_attr[:, 0]：核苷酸内部共价键
+  edge_attr[:, 1]：磷酸二酯键
+
+  不能把 sequence edge 和 dynamic radius edge 当成化学键。
+
+  设理想键长为 (l_{ij})：
+
+  [
+  L_{\mathrm{bond}}
+
+  \frac1{|E_b|}
+  \sum_{(i,j)\in E_b}
+  \left(
+  |\hat x_i-\hat x_j|-l_{ij}
+  \right)^2
+  ]
+
+  数据中最好额外保存：
+
+  bond_index: LongTensor[2, E_bond]
+  bond_length: FloatTensor[E_bond]
+
+  其中理想键长可以来自 CCD，也可以暂时使用 native 中对应键的长度。长期看推荐 CCD 理想长度。
+
+  磷酸二酯键断裂也会被这个 loss 约束，因此不一定需要单独写 chain-break loss。
+
+  i → j，目标长度 1.43
+  j → i，目标长度 1.43
+
+  如果保存双向边，loss 会把同一根键计算两次。虽然数值均值通常不受影响，但更干净的做法是几何 loss 只保留一个方向，例如 i < j。
+
+  #### 键角 loss
+
+  对于三原子：
+
+  i — j — k
+
+  约束夹角：
+
+  [
+  L_{\mathrm{angle}}
+
+  \frac1{N_a}
+  \sum
+  \left(
+  \cos\hat\theta_{ijk}-\cos\theta^{*}_{ijk}
+  \right)^2
+  ]
+
+  推荐比较 cosine，不要直接使用 acos()，因为接近 (0) 或 (\pi) 时数值不稳定。
+
+  数据中保存：
+
+  angle_index: LongTensor[3, E_angle]
+  angle_target_cos: FloatTensor[E_angle]
+
+  第一版可以从 native 结构计算 target；以后再换成标准模板值。
+
+  ####Steric clash loss
+
+  对非键合原子对计算：
+
+  [
+  L_{\mathrm{clash}}
+
+  \operatorname{mean}
+  \left[
+  \operatorname{ReLU}
+  \left(
+  r_i+r_j-\delta-d_{ij}
+  \right)^2
+  \right]
+  ]
+
+  其中：
+
+  - (r_i,r_j) 是原子的 van der Waals 半径；
+  - (\delta) 是适当容差；
+  - 排除共价相连的 1–2 原子；
+  - 最好也排除共享一个中心原子的 1–3 原子。
+
+  可以利用当前 dynamic radius graph，只对较近的动态边计算，不需要计算完整 (N^2) 原子对。
+
+  #### 碱基平面 loss
+
+  A/C/G/U 的碱基重原子应大致处于同一平面。
+
+  可对每个残基的碱基原子计算中心：
+
+  base_center = base_pos.mean(dim=0)
+
+  然后对中心化坐标的协方差矩阵求最小特征值：
+
+  [
+  L_{\mathrm{plane}}
+
+  \frac1R
+  \sum_r
+  \lambda_{\min}
+  \left(
+  X_r^\top X_r
+  \right)
+  ]
+
+  最小特征值越小，说明这些原子越接近一个平面。
+
+  这项 loss 不要求碱基保持某个固定的空间朝向，所以不会破坏旋转等变性。
+
+  ### 5. 总 loss
+
+  在 Code_Flow_matching/etflow/models/model.py 的 generic_step() 中，目前是：
+
+  loss = batchwise_l2_loss(
+      v_t,
+      u_t,
+      batch=batch,
+      reduce="mean",
+  )
+
+  以后可以改成：
+
+  flow_loss = batchwise_l2_loss(
+      v_t,
+      u_t,
+      batch=batch,
+      reduce="mean",
+  )
+
+  t_atom = unsqueeze_like(t[batch], x_t)
+  pos_estimate = x_t + (1 - t_atom) * v_t
+
+  bond_loss = compute_bond_loss(...)
+  angle_loss = compute_angle_loss(...)
+  clash_loss = compute_clash_loss(...)
+  plane_loss = compute_base_plane_loss(...)
+
+  loss = (
+      flow_loss
+      + lambda_bond * bond_loss
+      + lambda_angle * angle_loss
+      + lambda_clash * clash_loss
+      + lambda_plane * plane_loss
+  )
+
+  建议第一轮只加入：
+
+  bond loss
+  clash loss
+  base-plane loss
+
+  键角、糖环 pucker、手性和 torsion 后续再加，避免一次引入太多变量。
+
+  各辅助 loss 最好先单独归一化，并使它们在训练初期的梯度量级明显小于主要的 flow loss。
+
+
+  ### 7. 如果还想保证 ODE 中间步骤也合理
+
+  终点几何 loss 主要保证最终结构，不保证所有中间 x_t 都严格合法。可以进一步采用两种方法。
+
+  #### 轻量方案：每步或最终进行约束优化
+
+  在 ODE 输出后，对以下能量做少量梯度优化：
+
+  bond energy
+  angle energy
+  clash energy
+  plane energy
+  与模型输出之间的 restraint
+
+  最后一项非常重要，否则能量最小化可能把结构拉离模型预测结果。
+
+  也可以使用 RNA force field 做 restrained minimization。
+
+  #### 最严格方案：改成内部坐标 flow
+
+  不直接预测每个原子的自由 Cartesian 位移，而是预测：
+
+  - backbone torsion；
+  - sugar pucker；
+  - nucleotide rigid frame；
+  - 碱基相对位姿。
+
+  这样键长和大部分键角可以天然固定。但这相当于更换坐标表示和输出头，改动远大于增加辅助 loss，适合作为后续版本。
+
+  
+  #### Protenix CCD 是否提供理想键长
+
+  分两层看：
+
+  1. CCD 的 chem_comp_bond 数据模式支持 value_dist 和 value_dist_esd。
+  2. Protenix 的：
+
+  ccd.get_component_atom_array(...)
+
+  主要返回 AtomArray、理想坐标和 BondList。BondList 保留连接关系和 bond type，但不一定直接暴露 value_dist。
+
+  最稳妥的方法是利用 Protenix 返回的 CCD 理想坐标计算：
+
+  component = ccd.get_component_atom_array(
+      residue_name,
+      keep_leaving_atoms=False,
+      keep_hydrogens=False,
+  )
+
+  bond_array = component.bonds.as_array()
+  ideal_pos = component.coord
+
+  for atom_i, atom_j, bond_type in bond_array:
+      ideal_length = np.linalg.norm(
+          ideal_pos[atom_i] - ideal_pos[atom_j]
+      )
+
+  因为 Protenix/Protenix/protenix/data/core/ccd.py:94 使用：
+
+  use_ideal_coord=True
+
+  所以 component.coord 是 CCD 理想坐标。
+
+  对于跨残基的：
+
+  O3'(i)—P(i+1)
+
+  它不属于单个组分内部的 component.bonds。可以使用：
+
+  - RNA force-field 中的理想值；
+  - 化学连接字典；
+  - 或先统计训练集 native 结构中该键长度的稳健中位数。
+
+  不建议每个样本直接把自己的 native 键长作为输入；可以将训练集统计得到的全局模板作为 target。
+
+  ### 6. Steric clash loss 具体怎么算
+
+  #### 输入
+
+  需要：
+
+  pos_estimate       # [N,3] 模型估计的最终结构
+  atomic_numbers     # [N]
+  batch              # [N]
+  bond_index         # 排除直接成键的原子对
+  angle_index        # 可选，用于排除1-3原子对
+
+  首先为元素准备 van der Waals 半径。可以使用一致的力场参数集，例如大致包括：
+
+  vdw_radius = {
+      6: 1.70,   # C
+      7: 1.55,   # N
+      8: 1.52,   # O
+      15: 1.80,  # P
+      16: 1.80,  # S
+  }
+
+  实际实验中应固定一个来源，不要在不同数据中混用多套半径。
+
+  #### 第一步：找较近的原子对
+
+  应基于 pos_estimate 单独构建 clash candidate graph：
+
+  clash_index = radius_graph(
+      x=pos_estimate,
+      r=4.5,
+      batch=batch,
+      loop=False,
+      max_num_neighbors=64,
+  )
+
+  不能直接依赖当前 x_t 的动态图，因为 x_t 没有 clash，不代表预测终点 pos_estimate 没有 clash。
+
+  #### 第二步：删除不应计算 clash 的原子对
+
+  排除：
+
+  - 自己和自己；
+  - 同一共价键的 1–2 原子；
+  - 最好排除通过一个中心原子连接的 1–3 原子；
+  - 使用 i < j 避免重复计数。
+
+  #### 第三步：计算允许距离
+
+  对候选原子对 (i,j)：
+
+  [
+  d_{ij}=|\hat x_i-\hat x_j|
+  ]
+
+  定义允许的最小距离：
+
+  [
+  d^{\min}_{ij}=s(r_i+r_j)
+  ]
+
+  其中 (s) 是容差系数，可以从较宽松的值开始，例如 0.8。
+
+  #### 第四步：计算穿透量
+
+  [
+  o_{ij}=\max(0,d^{\min}{ij}-d{ij})
+  ]
+
+  distance = torch.linalg.vector_norm(
+      pos_estimate[row] - pos_estimate[col],
+      dim=-1,
+  )
+
+  minimum_distance = 0.8 * (
+      radius[row] + radius[col]
+  )
+
+  overlap = torch.relu(
+      minimum_distance - distance
+  )
+
+  clash_loss = overlap.square().mean()
+
+  含义：
+
+  - 距离足够大：loss 为0；
+  - 两个原子发生重叠：距离越小，惩罚越大。
+
+  注意 radius_graph() 只负责选出候选边，随后必须使用 pos_estimate 重新计算 distance，这样 clash loss 才能对模型输出反向传播。
+
+  ### 7. 碱基平面 loss 具体怎么算
+
+  #### 第一步：选出每个残基的碱基环原子
+
+  糖和磷酸原子不能参与碱基平面拟合。
+
+  嘌呤 A/G 可选环原子：
+
+  N9 C8 N7 C5 C6 N1 C2 N3 C4
+
+  嘧啶 C/U 可选：
+
+  N1 C2 N3 C4 C5 C6
+
+  通过：
+
+  residue_index
+  atom_name_id
+
+  得到每个残基的 base_atom_mask。
+
+  #### 第二步：提取一个残基的碱基坐标
+
+  base_pos = pos_estimate[base_atom_mask]
+  base_center = base_pos.mean(dim=0)
+  centered = base_pos - base_center
+
+  #### 第三步：计算协方差矩阵
+
+  covariance = (
+      centered.transpose(0, 1) @ centered
+      / centered.size(0)
+  )
+
+  形状是：
+
+  [3, 3]
+
+  #### 第四步：计算最小特征值
+
+  eigenvalues = torch.linalg.eigvalsh(covariance)
+  residue_plane_loss = eigenvalues[0]
+
+  原理是：
+
+  - 完全位于二维平面时，垂直平面方向的方差为0；
+  - 碱基翘曲越严重，最小特征值越大。
+
+  全部残基取平均：
+
+  plane_losses = []
+
+  for residue_id in residue_ids:
+      atom_mask = (
+          (residue_index == residue_id)
+          & base_atom_mask
+      )
+
+      if atom_mask.sum() < 3:
+          continue
+
+      base_pos = pos_estimate[atom_mask]
+      base_pos = base_pos - base_pos.mean(
+          dim=0,
+          keepdim=True,
+      )
+
+      covariance = (
+          base_pos.transpose(0, 1) @ base_pos
+          / base_pos.size(0)
+      )
+
+      eigenvalues = torch.linalg.eigvalsh(
+          covariance
+      )
+      plane_losses.append(eigenvalues[0])
+
+  plane_loss = torch.stack(plane_losses).mean()
+
+  对于 batch size 大于1，不能只用 residue_index，因为不同 RNA 都可能有 residue 0。应使用：
+
+  (batch, residue_index)
+
+  共同确定唯一残基。
+
+  这个 loss：
+
+  - 平移不变；
+  - 旋转不变；
+  - 可微；
+  - 不强迫碱基朝向某个固定方向；
+  - 只约束碱基不要变成非平面。
+
+  ### 8. 是否意味着直接预测 pos-pos_pred，不再用ODE
+
+  不是自动意味着，而是现在有两条都应该测试的路线。
+
+  #### 路线A：一步 residual baseline
+
+  训练：
+
+  x = x0_centered
+  target = x1_centered - x0_centered
+
+  delta = model(
+      pos=x,
+      pos_source=x,
+      t=zeros,
+      ...
+  )
+
+  loss = MSE(delta, target)
+
+  推理：
+
+  pos_refined = x0_centered + delta
+
+  不需要ODE，也不需要时间。
+
+  #### 路线B：deterministic flow
+
+  训练随机采样 (t)：
+
+  x_t = (1 - t) * x0_centered + t * x1_centered
+  u_t = x1_centered - x0_centered
+
+  推理仍然进行ODE：
+
+  x = x0_centered
+
+  for i in range(n_timesteps):
+      v_t = model(x, t_i)
+      x = x + delta_t * v_t
+
+  但步数未必需要50，可以实验1、5、10、20、50步。
+
+  ### #我的建议
+
+  不要现在就把当前 flow 改成只有一步。应该保留两个独立实验：
+
+  实验1：专门训练的一步 residual model
+  实验2：sigma=0 的 deterministic flow model
+
+  如果实验1不弱于实验2，就采用一步模型，速度更快、逻辑更简单。
+
+  如果多步 deterministic flow 明显更好，就说明模型确实在利用“根据中间结构反复纠错”的能力，此时可以合理保留5～20步，而未必需要50步。
+
+
+ 你的方案可以整理成两个正交开关：
+
+  training_objective:
+      flow       多步 deterministic/stochastic flow
+      residual   一步直接预测 pos-pos_pred
+
+  flow_path:
+      deterministic
+      stochastic
+
+  这样可以公平比较：
+
+  1. 一步 residual regression；
+  2. deterministic flow 的 1/5/10/20/50 步；
+  3. stochastic flow 的不同步数。
+
+  ## 一、回答第3个问题
+
+  “把 (t) 固定为0”指的是：为一步 residual 模型单独改变训练数据构造，而不是只在推理时把一个随机 (t) 训练的 flow 模型强行设置成 (t=0)。
+
+  ### 当前 flow 训练
+
+  当前模型训练时：
+
+  t = self.sample_time(...)
+  x_t = (1 - t) * x0 + t * x1
+  target = x1 - x0
+
+  所以模型见过的是整个 (t\in(0,1)) 的中间结构分布。
+
+  ### 一步 residual 训练
+
+  一步 residual 必须训练成：
+
+  t = 0
+  x_t = x0
+  target = x1 - x0
+
+  也就是整个训练过程只学习：
+
+  [
+  v_\theta(x_0,0)=x_1-x_0
+  ]
+
+  推理才是：
+
+  x1_estimate = x0 + model(x0, t=0)
+
+  因此下面两者不完全相同：
+
+  A. 随机 t 训练的 flow 模型，推理时只调用 t=0 一次
+  B. 始终在 t=0 专门训练的一步 residual 模型
+
+  B 才是公平的一步 residual baseline。
+
+  ———
+
+  # 二、增加两个模式参数
+
+  在 BaseFlow.__init__() 增加：
+
+  training_objective: str = "flow",
+  flow_path: str = "deterministic",
+
+  保留：
+
+  sigma: float = 0.1,
+
+  其中：
+
+  training_objective="flow"
+  flow_path="deterministic"
+
+  表示确定性 flow。
+
+  training_objective="flow"
+  flow_path="stochastic"
+  sigma=0.1
+
+  表示带噪 flow。
+
+  training_objective="residual"
+
+  表示一步 residual；此时 flow_path 和 sigma 不参与训练路径。
+
+  初始化时增加：
+
+  if training_objective not in {"flow", "residual"}:
+      raise ValueError(
+          f"Unknown training_objective: {training_objective}"
+      )
+
+  if flow_path not in {"deterministic", "stochastic"}:
+      raise ValueError(
+          f"Unknown flow_path: {flow_path}"
+      )
+
+  if flow_path == "stochastic" and sigma <= 0:
+      raise ValueError(
+          "stochastic flow requires sigma > 0"
+      )
+
+  self.training_objective = training_objective
+  self.flow_path = flow_path
+
+  ## 修改噪声函数
+
+  由：
+
+  def sigma_t(self, t):
+      return self.sigma * torch.sqrt(t * (1 - t))
+
+  def sigma_dot_t(self, t):
+      return self.sigma * 0.5 * (1 - 2 * t) / torch.sqrt(t * (1 - t))
+
+  改为：
+
+  def sigma_t(self, t):
+      if self.flow_path == "deterministic":
+          return torch.zeros_like(t)
+
+      return self.sigma * torch.sqrt(t * (1 - t))
+
+
+  def sigma_dot_t(self, t):
+      if self.flow_path == "deterministic":
+          return torch.zeros_like(t)
+
+      return (
+          self.sigma
+          * 0.5
+          * (1 - 2 * t)
+          / torch.sqrt(t * (1 - t))
+      )
+
+  这样切换：
+
+  flow_path: deterministic
+
+  就完全关闭噪声，而不用删除 stochastic 代码。
+
+  ## 修改噪声采样
+
+  在 sample_conditional_pt() 中，由：
+
+  eps = torch.randn_like(x1)
+  eps = center_of_mass(eps, batch=batch)
+
+  改为：
+
+  if self.flow_path == "deterministic":
+      eps = torch.zeros_like(x1)
+  else:
+      eps = torch.randn_like(x1)
+      eps = center_of_mass(eps, batch=batch)
+
+  并让 compute_conditional_vector_field() 返回 eps：
+
+  return x_t, u_t, eps
+
+  这是为了将来 stochastic 模式下也能构造无噪声的预测终点。
+
+  ———
+
+  # 三、修改训练数据构造
+
+  在 generic_step() 中，原来的：
+
+  t = self.sample_time(
+      num_samples=batch_size,
+      stage=stage,
+  )
+
+  x_t, u_t = self.compute_conditional_vector_field(
+      x0=x0,
+      x1=pos,
+      t=t,
+      batch=batch,
+  )
+
+  改为：
+
+  x0_centered = center_of_mass(x0, batch=batch)
+  x1_centered = center_of_mass(pos, batch=batch)
+
+  if self.training_objective == "residual":
+      t = torch.zeros(
+          batch_size,
+          1,
+          dtype=x0.dtype,
+          device=x0.device,
+      )
+
+      x_t = x0_centered
+      u_t = x1_centered - x0_centered
+      eps = torch.zeros_like(x_t)
+
+  else:
+      t = self.sample_time(
+          num_samples=batch_size,
+          stage=stage,
+      )
+
+      x_t, u_t, eps = (
+          self.compute_conditional_vector_field(
+              x0=x0,
+              x1=pos,
+              t=t,
+              batch=batch,
+          )
+      )
+
+  网络调用保持：
+
+  v_t = self(
+      z=z,
+      t=t,
+      pos=x_t,
+      pos_source=x0,
+      bond_index=bond_index,
+      edge_attr=edge_attr,
+      node_attr=node_attr,
+      batch=batch,
+  )
+
+  ———
+
+  # 四、构造用于几何 loss 的预测终点
+
+  网络输出后增加：
+
+  t_atom = unsqueeze_like(t[batch], x_t)
+
+  if self.training_objective == "residual":
+      pos_estimate = x0_centered + v_t
+
+  elif self.flow_path == "deterministic":
+      pos_estimate = x_t + (1 - t_atom) * v_t
+
+  else:
+      clean_displacement = (
+          v_t
+          - self.sigma_dot_t(t_atom) * eps
+      )
+      pos_estimate = x0_centered + clean_displacement
+
+  含义：
+
+  - residual：直接预测完整位移；
+  - deterministic flow：从当前 (x_t) 估计终点；
+  - stochastic flow：先从速度中减去已知的噪声速度。
+
+  几何 loss 都计算在 pos_estimate 上。
+
+  ———
+
+  # 五、键长 loss
+
+  为了不与现有作为完整静态图的 bond_index 混淆，建议 .pt 使用：
+
+  geometry_bond_index: LongTensor[2, E_bond]
+  ideal_bond_length: FloatTensor[E_bond]
+
+  其中只包含：
+
+  - 核苷酸内部共价键；
+  - 相邻核苷酸的磷酸二酯键。
+
+  最好每根键只保存一次，不保存双向副本。
+
+  在 Code_Flow_matching/etflow/models/loss.py 增加：
+
+  def bond_length_loss(
+      prediction: torch.Tensor,
+      geometry_bond_index: torch.Tensor,
+      ideal_bond_length: torch.Tensor,
+  ) -> torch.Tensor:
+      if geometry_bond_index.numel() == 0:
+          return prediction.sum() * 0.0
+
+      atom_i = geometry_bond_index[0]
+      atom_j = geometry_bond_index[1]
+
+      predicted_bond_length = torch.linalg.vector_norm(
+          prediction[atom_i] - prediction[atom_j],
+          dim=-1,
+      )
+
+      ideal_bond_length = ideal_bond_length.to(
+          dtype=prediction.dtype,
+          device=prediction.device,
+      ).view(-1)
+
+      return (
+          predicted_bond_length
+          - ideal_bond_length
+      ).square().mean()
+
+  在 Dataset 中读取：
+
+  geometry_bond_index = data["geometry_bond_index"]
+  ideal_bond_length = data["ideal_bond_length"]
+
+  并放进 Data(...)：
+
+  geometry_bond_index=geometry_bond_index,
+  ideal_bond_length=ideal_bond_length,
+
+  由于字段名包含 index，PyG 通常会在 batching 时自动增加原子索引偏移。
+
+  ———
+
+  # 六、Steric clash loss
+
+  ## 采用哪套 van der Waals 半径
+
+  当前第一版建议使用 Bondi 半径，只处理 RNA 常见的 C/N/O/P/S：
+
+  BONDI_VDW_RADII = {
+      6: 1.70,   # C
+      7: 1.55,   # N
+      8: 1.52,   # O
+      15: 1.80,  # P
+      16: 1.80,  # S
+  }
+
+  暂时不对 Mg、K 等离子计算这个 clash loss。离子相互作用不能简单按照普通有机原子的 steric clash 处理。
+
+  在 BaseFlow.__init__() 中创建 buffer：
+
+  vdw_radius_table = torch.zeros(max_z)
+
+  for atomic_number, radius in {
+      6: 1.70,
+      7: 1.55,
+      8: 1.52,
+      15: 1.80,
+      16: 1.80,
+  }.items():
+      if atomic_number < max_z:
+          vdw_radius_table[atomic_number] = radius
+
+  self.register_buffer(
+      "vdw_radius_table",
+      vdw_radius_table,
+  )
+
+  变量名使用 vdw_radius_table，不会和当前 edge_weight、cutoff 等变量混淆。
+
+  ## clash loss 代码
+
+  在 loss.py 中增加：
+
+  from etflow.models.utils import build_dynamic_radius_graph
+
+
+  def steric_clash_loss(
+      prediction: torch.Tensor,
+      atomic_numbers: torch.Tensor,
+      batch: torch.Tensor,
+      geometry_bond_index: torch.Tensor,
+      vdw_radius_table: torch.Tensor,
+      clash_cutoff: float = 4.5,
+      clash_distance_scale: float = 0.8,
+      clash_max_num_neighbors: int = 64,
+  ) -> torch.Tensor:
+      clash_edge_index = build_dynamic_radius_graph(
+          pos=prediction,
+          batch=batch,
+          cutoff=clash_cutoff,
+          max_num_neighbors=clash_max_num_neighbors,
+      )
+
+      if clash_edge_index.numel() == 0:
+          return prediction.sum() * 0.0
+
+      atom_i = clash_edge_index[0]
+      atom_j = clash_edge_index[1]
+
+      # 双向边只保留一次。
+      unique_pair_mask = atom_i < atom_j
+      atom_i = atom_i[unique_pair_mask]
+      atom_j = atom_j[unique_pair_mask]
+
+      num_nodes = prediction.size(0)
+
+      candidate_pair_id = atom_i * num_nodes + atom_j
+
+      # geometry_bond_index 可能方向不固定，先转换为无向pair。
+      bond_atom_i = torch.minimum(
+          geometry_bond_index[0],
+          geometry_bond_index[1],
+      )
+      bond_atom_j = torch.maximum(
+          geometry_bond_index[0],
+          geometry_bond_index[1],
+      )
+      bonded_pair_id = (
+          bond_atom_i * num_nodes
+          + bond_atom_j
+      )
+
+      nonbonded_mask = ~torch.isin(
+          candidate_pair_id,
+          bonded_pair_id,
+      )
+
+      atom_i = atom_i[nonbonded_mask]
+      atom_j = atom_j[nonbonded_mask]
+
+      if atom_i.numel() == 0:
+          return prediction.sum() * 0.0
+
+      atom_radius = vdw_radius_table[
+          atomic_numbers.view(-1)
+      ]
+
+      supported_atom_mask = (
+          (atom_radius[atom_i] > 0)
+          & (atom_radius[atom_j] > 0)
+      )
+
+      atom_i = atom_i[supported_atom_mask]
+      atom_j = atom_j[supported_atom_mask]
+
+      if atom_i.numel() == 0:
+          return prediction.sum() * 0.0
+
+      predicted_distance = torch.linalg.vector_norm(
+          prediction[atom_i] - prediction[atom_j],
+          dim=-1,
+      )
+
+      minimum_distance = clash_distance_scale * (
+          atom_radius[atom_i]
+          + atom_radius[atom_j]
+      )
+
+      overlap = torch.relu(
+          minimum_distance - predicted_distance
+      )
+
+      return overlap.square().mean()
+
+  更严格的版本还需要排除 1–3 原子对。建议生成 .pt 时额外保存：
+
+  clash_exclusion_index
+
+  它包含：
+
+  - 1–2 共价原子对；
+  - 1–3 键角原子对。
+
+  第一版只排除直接成键原子可能把部分正常的 1–3 接触误判成 clash，所以正式训练前最好补上该字段。
+
+  ———
+
+  # 七、碱基平面 loss
+
+  ## 固定 atom-name 编码
+
+  atom_name_id 必须使用全数据集统一映射。
+
+  碱基环原子名称集合：
+
+  BASE_RING_ATOM_NAMES = {
+      "N9", "C8", "N7", "C5", "C6",
+      "N1", "C2", "N3", "C4",
+  }
+
+  根据你的 ATOM_NAME_TO_ID 得到：
+
+  base_atom_name_ids = torch.tensor(
+      [
+          ATOM_NAME_TO_ID[name]
+          for name in BASE_RING_ATOM_NAMES
+      ],
+      dtype=torch.long,
+  )
+
+  可以像 vdW 半径一样注册为 buffer：
+
+  self.register_buffer(
+      "base_atom_name_ids",
+      base_atom_name_ids,
+  )
+
+  ## plane loss 代码
+
+  在 loss.py 增加：
+
+  def base_plane_loss(
+      prediction: torch.Tensor,
+      residue_index: torch.Tensor,
+      atom_name_id: torch.Tensor,
+      batch: torch.Tensor,
+      base_atom_name_ids: torch.Tensor,
+  ) -> torch.Tensor:
+      if batch is None:
+          batch = torch.zeros(
+              prediction.size(0),
+              dtype=torch.long,
+              device=prediction.device,
+          )
+
+      base_atom_mask = torch.isin(
+          atom_name_id.view(-1),
+          base_atom_name_ids,
+      )
+
+      # 不同RNA都可能存在residue_index=0，
+      # 因此必须结合batch区分残基。
+      residue_key = torch.stack(
+          [
+              batch.view(-1),
+              residue_index.view(-1),
+          ],
+          dim=1,
+      )
+
+      _, residue_group = torch.unique(
+          residue_key,
+          dim=0,
+          return_inverse=True,
+      )
+
+      plane_loss_list = []
+
+      for group_index in torch.unique(residue_group):
+          atom_mask = (
+              (residue_group == group_index)
+              & base_atom_mask
+          )
+
+          if atom_mask.sum() < 3:
+              continue
+
+          base_position = prediction[atom_mask]
+          base_position = (
+              base_position
+              - base_position.mean(
+                  dim=0,
+                  keepdim=True,
+              )
+          )
+
+          covariance = (
+              base_position.transpose(0, 1)
+              @ base_position
+              / base_position.size(0)
+          )
+
+          eigenvalues = torch.linalg.eigvalsh(
+              covariance
+          )
+
+          plane_loss_list.append(
+              eigenvalues[0].clamp_min(0)
+          )
+
+      if not plane_loss_list:
+          return prediction.sum() * 0.0
+
+      return torch.stack(plane_loss_list).mean()
+
+  最小特征值就是碱基原子沿“最佳拟合平面法向方向”的平均平方偏离。
+
+  ———
+
+  # 八、在 generic_step() 中组合 loss
+
+  导入：
+
+  from etflow.models.loss import (
+      base_plane_loss,
+      batchwise_l2_loss,
+      bond_length_loss,
+      steric_clash_loss,
+  )
+
+  读取新数据：
+
+  geometry_bond_index = batched_data[
+      "geometry_bond_index"
+  ]
+  ideal_bond_length = batched_data[
+      "ideal_bond_length"
+  ]
+  residue_index = batched_data["residue_index"]
+  atom_name_id = batched_data["atom_name_id"]
+
+  计算：
+
+  flow_matching_loss = batchwise_l2_loss(
+      v_t,
+      u_t,
+      batch=batch,
+      reduce="mean",
+  )
+
+  bond_loss = bond_length_loss(
+      prediction=pos_estimate,
+      geometry_bond_index=geometry_bond_index,
+      ideal_bond_length=ideal_bond_length,
+  )
+
+  clash_loss = steric_clash_loss(
+      prediction=pos_estimate,
+      atomic_numbers=z,
+      batch=batch,
+      geometry_bond_index=geometry_bond_index,
+      vdw_radius_table=self.vdw_radius_table,
+  )
+
+  plane_loss = base_plane_loss(
+      prediction=pos_estimate,
+      residue_index=residue_index,
+      atom_name_id=atom_name_id,
+      batch=batch,
+      base_atom_name_ids=self.base_atom_name_ids,
+  )
+
+  loss = (
+      flow_matching_loss
+      + self.bond_loss_weight * bond_loss
+      + self.clash_loss_weight * clash_loss
+      + self.plane_loss_weight * plane_loss
+  )
+
+  建议新增初始化参数：
+
+  bond_loss_weight: float = 0.1,
+  clash_loss_weight: float = 0.01,
+  plane_loss_weight: float = 0.1,
+
+  这只是初始实验值。正式选择时应观察每项原始 loss 和梯度量级，不能只比较数字大小。
+
+  ———
+
+  # 九、修改 sample() 支持一步 residual 和多步 flow
+
+  首先正确计算 batch size：
+
+  batch_size = (
+      int(batch.max().item()) + 1
+      if batch is not None
+      else 1
+  )
+
+  ### residual 分支
+
+  在 ODE 循环前增加：
+
+  if self.training_objective == "residual":
+      t = torch.zeros(
+          batch_size,
+          1,
+          dtype=source.dtype,
+          device=source.device,
+      )
+
+      residual = self(
+          z=z,
+          t=t,
+          pos=source,
+          pos_source=source,
+          bond_index=bond_index,
+          edge_attr=edge_attr,
+          node_attr=node_attr,
+          batch=batch,
+      )
+
+      return source + residual
+
+  ### flow 分支
+
+  保留当前 ODE，但建议把当前按原子构造 t：
+
+  t = t_schedule[i].repeat(x.size(0))
+  t = unsqueeze_like(t, x)
+
+  改为按 batch 构造：
+
+  t = torch.full(
+      (batch_size, 1),
+      fill_value=t_schedule[i].item(),
+      dtype=x.dtype,
+      device=x.device,
+  )
+
+  因为 BaseFlow.forward() 内部已经执行：
+
+  t=t[batch]
+
+  所以它期望 t 是每个 RNA 一个时间，而不是每个原子一个时间。
+
+  之后通过：
+
+  n_timesteps=1
+  n_timesteps=5
+  n_timesteps=10
+  n_timesteps=20
+  n_timesteps=50
+
+  比较 deterministic flow 步数。
+
+  ## 最终实验矩阵
+
+  建议至少训练三个独立模型：
+
+  模型A
+  training_objective=residual
+  一步推理
+
+  模型B
+  training_objective=flow
+  flow_path=deterministic
+  分别测试1/5/10/20/50步
+
+  模型C
+  training_objective=flow
+  flow_path=stochastic
+  sigma=0.1
+  分别测试10/20/50步
+
+  其中“模型B使用1步ODE”和“模型A一步residual”必须分开报告，因为它们架构调用形式相似，但训练分布不同。
+ ## 3. clash_exclusion_index 的含义和格式
+
+  推荐格式：
+
+  clash_exclusion_index: LongTensor[2, E_exclusion]
+
+  例如：
+
+  tensor([
+      [0, 1, 0],
+      [1, 2, 2],
+  ])
+
+  表示排除：
+
+  (0, 1)  1–2
+  (1, 2)  1–2
+  (0, 2)  1–3
+
+  建议每个无向原子对只保存一次，并满足：
+
+  clash_exclusion_index[0] < clash_exclusion_index[1]
+
+  PyG 会自动对名称中包含 index 的二维索引进行 batch 偏移，因此这个名称可以正常批处理。
+
+  ### 生成逻辑
+
+  在以后生成 .pt 时可以使用：
+
+  from itertools import combinations
+
+  import torch
+
+
+  def build_clash_exclusion_index(
+          geometry_bond_index: torch.Tensor,
+          num_atoms: int,
+  ) -> torch.Tensor:
+      neighbors = [set() for _ in range(num_atoms)]
+      one_two_pairs = set()
+
+      for atom_i, atom_j in (
+          geometry_bond_index.detach().cpu().t().tolist()
+      ):
+          atom_i = int(atom_i)
+          atom_j = int(atom_j)
+
+          if atom_i == atom_j:
+              continue
+
+          pair = tuple(sorted((atom_i, atom_j)))
+          one_two_pairs.add(pair)
+
+          neighbors[atom_i].add(atom_j)
+          neighbors[atom_j].add(atom_i)
+
+      one_three_pairs = set()
+
+      for center_atom in range(num_atoms):
+          for atom_i, atom_j in combinations(
+                  sorted(neighbors[center_atom]),
+                  2,
+          ):
+              one_three_pairs.add(
+                  tuple(sorted((atom_i, atom_j)))
+              )
+
+      exclusion_pairs = sorted(
+          one_two_pairs | one_three_pairs
+      )
+
+      if not exclusion_pairs:
+          return torch.empty((2, 0), dtype=torch.long)
+
+      return torch.tensor(
+          exclusion_pairs,
+          dtype=torch.long,
+      ).t().contiguous()
+
+ ### 新建统一常量文件
+
+  建议新建：
+
+  etflow/data/constants.py
+
+  内容可以是：
+
+  UNKNOWN_ATOM_NAME_ID = 0
+
+  RNA_ATOM_NAMES = (
+      # 磷酸和糖环
+      "P", "OP1", "OP2", "OP3",
+      "O5'", "C5'", "C4'", "O4'",
+      "C3'", "O3'", "C2'", "O2'", "C1'",
+
+      # 碱基环
+      "N9", "C8", "N7", "C5", "C6",
+      "N1", "C2", "N3", "C4",
+
+      # 碱基环外原子
+      "N6", "O6", "N2", "O2", "N4", "O4",
+  )
+
+  ATOM_NAME_TO_ID = {
+      atom_name: atom_id
+      for atom_id, atom_name in enumerate(
+          RNA_ATOM_NAMES,
+          start=1,
+      )
+  }
+
+  BASE_RING_ATOM_NAMES = (
+      "N9", "C8", "N7", "C5", "C6",
+      "N1", "C2", "N3", "C4",
+  )
+
+  BASE_ATOM_NAME_IDS = tuple(
+      ATOM_NAME_TO_ID[atom_name]
+      for atom_name in BASE_RING_ATOM_NAMES
+  )
+
+  ATOM_NAME_ALIASES = {
+      "O1P": "OP1",
+      "O2P": "OP2",
+      "O3P": "OP3",
+  }
+
+
+  def normalize_atom_name(atom_name: str) -> str:
+      atom_name = atom_name.strip().replace("*", "'")
+      return ATOM_NAME_ALIASES.get(atom_name, atom_name)
+
+  ### 生成 .pt 时
+
+  from etflow.data.constants import (
+      ATOM_NAME_TO_ID,
+      UNKNOWN_ATOM_NAME_ID,
+      normalize_atom_name,
+  )
+
+  atom_name_id = torch.tensor(
+      [
+          ATOM_NAME_TO_ID.get(
+              normalize_atom_name(atom_name),
+              UNKNOWN_ATOM_NAME_ID,
+          )
+          for atom_name in atom_names
+      ],
+      dtype=torch.long,
+  )
+
+  每个原子对应一个整数，所以形状为：
+
+  atom_name_id: LongTensor[N]
+
+  residue_index 也必须是：
+
+  residue_index: LongTensor[N]
+
+  对于多链 RNA，residue_index 必须在单个 .pt 内唯一。不要直接使用可能在不同链重复的 PDB residue number；应重新编码为 0, 1, ..., R-1。
 # 最值得做的模型创新
   我建议把最终模型定义为：
   > Confidence-Gated Interaction-Aware Residual Flow for RNA Refinement
