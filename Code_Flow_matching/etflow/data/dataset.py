@@ -312,6 +312,21 @@ class EuclideanDataset(Dataset):
             dim=-1,
         ).reshape(-1, 4).contiguous()
 
+        # Modify_5
+        token_mobility_attr = torch.stack(
+            [
+                token_pair_pae.mean(dim=1).clamp(0.0, 32.0) / 32.0,
+                token_pair_pae.mean(dim=0).clamp(0.0, 32.0) / 32.0,
+                token_pair_pde.mean(dim=1).clamp(0.0, 32.0) / 32.0,
+                contact_probs.mean(dim=1).clamp(0.0, 1.0),
+            ],
+            dim=-1,
+        )
+
+        atom_mobility_attr = token_mobility_attr[
+            atom_to_token_idx
+        ].contiguous()
+
         # ToDo 注意pt文件的生成
         return RNAData(
             pos=pos,
@@ -334,4 +349,7 @@ class EuclideanDataset(Dataset):
                 [num_tokens],
                 dtype=torch.long,
             ),
+
+            # Modify_5
+            atom_mobility_attr=atom_mobility_attr,
         )
