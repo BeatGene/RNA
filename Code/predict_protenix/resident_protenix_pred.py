@@ -101,9 +101,11 @@ def run(args: argparse.Namespace, heartbeat: Heartbeat) -> None:
     from runner.dumper import DataDumper
     from runner.inference import infer_predict
 
-    class LegacyLayoutDumper(DataDumper):
+    class ConfigurableLayoutDumper(DataDumper):
         def _get_dump_dir(self, dataset_name: str, sample_name: str, seed: int) -> str:
             pdb_id = str(sample_name).strip().lower()
+            if args.output_layout == "dataset":
+                return str(args.output_dir / pdb_id / f"seed_{seed}")
             return str(
                 args.output_dir
                 / f"pred_output_{pdb_id}_seed_{seed}"
@@ -127,12 +129,12 @@ def run(args: argparse.Namespace, heartbeat: Heartbeat) -> None:
         use_template=False,
         use_rna_msa=True,
         use_seeds_in_json=False,
-        need_atom_confidence=False,
+        need_atom_confidence=args.need_atom_confidence,
         kalign_binary_path=None,
     )
-    runner.dumper = LegacyLayoutDumper(
+    runner.dumper = ConfigurableLayoutDumper(
         base_dir=str(args.output_dir),
-        need_atom_confidence=False,
+        need_atom_confidence=args.need_atom_confidence,
         sorted_by_ranking_score=True,
     )
     tasks = json.loads(args.input_json.read_text(encoding="utf-8"))
@@ -273,6 +275,23 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--cycles", type=int, default=10)
     parser.add_argument("--dtype", choices=("bf16", "fp32", "fp16"), default="bf16")
     parser.add_argument("--model", default="protenix_base_default_v1.0.0")
+    parser.add_argument(
+        "--need-atom-confidence",
+        action="store_true",
+        help=(
+            "保存每个 sample 的 full_data JSON（atom_plddt、token_pair_pae、"
+            "token_pair_pde、contact_probs、atom_to_token_idx）"
+        ),
+    )
+    parser.add_argument(
+        "--output-layout",
+        choices=("legacy", "dataset"),
+        default="legacy",
+        help=(
+            "legacy: pred_output_<pdb>_seed_<seed>/...；"
+            "dataset: <pdb>/seed_<seed>/..."
+        ),
+    )
     parser.add_argument("--heartbeat", type=Path, required=True)
     parser.add_argument(
         "--memory-stop-percent",

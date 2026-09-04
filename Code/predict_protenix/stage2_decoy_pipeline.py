@@ -39,6 +39,14 @@ UNRESOLVED_CIF_RE = re.compile(
 CONFIDENCE_RE = re.compile(
     r"^.+_summary_confidence_sample_(\d+)\.json$", re.IGNORECASE
 )
+FULL_DATA_RE = re.compile(r"^.+_full_data_sample_(\d+)\.json$", re.IGNORECASE)
+FULL_DATA_KEYS = (
+    "atom_plddt",
+    "token_pair_pae",
+    "token_pair_pde",
+    "contact_probs",
+    "atom_to_token_idx",
+)
 TRUE_VALUES = {"1", "TRUE", "T", "YES", "Y"}
 MODEL_NAME = "protenix_base_default_v1.0.0"
 FOLDBENCH_SEEDS = "42,66,101,2024,8888"
@@ -152,6 +160,35 @@ class SeedInfo:
     unresolved_count: int
     confidence_count: int
     sample_indices: str
+    full_data_count: int = 0
+
+
+def validate_full_data_json(path: Path) -> tuple[bool, str]:
+    """Cheaply verify a potentially very large full-confidence JSON file.
+
+    Loading all pair matrices with json.loads can require several times the file
+    size in RAM.  The dumper writes one top-level object, so completeness plus
+    the five required top-level key names is enough for resumability auditing.
+    """
+    try:
+        if path.stat().st_size < 128:
+            return False, f"文件过小({path.stat().st_size} bytes)"
+        required = {f'"{key}"'.encode() for key in FULL_DATA_KEYS}
+        found: set[bytes] = set()
+        tail = b""
+        with path.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                window = tail + chunk
+                found.update(key for key in required if key in window)
+                tail = window[-128:]
+        missing = sorted(key.decode().strip('"') for key in required - found)
+        if missing:
+            return False, f"缺少字段={missing}"
+        if not tail.rstrip().endswith(b"}"):
+            return False, "JSON 末尾不完整"
+        return True, "OK"
+    except OSError as exc:
+        return False, f"{type(exc).__name__}: {exc}"
 
 
 def load_targets(manifest_path: Path) -> list[Target]:
@@ -422,6 +459,7 @@ def inspect_seed(
     output_dir: Path | None,
     expected_samples: int,
     validation: str,
+    require_full_confidence: bool = False,
 ) -> SeedInfo:
     empty = SeedInfo(
         "MISSING",
@@ -450,6 +488,7 @@ def inspect_seed(
     primary: dict[int, list[Path]] = {}
     unresolved: set[int] = set()
     confidence: dict[int, list[Path]] = {}
+    full_data: dict[int, list[Path]] = {}
     for path in pred_dir.iterdir():
         if not path.is_file():
             continue
@@ -464,6 +503,10 @@ def inspect_seed(
         confidence_match = CONFIDENCE_RE.fullmatch(path.name)
         if confidence_match:
             confidence.setdefault(int(confidence_match.group(1)), []).append(path)
+            continue
+        full_data_match = FULL_DATA_RE.fullmatch(path.name)
+        if full_data_match:
+            full_data.setdefault(int(full_data_match.group(1)), []).append(path)
 
     validator = full_validate_cif if validation == "full" else quick_validate_cif
     invalid_reasons: list[str] = []
@@ -497,6 +540,21 @@ def inspect_seed(
                 f"{paths[0].name}: {type(exc).__name__}: {exc}"
             )
 
+    invalid_full_data_reasons: list[str] = []
+    valid_full_data_count = 0
+    if require_full_confidence:
+        for index, paths in sorted(full_data.items()):
+            if len(paths) != 1:
+                invalid_full_data_reasons.append(
+                    f"full_data sample_{index} 重复={len(paths)}"
+                )
+                continue
+            valid, reason = validate_full_data_json(paths[0])
+            if valid:
+                valid_full_data_count += 1
+            else:
+                invalid_full_data_reasons.append(f"{paths[0].name}: {reason}")
+
     expected_indices = set(range(expected_samples))
     actual_indices = set(primary)
     missing_indices = sorted(expected_indices - actual_indices)
@@ -506,6 +564,19 @@ def inspect_seed(
     extra_confidence = sorted(confidence_indices - expected_indices)
     primary_count = sum(len(paths) for paths in primary.values())
     confidence_count = sum(len(paths) for paths in confidence.values())
+    full_data_indices = set(full_data)
+    missing_full_data = sorted(expected_indices - full_data_indices)
+    extra_full_data = sorted(full_data_indices - expected_indices)
+    full_data_count = sum(len(paths) for paths in full_data.values())
+    full_data_complete = (
+        not require_full_confidence
+        or (
+            not missing_full_data
+            and not extra_full_data
+            and full_data_count == expected_samples
+            and valid_full_data_count == expected_samples
+        )
+    )
     if (
         not missing_indices
         and not extra_indices
@@ -515,6 +586,7 @@ def inspect_seed(
         and valid_count == expected_samples
         and confidence_count == expected_samples
         and valid_confidence_count == expected_samples
+        and full_data_complete
     ):
         status = "COMPLETE"
         reason = "OK"
@@ -536,6 +608,14 @@ def inspect_seed(
             pieces.append("; ".join(invalid_reasons[:3]))
         if invalid_confidence_reasons:
             pieces.append("; ".join(invalid_confidence_reasons[:3]))
+        if require_full_confidence:
+            pieces.append(f"full_data={full_data_count}/{expected_samples}")
+        if missing_full_data:
+            pieces.append(f"缺少full_data sample={missing_full_data[:10]}")
+        if extra_full_data:
+            pieces.append(f"额外full_data sample={extra_full_data[:10]}")
+        if invalid_full_data_reasons:
+            pieces.append("; ".join(invalid_full_data_reasons[:3]))
         reason = "；".join(pieces)
 
     return SeedInfo(
@@ -549,6 +629,7 @@ def inspect_seed(
         unresolved_count=len(unresolved),
         confidence_count=confidence_count,
         sample_indices=",".join(str(i) for i in sorted(actual_indices)),
+        full_data_count=full_data_count,
     )
 
 
@@ -681,7 +762,12 @@ def build_audit(
         for seed in args.seeds:
             paths = pred_index.get((target.pdb_id, seed), [])
             output_dir = choose_indexed_path(paths)
-            info = inspect_seed(output_dir, args.samples, args.cif_validation)
+            info = inspect_seed(
+                output_dir,
+                args.samples,
+                args.cif_validation,
+                getattr(args, "need_atom_confidence", False),
+            )
             seed_infos[seed] = info
             seed_rows.append(
                 {
@@ -696,6 +782,7 @@ def build_audit(
                     "INVALID_PRIMARY_CIF_COUNT": info.invalid_primary_count,
                     "UNRESOLVED_VARIANT_COUNT": info.unresolved_count,
                     "CONFIDENCE_JSON_COUNT": info.confidence_count,
+                    "FULL_DATA_JSON_COUNT": info.full_data_count,
                     "SAMPLE_INDICES": info.sample_indices,
                     "DUPLICATE_OUTPUT_DIR_COUNT": max(0, len(paths) - 1),
                 }
@@ -782,6 +869,7 @@ def build_audit(
         "seeds": args.seeds,
         "samples_per_seed": args.samples,
         "cif_validation": args.cif_validation,
+        "need_atom_confidence": getattr(args, "need_atom_confidence", False),
         "all_complete": bool(summary_rows)
         and all(row["OVERALL_STATUS"] == "COMPLETE" for row in summary_rows),
     }
@@ -1186,7 +1274,12 @@ def run_pred(args: argparse.Namespace) -> None:
         missing: list[int] = []
         for seed in args.seeds:
             out = choose_indexed_path(pred_index.get((target.pdb_id, seed), []))
-            current = inspect_seed(out, args.samples, args.cif_validation)
+            current = inspect_seed(
+                out,
+                args.samples,
+                args.cif_validation,
+                getattr(args, "need_atom_confidence", False),
+            )
             if current.status != "COMPLETE":
                 missing.append(seed)
         action = "COMPLETE" if not missing else "SCHEDULE"
@@ -1286,6 +1379,9 @@ def run_pred(args: argparse.Namespace) -> None:
             "--memory-stop-percent",
             str(args.memory_stop_percent),
         ]
+        if args.need_atom_confidence:
+            command.append("--need-atom-confidence")
+        command.extend(["--output-layout", args.prediction_layout])
         env = os.environ.copy()
         env["CUDA_VISIBLE_DEVICES"] = str(gpu)
         env["OMP_NUM_THREADS"] = str(args.cpu_threads_per_gpu)
@@ -1300,6 +1396,8 @@ def run_pred(args: argparse.Namespace) -> None:
                 "model": MODEL_NAME,
                 "samples": args.samples,
                 "seeds": list(seeds),
+                "need_atom_confidence": args.need_atom_confidence,
+                "prediction_layout": args.prediction_layout,
                 "pdb_count": len(pdb_items),
                 "pdb_ids": [target.pdb_id for target, _ in pdb_items],
             },
@@ -1327,7 +1425,10 @@ def run_pred(args: argparse.Namespace) -> None:
             for seed in seeds:
                 paths = batch_pred_index.get((target.pdb_id, seed), [])
                 verified = inspect_seed(
-                    choose_indexed_path(paths), args.samples, args.cif_validation
+                    choose_indexed_path(paths),
+                    args.samples,
+                    args.cif_validation,
+                    getattr(args, "need_atom_confidence", False),
                 )
                 verified_rows.append(
                     (target.pdb_id, seed, verified.status == "COMPLETE")
@@ -1503,6 +1604,14 @@ def add_common_arguments(parser: argparse.ArgumentParser) -> None:
     )
     parser.add_argument("--samples", type=int, default=FOLDBENCH_SAMPLES)
     parser.add_argument(
+        "--need-atom-confidence",
+        action="store_true",
+        help=(
+            "要求并校验 full_data JSON 中的 atom_plddt、token_pair_pae、"
+            "token_pair_pde、contact_probs、atom_to_token_idx"
+        ),
+    )
+    parser.add_argument(
         "--cif-validation",
         choices=("quick", "full"),
         default="quick",
@@ -1608,6 +1717,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path(__file__).with_name("resident_protenix_pred.py"),
         help="常驻 GPU Protenix worker 脚本",
+    )
+    pred_parser.add_argument(
+        "--prediction-layout",
+        choices=("legacy", "dataset"),
+        default="legacy",
+        help="dataset 将结果写入 <pred-output-dir>/<pdb>/seed_<seed>",
     )
 
     preflight_parser = subparsers.add_parser("preflight", help="检查运行环境")

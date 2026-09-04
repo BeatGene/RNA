@@ -112,6 +112,7 @@ class Stage2AuditTests(unittest.TestCase):
             seeds=[42, 43],
             samples=2,
             cif_validation="quick",
+            need_atom_confidence=False,
             protenix="protenix",
         )
 
@@ -231,6 +232,26 @@ class Stage2AuditTests(unittest.TestCase):
         info = pipeline.inspect_seed(confidence.parents[3], 2, "quick")
         self.assertEqual(info.status, "INCOMPLETE")
         self.assertIn("ranking_score", info.reason)
+
+    def test_full_confidence_requires_all_five_fields(self) -> None:
+        self.make_complete_target_with_stale_msa()
+        seed_dir = next(self.pred.rglob("seed_42"))
+        pred = seed_dir / "predictions"
+        payload = {key: list(range(20)) for key in pipeline.FULL_DATA_KEYS}
+        for rank in range(2):
+            (pred / f"1abc_full_data_sample_{rank}.json").write_text(
+                json.dumps(payload), encoding="utf-8"
+            )
+        complete = pipeline.inspect_seed(seed_dir, 2, "quick", True)
+        self.assertEqual(complete.status, "COMPLETE")
+        self.assertEqual(complete.full_data_count, 2)
+
+        (pred / "1abc_full_data_sample_0.json").write_text(
+            json.dumps({"atom_plddt": [0], "padding": "x" * 256}), encoding="utf-8"
+        )
+        incomplete = pipeline.inspect_seed(seed_dir, 2, "quick", True)
+        self.assertEqual(incomplete.status, "INCOMPLETE")
+        self.assertIn("缺少字段", incomplete.reason)
 
 
 if __name__ == "__main__":
