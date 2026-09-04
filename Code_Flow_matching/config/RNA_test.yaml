@@ -29,7 +29,9 @@ model_args:
     activation: silu
     neighbor_embedding: true
     cutoff_lower: 0.0
-    cutoff_upper: 4.5
+    cutoff_upper: 6.0
+    dynamic_radius_cutoff: 6.0
+    max_num_neighbors: 64
     max_z: 20
     node_attr_dim: 674
     edge_attr_dim: 7

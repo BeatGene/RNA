@@ -711,7 +711,9 @@ class TorchMDDynamics(nn.Module):
         batch: Tensor,
         edge_attr: Optional[Tensor] = None,
         node_attr: Optional[Tensor] = None,
-    ) -> Tuple[Tensor, Optional[Tensor]]:
+        # Modify_5
+        return_hidden: bool = False,
+    ) -> Tensor | Tuple[Tensor, Tensor]:
         """Forward pass over torchmd-net model.
 
         Parameters
@@ -748,4 +750,11 @@ class TorchMDDynamics(nn.Module):
 
         # latent representation
         _, v = self.output_model.pre_reduce(x, v, z, pos, batch)
-        return center(v, batch)
+
+        # Modify_5
+        velocity = center(v, batch)
+
+        if return_hidden:
+            return velocity, x
+
+        return velocity

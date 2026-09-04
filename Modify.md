@@ -1091,10 +1091,10 @@ def build_clash_exclusion_index(
 
   3. 加 explicit source conditioning；
   4. 加 pLDDT/PAE/contact 与 mobility gate；
-  5. 加 identity/no-op 数据和 QA accept-reject；
-  6. 改为 key-atom/frame/torsion 表示；
-  7. 加动态 base-pair/stacking graph；
-  8. 最后再研究 FlowCast、few-step distillation 和多候选 consensus。
+  5. 加 identity/no-op 数据和 QA accept-reject； <----
+  6. 改为 key-atom/frame/torsion 表示；    不做
+  7. 加动态 base-pair/stacking graph；   待做
+  8. 最后再研究 FlowCast、few-step distillation 和多候选 consensus。 待做
 
 
   最终评价不要只报平均 RMSD，至少还应包括：

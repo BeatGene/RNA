@@ -29,6 +29,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 try:
     from torch_geometric.loader import DataLoader
+    from torch_geometric.utils import scatter
 except ImportError as exc:
     raise SystemExit(
         "Missing torch_geometric. Install the project dependencies before "
@@ -236,6 +237,7 @@ def validate_batch(batch) -> None:
     assert batch.node_attr.shape == (num_atoms, NODE_ATTR_DIM)
     assert batch.node_attr.dtype == torch.float32
     assert batch.token_pair_confidence.shape == (2**2 + 3**2, 4)
+    assert batch.atom_mobility_attr.shape == (num_atoms, 4)
     assert torch.isfinite(batch.node_attr).all()
     assert torch.isfinite(batch.token_pair_confidence).all()
 
@@ -270,6 +272,19 @@ def validate_batch(batch) -> None:
     assert torch.allclose(
         batch.token_pair_confidence[1], expected_first_pair, atol=1.0e-7
     )
+    expected_first_mobility = torch.tensor(
+        [
+            1.5 / 32.0,
+            2.5 / 32.0,
+            1.5 / 32.0,
+            (1.0 + math.exp(-1.0)) / 2.0,
+        ]
+    )
+    assert torch.allclose(
+        batch.atom_mobility_attr[0],
+        expected_first_mobility,
+        atol=1.0e-7,
+    )
 
 
 def check_dataset_validation(temp_dir: Path) -> None:
@@ -293,6 +308,7 @@ def make_model(
     flow_path: str,
     confidence_conditioning: bool,
     device: torch.device,
+    use_mobility_v1: bool = False,
 ):
     model = BaseFlow(
         hidden_channels=32,
@@ -315,6 +331,7 @@ def make_model(
         so3_equivariant=True,
         source_conditioning=True,
         confidence_conditioning=confidence_conditioning,
+        use_mobility_v1=use_mobility_v1,
         sigma=0.1,
         training_objective=training_objective,
         flow_path=flow_path,
@@ -344,15 +361,29 @@ def confidence_kwargs(batch) -> dict:
     }
 
 
+def mobility_kwargs(batch) -> dict:
+    return {
+        "atom_mobility_attr": batch.atom_mobility_attr,
+        "geometry_bond_index": batch.geometry_bond_index,
+        "ideal_bond_length": batch.ideal_bond_length,
+        "clash_exclusion_index": batch.clash_exclusion_index,
+    }
+
+
 def run_training_mode(
     batch,
     training_objective: str,
     flow_path: str,
     confidence_conditioning: bool,
     device,
+    use_mobility_v1: bool = False,
 ):
     model = make_model(
-        training_objective, flow_path, confidence_conditioning, device
+        training_objective,
+        flow_path,
+        confidence_conditioning,
+        device,
+        use_mobility_v1=use_mobility_v1,
     )
     model.train()
     model.zero_grad(set_to_none=True)
@@ -364,6 +395,17 @@ def run_training_mode(
     gradients = [p.grad for p in model.parameters() if p.grad is not None]
     assert gradients, "No parameter received a gradient"
     assert all(torch.isfinite(gradient).all() for gradient in gradients)
+    if use_mobility_v1:
+        mobility_gradients = [
+            parameter.grad
+            for parameter in model.mobility_head.parameters()
+            if parameter.grad is not None
+        ]
+        assert mobility_gradients, "mobility_head received no gradient"
+        assert any(
+            gradient.abs().sum().item() > 0.0
+            for gradient in mobility_gradients
+        ), "mobility_head gradients are all zero"
 
     model.eval()
     sample_steps = (1,) if training_objective == "residual" else (1, 3)
@@ -377,17 +419,121 @@ def run_training_mode(
             edge_attr=batch.edge_attr,
             n_timesteps=n_timesteps,
             **confidence_kwargs(batch),
+            **mobility_kwargs(batch),
         )
         assert prediction.shape == batch.pos.shape
         assert torch.isfinite(prediction).all()
 
     confidence_label = "on" if confidence_conditioning else "off"
+    mobility_label = "on" if use_mobility_v1 else "off"
     print(
         f"PASS confidence={confidence_label:<3} "
+        f"mobility_v1={mobility_label:<3} "
         f"objective={training_objective:<8} path={flow_path:<13} "
         f"loss={loss.detach().item():.6f}"
     )
     return model
+
+
+@torch.no_grad()
+def check_mobility_v1(model, batch) -> None:
+    model.eval()
+    num_graphs = int(batch.batch.max().item()) + 1
+    t = torch.zeros(
+        num_graphs,
+        1,
+        dtype=batch.pos.dtype,
+        device=batch.pos.device,
+    )
+    velocity, auxiliary = model(
+        z=batch.atomic_numbers,
+        t=t,
+        pos=batch.pos_pred,
+        pos_source=batch.pos_pred,
+        bond_index=batch.edge_index,
+        edge_attr=batch.edge_attr,
+        node_attr=batch.node_attr,
+        batch=batch.batch,
+        return_aux=True,
+        **confidence_kwargs(batch),
+        **mobility_kwargs(batch),
+    )
+    assert velocity.shape == batch.pos.shape
+    assert auxiliary["mobility_residue"].shape == (5, 1)
+    assert auxiliary["mobility_atom"].shape == (batch.num_nodes, 1)
+    assert torch.equal(
+        auxiliary["mobility_atom"],
+        auxiliary["mobility_residue"][auxiliary["global_residue_index"]],
+    )
+    assert (auxiliary["mobility_residue"] > 0).all()
+    assert (auxiliary["mobility_residue"] < 1).all()
+    assert torch.isfinite(velocity).all()
+
+    x0 = batch.pos_pred.clone()
+    x1 = batch.pos
+    x0 = x0 - scatter(x0, batch.batch, dim=0, reduce="mean")[batch.batch]
+    x1 = x1 - scatter(x1, batch.batch, dim=0, reduce="mean")[batch.batch]
+
+    original_values = (
+        model.identity_pair_probability,
+        model.near_native_pair_probability,
+        model.near_native_min_alpha,
+        model.near_native_max_alpha,
+    )
+    try:
+        model.identity_pair_probability = 1.0
+        model.near_native_pair_probability = 0.0
+        identity_source, identity_fraction, near_fraction = (
+            model.augment_residual_source(x0, x1, batch.batch)
+        )
+        assert torch.allclose(identity_source, x1)
+        assert identity_fraction.item() == 1.0
+        assert near_fraction.item() == 0.0
+
+        model.identity_pair_probability = 0.0
+        model.near_native_pair_probability = 1.0
+        model.near_native_min_alpha = 0.1
+        model.near_native_max_alpha = 0.1
+        near_source, identity_fraction, near_fraction = (
+            model.augment_residual_source(x0, x1, batch.batch)
+        )
+        assert torch.allclose(
+            near_source,
+            x1 + 0.1 * (x0 - x1),
+            atol=1.0e-6,
+        )
+        assert identity_fraction.item() == 0.0
+        assert near_fraction.item() == 1.0
+    finally:
+        (
+            model.identity_pair_probability,
+            model.near_native_pair_probability,
+            model.near_native_min_alpha,
+            model.near_native_max_alpha,
+        ) = original_values
+
+    print(
+        "PASS mobility_v1 residue gate and identity/near-native augmentation "
+        f"mobility_mean={auxiliary['mobility_residue'].mean().item():.3f}"
+    )
+
+
+def check_mobility_configuration(device) -> None:
+    try:
+        make_model(
+            training_objective="flow",
+            flow_path="deterministic",
+            confidence_conditioning=True,
+            device=device,
+            use_mobility_v1=True,
+        )
+    except ValueError as exc:
+        assert "only supported" in str(exc)
+    else:
+        raise AssertionError(
+            "use_mobility_v1=True with flow objective was not rejected"
+        )
+    print("PASS mobility_v1 residual-only configuration guard")
 
 
 @torch.no_grad()
@@ -677,6 +823,17 @@ def main() -> None:
                     confidence_conditioning,
                     device,
                 )
+
+        mobility_model = run_training_mode(
+            batch=batch,
+            training_objective="residual",
+            flow_path="deterministic",
+            confidence_conditioning=True,
+            device=device,
+            use_mobility_v1=True,
+        )
+        check_mobility_v1(mobility_model, batch)
+        check_mobility_configuration(device)
 
         enabled_model = models[(True, "residual", "deterministic")]
         disabled_model = models[(False, "residual", "deterministic")]
