@@ -61,6 +61,7 @@ class BaseFlow(BaseModel):
             # max_num_neighbors: int = 32,
             so3_equivariant: bool = False,
             source_conditioning: bool = True,
+            confidence_conditioning: bool = False,
             # flow matching args
             sigma: float = 0.1,
             # prior_type: str = "gaussian",
@@ -135,6 +136,17 @@ class BaseFlow(BaseModel):
                 dtype=torch.long,
             ),
         )
+        #Modify_4
+        self.confidence_conditioning = confidence_conditioning
+        self.confidence_node_attr_dim = 1
+        self.confidence_edge_attr_dim = 4
+
+        network_node_attr_dim = node_attr_dim
+        network_edge_attr_dim = edge_attr_dim
+
+        if self.confidence_conditioning:
+            network_node_attr_dim += self.confidence_node_attr_dim
+            network_edge_attr_dim += self.confidence_edge_attr_dim
         # setup network
         if network_type == "TorchMDDynamics":
             self.network = TorchMDDynamics(
@@ -148,8 +160,9 @@ class BaseFlow(BaseModel):
                 cutoff_lower=cutoff_lower,
                 cutoff_upper=cutoff_upper,
                 max_z=max_z,
-                node_attr_dim=node_attr_dim,
-                edge_attr_dim=edge_attr_dim,
+                # Modify_4
+                node_attr_dim=network_node_attr_dim,
+                edge_attr_dim=network_edge_attr_dim,
                 attn_activation=attn_activation,
                 num_heads=num_heads,
                 distance_influence=distance_influence,
@@ -277,17 +290,147 @@ class BaseFlow(BaseModel):
             )
         raise NotImplementedError(f"Time sampling {self.sample_time_dist} not implemented")
 
+    #Modify_4
+    def build_confidence_edge_attr(
+            self,
+            edge_index: Tensor,
+            batch: Optional[Tensor],
+            atom_to_token_idx: Tensor,
+            token_pair_confidence: Tensor,
+            num_tokens: Tensor,
+    ) -> Tensor:
+        if atom_to_token_idx is None:
+            raise ValueError(
+                "confidence_conditioning=True requires atom_to_token_idx"
+            )
+
+        if token_pair_confidence is None:
+            raise ValueError(
+                "confidence_conditioning=True requires "
+                "token_pair_confidence"
+            )
+
+        if num_tokens is None:
+            raise ValueError(
+                "confidence_conditioning=True requires num_tokens"
+            )
+
+        atom_to_token_idx = atom_to_token_idx.long().view(-1)
+        num_tokens = num_tokens.long().view(-1)
+
+        if batch is not None and atom_to_token_idx.numel() != batch.numel():
+            raise ValueError(
+                "atom_to_token_idx and batch must have the same number of atoms"
+            )
+
+        if token_pair_confidence.dim() != 2:
+            raise ValueError(
+                "token_pair_confidence must have shape "
+                "[sum(num_tokens**2), 4]"
+            )
+
+        if (
+                token_pair_confidence.size(1)
+                != self.confidence_edge_attr_dim
+        ):
+            raise ValueError(
+                "token_pair_confidence must contain exactly "
+                f"{self.confidence_edge_attr_dim} features"
+            )
+
+        if batch is None:
+            batch = torch.zeros(
+                atom_to_token_idx.numel(),
+                dtype=torch.long,
+                device=atom_to_token_idx.device,
+            )
+
+        num_graphs = (
+            int(batch.max().item()) + 1
+            if batch.numel() > 0
+            else 0
+        )
+        if num_tokens.numel() != num_graphs:
+            raise ValueError(
+                "num_tokens must contain exactly one value per graph"
+            )
+
+        pair_count = num_tokens.square()
+
+        expected_pair_rows = pair_count.sum()
+
+        if (
+                token_pair_confidence.size(0)
+                != int(expected_pair_rows.item())
+        ):
+            raise ValueError(
+                "token_pair_confidence row count does not equal "
+                "sum(num_tokens ** 2)"
+            )
+
+        pair_offset = torch.cat(
+            [
+                pair_count.new_zeros(1),
+                pair_count.cumsum(dim=0)[:-1],
+            ],
+            dim=0,
+        )
+
+        edge_source = edge_index[0]
+        edge_target = edge_index[1]
+
+        edge_batch = batch[edge_source]
+
+        if not torch.equal(
+                edge_batch,
+                batch[edge_target],
+        ):
+            raise ValueError(
+                "Found an edge connecting two different graphs"
+            )
+
+        token_source = atom_to_token_idx[edge_source]
+        token_target = atom_to_token_idx[edge_target]
+
+        edge_num_tokens = num_tokens[edge_batch]
+
+        invalid_token_mask = (
+                (token_source < 0)
+                | (token_target < 0)
+                | (token_source >= edge_num_tokens)
+                | (token_target >= edge_num_tokens)
+        )
+
+        if invalid_token_mask.any():
+            raise ValueError(
+                "atom_to_token_idx contains an invalid local token id"
+            )
+
+        flat_pair_index = (
+                pair_offset[edge_batch]
+                + token_source * edge_num_tokens
+                + token_target
+        )
+
+        return token_pair_confidence[
+            flat_pair_index
+        ]
+
     def forward(
             self,
             z: Tensor,
             t: Tensor,
             pos: Tensor,
             bond_index: Tensor,
-            # Modify_1
             pos_source: Tensor,
             edge_attr: Optional[Tensor] = None,
             node_attr: Optional[Tensor] = None,
             batch: Optional[Tensor] = None,
+            # Modify_4
+            atom_plddt: Optional[Tensor] = None,
+            atom_to_token_idx: Optional[Tensor] = None,
+            token_pair_confidence: Optional[Tensor] = None,
+            num_tokens: Optional[Tensor] = None,
     ):
         """
         前向传播：网络预测向量场 v_t
@@ -310,6 +453,36 @@ class BaseFlow(BaseModel):
         # )
         # 【核心修改】：直接使用传入的 pre-computed edge_index
         # 摒弃了原版消耗极大的 extend_bond_index
+        # Modify_4
+        if self.confidence_conditioning:
+            if node_attr is None:
+                raise ValueError(
+                    "confidence_conditioning=True requires node_attr"
+                )
+
+            if atom_plddt is None:
+                raise ValueError(
+                    "confidence_conditioning=True requires atom_plddt"
+                )
+
+            atom_plddt = atom_plddt.to(
+                dtype=node_attr.dtype,
+                device=node_attr.device,
+            ).view(-1, 1)
+
+            if atom_plddt.size(0) != node_attr.size(0):
+                raise ValueError(
+                    "atom_plddt and node_attr must have the "
+                    "same number of atoms"
+                )
+
+            node_attr = torch.cat(
+                [
+                    node_attr,
+                    atom_plddt.clamp(0.0, 1.0),
+                ],
+                dim=-1,
+            )
         # Modify_2
         if self.dynamic_graph:
             if edge_attr is None:
@@ -330,6 +503,33 @@ class BaseFlow(BaseModel):
         else:
             edge_index = bond_index
             edge_type = edge_attr
+        # Modify_4
+        if self.confidence_conditioning:
+            if edge_type is None:
+                raise ValueError(
+                    "confidence_conditioning=True requires edge_attr"
+                )
+
+            confidence_edge_attr = self.build_confidence_edge_attr(
+                edge_index=edge_index,
+                batch=batch,
+                atom_to_token_idx=atom_to_token_idx,
+                token_pair_confidence=token_pair_confidence,
+                num_tokens=num_tokens,
+            )
+
+            confidence_edge_attr = confidence_edge_attr.to(
+                dtype=edge_type.dtype,
+                device=edge_type.device,
+            )
+
+            edge_type = torch.cat(
+                [
+                    edge_type,
+                    confidence_edge_attr,
+                ],
+                dim=-1,
+            )
         v_t = self.network(
             z=z,
             t=t[batch],
@@ -364,6 +564,23 @@ class BaseFlow(BaseModel):
         clash_exclusion_index = batched_data[
             "clash_exclusion_index"
         ]
+        # Modify_4
+        atom_plddt = batched_data.get(
+            "atom_plddt",
+            None,
+        )
+        atom_to_token_idx = batched_data.get(
+            "atom_to_token_idx",
+            None,
+        )
+        token_pair_confidence = batched_data.get(
+            "token_pair_confidence",
+            None,
+        )
+        num_tokens = batched_data.get(
+            "num_tokens",
+            None,
+        )
         batch_size = batch.max().item() + 1 if batch is not None else 1
 
         # 【核心修改】：流匹配的起点不再是噪声，而是预测结构
@@ -405,12 +622,16 @@ class BaseFlow(BaseModel):
             z=z,
             t=t,
             pos=x_t,
-            # Modify_1
             pos_source=x0,
             bond_index=bond_index,
             edge_attr=edge_attr,
             node_attr=node_attr,
             batch=batch,
+            # Modify_4
+            atom_plddt=atom_plddt,
+            atom_to_token_idx=atom_to_token_idx,
+            token_pair_confidence=token_pair_confidence,
+            num_tokens=num_tokens,
         )
 
         # Modify_3
@@ -523,8 +744,12 @@ class BaseFlow(BaseModel):
             batch: Tensor,
             node_attr: Tensor = None,
             edge_attr: Tensor = None,
+            #Modify_4
+            atom_plddt: Tensor = None,
+            atom_to_token_idx: Tensor = None,
+            token_pair_confidence: Tensor = None,
+            num_tokens: Tensor = None,
             n_timesteps: int = 50,
-
             s_churn: float = 1.0,
             std: float = 1.0,
     ):
@@ -558,7 +783,6 @@ class BaseFlow(BaseModel):
                 dtype=source.dtype,
                 device=source.device,
             )
-
             residual = self(
                 z=z,
                 t=t,
@@ -568,6 +792,10 @@ class BaseFlow(BaseModel):
                 edge_attr=edge_attr,
                 node_attr=node_attr,
                 batch=batch,
+                atom_plddt=atom_plddt,
+                atom_to_token_idx=atom_to_token_idx,
+                token_pair_confidence=token_pair_confidence,
+                num_tokens=num_tokens,
             )
 
             return source + residual
@@ -584,16 +812,20 @@ class BaseFlow(BaseModel):
             delta_t = self._compute_delta_t(t_schedule, t=i)
 
             # 获取当前 t 下的向量场方向
+            #Modify_4
             v_t = self(
                 z=z,
                 t=t,
                 pos=x,
-                # Modify_1
                 pos_source=source,
                 bond_index=bond_index,
                 edge_attr=edge_attr,
                 node_attr=node_attr,
                 batch=batch,
+                atom_plddt=atom_plddt,
+                atom_to_token_idx=atom_to_token_idx,
+                token_pair_confidence=token_pair_confidence,
+                num_tokens=num_tokens,
             )
             # 沿着向量场前进一小步
             x = x + delta_t * v_t

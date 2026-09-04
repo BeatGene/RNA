@@ -297,8 +297,9 @@ class GatedEquivariantBlock(nn.Module):
         vec1_buffer = self.vec1_proj(v)
 
         # detach zero-entries to avoid NaN gradients during force loss backpropagation
-        vec1 = torch.zeros(
-            vec1_buffer.size(0), vec1_buffer.size(2), device=vec1_buffer.device
+        vec1 = vec1_buffer.new_zeros(
+            vec1_buffer.size(0),
+            vec1_buffer.size(2),
         )
 
         # mask = (vec1_buffer != 0).view(vec1_buffer.size(0), -1).any(dim=1)

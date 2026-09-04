@@ -31,8 +31,10 @@ model_args:
     cutoff_lower: 0.0
     cutoff_upper: 4.5
     max_z: 20
-    node_attr_dim: 0
-    edge_attr_dim: 0
+    node_attr_dim: 674
+    edge_attr_dim: 7
+    num_edge_types: 7
+    confidence_conditioning: true
     attn_activation: silu
     num_heads: 8
     distance_influence: both

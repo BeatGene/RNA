@@ -12,6 +12,8 @@ edge_attr目前打算根据边的种类进行独热编码，边的种类与构�
 ## 当前图不是描述中的“RNA 化学图”
 当前生成图的脚本是之前版本的脚本，现在生成应当1.永久保留共价键 2.区分共价键与磷酸二酯键 3.保留原子所属残基以及具体的atom_name chain_id不用，因为目前数据集只专注于一条链的情况
 
+
+**当前模型已经通过第一阶段的CPU/GPU工程可运行性验证，可以进入.pt数据生成阶段。下一步最重要的是明确并验证.pt数据契约，然后用少量真实样本做过拟合测试。**
 # 模型修改
 
 ## 网络显式看到原始预测结构 Modify_1  DONE
@@ -77,51 +79,38 @@ sequence-neighbor graph；
 
   以后生成 .pt 时可以使用：
 
-  from protenix.data.core import ccd
+`from protenix.data.core import ccd
 
-
-  def get_rna_bond_template(residue_name):
-      component = ccd.get_component_atom_array(
-          ccd_code=residue_name,
-          keep_leaving_atoms=False,
-          keep_hydrogens=False,
-      )
-
-      if component is None or component.bonds is None:
-          raise ValueError(
-              f"Cannot obtain CCD bonds for {residue_name}"
-          )
-
-      atom_names = component.atom_name.tolist()
-      bond_array = component.bonds.as_array()
-      # bond_array 每行为 [atom_index_1, atom_index_2, bond_type]
-
-      bond_template = []
-
-      for atom_index_1, atom_index_2, bond_type in bond_array:
-          bond_template.append(
-              (
-                  atom_names[atom_index_1],
-                  atom_names[atom_index_2],
-                  int(bond_type),
-              )
-          )
-
-      return bond_template
+def get_rna_bond_template(residue_name):
+    component = ccd.get_component_atom_array(ccd_code=residue_name, keep_leaving_atoms=False, keep_hydrogens=False,)
+    if component is None or component.bonds is None:
+        raise ValueError(
+            f"Cannot obtain CCD bonds for {residue_name}"
+        )
+    atom_names = component.atom_name.tolist()
+    bond_array = component.bonds.as_array()
+    # bond_array 每行为 [atom_index_1, atom_index_2, bond_type]
+    bond_template = []
+    for atom_index_1, atom_index_2, bond_type in bond_array:
+        bond_template.append(
+            (
+                atom_names[atom_index_1],
+                atom_names[atom_index_2],
+                int(bond_type),
+            )
+        )
+    return bond_template`
 
   标准残基直接读取：
 
-  rna_bond_templates = {
-      residue_name: get_rna_bond_template(residue_name)
-      for residue_name in ["A", "C", "G", "U"]
-  }
+rna_bond_templates = { residue_name: get_rna_bond_template(residue_name) for residue_name in ["A", "C", "G", "U"]}
 
   注意两点：
 
   - CCD 主要提供单个核苷酸内部的键。
   - 相邻残基之间的 O3'(i)—P(i+1) 磷酸二酯键仍需根据 residue_index 显式加入。
 
-    安装时要让 torch_cluster 与服务器的 PyTorch/CUDA 版本严格匹配，不建议直接随意使用一个不匹配的 wheel。
+  安装时要让 torch_cluster 与服务器的 PyTorch/CUDA 版本严格匹配，不建议直接随意使用一个不匹配的 wheel。
 
   建议统一原子名称：
 
@@ -134,11 +123,7 @@ sequence-neighbor graph；
   i -> j
   j -> i
 
-  这部分应当在生成 .pt 文件时完成，而不是在模型中根据距离猜测。
-
-  ———
-
-  #### 2. sequence-neighbor graph->生成.pt文件时生成
+2.sequence-neighbor graph ->生成.pt时生成
 
   它表示“序列上相邻”，并不等同于化学键。
 
@@ -147,22 +132,18 @@ sequence-neighbor graph；
   因此可以给相邻残基的代表原子增加 shortcut：
 
   C4'(i) ↔ C4'(i+1)
-  C4'(i) ↔ C4'(i+2)   # 可选
 
   不建议把相邻两个残基的全部原子两两相连，边数会非常大。
 
   第一版建议：
-
   sequence_window = 1
   anchor_atom = "C4'"
 
   即只连接相邻残基的 C4' 原子。
 
-  ———
+3.动态 radius graph->每一步实时生成
 
-  #### 3. 动态 radius graph->每一步实时生成
-
-  表示当前 flow 状态 x_t 中的空间近邻：
+  表示当前flow状态x_t中的空间近邻：
 
   distance(x_t[i], x_t[j]) < radius
 
@@ -185,13 +166,12 @@ sequence-neighbor graph；
 
   都会基于更新后的 x 构图。因此 sample() 本身不需要额外改循环。
 
-  ———
 
-  #### 4. residue-level base-pair/stacking/global graph->第二阶段目标
+4.residue-level base-pair/stacking/global graph->第二阶段目标
 
   这里节点不再是原子，而是核苷酸残基。
 
-  ##### Base-pair 边
+  **Base-pair 边**
 
   表示可能形成碱基配对的两个残基，例如：
 
@@ -209,7 +189,7 @@ sequence-neighbor graph；
 
   注意：不能训练时根据 native 结构构图、推理时却没有 native，这会造成标签泄漏。
 
-  ##### Stacking 边
+  **Stacking 边**
 
   表示碱基堆积。通常根据：
 
@@ -219,7 +199,7 @@ sequence-neighbor graph；
 
   生成候选边。
 
-  ##### Global 边
+  **Global 边**
 
   用于长距离通信。例如连接：
 
@@ -230,32 +210,22 @@ sequence-neighbor graph；
 
   这种 dilated sequence graph 能让长 RNA 的远距离残基在较少层数内通信。
 
-  ———
-
-  ### 二、建议的新 .pt 数据格式
-
-  你当前的数据生成代码只有原子坐标和 radius graph，无法可靠生成 sequence/residue graph。新版本至少需要保存：
-
-  {
-      "pos": pos,
-      "pos_pred": pos_pred,
-      "atomic_numbers": atomic_numbers,
-
-      # 原子所属残基，范围 0 ... num_residues-1
-      "residue_index": residue_index,
-
-      # 建议保存整数编码，PyG batching 更方便
-      "atom_name_id": atom_name_id,
-
-      # 静态图：化学边 + sequence shortcut + 静态 interaction candidates
-      "edge_index": edge_index,
-
-      # 每条静态边的类型
-      "edge_attr": edge_attr,
-
-      "node_attr": node_attr,
-      "sequence": sequence,
-  }
+{
+    "pos": pos,
+    "pos_pred": pos_pred,
+    "atomic_numbers": atomic_numbers,
+    "sequence": str,
+    # 原子所属残基，范围 0 ... num_residues-1
+    "residue_index": residue_index,
+    #建议保存整数编码，PyG batching 更方便 # 必须使用整个数据集统一的 atom-name 编码表
+    "atom_name_id": atom_name_id,
+    # 静态图：化学边 + sequence shortcut + 静态 interaction candidates
+    "edge_index": edge_index,
+    # 每条静态边的类型
+    "edge_attr": edge_attr,
+    "node_attr": node_attr,
+    "sequence": sequence,
+}
 
   边类型建议用 one-hot，而不是用一个整数直接输入网络：
 
@@ -275,77 +245,19 @@ sequence-neighbor graph；
   ──────  ─────────────────────
       6    global/dilated
     
-你当前不使用后三类边也没关系，静态 .pt 中第 4～6 列保持为零即可。提前保留这三列可以避免以后增加边类型时改变模型输入维度。
+edge_attr.shape == [num_edges, 7]
 
-  因此：
+atom_name_id 必须采用全数据集固定映射，例如：
 
-  edge_attr.shape == [num_edges, 7]
-
-  如果用单个整数 0～6 直接作为连续特征，网络会错误地认为类型 6 在数值上“大于”类型 1，所以应该使用 one-hot 或 embedding。
-#### 6. 当前阶段的 .pt 数据要求
-
-  按你目前“不加入 base-pair/stacking/global 图”的计划，建议最终生成：
-
-  {
-      # 必需坐标，二者原子顺序必须完全一致
-      "pos": FloatTensor[N, 3],
-      "pos_pred": FloatTensor[N, 3],
-
-      "atomic_numbers": LongTensor[N],
-      "sequence": str,
-
-      # 建议从 0 开始、连续编号
-      "residue_index": LongTensor[N],
-
-      # 必须使用整个数据集统一的 atom-name 编码表
-      "atom_name_id": LongTensor[N],
-
-      # 只保存永久静态边
-      "edge_index": LongTensor[2, E_static],
-
-      # 7 维 one-hot；目前只允许第 0、1、2 列为 1
-      "edge_attr": FloatTensor[E_static, 7],
-
-      "node_attr": FloatTensor[N, node_attr_dim],
-  }
-
-  静态边要求：
-
-  - 双向；
-  - 无 self-loop；
-  - 无重复边；
-  - 索引范围在 [0, N)；
-  - edge_attr.shape[0] == edge_index.shape[1]。
-
-  目前静态 one-hot 分别为：
-
-   核苷酸内部共价键
-  [1, 0, 0, 0, 0, 0, 0]
-
-   相邻残基 O3'—P 磷酸二酯键
-  [0, 1, 0, 0, 0, 0, 0]
-
-  相邻残基 C4'—C4' sequence edge
-  [0, 0, 1, 0, 0, 0, 0]
-
-  .pt 中不要保存 radius graph。第 3 列 dynamic spatial edge 由模型在运行时生成。
-
-  atom_name_id 必须采用全数据集固定映射，例如：
-
-  ATOM_NAME_TO_ID = {
-      "P": 0,
-      "OP1": 1,
-      "OP2": 2,
-      "O5'": 3,
-      "C5'": 4,
-      "C4'": 5,
-      # ...
-  }
-
-  不能每个样本单独按照出现顺序编号，否则同一个 ID 在不同 RNA 中会代表不同原子。
-
-  当前 EuclideanDataset 还没有把 residue_index 和 atom_name_id 放入返回的 Data。这不影响当前版本，因为静态边已经在 .pt 中构建好，模型尚
-  未直接使用这两个字段；以后加入 atom-role embedding 或 residue-level network 时，再同步增加即可。
+ATOM_NAME_TO_ID = {
+    "P": 0,
+    "OP1": 1,
+    "OP2": 2,
+    "O5'": 3,
+    "C5'": 4,
+    "C4'": 5,
+    # ...
+}
 
   ##### 五、base-pair/stacking 图怎样接入当前模型
 
@@ -385,16 +297,7 @@ sequence-neighbor graph；
 
   因此不建议和动态 radius graph 一次性一起改。
 
-## 自由Cartesian原子流没有化学约束 & stochastic path未必适合当前确定性任务 Modify_3 DONE->PT
-(\sigma_t=\sigma\sqrt{t(1-t)}) 的导数在两端趋于无穷。当前采样到 1e-4/0.9999 附近时，noise velocity 可明显大于真实 correction。
-
-建议首先消融：
-  - sigma=0 的 deterministic paired rectified flow；
-  - 当前 sigma=0.1；
-  - 有界导数的 (\sigma t(1-t))。
-
-  如果每个 pos_pred 只有一个 native，必须加入“一步 residual EGNN”基线，否则 reviewer 很容易质疑为什么需要 50-step flow，
-  而不是直接预测 pos-pos_pred。
+## 增加化学约束/LOSS & 三种模式 Modify_3 DONE->PT
 
   ### 建议加入的四种几何 loss
 
@@ -404,8 +307,6 @@ sequence-neighbor graph；
 
   edge_attr[:, 0]：核苷酸内部共价键
   edge_attr[:, 1]：磷酸二酯键
-
-  不能把 sequence edge 和 dynamic radius edge 当成化学键。
 
   设理想键长为 (l_{ij})：
 
@@ -460,7 +361,7 @@ sequence-neighbor graph；
 
   第一版可以从 native 结构计算 target；以后再换成标准模板值。
 
-  ####Steric clash loss
+  #### Steric clash loss
 
   对非键合原子对计算：
 
@@ -601,7 +502,7 @@ sequence-neighbor graph；
 
   不建议每个样本直接把自己的 native 键长作为输入；可以将训练集统计得到的全局模板作为 target。
 
-  ### 6. Steric clash loss 具体怎么算
+  ### Steric clash loss 具体怎么算
 
   #### 输入
 
@@ -785,319 +686,6 @@ sequence-neighbor graph；
   - 不强迫碱基朝向某个固定方向；
   - 只约束碱基不要变成非平面。
 
-  ### 8. 是否意味着直接预测 pos-pos_pred，不再用ODE
-
-  不是自动意味着，而是现在有两条都应该测试的路线。
-
-  #### 路线A：一步 residual baseline
-
-  训练：
-
-  x = x0_centered
-  target = x1_centered - x0_centered
-
-  delta = model(
-      pos=x,
-      pos_source=x,
-      t=zeros,
-      ...
-  )
-
-  loss = MSE(delta, target)
-
-  推理：
-
-  pos_refined = x0_centered + delta
-
-  不需要ODE，也不需要时间。
-
-  #### 路线B：deterministic flow
-
-  训练随机采样 (t)：
-
-  x_t = (1 - t) * x0_centered + t * x1_centered
-  u_t = x1_centered - x0_centered
-
-  推理仍然进行ODE：
-
-  x = x0_centered
-
-  for i in range(n_timesteps):
-      v_t = model(x, t_i)
-      x = x + delta_t * v_t
-
-  但步数未必需要50，可以实验1、5、10、20、50步。
-
-  ### #我的建议
-
-  不要现在就把当前 flow 改成只有一步。应该保留两个独立实验：
-
-  实验1：专门训练的一步 residual model
-  实验2：sigma=0 的 deterministic flow model
-
-  如果实验1不弱于实验2，就采用一步模型，速度更快、逻辑更简单。
-
-  如果多步 deterministic flow 明显更好，就说明模型确实在利用“根据中间结构反复纠错”的能力，此时可以合理保留5～20步，而未必需要50步。
-
-
- 你的方案可以整理成两个正交开关：
-
-  training_objective:
-      flow       多步 deterministic/stochastic flow
-      residual   一步直接预测 pos-pos_pred
-
-  flow_path:
-      deterministic
-      stochastic
-
-  这样可以公平比较：
-
-  1. 一步 residual regression；
-  2. deterministic flow 的 1/5/10/20/50 步；
-  3. stochastic flow 的不同步数。
-
-  ## 一、回答第3个问题
-
-  “把 (t) 固定为0”指的是：为一步 residual 模型单独改变训练数据构造，而不是只在推理时把一个随机 (t) 训练的 flow 模型强行设置成 (t=0)。
-
-  ### 当前 flow 训练
-
-  当前模型训练时：
-
-  t = self.sample_time(...)
-  x_t = (1 - t) * x0 + t * x1
-  target = x1 - x0
-
-  所以模型见过的是整个 (t\in(0,1)) 的中间结构分布。
-
-  ### 一步 residual 训练
-
-  一步 residual 必须训练成：
-
-  t = 0
-  x_t = x0
-  target = x1 - x0
-
-  也就是整个训练过程只学习：
-
-  [
-  v_\theta(x_0,0)=x_1-x_0
-  ]
-
-  推理才是：
-
-  x1_estimate = x0 + model(x0, t=0)
-
-  因此下面两者不完全相同：
-
-  A. 随机 t 训练的 flow 模型，推理时只调用 t=0 一次
-  B. 始终在 t=0 专门训练的一步 residual 模型
-
-  B 才是公平的一步 residual baseline。
-
-  ———
-
-  # 二、增加两个模式参数
-
-  在 BaseFlow.__init__() 增加：
-
-  training_objective: str = "flow",
-  flow_path: str = "deterministic",
-
-  保留：
-
-  sigma: float = 0.1,
-
-  其中：
-
-  training_objective="flow"
-  flow_path="deterministic"
-
-  表示确定性 flow。
-
-  training_objective="flow"
-  flow_path="stochastic"
-  sigma=0.1
-
-  表示带噪 flow。
-
-  training_objective="residual"
-
-  表示一步 residual；此时 flow_path 和 sigma 不参与训练路径。
-
-  初始化时增加：
-
-  if training_objective not in {"flow", "residual"}:
-      raise ValueError(
-          f"Unknown training_objective: {training_objective}"
-      )
-
-  if flow_path not in {"deterministic", "stochastic"}:
-      raise ValueError(
-          f"Unknown flow_path: {flow_path}"
-      )
-
-  if flow_path == "stochastic" and sigma <= 0:
-      raise ValueError(
-          "stochastic flow requires sigma > 0"
-      )
-
-  self.training_objective = training_objective
-  self.flow_path = flow_path
-
-  ## 修改噪声函数
-
-  由：
-
-  def sigma_t(self, t):
-      return self.sigma * torch.sqrt(t * (1 - t))
-
-  def sigma_dot_t(self, t):
-      return self.sigma * 0.5 * (1 - 2 * t) / torch.sqrt(t * (1 - t))
-
-  改为：
-
-  def sigma_t(self, t):
-      if self.flow_path == "deterministic":
-          return torch.zeros_like(t)
-
-      return self.sigma * torch.sqrt(t * (1 - t))
-
-
-  def sigma_dot_t(self, t):
-      if self.flow_path == "deterministic":
-          return torch.zeros_like(t)
-
-      return (
-          self.sigma
-          * 0.5
-          * (1 - 2 * t)
-          / torch.sqrt(t * (1 - t))
-      )
-
-  这样切换：
-
-  flow_path: deterministic
-
-  就完全关闭噪声，而不用删除 stochastic 代码。
-
-  ## 修改噪声采样
-
-  在 sample_conditional_pt() 中，由：
-
-  eps = torch.randn_like(x1)
-  eps = center_of_mass(eps, batch=batch)
-
-  改为：
-
-  if self.flow_path == "deterministic":
-      eps = torch.zeros_like(x1)
-  else:
-      eps = torch.randn_like(x1)
-      eps = center_of_mass(eps, batch=batch)
-
-  并让 compute_conditional_vector_field() 返回 eps：
-
-  return x_t, u_t, eps
-
-  这是为了将来 stochastic 模式下也能构造无噪声的预测终点。
-
-  ———
-
-  # 三、修改训练数据构造
-
-  在 generic_step() 中，原来的：
-
-  t = self.sample_time(
-      num_samples=batch_size,
-      stage=stage,
-  )
-
-  x_t, u_t = self.compute_conditional_vector_field(
-      x0=x0,
-      x1=pos,
-      t=t,
-      batch=batch,
-  )
-
-  改为：
-
-  x0_centered = center_of_mass(x0, batch=batch)
-  x1_centered = center_of_mass(pos, batch=batch)
-
-  if self.training_objective == "residual":
-      t = torch.zeros(
-          batch_size,
-          1,
-          dtype=x0.dtype,
-          device=x0.device,
-      )
-
-      x_t = x0_centered
-      u_t = x1_centered - x0_centered
-      eps = torch.zeros_like(x_t)
-
-  else:
-      t = self.sample_time(
-          num_samples=batch_size,
-          stage=stage,
-      )
-
-      x_t, u_t, eps = (
-          self.compute_conditional_vector_field(
-              x0=x0,
-              x1=pos,
-              t=t,
-              batch=batch,
-          )
-      )
-
-  网络调用保持：
-
-  v_t = self(
-      z=z,
-      t=t,
-      pos=x_t,
-      pos_source=x0,
-      bond_index=bond_index,
-      edge_attr=edge_attr,
-      node_attr=node_attr,
-      batch=batch,
-  )
-
-  ———
-
-  # 四、构造用于几何 loss 的预测终点
-
-  网络输出后增加：
-
-  t_atom = unsqueeze_like(t[batch], x_t)
-
-  if self.training_objective == "residual":
-      pos_estimate = x0_centered + v_t
-
-  elif self.flow_path == "deterministic":
-      pos_estimate = x_t + (1 - t_atom) * v_t
-
-  else:
-      clean_displacement = (
-          v_t
-          - self.sigma_dot_t(t_atom) * eps
-      )
-      pos_estimate = x0_centered + clean_displacement
-
-  含义：
-
-  - residual：直接预测完整位移；
-  - deterministic flow：从当前 (x_t) 估计终点；
-  - stochastic flow：先从速度中减去已知的噪声速度。
-
-  几何 loss 都计算在 pos_estimate 上。
-
-  ———
-
-  # 五、键长 loss
-
   为了不与现有作为完整静态图的 bond_index 混淆，建议 .pt 使用：
 
   geometry_bond_index: LongTensor[2, E_bond]
@@ -1110,520 +698,42 @@ sequence-neighbor graph；
 
   最好每根键只保存一次，不保存双向副本。
 
-  在 Code_Flow_matching/etflow/models/loss.py 增加：
+当前第一版建议使用 Bondi 半径，只处理 RNA 常见的 C/N/O/P/S：
 
-  def bond_length_loss(
-      prediction: torch.Tensor,
-      geometry_bond_index: torch.Tensor,
-      ideal_bond_length: torch.Tensor,
-  ) -> torch.Tensor:
-      if geometry_bond_index.numel() == 0:
-          return prediction.sum() * 0.0
+BONDI_VDW_RADII = {
+    6: 1.70,   # C
+    7: 1.55,   # N
+    8: 1.52,   # O
+    15: 1.80,  # P
+    16: 1.80,  # S
+}
 
-      atom_i = geometry_bond_index[0]
-      atom_j = geometry_bond_index[1]
+### 生成逻辑
 
-      predicted_bond_length = torch.linalg.vector_norm(
-          prediction[atom_i] - prediction[atom_j],
-          dim=-1,
-      )
+在以后生成 .pt 时可以使用：构建clash_index(要去除掉1-2共价键和1-3)
 
-      ideal_bond_length = ideal_bond_length.to(
-          dtype=prediction.dtype,
-          device=prediction.device,
-      ).view(-1)
+from itertools import combinations
 
-      return (
-          predicted_bond_length
-          - ideal_bond_length
-      ).square().mean()
+import torch
 
-  在 Dataset 中读取：
-
-  geometry_bond_index = data["geometry_bond_index"]
-  ideal_bond_length = data["ideal_bond_length"]
-
-  并放进 Data(...)：
-
-  geometry_bond_index=geometry_bond_index,
-  ideal_bond_length=ideal_bond_length,
-
-  由于字段名包含 index，PyG 通常会在 batching 时自动增加原子索引偏移。
-
-  ———
-
-  # 六、Steric clash loss
-
-  ## 采用哪套 van der Waals 半径
-
-  当前第一版建议使用 Bondi 半径，只处理 RNA 常见的 C/N/O/P/S：
-
-  BONDI_VDW_RADII = {
-      6: 1.70,   # C
-      7: 1.55,   # N
-      8: 1.52,   # O
-      15: 1.80,  # P
-      16: 1.80,  # S
-  }
-
-  暂时不对 Mg、K 等离子计算这个 clash loss。离子相互作用不能简单按照普通有机原子的 steric clash 处理。
-
-  在 BaseFlow.__init__() 中创建 buffer：
-
-  vdw_radius_table = torch.zeros(max_z)
-
-  for atomic_number, radius in {
-      6: 1.70,
-      7: 1.55,
-      8: 1.52,
-      15: 1.80,
-      16: 1.80,
-  }.items():
-      if atomic_number < max_z:
-          vdw_radius_table[atomic_number] = radius
-
-  self.register_buffer(
-      "vdw_radius_table",
-      vdw_radius_table,
-  )
-
-  变量名使用 vdw_radius_table，不会和当前 edge_weight、cutoff 等变量混淆。
-
-  ## clash loss 代码
-
-  在 loss.py 中增加：
-
-  from etflow.models.utils import build_dynamic_radius_graph
-
-
-  def steric_clash_loss(
-      prediction: torch.Tensor,
-      atomic_numbers: torch.Tensor,
-      batch: torch.Tensor,
-      geometry_bond_index: torch.Tensor,
-      vdw_radius_table: torch.Tensor,
-      clash_cutoff: float = 4.5,
-      clash_distance_scale: float = 0.8,
-      clash_max_num_neighbors: int = 64,
-  ) -> torch.Tensor:
-      clash_edge_index = build_dynamic_radius_graph(
-          pos=prediction,
-          batch=batch,
-          cutoff=clash_cutoff,
-          max_num_neighbors=clash_max_num_neighbors,
-      )
-
-      if clash_edge_index.numel() == 0:
-          return prediction.sum() * 0.0
-
-      atom_i = clash_edge_index[0]
-      atom_j = clash_edge_index[1]
-
-      # 双向边只保留一次。
-      unique_pair_mask = atom_i < atom_j
-      atom_i = atom_i[unique_pair_mask]
-      atom_j = atom_j[unique_pair_mask]
-
-      num_nodes = prediction.size(0)
-
-      candidate_pair_id = atom_i * num_nodes + atom_j
-
-      # geometry_bond_index 可能方向不固定，先转换为无向pair。
-      bond_atom_i = torch.minimum(
-          geometry_bond_index[0],
-          geometry_bond_index[1],
-      )
-      bond_atom_j = torch.maximum(
-          geometry_bond_index[0],
-          geometry_bond_index[1],
-      )
-      bonded_pair_id = (
-          bond_atom_i * num_nodes
-          + bond_atom_j
-      )
-
-      nonbonded_mask = ~torch.isin(
-          candidate_pair_id,
-          bonded_pair_id,
-      )
-
-      atom_i = atom_i[nonbonded_mask]
-      atom_j = atom_j[nonbonded_mask]
-
-      if atom_i.numel() == 0:
-          return prediction.sum() * 0.0
-
-      atom_radius = vdw_radius_table[
-          atomic_numbers.view(-1)
-      ]
-
-      supported_atom_mask = (
-          (atom_radius[atom_i] > 0)
-          & (atom_radius[atom_j] > 0)
-      )
-
-      atom_i = atom_i[supported_atom_mask]
-      atom_j = atom_j[supported_atom_mask]
-
-      if atom_i.numel() == 0:
-          return prediction.sum() * 0.0
-
-      predicted_distance = torch.linalg.vector_norm(
-          prediction[atom_i] - prediction[atom_j],
-          dim=-1,
-      )
-
-      minimum_distance = clash_distance_scale * (
-          atom_radius[atom_i]
-          + atom_radius[atom_j]
-      )
-
-      overlap = torch.relu(
-          minimum_distance - predicted_distance
-      )
-
-      return overlap.square().mean()
-
-  更严格的版本还需要排除 1–3 原子对。建议生成 .pt 时额外保存：
-
-  clash_exclusion_index
-
-  它包含：
-
-  - 1–2 共价原子对；
-  - 1–3 键角原子对。
-
-  第一版只排除直接成键原子可能把部分正常的 1–3 接触误判成 clash，所以正式训练前最好补上该字段。
-
-  ———
-
-  # 七、碱基平面 loss
-
-  ## 固定 atom-name 编码
-
-  atom_name_id 必须使用全数据集统一映射。
-
-  碱基环原子名称集合：
-
-  BASE_RING_ATOM_NAMES = {
-      "N9", "C8", "N7", "C5", "C6",
-      "N1", "C2", "N3", "C4",
-  }
-
-  根据你的 ATOM_NAME_TO_ID 得到：
-
-  base_atom_name_ids = torch.tensor(
-      [
-          ATOM_NAME_TO_ID[name]
-          for name in BASE_RING_ATOM_NAMES
-      ],
-      dtype=torch.long,
-  )
-
-  可以像 vdW 半径一样注册为 buffer：
-
-  self.register_buffer(
-      "base_atom_name_ids",
-      base_atom_name_ids,
-  )
-
-  ## plane loss 代码
-
-  在 loss.py 增加：
-
-  def base_plane_loss(
-      prediction: torch.Tensor,
-      residue_index: torch.Tensor,
-      atom_name_id: torch.Tensor,
-      batch: torch.Tensor,
-      base_atom_name_ids: torch.Tensor,
-  ) -> torch.Tensor:
-      if batch is None:
-          batch = torch.zeros(
-              prediction.size(0),
-              dtype=torch.long,
-              device=prediction.device,
-          )
-
-      base_atom_mask = torch.isin(
-          atom_name_id.view(-1),
-          base_atom_name_ids,
-      )
-
-      # 不同RNA都可能存在residue_index=0，
-      # 因此必须结合batch区分残基。
-      residue_key = torch.stack(
-          [
-              batch.view(-1),
-              residue_index.view(-1),
-          ],
-          dim=1,
-      )
-
-      _, residue_group = torch.unique(
-          residue_key,
-          dim=0,
-          return_inverse=True,
-      )
-
-      plane_loss_list = []
-
-      for group_index in torch.unique(residue_group):
-          atom_mask = (
-              (residue_group == group_index)
-              & base_atom_mask
-          )
-
-          if atom_mask.sum() < 3:
-              continue
-
-          base_position = prediction[atom_mask]
-          base_position = (
-              base_position
-              - base_position.mean(
-                  dim=0,
-                  keepdim=True,
-              )
-          )
-
-          covariance = (
-              base_position.transpose(0, 1)
-              @ base_position
-              / base_position.size(0)
-          )
-
-          eigenvalues = torch.linalg.eigvalsh(
-              covariance
-          )
-
-          plane_loss_list.append(
-              eigenvalues[0].clamp_min(0)
-          )
-
-      if not plane_loss_list:
-          return prediction.sum() * 0.0
-
-      return torch.stack(plane_loss_list).mean()
-
-  最小特征值就是碱基原子沿“最佳拟合平面法向方向”的平均平方偏离。
-
-  ———
-
-  # 八、在 generic_step() 中组合 loss
-
-  导入：
-
-  from etflow.models.loss import (
-      base_plane_loss,
-      batchwise_l2_loss,
-      bond_length_loss,
-      steric_clash_loss,
-  )
-
-  读取新数据：
-
-  geometry_bond_index = batched_data[
-      "geometry_bond_index"
-  ]
-  ideal_bond_length = batched_data[
-      "ideal_bond_length"
-  ]
-  residue_index = batched_data["residue_index"]
-  atom_name_id = batched_data["atom_name_id"]
-
-  计算：
-
-  flow_matching_loss = batchwise_l2_loss(
-      v_t,
-      u_t,
-      batch=batch,
-      reduce="mean",
-  )
-
-  bond_loss = bond_length_loss(
-      prediction=pos_estimate,
-      geometry_bond_index=geometry_bond_index,
-      ideal_bond_length=ideal_bond_length,
-  )
-
-  clash_loss = steric_clash_loss(
-      prediction=pos_estimate,
-      atomic_numbers=z,
-      batch=batch,
-      geometry_bond_index=geometry_bond_index,
-      vdw_radius_table=self.vdw_radius_table,
-  )
-
-  plane_loss = base_plane_loss(
-      prediction=pos_estimate,
-      residue_index=residue_index,
-      atom_name_id=atom_name_id,
-      batch=batch,
-      base_atom_name_ids=self.base_atom_name_ids,
-  )
-
-  loss = (
-      flow_matching_loss
-      + self.bond_loss_weight * bond_loss
-      + self.clash_loss_weight * clash_loss
-      + self.plane_loss_weight * plane_loss
-  )
-
-  建议新增初始化参数：
-
-  bond_loss_weight: float = 0.1,
-  clash_loss_weight: float = 0.01,
-  plane_loss_weight: float = 0.1,
-
-  这只是初始实验值。正式选择时应观察每项原始 loss 和梯度量级，不能只比较数字大小。
-
-  ———
-
-  # 九、修改 sample() 支持一步 residual 和多步 flow
-
-  首先正确计算 batch size：
-
-  batch_size = (
-      int(batch.max().item()) + 1
-      if batch is not None
-      else 1
-  )
-
-  ### residual 分支
-
-  在 ODE 循环前增加：
-
-  if self.training_objective == "residual":
-      t = torch.zeros(
-          batch_size,
-          1,
-          dtype=source.dtype,
-          device=source.device,
-      )
-
-      residual = self(
-          z=z,
-          t=t,
-          pos=source,
-          pos_source=source,
-          bond_index=bond_index,
-          edge_attr=edge_attr,
-          node_attr=node_attr,
-          batch=batch,
-      )
-
-      return source + residual
-
-  ### flow 分支
-
-  保留当前 ODE，但建议把当前按原子构造 t：
-
-  t = t_schedule[i].repeat(x.size(0))
-  t = unsqueeze_like(t, x)
-
-  改为按 batch 构造：
-
-  t = torch.full(
-      (batch_size, 1),
-      fill_value=t_schedule[i].item(),
-      dtype=x.dtype,
-      device=x.device,
-  )
-
-  因为 BaseFlow.forward() 内部已经执行：
-
-  t=t[batch]
-
-  所以它期望 t 是每个 RNA 一个时间，而不是每个原子一个时间。
-
-  之后通过：
-
-  n_timesteps=1
-  n_timesteps=5
-  n_timesteps=10
-  n_timesteps=20
-  n_timesteps=50
-
-  比较 deterministic flow 步数。
-
-  ## 最终实验矩阵
-
-  建议至少训练三个独立模型：
-
-  模型A
-  training_objective=residual
-  一步推理
-
-  模型B
-  training_objective=flow
-  flow_path=deterministic
-  分别测试1/5/10/20/50步
-
-  模型C
-  training_objective=flow
-  flow_path=stochastic
-  sigma=0.1
-  分别测试10/20/50步
-
-  其中“模型B使用1步ODE”和“模型A一步residual”必须分开报告，因为它们架构调用形式相似，但训练分布不同。
- ## 3. clash_exclusion_index 的含义和格式
-
-  推荐格式：
-
-  clash_exclusion_index: LongTensor[2, E_exclusion]
-
-  例如：
-
-  tensor([
-      [0, 1, 0],
-      [1, 2, 2],
-  ])
-
-  表示排除：
-
-  (0, 1)  1–2
-  (1, 2)  1–2
-  (0, 2)  1–3
-
-  建议每个无向原子对只保存一次，并满足：
-
-  clash_exclusion_index[0] < clash_exclusion_index[1]
-
-  PyG 会自动对名称中包含 index 的二维索引进行 batch 偏移，因此这个名称可以正常批处理。
-
-  ### 生成逻辑
-
-  在以后生成 .pt 时可以使用：
-
-  from itertools import combinations
-
-  import torch
-
-
-  def build_clash_exclusion_index(
-          geometry_bond_index: torch.Tensor,
-          num_atoms: int,
-  ) -> torch.Tensor:
+def build_clash_exclusion_index(
+    geometry_bond_index: torch.Tensor,
+    num_atoms: int,
+) -> torch.Tensor:
       neighbors = [set() for _ in range(num_atoms)]
       one_two_pairs = set()
-
       for atom_i, atom_j in (
           geometry_bond_index.detach().cpu().t().tolist()
       ):
           atom_i = int(atom_i)
           atom_j = int(atom_j)
-
           if atom_i == atom_j:
               continue
-
           pair = tuple(sorted((atom_i, atom_j)))
           one_two_pairs.add(pair)
-
           neighbors[atom_i].add(atom_j)
           neighbors[atom_j].add(atom_i)
-
       one_three_pairs = set()
-
       for center_atom in range(num_atoms):
           for atom_i, atom_j in combinations(
                   sorted(neighbors[center_atom]),
@@ -1632,14 +742,11 @@ sequence-neighbor graph；
               one_three_pairs.add(
                   tuple(sorted((atom_i, atom_j)))
               )
-
       exclusion_pairs = sorted(
           one_two_pairs | one_three_pairs
       )
-
       if not exclusion_pairs:
           return torch.empty((2, 0), dtype=torch.long)
-
       return torch.tensor(
           exclusion_pairs,
           dtype=torch.long,
@@ -1726,11 +833,55 @@ sequence-neighbor graph；
   residue_index: LongTensor[N]
 
   对于多链 RNA，residue_index 必须在单个 .pt 内唯一。不要直接使用可能在不同链重复的 PDB residue number；应重新编码为 0, 1, ..., R-1。
+
+
 # 最值得做的模型创新
   我建议把最终模型定义为：
   > Confidence-Gated Interaction-Aware Residual Flow for RNA Refinement
 
-  ## 创新一：prediction-conditioned residual flow
+唯一需要记住的是：CUDA float32 下存在 scatter 非确定性，所以固定随机种子也不保证逐位相同。它通常不妨碍训练，但如果以后 要求严格复现实验，需要专门处理确定性图聚合算子，并记录 CUDA、PyTorch、PyG 与 torch_cluster 版本。
+  ## 创新一：prediction-conditioned residual flow 
+###计划在生成 .pt 时
+    把 atom_role 正确编码并拼入 node_attr，且最终让 node_attr_dim 等于实际总维度->PT 
+    需要注意不要把无序类别 ID 直接当连续数值使用，例如：atom_role = 17.0 模型可能错误理解为角色 17 比角色 3“更大”。建议采用：
+  - atom-role one-hot；或
+  - atom_role_id + nn.Embedding
+
+
+4. 是的，A/C/G/U/其他类别信息也可以直接拼进 node_attr。
+  最简单的是使用 5 维 one-hot：
+
+  A     = [1, 0, 0, 0, 0]
+  C     = [0, 1, 0, 0, 0]
+  G     = [0, 0, 1, 0, 0]
+  U     = [0, 0, 0, 1, 0]
+  other = [0, 0, 0, 0, 1]
+
+  同一个核苷酸内的所有原子使用相同的 residue one-hot。最终例如：
+
+  node_attr = torch.cat(
+      [
+          rna_fm_feature,       # 640维
+          atom_role_one_hot,    # 假设 R 维
+          residue_one_hot,      # 5维
+      ],
+      dim=-1,
+  )
+
+  那么：
+
+  node_attr_dim = 640 + R + 5
+
+  如果以后再加入 per-atom pLDDT：
+
+  node_attr_dim = 640 + R + 5 + 1
+
+  如果还加入投影后的 Protenix single embedding，也继续累加其投影维度。
+
+  RNA-FM 本身已经包含核苷酸类型和上下文信息，因此 5 维 one-hot 不是绝对必需；但它代价极小，能够明确告诉网络该残基是 A/C/
+  G/U，建议保留。
+
+
   不仅令 x0=pos_pred，还让整个轨迹显式条件于：
   - 原始 pos_pred；
   - x_t-pos_pred；
@@ -1738,7 +889,131 @@ sequence-neighbor graph；
   - Protenix single/pair embeddings；
   - pLDDT、PAE/PDE、contact probability。
 
-  AF3 官方输出本身提供 per-atom pLDDT、token-pair PAE、contact probability、多 seed/sample，以及可选 single/pair embeddings，因此这些输入具有直接数据来源。AlphaFold 3 输出说明
+  ## 2a. Protenix 输出文件中有没有这些数据
+
+  需要区分“构象 CIF 文件”“置信度 JSON”和“模型内部 embedding”。
+
+  ### pLDDT
+
+  你本地这版 Protenix 会把 atom pLDDT 乘以 100 后写入 CIF 的 B-factor 字段，见 /C:/Users/49586/Desktop/Learning/
+  Laboratory/Admis/graduate_first/RNA/Protenix/Protenix/runner/dumper.py:201。
+
+  所以：
+
+  - CIF 中可以获得每原子 pLDDT；
+  - 它不是真正的实验 B-factor，而是借用该字段保存置信度；
+  - CIF 中通常是 0–100，内部 atom_plddt 是 0–1。
+
+  ### PAE、PDE、contact probability
+
+  它们不在普通 CIF 坐标文件里。
+
+  运行 Protenix 时打开：
+
+  --need_atom_confidence true
+
+  会额外生成：
+
+  *_full_data_sample_*.json
+
+  其中包含：
+
+  - atom_plddt：[N_atom]
+  - token_pair_pae：[N_token,N_token]
+  - token_pair_pde：[N_token,N_token]
+  - contact_probs：[N_token,N_token]
+  - atom_to_token_idx：原子到 token 的映射
+
+  这些字段在本地源码 /C:/Users/49586/Desktop/Learning/Laboratory/Admis/graduate_first/RNA/Protenix/Protenix/protenix/
+  model/sample_confidence.py:95 中构造，并由 /C:/Users/49586/Desktop/Learning/Laboratory/Admis/graduate_first/RNA/
+  Protenix/Protenix/runner/dumper.py:270 写入 JSON。Protenix 官方文档也说明了 CIF 与置信度 JSON 的输出结构。Protenix 输
+  出文档
+
+  更合适的方式是作为软条件输入，让模型自己决定是否采用：
+
+  ### 节点条件
+
+  对原子 (i)：
+
+  node_attr_i =
+      RNA-FM residue embedding
+      + atom role embedding
+      + residue identity embedding
+      + Protenix single embedding[token_i]
+      + atom pLDDT_i
+
+  single embedding 是 token 级的，可以通过 atom_to_token_idx 扩展到原子。
+
+  ### 边条件
+
+  对当前图中的边 (i\rightarrow j)：
+
+  edge_attr_ij =
+      当前边类型
+      + PAE[token_i, token_j]
+      + PAE[token_j, token_i]
+      + PDE[token_i, token_j]
+      + contact_prob[token_i, token_j]
+      + projected_pair_embedding[token_i, token_j]
+
+  PAE 有方向性，因此最好同时保存 PAE_ij 和 PAE_ji。PDE 更接近“这对 token 的距离可能错多少”；contact probability 是结构先验，不严格等于误差置信度。
+
+  第一版我建议先只加入：
+
+  1. atom pLDDT；
+  2. PAE/PDE/contact probability；
+  3. Protenix single embedding。
+
+  pair embedding 是 (O(L^2\times128))，存储和载入都很重，适合放到后续消融实验中，而不是第一步全部加入。
+
+  ## 置信度与真实误差的相关性
+
+
+
+  所以，AF3 已经证明了“置信度能反映相应类型的准确度”；但“这些置信度能否预测你的 Protenix RNA refinement 位移”仍然需要你
+  在自己的数据上证明。
+
+  建议至少测：
+
+  - pLDDT 与真实 per-atom local lDDT：验证原指标；
+  - pLDDT 与 Kabsch 对齐后原子误差：验证是否能指导 refinement；
+  - PDE 与真实 pair-distance error；
+  - contact probability 与 native contact 的 AUROC/AUPRC；
+  - PAE 与 RNA helix/domain 相对位置误差；
+  - Spearman 相关系数和分箱校准曲线。
+
+  最关键的是第二组，因为你的目标不是解释置信度，而是预测修正位移。
+
+  ———
+
+  ## 2c. 会不会限制性能上限
+
+  如果采用硬冻结或硬缩放，会。
+
+  例如：
+
+  delta_x = (1 - confidence) * delta_x
+
+  一旦某个原子“高置信但预测错误”，模型无论多强都无法充分修正，确实会降低理论上限。
+
+  但如果只是把 confidence 连接到 node_attr/edge_attr：
+
+  delta_x = model(
+      coordinates,
+      plddt,
+      pae,
+      pde,
+      contact_prob,
+  )
+
+  模型可以学习使用，也可以学习忽略它，理论上不会因为置信度而失去移动自由度。有限数据下仍可能出现过拟合，因此需要消融，但没有人为设置的硬上限。
+
+
+  因此推荐的原则是： confidence 告诉模型“哪里可能存在什么类型的不确定性”，但不直接决定“这个原子能不能动、最多动多少”。
+
+  实验上应同时报告全原子 RMSD、lDDT、键长/冲突、不同初始质量分组下的提升，以及 refinement 后变差的比例。最合适的实施顺序
+  是：先加入 pLDDT+PAE/PDE/contact，完成置信度—真实误差分析，再决定是否值得抽取体积很大的 Protenix single/pair
+  embeddings。
 
   ## 创新二：learned mobility gate + no-regret refinement
 
@@ -1793,23 +1068,9 @@ sequence-neighbor graph；
   每若干 ODE 步用 soft interaction logits 更新 message-passing bias。重点不是简单“把二级结构作为输入”，而是让
   interaction graph 和坐标在 flow 中共同修正。
 
-  ## 5. 最新研究对 novelty 的约束
+  
 
-  截至 2026-09-01，以下表述已经不能使用：
-
-  - “首次将 Flow Matching 用于 RNA”：RNA-FrameFlow、RNAbpFlow、RiboGen 都已经做过；
-  - “首次 base-pair-aware RNA flow”：RNAbpFlow 已经是 base-pair-conditioned SE(3) flow matching。RNAbpFlow
-  - “首次 AI RNA refinement”：RNArefine 已用几何网络预测 pairing/stacking，再结合 Monte Carlo 和 L-BFGS 做全原子精修。
-    RNArefine
-
-  - “首次等变生成模型做 RNA refinement”：ChironRNA 已用 E(3)-equivariant diffusion 做 clash 区域重生成和缺失原子补全。
-    ChironRNA
-
-  - “首次全原子 RNA flow”：RiboGen 已做 sequence/structure all-atom co-generation。RiboGen
-
-  比较稳妥的创新表述是：
-
-  > 面向 Protenix/AF3-like predictor errors 的 prediction-conditioned RNA correction flow，通过学习型置信度门控保护正确 区域，并联合更新 RNA interaction topology、nucleotide geometry 和 refinement QA。
+比较稳妥的创新表述是：面向 Protenix/AF3-like predictor errors 的 prediction-conditioned RNA correction flow，通过学习型置信度门控保护正确 区域，并联合更新 RNA interaction topology、nucleotide geometry 和 refinement QA。
 
   这是比单纯“把起点改为 pos_pred”强得多的贡献组合。
 
@@ -1835,8 +1096,6 @@ sequence-neighbor graph；
   7. 加动态 base-pair/stacking graph；
   8. 最后再研究 FlowCast、few-step distillation 和多候选 consensus。
 
-  数据切分必须同时控制结构相似性，不能只按序列去重。RNA3DB 专门指出，RNA 数据稀少且结构重复会显著夸大测试性能；2026 年的
-  新 benchmark 也显示预测精度强烈依赖与训练集的结构相似度。RNA3DB、2026 RNA benchmark
 
   最终评价不要只报平均 RMSD，至少还应包括：
 
@@ -1848,43 +1107,10 @@ sequence-neighbor graph；
   - raw/refined 经 QA 选择后的实际收益；
   - 按 initial RMSD、长度、pLDDT、训练集结构相似度分层。
 
-  现有 Code_Flow_matching/RNA_refinement_novelty_and_model_proposal.md:1 的总体方向是正确的，但其中“atomic_numbers key
-  前有空格”和“仍使用平方距离”两项已经在当前代码中修复；Dataset/evaluate/schema、静态图和未使用 RNA 特征等问题仍然存在。
-  
 
-完全可以，而且我认为这才是当前阶段更稳妥的路线。当前 TorchMD-ET 的表达能力足以先验证“Protenix → native refinement”是否
-  成立；目前瓶颈主要不是 backbone，而是输入条件、图结构、RNA 几何先验和损失函数。
 
-  建议按以下顺序修改。
 
-  1. 先修正确性问题
-
-  - 统一居中后的 x0/x1/u_t；
-  - 统一 Dataset、配置和 .pt 字段；
-  - 修复 evaluate.py 的 batch.z、edge_index/bond_index 和 sample_files；
-  - 推理后恢复 pos_pred 的原始质心；
-  - 保留共价键，不能让 radius graph 覆盖化学图。
-
-  2. 显式条件化原始预测结构
-
-  当前网络只接收 x_t。加入：
-
-  [
-  \Delta x_t=x_t-x_{\text{pred}}
-  ]
-
-  但不能把三维向量直接拼到普通 scalar node feature。可以先对 pos_pred 单独编码：
-
-  source graph(pos_pred) ── TorchMD encoder ── source scalar/vector features
-  current graph(x_t)     ── TorchMD encoder ── current scalar/vector features
-                                        ↓
-                                  等变特征融合
-                                        ↓
-                                   velocity head
-
-  低成本版本可以共享两条分支的权重，或只增加 2–3 层 source encoder。
-
-  3. 真正打开 RNA 特征
+1.真正打开 RNA 特征
 
   目前配置中的 node_attr_dim: 0 关闭了 RNA-FM。建议 node feature 至少加入：
 
@@ -1902,23 +1128,7 @@ sequence-neighbor graph；
 
   同一残基的原子可以共享 RNA-FM，但应额外加入不同的 atom-role embedding。
 
-  4. 改造成多类型动态图
-
-  当前 TorchMD 网络可以继续使用，只需要改善送进去的边：
-
-  covalent edges：永久保留
-  sequence edges：相邻核苷酸
-  spatial edges：根据当前 x_t 动态更新
-  interaction edges：base pair / stacking candidates
-
-  建议 edge_attr 使用 one-hot 或 embedding：
-
-  [covalent, intra-residue, phosphodiester,
-   spatial, base-pair, stacking, cross-chain]
-
-  无需每个 ODE step 都重构动态图，可以每 2–5 步更新一次，降低成本。
-
-  5. 加 confidence mobility gate
+2.加 confidence mobility gate
 
   在当前 vector head 后增加一个标量 head：
 
@@ -1938,44 +1148,7 @@ sequence-neighbor graph；
 
   要求模型输出零速度，可以显著降低 over-refinement。
 
-  6. 加 RNA-specific loss
-
-  保留 flow matching loss：
-
-  [
-  L_{\mathrm{FM}}=|v_\theta-u_t|^2
-  ]
-
-  再加入辅助损失：
-
-  [
-  L=L_{\mathrm{FM}}
-  +\lambda_bL_{\mathrm{bond}}
-  +\lambda_aL_{\mathrm{angle}}
-  +\lambda_cL_{\mathrm{clash}}
-  +\lambda_pL_{\mathrm{plane}}
-  +\lambda_{\mathrm{bp}}L_{\mathrm{basepair}}
-  +\lambda_sL_{\mathrm{stacking}}
-  ]
-
-  第一版建议只加入：
-
-  - bond length；
-  - clash；
-  - base plane；
-  - base-pair distance/orientation。
-
-  pucker、suite、torsion 可以后续添加，避免第一次修改过多。
-
-  辅助几何 loss 最好作用在模型估计的终点：
-
-  [
-  \hat x_1=x_t+(1-t)v_\theta(x_t,t)
-  ]
-
-  而不是直接作用在瞬时速度上。
-
-  7. 加终点 self-conditioning
+3.加终点 self-conditioning
 
   每一步预测：
 
@@ -1989,7 +1162,7 @@ sequence-neighbor graph；
 
   这有助于模型发现 ODE 轨迹已经偏离合理 RNA 几何，并在后续步骤纠正。改动比更换 EquiformerV2 小。
 
-  8. 改进采样器
+4.改进采样器
 
   当前只有 Euler：
 
@@ -2023,8 +1196,7 @@ sequence-neighbor graph；
 
   这个方案已经足以形成有辨识度的模型。创新点不必依赖更大的网络，而可以来自：
 
-  > 同一个轻量等变速度网络，通过 predictor-specific source conditioning、置信度门控和 RNA interaction constraints，实现
-  > no-regret RNA refinement。
+  > 同一个轻量等变速度网络，通过 predictor-specific source conditioning、置信度门控和 RNA interaction constraints，实现 no-regret RNA refinement。
 
   最重要的是先证明：
 
@@ -2033,5 +1205,4 @@ sequence-neighbor graph；
   - INF、clash 和 RNA stereochemistry 与 RMSD 同时改善；
   - 同参数量 direct regression 无法达到同样效果。
 
-  因此答案是：可以，而且建议先在当前模型上改。EquiformerV2 可以保留为以后的一项 backbone ablation，而不是当前工作的前置
-  条件。
+
