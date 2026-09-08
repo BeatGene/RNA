@@ -1,306 +1,176 @@
-• 下面给出一套确定的 .pt 数据契约和代码修改方案。设计原则是：
+# RNA refinement `.pt` 数据契约（schema v2）
+
+本契约对应 `Code_Flow_matching` 当前模型和 `scripts/build_refinement_pt.py`。
+一个 Protenix seed/sample 与一个 native 结构生成一个 `.pt`。
+
+## 最重要的三个约束
+
+1. **预测结构是原子主索引。** `pos_pred[i]`、所有逐原子特征及图中的节点
+   `i` 永远表示 Protenix CIF 的同一个 RNA 重原子。不能为了适配 native
+   缺失原子而删除预测节点。
+2. **native 缺失通过 `target_mask` 表达。** 能按“序列比对后的残基位置 +
+   标准化原子名”唯一对应的原子为 `True`，其他为 `False`。禁止按 CIF 行号、
+   `auth_seq_id` 或最近坐标强行配对。
+3. **native 必须先刚体对齐到预测坐标系。** 用所有可靠匹配原子做 Kabsch
+   对齐，再写入 `pos`。两份独立结构的平移/旋转没有学习意义，仅做质心居中
+   不能解决任意整体旋转。
+
+设 `N` 为预测 RNA 重原子数，`R` 为该 RNA 链残基/token 数，`E_s` 为静态
+有向边数，`E_b` 为唯一共价键数，`E_x` 为 clash 排除对数。
+
+## 必需字段
+
+```python
+sample = {
+    "schema_version": 2,
+    "sample_id": "7abc_seed_300_sample_0",
+
+    # 坐标和监督
+    "pos_pred": FloatTensor[N, 3],       # Protenix 坐标，Å
+    "pos": FloatTensor[N, 3],            # 对齐后的 native target；见填充值规则
+    "target_mask": BoolTensor[N],         # 该原子是否有可靠 native 坐标监督
+
+    # 原子/残基
+    "atomic_numbers": LongTensor[N],
+    "atom_name_id": LongTensor[N],
+    "residue_index": LongTensor[N],       # 必须连续，范围 0..R-1
+    "sequence": "AUGC...",               # 长度 R
+    "residue_type_id": LongTensor[R],     # A/C/G/U/unknown = 0/1/2/3/4
+    "rnafm_embedding": Tensor[R, 640],    # 推荐磁盘 float16，加载转 float32
+
+    # 静态图
+    "edge_index": LongTensor[2, E_s],
+    "edge_attr": FloatTensor[E_s, 7],
+
+    # 几何约束
+    "geometry_bond_index": LongTensor[2, E_b],
+    "ideal_bond_length": FloatTensor[E_b],
+    "clash_exclusion_index": LongTensor[2, E_x],
 
-  - .pt 保存原始、可追溯的数据；
-  - node_attr 在 dataset.py 中构造；
-  - 置信度单独保存，通过 confidence_conditioning 控制；
-  - 动态边生成后，再为最终边索引 PAE/PDE/contact；
-  - 不需要修改真正使用的 networks/torchmd_net/model_dynamics.py 内部计算逻辑。
+    # 与同一个 sample CIF 配对的 Protenix full_data JSON
+    "atom_plddt": FloatTensor[N],         # 归一化到 0..1
+    "atom_to_token_idx": LongTensor[N],   # 当前单 RNA 链中范围 0..R-1
+    "token_pair_pae": Tensor[R, R],       # Å，可为 float16
+    "token_pair_pde": Tensor[R, R],       # Å，可为 float16
+    "contact_probs": Tensor[R, R],        # 0..1，可为 float16
+}
+```
 
-  设：
+### `pos` 对 native 缺失原子的填充值
 
-  - (N)：原子数；
-  - (R)：RNA 残基数；
-  - (T)：Protenix token 数；
-  - (E_s)：静态有向边数；
-  - (E_b)：唯一共价键数；
-  - (E_x)：clash 排除对数。
+模型和 PyG batch 要求 `pos` 与 `pos_pred` 同为 `[N,3]`。因此：
+
+```python
+pos = pos_pred.clone()
+pos[target_mask] = aligned_native_coordinates
+```
+
+`target_mask=False` 的填充值只用于保持形状和构造完整的推理图，绝不能进入
+坐标 loss、mobility target、no-regret loss 或 protect loss。几何正则（键长、
+clash、碱基平面）仍可作用于全部预测原子，因为它们不依赖 native 标签。
+
+每个样本至少要有 3 个非共线匹配原子；生成脚本默认还要求
+`observed_atom_fraction >= 0.5`，低于阈值会进入 issues 而不生成训练样本。
+可用 `--min-observed-atom-fraction` 调整，但不建议为了追求样本数盲目降低。
+
+## 映射规则
+
+### 残基映射
+
+- 优先从 native CIF 的 `_entity_poly_seq` 得到完整聚合物序列，因此整个残基
+  即使没有任何 `_atom_site` 行也不会导致后续残基错位。
+- 用 `_chem_comp.mon_nstd_parent_comp_id` 将可识别修饰残基映射到母体碱基。
+- 将 Protenix/RNA-FM 序列与 native 完整序列做全局序列比对。
+- 当前脚本要求 identity 与 query coverage 均不低于 0.8，并把实际值写入
+  审计字段。单链标准数据通常应为 1.0；低于 1.0 要看报告。
+
+### 原子映射
+
+- 在已比对残基内，用 `normalize_atom_name()` 后的原子名匹配；`O1P/O2P/O3P`
+  会规范为 `OP1/OP2/OP3`，星号会规范成撇号。
+- native 多 altloc 时优先空 altloc/`A`，再取 occupancy 较高者；只读取第一个
+  model。
+- Protenix `full_data_sample_k.json` 中的 `atom_to_token_idx` 是 token 映射权威；
+  CIF 是原子身份和坐标权威。sample `k` 的 CIF 只能配 sample `k` 的 JSON。
+
+## 图与化学约束
+
+- `edge_index` 保存双向静态边：残基内共价键（type 0）、相邻残基
+  `O3'—P`（type 1）、相邻残基 `C4'—C4'` sequence edge（type 2）。
+- type 3 留给模型每步根据当前坐标生成的 dynamic-radius edge；不得写入 `.pt`。
+- `edge_attr` 始终为 7 类 one-hot。PAE/PDE/contact 不是 edge type，dataset
+  会在最终动态边确定后按 token 对索引它们。
+- `geometry_bond_index` 只存唯一、无向的真实共价键；`ideal_bond_length` 来自
+  标准 RNA 模板，而不是从 native 实测距离复制。
+- `clash_exclusion_index` 存唯一的 1–2 和 1–3 原子对，且第一行索引小于第二行。
 
-  # 一、每个 .pt 文件保存的数据
+## RNA-FM 文件
 
-  推荐结构如下：
+RNA-FM 源文件的实际 payload 字段是 `residue_embedding`，不是
+`rnafm_embedding`；生成脚本选中单链切片后改名写入最终 sample。源文件还含
+`sequences`、`chain_offsets`、`original_chain_ids` 和
+`expected_protenix_chain_ids`，脚本用它们防止拿错链。
 
-  sample = {
-      # 版本和来源
-      "schema_version": 1,
-      "sample_id": "7abc_chain_A_seed_101_sample_0",
+本地报告表明：
 
-      # 坐标与原子
-      "pos": ...,                       # FloatTensor [N, 3]
-      "pos_pred": ...,                  # FloatTensor [N, 3]
-      "atomic_numbers": ...,            # LongTensor  [N]
-      "atom_name_id": ...,              # LongTensor  [N]
-      "residue_index": ...,             # LongTensor  [N]
+- `RNA_FM_EMBED_20260811T144010Z` 只是 5 个 PDB 的 smoke run；
+- 完整生成是 `RNA_FM_EMBED_20260811T144755Z`：2241 个 PDB（2236 新生成、
+  5 个复用），0 failure；
+- `RNA_FM_VALIDATE_20260811T145152Z` 验证 2241 个 PDB 全部 PASS。
 
-      # 序列与基础节点特征
-      "sequence": "AUGC...",
-      "residue_type_id": ...,           # LongTensor  [R]
-      "rnafm_embedding": ...,           # FloatTensor [R, 640]
+所以服务器 `~/Data_FM/RNA_FM_embeddings` 可作为源，但 bulk 生成前仍建议先用
+几个当前单链 split ID 做 smoke test。
 
-      # 静态图
-      "edge_index": ...,                # LongTensor  [2, E_s]
-      "edge_attr": ...,                 # FloatTensor [E_s, 7]
+## 推荐审计字段（模型不直接使用）
 
-      # 几何约束
-      "geometry_bond_index": ...,       # LongTensor  [2, E_b]
-      "ideal_bond_length": ...,         # FloatTensor [E_b]
-      "clash_exclusion_index": ...,     # LongTensor  [2, E_x]
+生成脚本还保存：
 
-      # Protenix置信度
-      "atom_plddt": ...,                # FloatTensor [N]
-      "atom_to_token_idx": ...,         # LongTensor  [N]
-      "token_pair_pae": ...,            # FloatTensor [T, T]
-      "token_pair_pde": ...,            # FloatTensor [T, T]
-      "contact_probs": ...,              # FloatTensor [T, T]
-  }
+- PDB、native/predicted chain、seed、sample、模型名及四个源文件路径；
+- `protenix_original_token_index`（pair matrix 切片前的 token 编号）；
+- `native_sequence_identity`、`native_sequence_coverage`；
+- `observed_atom_count/fraction`、`observed_residue_mask`；
+- Kabsch rotation/translation 和 `pre_refinement_aligned_rmsd`；
+- generator/mapping/edge 版本。
 
-  ## 1. 坐标和原子信息
+`observed_residue_mask`、变换矩阵和源路径是审计信息，不应拼入 node feature。
 
-  ### pos: FloatTensor[N,3]
+## 与当前模型的维度对应
 
-  真实 native RNA 的重原子坐标，单位 Å。
+dataset 构造的基础 `node_attr` 是：
 
-  要求：
+```text
+RNA-FM 640 + atom-name one-hot 29 + residue-type one-hot 5 = 674
+```
 
-  - 与 pos_pred 原子数量相同；
-  - 与 pos_pred 原子顺序完全相同；
-  - 不需要预先质心居中，模型内部会处理。
+所以 YAML 中 `node_attr_dim: 674` 正确。开启 `confidence_conditioning` 后，模型
+内部再添加 1 维 pLDDT；不应把 YAML 改成 675。静态 `edge_attr_dim: 7` 也正确，
+模型内部再添加 4 维 PAE/PDE/contact confidence edge feature。
 
-  最重要的是原子对应关系：
+旧 v1 schema 的字段中没有需要删除的模型输入；真正缺少的是
+`target_mask`、native→prediction 刚体对齐规则，以及 RNA-FM 源 payload 与最终
+字段名之间的转换说明。
 
-  pos[i]
-  pos_pred[i]
-  atomic_numbers[i]
-  atom_name_id[i]
-  residue_index[i]
-  atom_plddt[i]
-  atom_to_token_idx[i]
+## 生成命令
 
-  必须全部表示同一个原子。
+先 smoke test：
 
-  ### pos_pred: FloatTensor[N,3]
+```bash
+python ~/Code_Flow_matching/scripts/build_refinement_pt.py \
+  --prediction-root ~/Data_V1 \
+  --native-root ~/pdb_data \
+  --rnafm-root ~/Data_FM/RNA_FM_embeddings \
+  --output-root ~/Data_Refinement_PT \
+  --split train --pdb-id 125D --fail-fast
+```
 
-  从同一个 Protenix sample 的 CIF 中读取的预测坐标。
+检查 `generation_manifest.tsv`、随机打开若干 `.pt` 后再全量运行：
 
-  例如：
+```bash
+python ~/Code_Flow_matching/scripts/build_refinement_pt.py \
+  --prediction-root ~/Data_V1 \
+  --native-root ~/pdb_data \
+  --rnafm-root ~/Data_FM/RNA_FM_embeddings \
+  --output-root ~/Data_Refinement_PT
+```
 
-  seed_101/sample_0.cif
-
-  必须和同一个 sample 的：
-
-  full_data_sample_0.json
-
-  配对，不能将 sample 0 的坐标与 sample 1 的 pLDDT/PAE 混用。
-
-  ### atomic_numbers: LongTensor[N]
-
-  元素原子序数，例如：
-
-  C = 6
-  N = 7
-  O = 8
-  P = 15
-  S = 16
-
-  来源是 CIF/native 原子记录中的 element 字段。
-
-  ### atom_name_id: LongTensor[N]
-
-  使用 /C:/Users/49586/Desktop/Learning/Laboratory/Admis/graduate_first/RNA/Code_Flow_matching/etflow/data/
-  constants.py:18 中的全局映射：
-
-  ATOM_NAME_TO_ID = {
-      "P": ...,
-      "OP1": ...,
-      "C4'": ...,
-      "N9": ...,
-  }
-
-  未知原子使用：
-
-  UNKNOWN_ATOM_NAME_ID = 0
-
-  这个字段具有两个用途：
-
-  - 供 base_plane_loss() 判断碱基环原子；
-  - 转成 one-hot 后作为 atom role 输入网络。
-
-  因此不需要再额外保存一个重复的 atom_role_id。精确原子名称本身就是一种更细粒度的 atom role。
-
-  ### residue_index: LongTensor[N]
-
-  每个原子所属的残基编号，必须重新映射成：
-
-  0, 1, 2, ..., R-1
-
-  例如：
-
-  residue_index = tensor([
-      0, 0, 0, ...,  # 第0个核苷酸的所有原子
-      1, 1, 1, ...,  # 第1个核苷酸的所有原子
-  ])
-
-  不要直接使用可能不连续的 PDB auth_seq_id。
-
-  ## 2. 序列和基础节点特征
-
-  ### sequence: str
-
-  RNA 序列：
-
-  "AUGCC..."
-
-  长度应等于 (R)。
-
-  ### residue_type_id: LongTensor[R]
-
-  推荐固定映射：
-
-  A = 0
-  C = 1
-  G = 2
-  U = 3
-  其他/未知 = 4
-
-  这是残基级数据，不需要为每个原子重复保存。dataset.py 会通过：
-
-  residue_type_id[residue_index]
-
-  扩展到原子。
-
-  ### rnafm_embedding: FloatTensor[R,640]
-
-  RNA-FM 对每个核苷酸产生的 640 维表示。
-
-  注意：
-
-  - RNA-FM 可能包含 BOS/EOS token，写入 .pt 前必须去掉；
-  - 最终第一维必须严格等于 RNA 残基数 (R)；
-  - 推荐在磁盘中保存为 float16，加载时转换为 float32；
-  - 不要扩展成 [N,640] 再保存，否则同一残基的向量会重复很多次。
-
-  dataset.py 中再执行：
-
-  rnafm_atom = rnafm_embedding[residue_index]
-
-  ## 3. 静态图
-
-  ### edge_index: LongTensor[2,E_s]
-
-  仅保存永久静态边：
-
-  - 核苷酸内部共价键；
-  - 相邻核苷酸间磷酸二酯键；
-  - 相邻残基的 C4'–C4' sequence-neighbor 边。
-
-  建议每条静态边保存两个方向：
-
-  i → j
-  j → i
-
-  不要把 radius dynamic edges 写入 .pt；它们由模型每一步重新生成。
-
-  ### edge_attr: FloatTensor[E_s,7]
-
-  7维边类型 one-hot。按照当前 smoke test 的约定：
-
-  type 0：残基内部共价键
-  type 1：残基之间磷酸二酯键
-  type 2：相邻残基 C4'–C4' 边
-  type 3：动态 radius 边，静态.pt中不应出现
-  type 4–6：预留
-
-  例如：
-
-  edge_attr = F.one_hot(
-      edge_type,
-      num_classes=7,
-  ).float()
-
-  这里始终保持 7 维。PAE/PDE/contact 不是边类型，不在数据生成时拼入这个字段。
-
-  ## 4. 几何约束
-
-  ### geometry_bond_index: LongTensor[2,E_b]
-
-  只包含真正的共价键：
-
-  - 核苷酸内部共价键；
-  - 相邻核苷酸间磷酸二酯键。
-
-  建议每条共价键只保存一次，不需要双向重复：
-
-  i—j
-
-  ### ideal_bond_length: FloatTensor[E_b]
-
-  与 geometry_bond_index 每一列严格对应：
-
-  geometry_bond_index[:, k]
-  ideal_bond_length[k]
-
-  理想长度来自 CCD/标准 RNA 化学模板，不应直接使用 native 中测量出的长度作为理想值。
-
-  ### clash_exclusion_index: LongTensor[2,E_x]
-
-  保存：
-
-  - 1–2 共价原子对；
-  - 1–3 键角原子对。
-
-  每对只保留一次，建议满足：
-
-  clash_exclusion_index[0] < clash_exclusion_index[1]
-
-  ## 5. Protenix 置信度
-
-  全部来自开启：
-
-  --need_atom_confidence true
-
-  后生成的 full_data_sample_*.json。
-
-  ### atom_plddt: FloatTensor[N]
-
-  范围规定为：
-
-  0–1
-
-  如果读取值是 0–100，生成脚本必须先除以 100。
-
-  ### atom_to_token_idx: LongTensor[N]
-
-  每个原子对应的 Protenix token，范围：
-
-  0 <= atom_to_token_idx[i] < T
-
-  即使纯 RNA 中 token 通常对应核苷酸，也必须使用 Protenix 的真实映射，不能用 residue_index 替代。
-
-  ### token_pair_pae: FloatTensor[T,T]
-
-  单位 Å，具有方向性：
-
-  PAE[i,j] 不一定等于 PAE[j,i]
-
-  ### token_pair_pde: FloatTensor[T,T]
-
-  token 对之间的预测距离误差，单位 Å。
-
-  ### contact_probs: FloatTensor[T,T]
-
-  范围 0–1，表示 token 对成为接触的预测概率。
-
-  ## 6. 推荐额外保存的审计信息
-
-  模型不直接使用，但强烈建议保留：
-
-  "native_structure_id": "7ABC",
-  "protenix_seed": 101,
-  "protenix_sample": 0,
-  "protenix_model_name": "...",
-  "atom_mapping_version": 1,
-  "edge_type_version": 1,
-  "rnafm_model_name": "...",
-
-  这能避免以后无法追踪数据来自哪个模型、seed 和映射规则。
-
-  ———
+默认不覆盖已有 `.pt`，可断点续跑；明确需要重建时加 `--overwrite`。

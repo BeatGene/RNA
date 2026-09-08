@@ -23,12 +23,12 @@ GPU_LIST="${GPU_LIST:-0,1,2,3,4,5,6,7}"
 SPLIT_ORDER="${SPLIT_ORDER:-train val test}"
 ROUND_MAX_TARGETS="${ROUND_MAX_TARGETS:-640}"
 MEMORY_STOP_PERCENT="${MEMORY_STOP_PERCENT:-40}"
-CGROUP_GUARD_GIB="${CGROUP_GUARD_GIB:-800}"
+CGROUP_ANON_GUARD_GIB="${CGROUP_ANON_GUARD_GIB:-800}"
 HOST_AVAILABLE_GUARD_GIB="${HOST_AVAILABLE_GUARD_GIB:-500}"
 MIN_FREE_DISK_GIB="${MIN_FREE_DISK_GIB:-200}"
 SMOKE_TEST_FIRST="${SMOKE_TEST_FIRST:-1}"
 GPU_START_MAX_USED_MIB="${GPU_START_MAX_USED_MIB:-8192}"
-START_CGROUP_MAX_GIB="${START_CGROUP_MAX_GIB:-500}"
+START_CGROUP_ANON_MAX_GIB="${START_CGROUP_ANON_MAX_GIB:-500}"
 START_HOST_AVAILABLE_MIN_GIB="${START_HOST_AVAILABLE_MIN_GIB:-700}"
 
 die() { echo "ERROR: $*" >&2; exit 1; }
@@ -44,6 +44,19 @@ done
 command -v flock >/dev/null 2>&1 || die "找不到 flock"
 command -v setsid >/dev/null 2>&1 || die "找不到 setsid"
 command -v nvidia-smi >/dev/null 2>&1 || die "找不到 nvidia-smi"
+
+pipeline_help="$("$PYTHON" "$PIPELINE" pred --help 2>&1)" \
+    || die "无法读取 stage2_decoy_pipeline.py pred --help"
+grep -q -- '--need-atom-confidence' <<< "$pipeline_help" \
+    || die "stage2_decoy_pipeline.py 版本过旧：缺少 --need-atom-confidence"
+grep -q -- '--prediction-layout' <<< "$pipeline_help" \
+    || die "stage2_decoy_pipeline.py 版本过旧：缺少 --prediction-layout"
+resident_help="$("$PYTHON" "$RESIDENT" --help 2>&1)" \
+    || die "无法读取 resident_protenix_pred.py --help"
+grep -q -- '--need-atom-confidence' <<< "$resident_help" \
+    || die "resident_protenix_pred.py 版本过旧：缺少 --need-atom-confidence"
+grep -q -- '--output-layout' <<< "$resident_help" \
+    || die "resident_protenix_pred.py 版本过旧：缺少 --output-layout"
 
 [[ -n "$SPLIT_ORDER" ]] || die "SPLIT_ORDER 不能为空"
 for split_name in $SPLIT_ORDER
@@ -71,10 +84,20 @@ done < <(nvidia-smi --query-gpu=index,memory.used,utilization.gpu --format=csv,n
 (( gpu_too_busy == 0 )) || die "所选 GPU 中至少一张占用过高"
 
 cgroup_current="$(cat /sys/fs/cgroup/memory.current)"
-host_available="$(awk '/^MemAvailable:/ {print $2 * 1024}' /proc/meminfo)"
+read -r cgroup_anon cgroup_file < <(
+    awk '
+        $1 == "anon" { anon = $2 }
+        $1 == "file" { file = $2 }
+        END { printf "%.0f %.0f\n", anon, file }
+    ' /sys/fs/cgroup/memory.stat
+)
+host_available="$(awk '/^MemAvailable:/ {printf "%.0f\n", $2 * 1024}' /proc/meminfo)"
 disk_available="$(df -PB1 "$DATA_ROOT" | awk 'NR==2 {print $4}')"
-(( cgroup_current < START_CGROUP_MAX_GIB * 1024 * 1024 * 1024 )) \
-    || die "cgroup 当前内存达到 ${START_CGROUP_MAX_GIB} GiB"
+echo "CGROUP_CURRENT_BYTES=$cgroup_current"
+echo "CGROUP_ANON_BYTES=$cgroup_anon"
+echo "CGROUP_FILE_CACHE_BYTES=$cgroup_file"
+(( cgroup_anon < START_CGROUP_ANON_MAX_GIB * 1024 * 1024 * 1024 )) \
+    || die "cgroup 匿名内存达到 ${START_CGROUP_ANON_MAX_GIB} GiB"
 (( host_available > START_HOST_AVAILABLE_MIN_GIB * 1024 * 1024 * 1024 )) \
     || die "宿主机可用内存低于 ${START_HOST_AVAILABLE_MIN_GIB} GiB"
 (( disk_available > MIN_FREE_DISK_GIB * 1024 * 1024 * 1024 )) \
@@ -144,7 +167,7 @@ nohup env \
     SPLIT_ORDER="$SPLIT_ORDER" \
     ROUND_MAX_TARGETS="$ROUND_MAX_TARGETS" \
     MEMORY_STOP_PERCENT="$MEMORY_STOP_PERCENT" \
-    CGROUP_GUARD_GIB="$CGROUP_GUARD_GIB" \
+    CGROUP_ANON_GUARD_GIB="$CGROUP_ANON_GUARD_GIB" \
     HOST_AVAILABLE_GUARD_GIB="$HOST_AVAILABLE_GUARD_GIB" \
     MIN_FREE_DISK_GIB="$MIN_FREE_DISK_GIB" \
     bash "$WORKER" > "$RUN_DIR/launcher.log" 2>&1 < /dev/null &

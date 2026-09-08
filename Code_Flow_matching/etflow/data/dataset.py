@@ -60,9 +60,16 @@ class EuclideanDataset(Dataset):
         data_path = self.data_files[idx]
         data = torch.load(data_path,map_location="cpu",)
 
+        if data.get("schema_version") != 2:
+            raise ValueError(
+                f"{data_path} uses schema_version={data.get('schema_version')!r}; "
+                "the masked refinement model requires schema_version=2"
+            )
+
         # Modify_3
         pos = data['pos'].float() # [N, 3] 真实的晶体结构坐标 (Ground Truth)
         pos_pred = data['pos_pred'].float()  # [N, 3] Protenix预测的结构坐标 (Condition/Source)
+        target_mask = data["target_mask"].bool().view(-1)
         atomic_numbers = (
             data["atomic_numbers"]
             .long()
@@ -156,6 +163,23 @@ class EuclideanDataset(Dataset):
             raise ValueError(
                 "residue_index must contain one value per atom"
             )
+
+        if pos_pred.shape != pos.shape:
+            raise ValueError("pos_pred and pos must both have shape [N, 3]")
+
+        if target_mask.numel() != pos.size(0):
+            raise ValueError("target_mask must contain one value per atom")
+
+        if target_mask.sum() < 3:
+            raise ValueError(
+                "target_mask must contain at least three mapped native atoms"
+            )
+
+        if not torch.isfinite(pos_pred).all():
+            raise ValueError("pos_pred contains NaN or Inf")
+
+        if not torch.isfinite(pos[target_mask]).all():
+            raise ValueError("observed native coordinates contain NaN or Inf")
 
         if (
                 residue_index.numel() > 0
@@ -331,6 +355,7 @@ class EuclideanDataset(Dataset):
         return RNAData(
             pos=pos,
             pos_pred=pos_pred,
+            target_mask=target_mask,
             atomic_numbers=atomic_numbers,
             sequence=sequence,
             edge_index=edge_index,

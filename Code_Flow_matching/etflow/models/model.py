@@ -603,19 +603,34 @@ class BaseFlow(BaseModel):
             target: Tensor,
             global_residue_index: Tensor,
             total_residues: int,
-    ) -> Tensor:
+            atom_mask: Optional[Tensor] = None,
+    ) -> tuple[Tensor, Tensor]:
         atom_square_error = (
             prediction - target
         ).square().sum(dim=-1)
-        return torch.sqrt(
-            scatter(
-                atom_square_error,
-                global_residue_index,
-                dim=0,
-                dim_size=total_residues,
-                reduce="mean",
-            ).clamp_min(1.0e-8)
+        if atom_mask is None:
+            atom_mask = torch.ones_like(atom_square_error, dtype=torch.bool)
+        atom_mask = atom_mask.to(atom_square_error.device).bool().view(-1)
+        weights = atom_mask.to(atom_square_error.dtype)
+        square_error_sum = scatter(
+            atom_square_error * weights,
+            global_residue_index,
+            dim=0,
+            dim_size=total_residues,
+            reduce="sum",
         )
+        observed_count = scatter(
+            weights,
+            global_residue_index,
+            dim=0,
+            dim_size=total_residues,
+            reduce="sum",
+        )
+        valid_residue = observed_count > 0
+        rms_error = torch.sqrt(
+            square_error_sum / observed_count.clamp_min(1.0)
+        )
+        return rms_error, valid_residue
 
     # Modify_5
     def apply_residue_mobility_gate(
@@ -880,6 +895,7 @@ class BaseFlow(BaseModel):
         z = batched_data["atomic_numbers"]
         pos = batched_data["pos"]  # X_1: 真实目标坐标
         pos_pred = batched_data["pos_pred"]  # X_0: 流的起点（Protenix预测坐标）
+        target_mask = batched_data["target_mask"].bool().view(-1)
         bond_index = batched_data["edge_index"]  # 边
         node_attr = batched_data.get("node_attr", None)
         edge_attr = batched_data.get("edge_attr", None)
@@ -1026,6 +1042,7 @@ class BaseFlow(BaseModel):
             u_t,
             batch=batch,
             reduce="mean",
+            mask=target_mask,
         )
 
         bond_loss = bond_length_loss(
@@ -1062,17 +1079,22 @@ class BaseFlow(BaseModel):
         if self.use_mobility_v1:
             global_residue_index = mobility_aux["global_residue_index"]
             total_residues = mobility_aux["total_residues"]
-            raw_residue_error = self.residue_rms_error(
+            raw_residue_error, valid_residue_mask = self.residue_rms_error(
                 prediction=x0_centered,
                 target=x1_centered,
                 global_residue_index=global_residue_index,
                 total_residues=total_residues,
+                atom_mask=target_mask,
             )
-            refined_residue_error = self.residue_rms_error(
+            refined_residue_error, refined_valid_residue_mask = self.residue_rms_error(
                 prediction=pos_estimate,
                 target=x1_centered,
                 global_residue_index=global_residue_index,
                 total_residues=total_residues,
+                atom_mask=target_mask,
+            )
+            valid_residue_mask = (
+                valid_residue_mask & refined_valid_residue_mask
             )
             mobility_target = (
                 (raw_residue_error - self.mobility_good_error)
@@ -1080,19 +1102,22 @@ class BaseFlow(BaseModel):
             ).clamp(0.0, 1.0)
             mobility_residue = mobility_aux["mobility_residue"].view(-1)
             mobility_loss = F.smooth_l1_loss(
-                mobility_residue,
-                mobility_target,
+                mobility_residue[valid_residue_mask],
+                mobility_target[valid_residue_mask],
             )
             no_regret_loss = torch.relu(
-                refined_residue_error - raw_residue_error
+                refined_residue_error[valid_residue_mask]
+                - raw_residue_error[valid_residue_mask]
             ).mean()
 
             correct_residue_mask = (
-                raw_residue_error < self.protect_error_threshold
+                (raw_residue_error < self.protect_error_threshold)
+                & valid_residue_mask
             )
             protect_atom_mask = correct_residue_mask[
                 global_residue_index
-            ].to(dtype=pos_estimate.dtype)
+            ] & target_mask
+            protect_atom_mask = protect_atom_mask.to(dtype=pos_estimate.dtype)
             atom_movement = (
                 pos_estimate - x0_centered
             ).square().sum(dim=-1)
@@ -1147,8 +1172,8 @@ class BaseFlow(BaseModel):
                 "no_regret_loss": no_regret_loss,
                 "protect_loss": protect_loss,
                 "velocity_budget_loss": velocity_budget_loss,
-                "mobility_mean": mobility_residue.mean(),
-                "mobility_target_mean": mobility_target.mean(),
+                "mobility_mean": mobility_residue[valid_residue_mask].mean(),
+                "mobility_target_mean": mobility_target[valid_residue_mask].mean(),
                 "identity_pair_fraction": identity_pair_fraction,
                 "near_native_pair_fraction": near_native_pair_fraction,
             }.items():

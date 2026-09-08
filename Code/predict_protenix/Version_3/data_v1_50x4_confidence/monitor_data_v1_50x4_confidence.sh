@@ -62,6 +62,13 @@ from pathlib import Path
 
 gib = 1024 ** 3
 current = int(Path("/sys/fs/cgroup/memory.current").read_text())
+memory_stat = {
+    key: int(value)
+    for key, value in (
+        line.split() for line in Path("/sys/fs/cgroup/memory.stat").read_text().splitlines()
+    )
+}
+maximum_text = Path("/sys/fs/cgroup/memory.max").read_text().strip()
 available = next(
     int(line.split()[1]) * 1024
     for line in Path("/proc/meminfo").read_text().splitlines()
@@ -69,6 +76,10 @@ available = next(
 )
 free = shutil.disk_usage(sys.argv[1]).free
 print(f"CGROUP_CURRENT={current / gib:.1f} GiB")
+print(f"CGROUP_ANON={memory_stat.get('anon', 0) / gib:.1f} GiB")
+print(f"CGROUP_FILE_CACHE={memory_stat.get('file', 0) / gib:.1f} GiB")
+if maximum_text != "max":
+    print(f"CGROUP_MAX={int(maximum_text) / gib:.1f} GiB")
 print(f"HOST_AVAILABLE={available / gib:.1f} GiB")
 print(f"DATA_DISK_FREE={free / gib:.1f} GiB")
 PY

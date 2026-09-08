@@ -64,6 +64,7 @@ def batchwise_l2_loss(
     target: torch.Tensor,
     batch: Optional[torch.Tensor] = None,
     reduce: bool = "mean",
+    mask: Optional[torch.Tensor] = None,
 ) -> torch.Tensor:
     if batch is None:
         batch = torch.zeros(
@@ -74,9 +75,36 @@ def batchwise_l2_loss(
     prediction = correct_tensor_shape(prediction)
     target = correct_tensor_shape(target)
 
-    return scatter(
-        torch.norm(prediction - target, p=2, dim=-1), index=batch, reduce=reduce
-    ).mean(dim=0)
+    atom_loss = torch.norm(prediction - target, p=2, dim=-1)
+    if mask is None:
+        return scatter(atom_loss, index=batch, reduce=reduce).mean(dim=0)
+
+    mask = mask.to(device=prediction.device).bool().view(-1)
+    if mask.numel() != prediction.size(0):
+        raise ValueError("mask must contain one value per atom")
+
+    # Normalize each graph by its number of observed native atoms, so long RNAs
+    # and structures with more resolved atoms do not dominate a batch.
+    num_graphs = int(batch.max().item()) + 1 if batch.numel() else 0
+    weights = mask.to(dtype=atom_loss.dtype)
+    loss_sum = scatter(
+        atom_loss * weights,
+        index=batch,
+        dim=0,
+        dim_size=num_graphs,
+        reduce="sum",
+    )
+    observed_count = scatter(
+        weights,
+        index=batch,
+        dim=0,
+        dim_size=num_graphs,
+        reduce="sum",
+    )
+    valid_graph = observed_count > 0
+    if not valid_graph.any():
+        raise ValueError("batch has no native-observed atoms")
+    return (loss_sum[valid_graph] / observed_count[valid_graph]).mean()
 
 # Modify_3
 def bond_length_loss(

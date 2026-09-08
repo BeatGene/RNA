@@ -245,6 +245,9 @@ class Stage2AuditTests(unittest.TestCase):
         complete = pipeline.inspect_seed(seed_dir, 2, "quick", True)
         self.assertEqual(complete.status, "COMPLETE")
         self.assertEqual(complete.full_data_count, 2)
+        self.assertTrue(
+            (seed_dir / pipeline.FULL_DATA_VALIDATION_CACHE).is_file()
+        )
 
         (pred / "1abc_full_data_sample_0.json").write_text(
             json.dumps({"atom_plddt": [0], "padding": "x" * 256}), encoding="utf-8"

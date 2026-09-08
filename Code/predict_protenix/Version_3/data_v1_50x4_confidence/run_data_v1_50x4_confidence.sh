@@ -16,7 +16,7 @@ GPU_LIST="${GPU_LIST:-0,1,2,3,4,5,6,7}"
 SPLIT_ORDER="${SPLIT_ORDER:-train val test}"
 ROUND_MAX_TARGETS="${ROUND_MAX_TARGETS:-640}"
 MEMORY_STOP_PERCENT="${MEMORY_STOP_PERCENT:-40}"
-CGROUP_GUARD_GIB="${CGROUP_GUARD_GIB:-800}"
+CGROUP_ANON_GUARD_GIB="${CGROUP_ANON_GUARD_GIB:-800}"
 HOST_AVAILABLE_GUARD_GIB="${HOST_AVAILABLE_GUARD_GIB:-500}"
 MIN_FREE_DISK_GIB="${MIN_FREE_DISK_GIB:-200}"
 
@@ -32,7 +32,7 @@ then
     exit 75
 fi
 
-cgroup_guard_bytes=$((CGROUP_GUARD_GIB * 1024 * 1024 * 1024))
+cgroup_anon_guard_bytes=$((CGROUP_ANON_GUARD_GIB * 1024 * 1024 * 1024))
 host_guard_bytes=$((HOST_AVAILABLE_GUARD_GIB * 1024 * 1024 * 1024))
 disk_guard_bytes=$((MIN_FREE_DISK_GIB * 1024 * 1024 * 1024))
 final_status=0
@@ -87,11 +87,18 @@ do
         do
             sleep 10
             cgroup_current="$(cat /sys/fs/cgroup/memory.current 2>/dev/null || echo 0)"
-            host_available="$(awk '/^MemAvailable:/ {print $2 * 1024}' /proc/meminfo)"
+            read -r cgroup_anon cgroup_file < <(
+                awk '
+                    $1 == "anon" { anon = $2 }
+                    $1 == "file" { file = $2 }
+                    END { printf "%.0f %.0f\n", anon, file }
+                ' /sys/fs/cgroup/memory.stat
+            )
+            host_available="$(awk '/^MemAvailable:/ {printf "%.0f\n", $2 * 1024}' /proc/meminfo)"
             disk_available="$(df -PB1 "$DATA_ROOT" | awk 'NR==2 {print $4}')"
-            if (( cgroup_current >= cgroup_guard_bytes ))
+            if (( cgroup_anon >= cgroup_anon_guard_bytes ))
             then
-                guard_reason="CGROUP_MEMORY_REACHED_${CGROUP_GUARD_GIB}_GIB"
+                guard_reason="CGROUP_ANON_MEMORY_REACHED_${CGROUP_ANON_GUARD_GIB}_GIB"
             elif (( host_available <= host_guard_bytes ))
             then
                 guard_reason="HOST_AVAILABLE_BELOW_${HOST_AVAILABLE_GUARD_GIB}_GIB"
@@ -108,6 +115,8 @@ do
                     echo "split=$split_name"
                     echo "round=$round_label"
                     echo "cgroup_current=$cgroup_current"
+                    echo "cgroup_anon=$cgroup_anon"
+                    echo "cgroup_file_cache=$cgroup_file"
                     echo "host_available=$host_available"
                     echo "disk_available=$disk_available"
                 } > "$RUN_DIR/resource_guard_stop.txt"
@@ -176,8 +185,8 @@ PY
 
         for _ in $(seq 1 60)
         do
-            cgroup_current="$(cat /sys/fs/cgroup/memory.current 2>/dev/null || echo 0)"
-            (( cgroup_current < 350 * 1024 * 1024 * 1024 )) && break
+            cgroup_anon="$(awk '$1 == "anon" {printf "%.0f\n", $2}' /sys/fs/cgroup/memory.stat)"
+            (( cgroup_anon < 350 * 1024 * 1024 * 1024 )) && break
             sleep 10
         done
     done

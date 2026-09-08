@@ -22,7 +22,9 @@ Output layout:
 The complete run expects 197,600 CIFs, summary-confidence JSON files, and
 full-data JSON files. Full pairwise confidence JSON can consume substantial
 disk space, so the launcher and worker stop before free space falls below 200
-GiB by default.
+GiB by default. Memory guards use cgroup anonymous memory rather than
+`memory.current`, because the latter includes reclaimable file cache generated
+while writing the large JSON files.
 
 Deploy the two modified shared files and this directory under `~/Code`, then
 run:

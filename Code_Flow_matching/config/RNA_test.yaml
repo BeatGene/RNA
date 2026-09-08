@@ -1,5 +1,5 @@
 # task name for logging
-task_name: RNA_test_02_rmsd_less
+task_name: rna_refinement_v2_masked_residual
 
 # unique seed for experiment reproducibility
 seed: 42
@@ -8,9 +8,9 @@ seed: 42
 datamodule: BaseDataModule
 datamodule_args:
     # dataloader
-    data_dir: "/storage9920/home/tinghao.xia/Data_V1"
+    data_dir: "/storage9920/home/tinghao.xia/Data_Refinement_PT"
     dataloader_args:
-        batch_size: 1
+        batch_size: 2
         num_workers: 2
         pin_memory: true
         persistent_workers: true
@@ -47,6 +47,19 @@ model_args:
 
     # flow matching specific
     sigma: 0.1
+    # A single residual prediction is the intended refinement objective.
+    # It is much cheaper and more stable than integrating a 50-step ODE.
+    training_objective: residual
+    flow_path: deterministic
+    use_mobility_v1: true
+    identity_pair_probability: 0.1
+    near_native_pair_probability: 0.2
+    near_native_min_alpha: 0.05
+    near_native_max_alpha: 0.25
+    mobility_gate_loss_weight: 0.1
+    no_regret_loss_weight: 0.5
+    protect_loss_weight: 0.2
+    velocity_budget_loss_weight: 0.01
 
 
     # optimizer args
@@ -56,7 +69,7 @@ model_args:
 
     # lr scheduler args
     lr_scheduler_type: CosineAnnealingWarmupRestarts
-    first_cycle_steps: 100_000
+    first_cycle_steps: 32_000
     cycle_mult: 1.0
     max_lr: 3.e-4
     min_lr: 3.e-5
@@ -71,7 +84,7 @@ model_args:
 callbacks:
     -   callback: ModelCheckpoint
         callback_args:
-            dirpath: './checkpoints/rna_refinement_v1'
+            dirpath: './checkpoints/rna_refinement_v2_masked_residual'
             monitor: val/loss
             mode: min
             save_last: true
@@ -83,6 +96,13 @@ callbacks:
             log_momentum: false
             logging_interval: step
 
+    -   callback: EarlyStopping
+        callback_args:
+            monitor: val/loss
+            mode: min
+            patience: 3
+            min_delta: 1.e-4
+
 # logger
 logger: WandbLogger
 logger_args:
@@ -92,20 +112,21 @@ logger_args:
 
 trainer: Trainer
 trainer_args:
-    max_epochs: 200
-    devices: 7
+    max_epochs: 10
+    devices: 8
     accelerator: gpu
     strategy: ddp_find_unused_parameters_true
-    accumulate_grad_batches: 6
+    accumulate_grad_batches: 3
     precision: bf16-mixed
     num_sanity_val_steps: 0
+    gradient_clip_val: 1.0
 
 # eval config
 eval_args:
-    batch_size: 32
+    batch_size: 1
     sampler_args:
         sampler_type: ode
-        n_timesteps: 50
+        n_timesteps: 1
         s_churn: 1.0
         t_min: 0.0001
         t_max: 0.9999

@@ -195,8 +195,10 @@ def make_synthetic_sample(sample_index: int) -> dict:
     contact_probs = torch.exp(-(token_row - token_col).abs())
 
     return {
+        "schema_version": 2,
         "pos": pos.float(),
         "pos_pred": pos_pred.float(),
+        "target_mask": torch.ones(pos.size(0), dtype=torch.bool),
         "atomic_numbers": atomic_numbers,
         "sequence": residue_letters,
         "edge_index": edge_index,
@@ -225,6 +227,8 @@ def validate_batch(batch) -> None:
     assert batch.num_graphs == 2
     assert batch.num_tokens.tolist() == [2, 3]
     assert batch.pos.shape == batch.pos_pred.shape == (num_atoms, 3)
+    assert batch.target_mask.shape == (num_atoms,)
+    assert batch.target_mask.dtype == torch.bool
     assert batch.atomic_numbers.dtype == torch.long
     assert batch.edge_index.dtype == torch.long
     assert batch.geometry_bond_index.dtype == torch.long

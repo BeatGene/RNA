@@ -75,14 +75,25 @@ def parse_seeds(text: str) -> list[int]:
 
 
 def cgroup_memory_percent() -> float | None:
+    """Return non-reclaimable anonymous memory as a percentage of cgroup max.
+
+    ``memory.current`` also contains the file page cache.  Full-confidence JSON
+    output can make that cache hundreds of GiB even after workers exit, so using
+    it here causes false memory stops.  The ``anon`` counter tracks process
+    allocations and is the relevant guard for model OOM prevention.
+    """
     root = Path("/sys/fs/cgroup")
     try:
-        current = int((root / "memory.current").read_text().strip())
+        memory_stat = {}
+        for line in (root / "memory.stat").read_text().splitlines():
+            key, value = line.split()
+            memory_stat[key] = int(value)
+        current = memory_stat["anon"]
         maximum_text = (root / "memory.max").read_text().strip()
         if maximum_text == "max":
             return None
         maximum = int(maximum_text)
-    except (OSError, ValueError):
+    except (KeyError, OSError, ValueError):
         return None
     return 100.0 * current / maximum if maximum > 0 else None
 
@@ -297,7 +308,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--memory-stop-percent",
         type=float,
         default=80.0,
-        help="每个 PDB 前检查 cgroup；达到该百分比则安全退出供之后续跑",
+        help="每个 PDB 前检查 cgroup 匿名内存；达到该百分比则安全退出供之后续跑",
     )
     return parser
 

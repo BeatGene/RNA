@@ -47,6 +47,7 @@ FULL_DATA_KEYS = (
     "contact_probs",
     "atom_to_token_idx",
 )
+FULL_DATA_VALIDATION_CACHE = ".full_data_validation_v1.json"
 TRUE_VALUES = {"1", "TRUE", "T", "YES", "Y"}
 MODEL_NAME = "protenix_base_default_v1.0.0"
 FOLDBENCH_SEEDS = "42,66,101,2024,8888"
@@ -189,6 +190,42 @@ def validate_full_data_json(path: Path) -> tuple[bool, str]:
         return True, "OK"
     except OSError as exc:
         return False, f"{type(exc).__name__}: {exc}"
+
+
+def full_data_cache_matches(marker: Path, paths: list[Path]) -> bool:
+    """Return True when a prior five-key validation matches current files."""
+    try:
+        payload = json.loads(marker.read_text(encoding="utf-8"))
+        if payload.get("required_keys") != list(FULL_DATA_KEYS):
+            return False
+        cached = payload.get("files")
+        if not isinstance(cached, dict) or set(cached) != {path.name for path in paths}:
+            return False
+        for path in paths:
+            stat = path.stat()
+            if cached[path.name] != {
+                "size": stat.st_size,
+                "mtime_ns": stat.st_mtime_ns,
+            }:
+                return False
+        return True
+    except (OSError, ValueError, TypeError, json.JSONDecodeError):
+        return False
+
+
+def write_full_data_cache(marker: Path, paths: list[Path]) -> None:
+    payload = {
+        "required_keys": list(FULL_DATA_KEYS),
+        "files": {
+            path.name: {
+                "size": path.stat().st_size,
+                "mtime_ns": path.stat().st_mtime_ns,
+            }
+            for path in paths
+        },
+        "validated_at_utc": utc_now(),
+    }
+    atomic_write_text(marker, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
 
 
 def load_targets(manifest_path: Path) -> list[Target]:
@@ -543,17 +580,31 @@ def inspect_seed(
     invalid_full_data_reasons: list[str] = []
     valid_full_data_count = 0
     if require_full_confidence:
-        for index, paths in sorted(full_data.items()):
-            if len(paths) != 1:
-                invalid_full_data_reasons.append(
-                    f"full_data sample_{index} 重复={len(paths)}"
-                )
-                continue
-            valid, reason = validate_full_data_json(paths[0])
-            if valid:
-                valid_full_data_count += 1
-            else:
-                invalid_full_data_reasons.append(f"{paths[0].name}: {reason}")
+        unique_paths = [paths[0] for _, paths in sorted(full_data.items()) if len(paths) == 1]
+        marker = output_dir / FULL_DATA_VALIDATION_CACHE
+        if len(unique_paths) == len(full_data) and full_data_cache_matches(
+            marker, unique_paths
+        ):
+            valid_full_data_count = len(unique_paths)
+        else:
+            for index, paths in sorted(full_data.items()):
+                if len(paths) != 1:
+                    invalid_full_data_reasons.append(
+                        f"full_data sample_{index} 重复={len(paths)}"
+                    )
+                    continue
+                valid, reason = validate_full_data_json(paths[0])
+                if valid:
+                    valid_full_data_count += 1
+                else:
+                    invalid_full_data_reasons.append(f"{paths[0].name}: {reason}")
+            if not invalid_full_data_reasons and unique_paths:
+                try:
+                    write_full_data_cache(marker, unique_paths)
+                except OSError as exc:
+                    invalid_full_data_reasons.append(
+                        f"写入校验缓存失败: {type(exc).__name__}: {exc}"
+                    )
 
     expected_indices = set(range(expected_samples))
     actual_indices = set(primary)
@@ -747,7 +798,12 @@ def build_audit(
     summary_rows: list[dict[str, Any]] = []
     seed_rows: list[dict[str, Any]] = []
     raw_infos: dict[str, JsonInfo] = {}
-    for target in targets:
+    for target_index, target in enumerate(targets, start=1):
+        if target_index == 1 or target_index % 25 == 0 or target_index == len(targets):
+            print(
+                f"[AUDIT] {target_index}/{len(targets)} {target.pdb_id}",
+                flush=True,
+            )
         raw_paths = raw_index.get(target.pdb_id, [])
         updated_paths = updated_index.get(target.pdb_id, [])
         prep_paths = prep_index.get(target.pdb_id, [])
@@ -1254,7 +1310,12 @@ def run_pred(args: argparse.Namespace) -> None:
     excluded_pdbs = load_pdb_id_file(args.exclude_pdb_file)
     ready: list[tuple[Target, tuple[int, ...], PrepInfo]] = []
     availability: list[dict[str, Any]] = []
-    for target in targets:
+    for target_index, target in enumerate(targets, start=1):
+        if target_index == 1 or target_index % 25 == 0 or target_index == len(targets):
+            print(
+                f"[PRED-AUDIT] {target_index}/{len(targets)} {target.pdb_id}",
+                flush=True,
+            )
         updated = choose_indexed_path(updated_index.get(target.pdb_id, []))
         prep_dir = choose_indexed_path(prep_index.get(target.pdb_id, []))
         prep = inspect_prep(target.pdb_id, updated, prep_dir)
