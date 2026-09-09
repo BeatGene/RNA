@@ -117,12 +117,12 @@ class BuildRefinementPtTest(unittest.TestCase):
         self.assertEqual(sample["geometry_bond_index"].shape[1], 2)
         self.assertEqual(sample["edge_index"].shape[1], 6)
 
-    def build_fixture(self, predicted, native, sequence, pred_style="single", native_style="double"):
+    def build_fixture(self, predicted, native, sequence, pred_style="single", native_style="double", native_sequence=None):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             pred, target, confidence, fm = [root / n for n in ("pred.cif", "native.cif", "conf.json", "fm.pt")]
             write_cif(pred, predicted, sequence, pred_style)
-            write_cif(target, native, sequence, native_style)
+            write_cif(target, native, sequence if native_sequence is None else native_sequence, native_style)
             count = len(sequence)
             confidence.write_text(json.dumps({
                 "atom_to_token_idx": [row[4] - 1 for row in predicted],
@@ -189,6 +189,70 @@ class BuildRefinementPtTest(unittest.TestCase):
         self.assertEqual(mapping, {0: 0, 1: 1, 3: 2})
         self.assertEqual(identity, 1.0)
         self.assertEqual(coverage, 0.75)
+
+    def chain(self, sequence, label="A", auth="A", source="entity_poly_seq"):
+        return module.NativeChain(label, auth, sequence, {}, source,
+                                  tuple(str(i + 1) for i in range(len(sequence))))
+
+    def test_strict_mapping_rejects_mismatch_even_at_high_identity(self):
+        with self.assertRaisesRegex(ValueError, "differs"):
+            module.choose_native_chain([self.chain("ACGUUCGUAC")], "ACGUACGUAC")
+
+    def test_strict_mapping_rejects_ambiguous_repeat_deletion(self):
+        with self.assertRaisesRegex(ValueError, "differs"):
+            module.choose_native_chain([self.chain("ACAAA")], "ACAAAA")
+
+    def test_strict_mapping_rejects_observed_only_even_when_identical(self):
+        with self.assertRaisesRegex(ValueError, "observed-only"):
+            module.choose_native_chain([self.chain("ACGU", source="observed_atoms_only")], "ACGU")
+
+    def test_strict_chain_selection_never_breaks_ties_silently(self):
+        chains = [self.chain("ACGU"), self.chain("ACGU", label="B", auth="B")]
+        with self.assertRaisesRegex(ValueError, "ambiguous native chain"):
+            module.choose_native_chain(chains, "ACGU")
+        chosen, mapping, identity, coverage = module.choose_native_chain(chains, "ACGU", "B")
+        self.assertEqual(chosen.label_chain, "B")
+        self.assertEqual(mapping, {0: 0, 1: 1, 2: 2, 3: 3})
+        self.assertEqual((identity, coverage), (1., 1.))
+        with self.assertRaisesRegex(ValueError, "not found"):
+            module.choose_native_chain(chains, "ACGU", "C")
+
+    def test_conflicting_and_incomplete_entity_positions_are_rejected(self):
+        for rows, message in (("1 1 A\n1 1 G\n", "ambiguous"), ("1 1 A\n1 3 G\n", "incomplete")):
+            block = gemmi.cif.read_string("data_x\nloop_\n_entity_poly_seq.entity_id\n_entity_poly_seq.num\n_entity_poly_seq.mon_id\n" + rows).sole_block()
+            with self.assertRaisesRegex(ValueError, message):
+                module._entity_sequences(block, {})
+
+    def test_repeats_with_complete_sequence_and_missing_coordinates_are_valid(self):
+        rows = []
+        for residue in range(1, 5):
+            for name, xyz in [("P", (0., 0., 0.)), ("C4'", (1., 0., 0.)), ("C1'", (0., 1., 0.))]:
+                rows.append((name[0], name, "A", "A", residue, xyz[0] + 5*residue, xyz[1], xyz[2]))
+        sample = self.build_fixture(rows, [r for r in rows if r[4] != 2], "AAAA")
+        self.assertEqual(sample["target_mask"].tolist(), [True]*3 + [False]*3 + [True]*6)
+        self.assertEqual(sample["prediction_to_native_residue_index"].tolist(), [0, 1, 2, 3])
+        self.assertEqual(sample["native_label_seq_ids"], ["1", "2", "3", "4"])
+        self.assertEqual(sample["native_atom_site_row"].tolist(), [0, 1, 2, -1, -1, -1, 3, 4, 5, 6, 7, 8])
+        self.assertEqual(sample["predicted_atom_site_row"].tolist(), list(range(12)))
+
+    def test_builder_itself_rejects_sequence_mismatch(self):
+        predicted = [("P", "P", "A", "A", 1, 0., 0., 0.),
+                     ("C", "C4'", "A", "A", 1, 1., 0., 0.),
+                     ("C", "C1'", "A", "A", 1, 0., 1., 0.)]
+        native = [(e, a, "G", chain, r, x, y, z) for e, a, _, chain, r, x, y, z in predicted]
+        with self.assertRaisesRegex(ValueError, "differs"):
+            self.build_fixture(predicted, native, "A", native_sequence="G")
+
+    def test_resume_rejects_old_mapping_policy(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "sample.pt"
+            torch.save({"schema_version": 2, "generator_version": "2.1-cif-decoding-purine-bonds"}, path)
+            with self.assertRaisesRegex(ValueError, "current strict mapping"):
+                module.load_resumable_sample(path)
+            payload = {"schema_version": 2, "generator_version": module.GENERATOR_VERSION,
+                       "mapping_policy": module.MAPPING_POLICY}
+            torch.save(payload, path)
+            self.assertEqual(module.load_resumable_sample(path), payload)
 
 
 if __name__ == "__main__":

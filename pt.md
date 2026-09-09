@@ -3,18 +3,19 @@
 本契约对应 `Code_Flow_matching` 当前模型和 `scripts/build_refinement_pt.py`。
 一个 Protenix seed/sample 与一个 native 结构生成一个 `.pt`。
 
-2026-09-09 生成器修正：`generator_version=2.1-cif-decoding-purine-bonds`，
-schema 仍为 v2；新增审计字段 `geometry_template_version=2`。
+2026-09-09 生成器修正：`generator_version=2.2-strict-complete-sequence-mapping`，
+schema 仍为 v2；`geometry_template_version=2`、`atom_mapping_version=3`。
 CIF 字符串先通过 Gemmi 解码语法引号，再规范化原子名；A/G 模板补全 N9—C4。
 旧生成器的 `.pt` 可能含错误 atom-name、缺失键或错误 mask，不能直接复用。
-请使用新的输出目录重建；默认续跑仍会跳过已有文件，仅更新脚本不会更新旧 `.pt`。
+请使用新的输出目录重建。续跑仅复用版本和映射策略匹配的已有文件，旧版文件会报错，
+不会被自动覆盖；需要原地重建时显式使用 `--overwrite`。
 
 ## 最重要的三个约束
 
 1. **预测结构是原子主索引。** `pos_pred[i]`、所有逐原子特征及图中的节点
    `i` 永远表示 Protenix CIF 的同一个 RNA 重原子。不能为了适配 native
    缺失原子而删除预测节点。
-2. **native 缺失通过 `target_mask` 表达。** 能按“序列比对后的残基位置 +
+2. **native 缺失通过 `target_mask` 表达。** 能按“完整序列中的同一残基位置 +
    标准化原子名”唯一对应的原子为 `True`，其他为 `False`。禁止按 CIF 行号、
    `auth_seq_id` 或最近坐标强行配对。
 3. **native 必须先刚体对齐到预测坐标系。** 用所有可靠匹配原子做 Kabsch
@@ -83,16 +84,23 @@ clash、碱基平面）仍可作用于全部预测原子，因为它们不依赖
 
 ### 残基映射
 
-- 优先从 native CIF 的 `_entity_poly_seq` 得到完整聚合物序列，因此整个残基
+- 必须从 native CIF 的 `_entity_poly_seq` 得到完整聚合物序列，因此整个残基
   即使没有任何 `_atom_site` 行也不会导致后续残基错位。
 - 用 `_chem_comp.mon_nstd_parent_comp_id` 将可识别修饰残基映射到母体碱基。
-- 将 Protenix/RNA-FM 序列与 native 完整序列做全局序列比对。
-- 当前脚本要求 identity 与 query coverage 均不低于 0.8，并把实际值写入
-  审计字段。单链标准数据通常应为 1.0；低于 1.0 要看报告。
+- Protenix/RNA-FM 序列必须仅含 A/C/G/U，且与 native 完整序列完全一致；
+  不再允许 80% identity、错配或带 gap 的序列比对作为训练标签依据。
+- 完整序列一致时按位置一一对应；相同碱基重复本身不是问题。缺原子/缺整残基
+  的坐标通过 mask 表达，而不是把完整序列中的位置删除。
+- `_entity_poly_seq.num` 必须从 1 连续编号；同一位置存在不同 monomer 时拒绝。
+- RNA-FM 提供 original_chain_id 时要求 native auth chain 匹配；否则必须只有
+  一条完整序列完全匹配的候选链。多条同分链、只有 observed 序列、序列不一致
+  都进入 issues；不使用几何距离猜测配对。
+- 这些是保守的数据接收条件，不保证挽救所有本来有效但信息不足的结构。
+  对被拒绝样本，需要查原始构建序列或已验证的残基映射，而不是降低阈值。
 
 ### 原子映射
 
-- 在已比对残基内，用 `normalize_atom_name()` 后的原子名匹配；`O1P/O2P/O3P`
+- 在已确定残基内，用 `normalize_atom_name()` 后的原子名匹配，并检查元素一致；`O1P/O2P/O3P`
   会规范为 `OP1/OP2/OP3`，星号会规范成撇号。
 - native 多 altloc 时优先空 altloc/`A`，再取 occupancy 较高者；只读取第一个
   model。
@@ -137,6 +145,10 @@ RNA-FM 源文件的实际 payload 字段是 `residue_embedding`，不是
 - `observed_atom_count/fraction`、`observed_residue_mask`；
 - Kabsch rotation/translation 和 `pre_refinement_aligned_rmsd`；
 - generator/mapping/edge 版本。
+- `mapping_policy`、`native_sequence_source`、`native_label_chain_id`；
+- `prediction_to_native_residue_index[R]`（0-based）与 `native_label_seq_ids[R]`；
+- `predicted_atom_site_row[N]`、`native_atom_site_row[N]`（原始 CIF 表的 0-based
+  行索引，仅作审计，绝不作为跨文件匹配规则；无 native 标签的位置为 -1）。
 
 `observed_residue_mask`、变换矩阵和源路径是审计信息，不应拼入 node feature。
 
@@ -179,4 +191,5 @@ python ~/Code_Flow_matching/scripts/build_refinement_pt.py \
   --output-root ~/Data_Refinement_PT
 ```
 
-默认不覆盖已有 `.pt`，可断点续跑；明确需要重建时加 `--overwrite`。
+默认不覆盖已有 `.pt`，仅复用当前生成器版本及映射策略的文件；旧版本报错。
+明确需要原地重建时加 `--overwrite`，或换用新的输出目录。

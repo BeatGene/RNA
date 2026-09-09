@@ -43,7 +43,8 @@ normalize_atom_name = _constants.normalize_atom_name
 
 
 SCHEMA_VERSION = 2
-GENERATOR_VERSION = "2.1-cif-decoding-purine-bonds"
+GENERATOR_VERSION = "2.2-strict-complete-sequence-mapping"
+MAPPING_POLICY = "complete-canonical-sequence-exact-unique-chain-v1"
 SAMPLE_CIF_RE = re.compile(r"^(?P<prefix>.+)_sample_(?P<sample>\d+)\.cif$", re.I)
 SEED_RE = re.compile(r"^seed_(?P<seed>\d+)$", re.I)
 
@@ -70,6 +71,8 @@ class NativeChain:
     auth_chain: str
     sequence: str
     atoms_by_residue: dict[int, dict[str, Atom]]
+    sequence_source: str = "unknown"
+    label_seq_ids: tuple[str, ...] = ()
 
 
 def _column_values(block: gemmi.cif.Block, tag: str) -> list[str]:
@@ -167,12 +170,20 @@ def _entity_sequences(block: gemmi.cif.Block, parents: dict[str, str]) -> dict[s
     nums = _column_values(block, "_entity_poly_seq.num")
     monomers = _column_values(block, "_entity_poly_seq.mon_id")
     result: dict[str, tuple[list[str], list[str]]] = {}
-    grouped: dict[str, list[tuple[int, str, str]]] = defaultdict(list)
+    if not len(entities) == len(nums) == len(monomers):
+        raise ValueError("incomplete _entity_poly_seq columns; cannot establish residue identity")
+    grouped: dict[str, dict[int, str]] = defaultdict(dict)
     for entity, num, monomer in zip(entities, nums, monomers):
-        grouped[entity].append((int(num), comp_symbol(monomer, parents), num))
+        position = int(num)
+        old = grouped[entity].get(position)
+        if old is not None and old != monomer:
+            raise ValueError(f"ambiguous _entity_poly_seq entity={entity} position={position}: {old}/{monomer}")
+        grouped[entity][position] = monomer
     for entity, rows in grouped.items():
-        rows.sort()
-        result[entity] = ([row[1] for row in rows], [row[2] for row in rows])
+        positions = sorted(rows)
+        if positions != list(range(1, len(positions) + 1)):
+            raise ValueError(f"incomplete _entity_poly_seq numbering for entity={entity}")
+        result[entity] = ([comp_symbol(rows[p], parents) for p in positions], [str(p) for p in positions])
     return result
 
 
@@ -223,7 +234,11 @@ def native_chains(path: Path) -> list[NativeChain]:
         for atom in chain_atoms:
             residue_index = seq_to_index.get(atom.label_seq_id)
             if residue_index is None:
+                if seq_data:
+                    raise ValueError(f"native chain {label_chain} atom row {atom.row} has label_seq_id={atom.label_seq_id!r} outside entity sequence")
                 continue
+            if seq_data and comp_symbol(atom.comp_id, parents) != symbols[residue_index]:
+                raise ValueError(f"native chain {label_chain} label_seq_id={atom.label_seq_id}: atom component {atom.comp_id} disagrees with entity sequence")
             key = (residue_index, atom.atom_name)
             old = selected.get(key)
             preferred_alt = atom.alt_id in {"", ".", "?", "A"}
@@ -241,13 +256,15 @@ def native_chains(path: Path) -> list[NativeChain]:
                 auth_chain=chain_atoms[0].auth_chain,
                 sequence="".join(symbols),
                 atoms_by_residue=dict(by_residue),
+                sequence_source="entity_poly_seq" if seq_data else "observed_atoms_only",
+                label_seq_ids=tuple(seq_ids),
             )
         )
     return result
 
 
 def global_align(query: str, target: str) -> tuple[dict[int, int], float, float]:
-    """Needleman-Wunsch mapping query indices to target indices."""
+    """Diagnostic alignment only; NOT used to authorize training atom matches."""
     n, m = len(query), len(target)
     scores = [[0] * (m + 1) for _ in range(n + 1)]
     trace = [[0] * (m + 1) for _ in range(n + 1)]  # 0 diagonal, 1 up, 2 left
@@ -282,15 +299,29 @@ def global_align(query: str, target: str) -> tuple[dict[int, int], float, float]
 
 
 def choose_native_chain(chains: list[NativeChain], sequence: str, preferred_auth_chain: str = "") -> tuple[NativeChain, dict[int, int], float, float]:
-    candidates = []
-    for chain in chains:
-        mapping, identity, coverage = global_align(sequence, chain.sequence)
-        preferred = int(bool(preferred_auth_chain) and chain.auth_chain == preferred_auth_chain)
-        candidates.append((identity, coverage, preferred, len(mapping), chain, mapping))
-    if not candidates:
-        raise ValueError("native CIF contains no RNA-like polymer chain")
-    identity, coverage, _, _, chain, mapping = max(candidates, key=lambda row: row[:4])
-    return chain, mapping, identity, coverage
+    """Require declared complete sequence and unambiguous chain provenance.
+
+    This deliberately rejects partial/approximate sequence alignments: a
+    unique best alignment is not evidence that a mutated construct is the
+    same experimental RNA. Missing ATOM coordinates are allowed, missing
+    sequence identity information is not.
+    """
+    if not sequence or any(symbol not in "ACGU" for symbol in sequence):
+        raise ValueError("strict mapping requires a nonempty canonical A/C/G/U prediction sequence")
+    if preferred_auth_chain:
+        chains = [chain for chain in chains if chain.auth_chain == preferred_auth_chain]
+        if not chains:
+            raise ValueError(f"RNA-FM original_chain_id={preferred_auth_chain!r} not found in native RNA chains")
+    complete = [chain for chain in chains if chain.sequence_source == "entity_poly_seq"]
+    if not complete:
+        raise ValueError("strict mapping requires native complete _entity_poly_seq; observed-only sequence cannot prove missing-residue positions")
+    exact = [chain for chain in complete if chain.sequence == sequence]
+    if not exact:
+        raise ValueError("native complete sequence differs from prediction; strict mapping rejects mismatches, insertions/deletions and unknown bases (no 80% fallback)")
+    if len(exact) != 1:
+        raise ValueError("ambiguous native chain: multiple complete exact sequence matches; supply verified RNA-FM original_chain_ids")
+    chain = exact[0]
+    return chain, dict(enumerate(range(len(sequence)))), 1.0, 1.0
 
 
 def _tensor(data: dict, key: str, dtype: torch.dtype) -> torch.Tensor:
@@ -464,18 +495,20 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
         residue_index_list.append(local_residue)
 
     native_chain, residue_mapping, identity, coverage = choose_native_chain(native_chains(native_cif), sequence, original_chain)
-    if identity < 0.8 or coverage < 0.8:
-        raise ValueError(f"native sequence mapping below threshold: identity={identity:.3f}, coverage={coverage:.3f}")
     pred_pos = torch.tensor([atom.xyz for atom in selected_atoms], dtype=torch.float32)
+    native_atom_rows = torch.full((len(selected_atoms),), -1, dtype=torch.long)
     native_pairs, pred_pairs, matched_indices = [], [], []
     for pred_residue, native_residue in residue_mapping.items():
         native_atoms = native_chain.atoms_by_residue.get(native_residue, {})
         for atom_name, native_atom in native_atoms.items():
             pred_index = atom_lookup.get((pred_residue, atom_name))
             if pred_index is not None:
+                if selected_atoms[pred_index].element != native_atom.element:
+                    raise ValueError(f"atom element mismatch at residue={pred_residue} atom={atom_name}")
                 native_pairs.append(native_atom.xyz)
                 pred_pairs.append(pred_pos[pred_index])
                 matched_indices.append(pred_index)
+                native_atom_rows[pred_index] = native_atom.row
     if len(matched_indices) < 3:
         raise ValueError(f"only {len(matched_indices)} native atoms could be mapped")
     aligned_native, rotation, translation, aligned_rmsd = kabsch_align(torch.tensor(native_pairs), torch.stack(pred_pairs))
@@ -532,7 +565,14 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
         "protenix_sample": sample_number,
         "protenix_model_name": "protenix_base_default_v1.0.0",
         "protenix_original_token_index": token_index,
-        "atom_mapping_version": 2,
+        "atom_mapping_version": 3,
+        "mapping_policy": MAPPING_POLICY,
+        "native_sequence_source": native_chain.sequence_source,
+        "native_label_chain_id": native_chain.label_chain,
+        "native_label_seq_ids": list(native_chain.label_seq_ids),
+        "prediction_to_native_residue_index": torch.tensor([residue_mapping[i] for i in range(len(sequence))]),
+        "predicted_atom_site_row": selected_rows,
+        "native_atom_site_row": native_atom_rows,
         "edge_type_version": 1,
         "geometry_template_version": 2,
         "rnafm_model_name": str(rnafm.get("model_name", "RNA-FM t12")),
@@ -573,6 +613,16 @@ def write_tsv(path: Path, rows: list[dict], fieldnames: list[str]) -> None:
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames, delimiter="\t")
         writer.writeheader(); writer.writerows(rows)
+
+
+def load_resumable_sample(path: Path) -> dict:
+    payload = torch.load(path, map_location="cpu", weights_only=True)
+    if (not isinstance(payload, dict)
+            or payload.get("schema_version") != SCHEMA_VERSION
+            or payload.get("generator_version") != GENERATOR_VERSION
+            or payload.get("mapping_policy") != MAPPING_POLICY):
+        raise ValueError(f"existing PT was not built with current strict mapping: {path}; use a new output directory or explicitly rebuild with --overwrite")
+    return payload
 
 
 def parse_args() -> argparse.Namespace:
@@ -625,7 +675,8 @@ def main() -> int:
                     try:
                         output_path = args.output_root / split / pdb_id / f"seed_{seed}" / f"sample_{sample_number}.pt"
                         if output_path.exists() and not args.overwrite:
-                            status, payload = "SKIPPED", None
+                            payload = load_resumable_sample(output_path)
+                            status = "SKIPPED"
                         else:
                             payload = build_sample(pred_cif, confidence_json, native_cif, rnafm_path, pdb_id, seed, sample_number)
                             if payload["observed_atom_fraction"] < args.min_observed_atom_fraction:
@@ -676,6 +727,7 @@ def main() -> int:
     summary = {
         "schema_version": SCHEMA_VERSION,
         "generator_version": GENERATOR_VERSION,
+        "mapping_policy": MAPPING_POLICY,
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "created_samples": sum(row["status"] == "CREATED" for row in manifest),
         "skipped_samples": sum(row["status"] == "SKIPPED" for row in manifest),

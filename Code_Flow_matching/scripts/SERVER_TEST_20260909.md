@@ -1,14 +1,18 @@
 # 修复后的服务器验证与测速
 
-本地已通过 6 项生成器回归和 3 项 RMS/梯度回归；完整 CUDA/BF16/DDP 测试需要服务器执行。
+本地已通过 14 项生成器回归、3 项 RMS/梯度回归，以及 2 项输出头 CPU BF16/FP64 回归。
+CUDA 输出头回归在本机跳过，需要服务器运行。
+服务器已通过此前版本的 FP32 冒烟测试及非零条件位移等变性检查；本次修复其暴露的 BF16 索引赋值冲突，CUDA/BF16/DDP 需要重跑。
 上传更新后的 Code_Flow_matching（尤其下列文件）。无需等待 Protenix 全量采样完成。
 
 - scripts/build_refinement_pt.py
 - scripts/test_build_refinement_pt.py
 - scripts/test_masked_rms.py
+- scripts/test_vector_output_amp.py
 - scripts/smoke_test_synthetic.py
 - scripts/check_training_runtime.py
 - etflow/models/model.py
+- etflow/networks/torchmd_net/utils.py
 
 config/RNA_test.yaml 中用户已设置的 clip_during_norm: false 保留；本次没有切换训练目标。
 
@@ -22,6 +26,7 @@ cd ~/Code_Flow_matching
 export PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}"
 python scripts/test_build_refinement_pt.py -v
 python scripts/test_masked_rms.py -v
+CUDA_VISIBLE_DEVICES=0 python scripts/test_vector_output_amp.py -v
 CUDA_VISIBLE_DEVICES=0 python scripts/smoke_test_synthetic.py --device cuda --bf16
 CUDA_VISIBLE_DEVICES=0 python scripts/check_training_runtime.py --config config/RNA_test.yaml --devices 1
 ```
@@ -46,13 +51,13 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python scripts/check_training_runtime.py \
 ## 3. 真实数据生成后的短程测速
 
 可以先生成一部分长度具有代表性的 train/val pt，避免只选最短的 RNA。
-不要复用旧 2.0 生成器的 pt。新 generator_version 是 2.1-cif-decoding-purine-bonds，schema 仍为 2。
-建议新输出目录，例如 ~/Data_Refinement_PT_v2_1；默认续跑跳过已有文件，不会自动修复旧文件。
+新 generator_version 是 2.2-strict-complete-sequence-mapping，schema 仍为 2。
+建议新输出目录，例如 ~/Data_Refinement_PT_v2_2；默认续跑拒绝旧版文件，不会自动覆盖。
 
 ```bash
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python scripts/check_training_runtime.py \
   --config config/RNA_test.yaml --devices 8 \
-  --data-dir ~/Data_Refinement_PT_v2_1 \
+  --data-dir ~/Data_Refinement_PT_v2_2 \
   --train-batches 100 --warmup-batches 10 --val-batches 20
 ```
 
@@ -98,4 +103,5 @@ use_mobility_v1: false
 若用随机插值路径，将 flow_path 改为 stochastic 并保持 sigma > 0。
 真正的多步 flow 推理还需要调用 sample 时传入大于 1 的 n_timesteps；train.py 本身不运行 YAML eval_args。
 同一训练 batch 通常只采一个 t 并前向一次，不会因为推理用 50 步，就把训练开销直接乘 50。
-本次没有修改序列比对的 0.8 阈值或同分路径选择；序列歧义属于另外的映射策略问题。
+数据生成已改为保守的完整序列精确匹配；不接受序列错配、gap 对齐或观察序列代替完整序列。
+完整序列相同但坐标缺失的原子/残基仍通过 target_mask 支持。被拒绝样本进入 generation_issues.tsv。

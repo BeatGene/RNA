@@ -297,11 +297,6 @@ class GatedEquivariantBlock(nn.Module):
         vec1_buffer = self.vec1_proj(v)
 
         # detach zero-entries to avoid NaN gradients during force loss backpropagation
-        vec1 = vec1_buffer.new_zeros(
-            vec1_buffer.size(0),
-            vec1_buffer.size(2),
-        )
-
         # mask = (vec1_buffer != 0).view(vec1_buffer.size(0), -1).any(dim=1)
         mask = (vec1_buffer != 0).reshape(vec1_buffer.size(0), -1).any(dim=1)
         if not mask.all():
@@ -314,7 +309,18 @@ class GatedEquivariantBlock(nn.Module):
                     "unless you change the cutoff."
                 )
             )
-        vec1[mask] = torch.norm(vec1_buffer[mask], dim=-2)
+        # CUDA autocast promotes norm to FP32 even when the projection is
+        # BF16. Allocate the destination from the norm result, not the
+        # projection. Explicit FP32 accumulation also protects low-precision
+        # norms; keep FP64 intact for mathematical equivariance checks.
+        norm_dtype = (
+            torch.float32
+            if vec1_buffer.dtype in (torch.float16, torch.bfloat16)
+            else vec1_buffer.dtype
+        )
+        vec1_norm = torch.norm(vec1_buffer[mask], dim=-2, dtype=norm_dtype)
+        vec1 = vec1_norm.new_zeros(vec1_buffer.size(0), vec1_buffer.size(2))
+        vec1[mask] = vec1_norm
         vec2 = self.vec2_proj(v)
 
         x = torch.cat([x, vec1], dim=-1)
