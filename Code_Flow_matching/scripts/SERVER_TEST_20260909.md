@@ -3,15 +3,21 @@
 本地已通过 14 项生成器回归、3 项 RMS/梯度回归，以及 2 项输出头 CPU BF16/FP64 回归。
 CUDA 输出头回归在本机跳过，需要服务器运行。
 服务器已通过此前版本的 FP32 冒烟测试及非零条件位移等变性检查；本次修复其暴露的 BF16 索引赋值冲突，CUDA/BF16/DDP 需要重跑。
+后续服务器日志已确认输出头 CUDA BF16 测试通过；又发现平面 loss 的协方差在 AMP 下被转回 BF16。
+现已将该协方差及 eigvalsh 放入 autocast-disabled FP32 区域。
+新增 test_plane_loss_amp.py，本地 2 项通过、1 项 CUDA 测试跳过；完整服务器测试仍需重跑。
+置信度开关测试已增加重复输出误差断言，原先出现 repeat_noise=1.578e-02 时仍打印 PASS 的行为已修正；若再次超过容差，会明确报错。
 上传更新后的 Code_Flow_matching（尤其下列文件）。无需等待 Protenix 全量采样完成。
 
 - scripts/build_refinement_pt.py
 - scripts/test_build_refinement_pt.py
 - scripts/test_masked_rms.py
 - scripts/test_vector_output_amp.py
+- scripts/test_plane_loss_amp.py
 - scripts/smoke_test_synthetic.py
 - scripts/check_training_runtime.py
 - etflow/models/model.py
+- etflow/models/loss.py
 - etflow/networks/torchmd_net/utils.py
 
 config/RNA_test.yaml 中用户已设置的 clip_during_norm: false 保留；本次没有切换训练目标。
@@ -27,6 +33,7 @@ export PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}"
 python scripts/test_build_refinement_pt.py -v
 python scripts/test_masked_rms.py -v
 CUDA_VISIBLE_DEVICES=0 python scripts/test_vector_output_amp.py -v
+CUDA_VISIBLE_DEVICES=0 python scripts/test_plane_loss_amp.py -v
 CUDA_VISIBLE_DEVICES=0 python scripts/smoke_test_synthetic.py --device cuda --bf16
 CUDA_VISIBLE_DEVICES=0 python scripts/check_training_runtime.py --config config/RNA_test.yaml --devices 1
 ```

@@ -636,10 +636,13 @@ def check_confidence_switch(enabled_model, disabled_model, batch) -> None:
 
     enabled_dynamic_graph = enabled_model.dynamic_graph
     disabled_dynamic_graph = disabled_model.dynamic_graph
+    enabled_model.eval()
+    disabled_model.eval()
     enabled_model.dynamic_graph = False
     disabled_model.dynamic_graph = False
     try:
         enabled_a = enabled_model(**common, **original)
+        enabled_repeat = enabled_model(**common, **original)
         enabled_b = enabled_model(**common, **changed)
         disabled_output = disabled_model(**common, **deliberately_invalid)
         disabled_repeat_a = disabled_model(**common, **original)
@@ -649,11 +652,28 @@ def check_confidence_switch(enabled_model, disabled_model, batch) -> None:
         disabled_model.dynamic_graph = disabled_dynamic_graph
 
     enabled_difference = (enabled_a - enabled_b).abs().max().item()
+    enabled_repeat_noise = (enabled_a - enabled_repeat).abs().max().item()
     disabled_repeat_noise = (
         disabled_repeat_a - disabled_repeat_b
     ).abs().max().item()
-    assert enabled_difference > 1.0e-6
-    assert torch.isfinite(disabled_output).all()
+    print(
+        "CHECK confidence switch "
+        f"enabled_change={enabled_difference:.3e} "
+        f"enabled_repeat_noise={enabled_repeat_noise:.3e} "
+        f"disabled_repeat_noise={disabled_repeat_noise:.3e} "
+        f"disabled_output_scale={disabled_repeat_a.abs().max().item():.3e}"
+    )
+    # A sensitivity signal must exceed numerical repeat noise. Previously
+    # the check printed PASS even for large differences on identical inputs.
+    torch.testing.assert_close(enabled_a, enabled_repeat, atol=1e-5, rtol=1e-4,
+                               msg="Enabled model changed on identical inputs")
+    torch.testing.assert_close(disabled_repeat_a, disabled_repeat_b, atol=1e-5, rtol=1e-4,
+                               msg="Disabled model changed on identical inputs")
+    torch.testing.assert_close(disabled_output, disabled_repeat_a, atol=1e-5, rtol=1e-4,
+                               msg="Disabled model did not ignore confidence inputs")
+    assert enabled_difference > max(1.0e-6, 10 * enabled_repeat_noise), (
+        "Confidence sensitivity is not distinguishable from repeat noise"
+    )
     print(
         "PASS confidence switch sensitivity "
         f"enabled_change={enabled_difference:.3e} "
@@ -869,19 +889,21 @@ def main() -> None:
         check_mobility_v1(mobility_model, batch)
         check_mobility_configuration(device)
 
-        enabled_model = models[(True, "residual", "deterministic")]
-        disabled_model = models[(False, "residual", "deterministic")]
-        check_confidence_pair_lookup(enabled_model, batch)
-        check_confidence_switch(enabled_model, disabled_model, batch)
-        check_confidence_validation(enabled_model, batch)
-        check_rotational_equivariance(enabled_model, batch)
-
+        # Exercise AMP before the independent confidence sensitivity check,
+        # so a repeatability failure cannot hide AMP regression results.
         if args.bf16:
             for objective, path, mobility in (("residual", "deterministic", True),
                                                ("flow", "deterministic", False),
                                                ("flow", "stochastic", False)):
                 run_training_mode(batch, objective, path, True, device,
                                   use_mobility_v1=mobility, bf16=True)
+
+        enabled_model = models[(True, "residual", "deterministic")]
+        disabled_model = models[(False, "residual", "deterministic")]
+        check_confidence_pair_lookup(enabled_model, batch)
+        check_confidence_switch(enabled_model, disabled_model, batch)
+        check_confidence_validation(enabled_model, batch)
+        check_rotational_equivariance(enabled_model, batch)
 
     print("ALL SYNTHETIC SMOKE TESTS PASSED")
 

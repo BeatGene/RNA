@@ -394,24 +394,18 @@ def base_plane_loss(
         if atom_mask.sum() < 4:
             continue
 
-        base_position = prediction[atom_mask].float()
-        base_position = (
-                base_position
-                - base_position.mean(
-            dim=0,
-            keepdim=True,
-        )
-        )
-
-        covariance = (
+        # .float() on positions alone is insufficient: autocast can cast
+        # the covariance matmul back to BF16. Keep both its accumulation
+        # and eigvalsh in FP32, with autograd still enabled.
+        with torch.autocast(device_type=prediction.device.type, enabled=False):
+            base_position = prediction[atom_mask].float()
+            base_position = base_position - base_position.mean(dim=0, keepdim=True)
+            covariance = (
                 base_position.transpose(0, 1)
                 @ base_position
                 / base_position.size(0)
-        )
-
-        eigenvalues = torch.linalg.eigvalsh(
-            covariance
-        )
+            )
+            eigenvalues = torch.linalg.eigvalsh(covariance)
 
         plane_loss_list.append(
             eigenvalues[0].clamp_min(0)
