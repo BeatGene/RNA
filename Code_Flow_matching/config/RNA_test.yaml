@@ -43,7 +43,7 @@ model_args:
     reduce_op: sum
     qk_norm: true
     so3_equivariant: true
-    clip_during_norm: true
+    clip_during_norm: false
 
     # flow matching specific
     sigma: 0.1

@@ -3,6 +3,12 @@
 本契约对应 `Code_Flow_matching` 当前模型和 `scripts/build_refinement_pt.py`。
 一个 Protenix seed/sample 与一个 native 结构生成一个 `.pt`。
 
+2026-09-09 生成器修正：`generator_version=2.1-cif-decoding-purine-bonds`，
+schema 仍为 v2；新增审计字段 `geometry_template_version=2`。
+CIF 字符串先通过 Gemmi 解码语法引号，再规范化原子名；A/G 模板补全 N9—C4。
+旧生成器的 `.pt` 可能含错误 atom-name、缺失键或错误 mask，不能直接复用。
+请使用新的输出目录重建；默认续跑仍会跳过已有文件，仅更新脚本不会更新旧 `.pt`。
+
 ## 最重要的三个约束
 
 1. **预测结构是原子主索引。** `pos_pred[i]`、所有逐原子特征及图中的节点

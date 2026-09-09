@@ -627,8 +627,18 @@ class BaseFlow(BaseModel):
             reduce="sum",
         )
         valid_residue = observed_count > 0
-        rms_error = torch.sqrt(
-            square_error_sum / observed_count.clamp_min(1.0)
+        mean_square_error = square_error_sum / observed_count.clamp_min(1.0)
+        # Never evaluate sqrt at zero: masking its OUTPUT still allows
+        # 0 * inf in backward, including for wholly unobserved residues.
+        # At exact zero RMS use the zero subgradient, preserving exact values.
+        positive_error = valid_residue & (mean_square_error > 0)
+        safe_mean_square_error = torch.where(
+            positive_error, mean_square_error, torch.ones_like(mean_square_error)
+        )
+        rms_error = torch.where(
+            positive_error,
+            torch.sqrt(safe_mean_square_error),
+            torch.zeros_like(mean_square_error),
         )
         return rms_error, valid_residue
 

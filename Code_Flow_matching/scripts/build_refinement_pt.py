@@ -43,7 +43,7 @@ normalize_atom_name = _constants.normalize_atom_name
 
 
 SCHEMA_VERSION = 2
-GENERATOR_VERSION = "2.0-native-mask-kabsch"
+GENERATOR_VERSION = "2.1-cif-decoding-purine-bonds"
 SAMPLE_CIF_RE = re.compile(r"^(?P<prefix>.+)_sample_(?P<sample>\d+)\.cif$", re.I)
 SEED_RE = re.compile(r"^seed_(?P<seed>\d+)$", re.I)
 
@@ -72,8 +72,15 @@ class NativeChain:
     atoms_by_residue: dict[int, dict[str, Atom]]
 
 
+def _column_values(block: gemmi.cif.Block, tag: str) -> list[str]:
+    # Gemmi's CIF DOM stores lexical values, including surrounding quotes.
+    # Preserve null markers because downstream selection distinguishes them.
+    return [value if value in {".", "?"} else gemmi.cif.as_string(value)
+            for value in block.find_values(tag)]
+
+
 def _values(block: gemmi.cif.Block, tag: str, n: int, default: str = "") -> list[str]:
-    values = list(block.find_values(tag))
+    values = _column_values(block, tag)
     if not values:
         return [default] * n
     if len(values) != n:
@@ -83,7 +90,7 @@ def _values(block: gemmi.cif.Block, tag: str, n: int, default: str = "") -> list
 
 def read_atoms(path: Path) -> tuple[gemmi.cif.Block, list[Atom]]:
     block = gemmi.cif.read_file(str(path)).sole_block()
-    xs = list(block.find_values("_atom_site.Cartn_x"))
+    xs = _column_values(block, "_atom_site.Cartn_x")
     if not xs:
         raise ValueError(f"{path}: no _atom_site rows")
     n = len(xs)
@@ -131,8 +138,8 @@ def read_atoms(path: Path) -> tuple[gemmi.cif.Block, list[Atom]]:
 
 
 def _comp_parent_map(block: gemmi.cif.Block) -> dict[str, str]:
-    ids = list(block.find_values("_chem_comp.id"))
-    parents = list(block.find_values("_chem_comp.mon_nstd_parent_comp_id"))
+    ids = _column_values(block, "_chem_comp.id")
+    parents = _column_values(block, "_chem_comp.mon_nstd_parent_comp_id")
     if len(ids) != len(parents):
         return {}
     return {key.upper(): value.upper() for key, value in zip(ids, parents)}
@@ -156,9 +163,9 @@ def comp_symbol(comp_id: str, parents: dict[str, str]) -> str:
 
 
 def _entity_sequences(block: gemmi.cif.Block, parents: dict[str, str]) -> dict[str, tuple[list[str], list[str]]]:
-    entities = list(block.find_values("_entity_poly_seq.entity_id"))
-    nums = list(block.find_values("_entity_poly_seq.num"))
-    monomers = list(block.find_values("_entity_poly_seq.mon_id"))
+    entities = _column_values(block, "_entity_poly_seq.entity_id")
+    nums = _column_values(block, "_entity_poly_seq.num")
+    monomers = _column_values(block, "_entity_poly_seq.mon_id")
     result: dict[str, tuple[list[str], list[str]]] = {}
     grouped: dict[str, list[tuple[int, str, str]]] = defaultdict(list)
     for entity, num, monomer in zip(entities, nums, monomers):
@@ -174,11 +181,11 @@ def native_chains(path: Path) -> list[NativeChain]:
     block, atoms = read_atoms(path)
     parents = _comp_parent_map(block)
     entity_sequences = _entity_sequences(block, parents)
-    asym_ids = list(block.find_values("_struct_asym.id"))
-    entity_ids = list(block.find_values("_struct_asym.entity_id"))
+    asym_ids = _column_values(block, "_struct_asym.id")
+    entity_ids = _column_values(block, "_struct_asym.entity_id")
     asym_to_entity = dict(zip(asym_ids, entity_ids))
-    polymer_entities = list(block.find_values("_entity_poly.entity_id"))
-    polymer_types = list(block.find_values("_entity_poly.type"))
+    polymer_entities = _column_values(block, "_entity_poly.entity_id")
+    polymer_types = _column_values(block, "_entity_poly.type")
     entity_to_polymer_type = {
         entity: polymer_type.lower()
         for entity, polymer_type in zip(polymer_entities, polymer_types)
@@ -376,8 +383,8 @@ COMMON_BONDS = (
     ("C1'", "O4'", 1.415),
 )
 BASE_BONDS = {
-    "A": (("C1'", "N9", 1.470), ("N9", "C8", 1.370), ("C8", "N7", 1.310), ("N7", "C5", 1.390), ("C5", "C6", 1.400), ("C6", "N1", 1.340), ("N1", "C2", 1.340), ("C2", "N3", 1.330), ("N3", "C4", 1.350), ("C4", "C5", 1.380), ("C6", "N6", 1.340)),
-    "G": (("C1'", "N9", 1.470), ("N9", "C8", 1.370), ("C8", "N7", 1.310), ("N7", "C5", 1.390), ("C5", "C6", 1.400), ("C6", "N1", 1.390), ("N1", "C2", 1.370), ("C2", "N3", 1.330), ("N3", "C4", 1.350), ("C4", "C5", 1.380), ("C6", "O6", 1.230), ("C2", "N2", 1.340)),
+    "A": (("C1'", "N9", 1.470), ("N9", "C8", 1.370), ("N9", "C4", 1.370), ("C8", "N7", 1.310), ("N7", "C5", 1.390), ("C5", "C6", 1.400), ("C6", "N1", 1.340), ("N1", "C2", 1.340), ("C2", "N3", 1.330), ("N3", "C4", 1.350), ("C4", "C5", 1.380), ("C6", "N6", 1.340)),
+    "G": (("C1'", "N9", 1.470), ("N9", "C8", 1.370), ("N9", "C4", 1.370), ("C8", "N7", 1.310), ("N7", "C5", 1.390), ("C5", "C6", 1.400), ("C6", "N1", 1.390), ("N1", "C2", 1.370), ("C2", "N3", 1.330), ("N3", "C4", 1.350), ("C4", "C5", 1.380), ("C6", "O6", 1.230), ("C2", "N2", 1.340)),
     "C": (("C1'", "N1", 1.470), ("N1", "C2", 1.380), ("C2", "N3", 1.340), ("N3", "C4", 1.350), ("C4", "C5", 1.430), ("C5", "C6", 1.340), ("C6", "N1", 1.370), ("C2", "O2", 1.230), ("C4", "N4", 1.340)),
     "U": (("C1'", "N1", 1.470), ("N1", "C2", 1.380), ("C2", "N3", 1.370), ("N3", "C4", 1.380), ("C4", "C5", 1.450), ("C5", "C6", 1.340), ("C6", "N1", 1.370), ("C2", "O2", 1.220), ("C4", "O4", 1.230)),
 }
@@ -527,6 +534,7 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
         "protenix_original_token_index": token_index,
         "atom_mapping_version": 2,
         "edge_type_version": 1,
+        "geometry_template_version": 2,
         "rnafm_model_name": str(rnafm.get("model_name", "RNA-FM t12")),
         "native_sequence": native_chain.sequence,
         "native_sequence_identity": identity,

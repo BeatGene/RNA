@@ -194,11 +194,26 @@ def make_synthetic_sample(sample_index: int) -> dict:
     token_pair_pde = 0.5 + token_row + 2.0 * token_col
     contact_probs = torch.exp(-(token_row - token_col).abs())
 
+    target_mask = torch.ones(pos.size(0), dtype=torch.bool)
+    if sample_index == 0:
+        target_mask[-1] = False  # Partially observed residue.
+    else:
+        target_mask[residue_index == 1] = False  # Entirely unobserved residue.
+    # Match the generator contract: align observed native atoms into the
+    # predicted frame, then fill missing coordinates with pos_pred.
+    mobile = pos[target_mask].double()
+    fixed = pos_pred[target_mask].double()
+    u, _, vh = torch.linalg.svd((mobile - mobile.mean(0)).T @ (fixed - fixed.mean(0)))
+    correction = torch.eye(3, dtype=torch.double)
+    correction[-1, -1] = torch.det(u @ vh).sign()
+    pos = ((pos.double() - mobile.mean(0)) @ (u @ correction @ vh) + fixed.mean(0)).float()
+    pos[~target_mask] = pos_pred[~target_mask]
+
     return {
         "schema_version": 2,
         "pos": pos.float(),
         "pos_pred": pos_pred.float(),
-        "target_mask": torch.ones(pos.size(0), dtype=torch.bool),
+        "target_mask": target_mask,
         "atomic_numbers": atomic_numbers,
         "sequence": residue_letters,
         "edge_index": edge_index,
@@ -229,6 +244,8 @@ def validate_batch(batch) -> None:
     assert batch.pos.shape == batch.pos_pred.shape == (num_atoms, 3)
     assert batch.target_mask.shape == (num_atoms,)
     assert batch.target_mask.dtype == torch.bool
+    assert int((~batch.target_mask).sum()) == 7
+    torch.testing.assert_close(batch.pos[~batch.target_mask], batch.pos_pred[~batch.target_mask])
     assert batch.atomic_numbers.dtype == torch.long
     assert batch.edge_index.dtype == torch.long
     assert batch.geometry_bond_index.dtype == torch.long
@@ -381,6 +398,7 @@ def run_training_mode(
     confidence_conditioning: bool,
     device,
     use_mobility_v1: bool = False,
+    bf16: bool = False,
 ):
     model = make_model(
         training_objective,
@@ -392,7 +410,8 @@ def run_training_mode(
     model.train()
     model.zero_grad(set_to_none=True)
 
-    loss = model.generic_step(batch, batch_idx=0, stage="train")
+    with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=bf16):
+        loss = model.generic_step(batch, batch_idx=0, stage="train")
     assert loss.ndim == 0
     assert torch.isfinite(loss)
     loss.backward()
@@ -434,7 +453,7 @@ def run_training_mode(
         f"PASS confidence={confidence_label:<3} "
         f"mobility_v1={mobility_label:<3} "
         f"objective={training_objective:<8} path={flow_path:<13} "
-        f"loss={loss.detach().item():.6f}"
+        f"bf16={bf16} loss={loss.detach().item():.6f}"
     )
     return model
 
@@ -681,23 +700,26 @@ def check_confidence_validation(model, batch) -> None:
 def check_rotational_equivariance(model, batch) -> None:
     model.eval()
     angle = 0.71
-    graph_rotation = torch.tensor(
-        [
-            [math.cos(angle), -math.sin(angle), 0.0],
-            [math.sin(angle), math.cos(angle), 0.0],
-            [0.0, 0.0, 1.0],
-        ],
-        dtype=batch.pos.dtype,
-        device=batch.pos.device,
-    )
-    rotated_graph_pos = batch.pos_pred @ graph_rotation.T
+    axis = torch.tensor([1., 2., 3.], dtype=batch.pos.dtype, device=batch.pos.device)
+    axis = axis / axis.norm()
+    a, b, c = axis.unbind()
+    zero = torch.zeros_like(a)
+    skew = torch.stack([zero, -c, b, c, zero, -a, -b, a, zero]).reshape(3, 3)
+    graph_rotation = (math.cos(angle) * torch.eye(3, device=axis.device)
+                      + (1 - math.cos(angle)) * axis[:, None] * axis[None, :]
+                      + math.sin(angle) * skew)
+    graph_pos = 0.63 * batch.pos_pred + 0.37 * batch.pos
+    rotated_graph_pos = graph_pos @ graph_rotation.T
+    # This mathematical check excludes neighbor truncation; real cap/backend
+    # behavior should be assessed separately on representative large RNAs.
+    neighbor_cap = max(model.max_num_neighbors, batch.num_nodes)
     edge_index, edge_attr = merge_dynamic_radius_edges(
-        pos=batch.pos_pred,
+        pos=graph_pos,
         batch=batch.batch,
         bond_index=batch.edge_index,
         edge_attr=batch.edge_attr,
         cutoff=model.cutoff,
-        max_num_neighbors=model.max_num_neighbors,
+        max_num_neighbors=neighbor_cap,
         num_edge_types=model.num_edge_types,
         dynamic_edge_type=model.dynamic_edge_type,
     )
@@ -707,7 +729,7 @@ def check_rotational_equivariance(model, batch) -> None:
         bond_index=batch.edge_index,
         edge_attr=batch.edge_attr,
         cutoff=model.cutoff,
-        max_num_neighbors=model.max_num_neighbors,
+        max_num_neighbors=neighbor_cap,
         num_edge_types=model.num_edge_types,
         dynamic_edge_type=model.dynamic_edge_type,
     )
@@ -725,8 +747,12 @@ def check_rotational_equivariance(model, batch) -> None:
         torch.float64 if batch.pos.is_cuda else batch.pos.dtype
     )
     rotation = graph_rotation.to(dtype=evaluation_dtype)
-    pos = batch.pos_pred.to(dtype=evaluation_dtype)
-    rotated_pos = pos @ rotation.T
+    pos = graph_pos.to(dtype=evaluation_dtype)
+    source = batch.pos_pred.to(dtype=evaluation_dtype)
+    assert not torch.allclose(pos, source), "Source displacement branch must be active"
+    translation = pos.new_tensor([2.3, -1.1, 0.7])
+    rotated_pos = pos @ rotation.T + translation
+    rotated_source = source @ rotation.T + translation
     t = torch.full(
         (int(batch.batch.max().item()) + 1, 1),
         0.37,
@@ -754,12 +780,12 @@ def check_rotational_equivariance(model, batch) -> None:
     try:
         output = model(
             pos=pos,
-            pos_source=pos,
+            pos_source=source,
             **common,
         )
         rotated_output = model(
             pos=rotated_pos,
-            pos_source=rotated_pos,
+            pos_source=rotated_source,
             **common,
         )
     finally:
@@ -768,7 +794,8 @@ def check_rotational_equivariance(model, batch) -> None:
     max_error = (rotated_output - output @ rotation.T).abs().max().item()
     assert max_error < 2.0e-4, f"Rotational equivariance error: {max_error:.3e}"
     print(
-        "PASS dynamic-graph rotation invariance and network equivariance "
+        "PASS untruncated graph rotation invariance and network equivariance "
+        "(nonzero source displacement, arbitrary axis, common translation) "
         f"dtype={evaluation_dtype} max_error={max_error:.3e}"
     )
 
@@ -776,6 +803,7 @@ def check_rotational_equivariance(model, batch) -> None:
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
+    parser.add_argument("--bf16", action="store_true", help="Also test CUDA BF16 autocast forward/backward")
     return parser.parse_args()
 
 
@@ -788,6 +816,8 @@ def main() -> None:
     )
     if device.type == "cuda" and not torch.cuda.is_available():
         raise SystemExit("CUDA was requested but torch.cuda.is_available() is False")
+    if args.bf16 and device.type != "cuda":
+        raise SystemExit("--bf16 requires --device cuda")
 
     torch.manual_seed(7)
     print(f"PyTorch={torch.__version__} device={device}")
@@ -845,6 +875,13 @@ def main() -> None:
         check_confidence_switch(enabled_model, disabled_model, batch)
         check_confidence_validation(enabled_model, batch)
         check_rotational_equivariance(enabled_model, batch)
+
+        if args.bf16:
+            for objective, path, mobility in (("residual", "deterministic", True),
+                                               ("flow", "deterministic", False),
+                                               ("flow", "stochastic", False)):
+                run_training_mode(batch, objective, path, True, device,
+                                  use_mobility_v1=mobility, bf16=True)
 
     print("ALL SYNTHETIC SMOKE TESTS PASSED")
 
