@@ -195,8 +195,10 @@ class BuildRefinementPtTest(unittest.TestCase):
                                   tuple(str(i + 1) for i in range(len(sequence))))
 
     def test_strict_mapping_rejects_mismatch_even_at_high_identity(self):
-        with self.assertRaisesRegex(ValueError, "differs"):
+        with self.assertRaisesRegex(ValueError, "differs") as caught:
             module.choose_native_chain([self.chain("ACGUUCGUAC")], "ACGUACGUAC")
+        self.assertIn("prediction_sequence='ACGUACGUAC'", str(caught.exception))
+        self.assertIn("'sequence': 'ACGUUCGUAC'", str(caught.exception))
 
     def test_strict_mapping_rejects_ambiguous_repeat_deletion(self):
         with self.assertRaisesRegex(ValueError, "differs"):
@@ -253,6 +255,84 @@ class BuildRefinementPtTest(unittest.TestCase):
                        "mapping_policy": module.MAPPING_POLICY}
             torch.save(payload, path)
             self.assertEqual(module.load_resumable_sample(path), payload)
+
+    def test_builder_rejects_atom_plddt_length_mismatch(self):
+        rows = [("P", "P", "A", "A", 1, 0., 0., 0.),
+                ("C", "C4'", "A", "A", 1, 1., 0., 0.),
+                ("C", "C1'", "A", "A", 1, 0., 1., 0.)]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pred, native = root / "pred.cif", root / "native.cif"
+            confidence, fm = root / "conf.json", root / "fm.pt"
+            write_cif(pred, rows, "A")
+            write_cif(native, rows, "A")
+            confidence.write_text(json.dumps({
+                "atom_to_token_idx": [0, 0, 0],
+                "atom_plddt": [0.9, 0.9],
+                "token_pair_pae": [[0.0]],
+                "token_pair_pde": [[0.0]],
+                "contact_probs": [[1.0]],
+            }), encoding="utf-8")
+            torch.save({"residue_embedding": torch.zeros(1, 640),
+                        "sequences": ["A"], "chain_offsets": [0, 1]}, fm)
+            with self.assertRaisesRegex(ValueError, "atom_plddt.*different lengths"):
+                module.build_sample(pred, confidence, native, fm, "test", 0, 0)
+
+    def test_dry_run_builds_and_reports_without_writing_pt(self):
+        rows = [("P", "P", "A", "A", 1, 0., 0., 0.),
+                ("C", "C4'", "A", "A", 1, 1., 0., 0.),
+                ("C", "C1'", "A", "A", 1, 0., 1., 0.)]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            prediction_root = root / "predictions"
+            native_root = root / "native"
+            rnafm_root = root / "rnafm"
+            output_root = root / "output"
+            sample_dir = prediction_root / "train" / "1abc" / "seed_7" / "predictions"
+            sample_dir.mkdir(parents=True)
+            bad_sample_dir = prediction_root / "train" / "2def" / "seed_7" / "predictions"
+            bad_sample_dir.mkdir(parents=True)
+            native_root.mkdir()
+            (rnafm_root / "1ABC").mkdir(parents=True)
+            pred = sample_dir / "1abc_sample_0.cif"
+            confidence = sample_dir / "1abc_full_data_sample_0.json"
+            write_cif(pred, rows, "A")
+            write_cif(native_root / "1abc.cif", rows, "A")
+            write_cif(bad_sample_dir / "2def_sample_0.cif", rows, "A")
+            confidence.write_text(json.dumps({
+                "atom_to_token_idx": [0, 0, 0],
+                "atom_plddt": [0.9, 0.9, 0.9],
+                "token_pair_pae": [[0.0]],
+                "token_pair_pde": [[0.0]],
+                "contact_probs": [[1.0]],
+            }), encoding="utf-8")
+            torch.save({"residue_embedding": torch.zeros(1, 640),
+                        "sequences": ["A"], "chain_offsets": [0, 1]},
+                       rnafm_root / "1ABC" / "rnafm_t12_residue_embeddings.pt")
+
+            result = module.main([
+                "--prediction-root", str(prediction_root),
+                "--native-root", str(native_root),
+                "--rnafm-root", str(rnafm_root),
+                "--output-root", str(output_root),
+                "--split", "train",
+                "--dry-run",
+            ])
+
+            self.assertEqual(result, 1)
+            self.assertEqual(list(output_root.rglob("*.pt")), [])
+            for split in ("train", "val", "test"):
+                self.assertTrue((output_root / split).is_dir())
+            summary = json.loads((output_root / "dry_run_summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(summary["mode"], "dry_run")
+            self.assertEqual(summary["dry_run_samples"], 1)
+            self.assertEqual(summary["failed_samples"], 1)
+            self.assertEqual(summary["problem_pdb_ids"], ["2DEF"])
+            self.assertGreater(summary["estimated_total_pt_bytes"], 0)
+            self.assertIsNotNone(summary["estimated_full_generation_seconds"])
+            self.assertTrue((output_root / "dry_run_manifest.tsv").is_file())
+            self.assertTrue((output_root / "dry_run_issues.tsv").is_file())
+            self.assertIn("2DEF", (output_root / "dry_run_issues.tsv").read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

@@ -12,8 +12,10 @@ import argparse
 import csv
 import functools
 import importlib.util
+import io
 import json
 import re
+import time
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -298,6 +300,26 @@ def global_align(query: str, target: str) -> tuple[dict[int, int], float, float]
     return mapping, identity, coverage
 
 
+def _sequence_mapping_error(
+    message: str,
+    prediction_sequence: str,
+    chains: list[NativeChain],
+) -> ValueError:
+    native_sequences = [
+        {
+            "label_chain": chain.label_chain,
+            "auth_chain": chain.auth_chain,
+            "sequence_source": chain.sequence_source,
+            "sequence": chain.sequence,
+        }
+        for chain in chains
+    ]
+    return ValueError(
+        f"{message}; prediction_sequence={prediction_sequence!r}; "
+        f"native_sequences={native_sequences!r}"
+    )
+
+
 def choose_native_chain(chains: list[NativeChain], sequence: str, preferred_auth_chain: str = "") -> tuple[NativeChain, dict[int, int], float, float]:
     """Require declared complete sequence and unambiguous chain provenance.
 
@@ -306,20 +328,41 @@ def choose_native_chain(chains: list[NativeChain], sequence: str, preferred_auth
     same experimental RNA. Missing ATOM coordinates are allowed, missing
     sequence identity information is not.
     """
+    all_chains = chains
     if not sequence or any(symbol not in "ACGU" for symbol in sequence):
-        raise ValueError("strict mapping requires a nonempty canonical A/C/G/U prediction sequence")
+        raise _sequence_mapping_error(
+            "strict mapping requires a nonempty canonical A/C/G/U prediction sequence",
+            sequence,
+            all_chains,
+        )
     if preferred_auth_chain:
         chains = [chain for chain in chains if chain.auth_chain == preferred_auth_chain]
         if not chains:
-            raise ValueError(f"RNA-FM original_chain_id={preferred_auth_chain!r} not found in native RNA chains")
+            raise _sequence_mapping_error(
+                f"RNA-FM original_chain_id={preferred_auth_chain!r} not found in native RNA chains",
+                sequence,
+                all_chains,
+            )
     complete = [chain for chain in chains if chain.sequence_source == "entity_poly_seq"]
     if not complete:
-        raise ValueError("strict mapping requires native complete _entity_poly_seq; observed-only sequence cannot prove missing-residue positions")
+        raise _sequence_mapping_error(
+            "strict mapping requires native complete _entity_poly_seq; observed-only sequence cannot prove missing-residue positions",
+            sequence,
+            chains,
+        )
     exact = [chain for chain in complete if chain.sequence == sequence]
     if not exact:
-        raise ValueError("native complete sequence differs from prediction; strict mapping rejects mismatches, insertions/deletions and unknown bases (no 80% fallback)")
+        raise _sequence_mapping_error(
+            "native complete sequence differs from prediction; strict mapping rejects mismatches, insertions/deletions and unknown bases (no 80% fallback)",
+            sequence,
+            complete,
+        )
     if len(exact) != 1:
-        raise ValueError("ambiguous native chain: multiple complete exact sequence matches; supply verified RNA-FM original_chain_ids")
+        raise _sequence_mapping_error(
+            "ambiguous native chain: multiple complete exact sequence matches; supply verified RNA-FM original_chain_ids",
+            sequence,
+            exact,
+        )
     chain = exact[0]
     return chain, dict(enumerate(range(len(sequence)))), 1.0, 1.0
 
@@ -365,6 +408,25 @@ def choose_predicted_and_embedding_chain(
     pred_candidates = _predicted_chain_candidates(atoms, atom_to_token, parents)
     sequences = [str(value).upper() for value in rnafm["sequences"]]
     offsets = torch.as_tensor(rnafm["chain_offsets"], dtype=torch.long).tolist()
+    all_embeddings = torch.as_tensor(rnafm["residue_embedding"])
+    if len(offsets) != len(sequences) + 1:
+        raise ValueError(
+            "RNA-FM chain_offsets must have one more entry than sequences: "
+            f"got {len(offsets)} offsets for {len(sequences)} sequences"
+        )
+    if not offsets or offsets[0] != 0 or any(left > right for left, right in zip(offsets, offsets[1:])):
+        raise ValueError("RNA-FM chain_offsets must start at zero and be nondecreasing")
+    if all_embeddings.ndim != 2 or offsets[-1] != len(all_embeddings):
+        raise ValueError(
+            "RNA-FM chain_offsets do not span residue_embedding: "
+            f"last offset={offsets[-1] if offsets else None}, embedding rows={len(all_embeddings)}"
+        )
+    for chain_index, sequence in enumerate(sequences):
+        if offsets[chain_index + 1] - offsets[chain_index] != len(sequence):
+            raise ValueError(
+                f"RNA-FM chain {chain_index} sequence length {len(sequence)} disagrees "
+                f"with its embedding span {offsets[chain_index + 1] - offsets[chain_index]}"
+            )
     expected_ids = [str(value) for value in rnafm.get("expected_protenix_chain_ids", [])]
     original_ids = [str(value) for value in rnafm.get("original_chain_ids", [])]
     matches = []
@@ -381,7 +443,7 @@ def choose_predicted_and_embedding_chain(
         raise ValueError("predicted/RNA-FM chain match is ambiguous")
     _, pred_chain, tokens, sequence, chain_index = matches[0]
     start, stop = offsets[chain_index], offsets[chain_index + 1]
-    embedding = torch.as_tensor(rnafm["residue_embedding"])[start:stop]
+    embedding = all_embeddings[start:stop]
     original_chain = original_ids[chain_index] if chain_index < len(original_ids) else ""
     return pred_chain, tokens, sequence, embedding, original_chain
 
@@ -474,8 +536,19 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
         confidence = json.load(handle)
     atom_to_token_all = _tensor(confidence, "atom_to_token_idx", torch.long).view(-1)
     atom_plddt_all = _tensor(confidence, "atom_plddt", torch.float32).view(-1)
-    if len(atom_to_token_all) != len(list(block.find_values("_atom_site.Cartn_x"))):
-        raise ValueError("predicted CIF atom rows and full-data JSON atom mapping have different lengths")
+    cif_atom_count = len(list(block.find_values("_atom_site.Cartn_x")))
+    if len(atom_to_token_all) != cif_atom_count:
+        raise ValueError(
+            "predicted CIF atom rows and full-data JSON atom_to_token_idx have "
+            f"different lengths: {cif_atom_count} versus {len(atom_to_token_all)}"
+        )
+    if len(atom_plddt_all) != cif_atom_count:
+        raise ValueError(
+            "predicted CIF atom rows and full-data JSON atom_plddt have "
+            f"different lengths: {cif_atom_count} versus {len(atom_plddt_all)}"
+        )
+    if bool((atom_to_token_all < 0).any()):
+        raise ValueError("atom_to_token_idx contains a negative token index")
     rnafm = load_rnafm(rnafm_path)
     pred_chain, original_tokens, sequence, embedding, original_chain = choose_predicted_and_embedding_chain(block, all_atoms, atom_to_token_all, rnafm)
     if embedding.shape != (len(sequence), 640):
@@ -520,6 +593,8 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
 
     selected_rows = torch.tensor([atom.row for atom in selected_atoms], dtype=torch.long)
     atom_plddt = atom_plddt_all[selected_rows]
+    if not bool(torch.isfinite(atom_plddt).all()):
+        raise ValueError("atom_plddt contains NaN or Inf")
     if atom_plddt.max() > 1.0 and atom_plddt.max() <= 100.0:
         atom_plddt = atom_plddt / 100.0
     if atom_plddt.min() < 0 or atom_plddt.max() > 1:
@@ -530,6 +605,15 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
         matrix = _tensor(confidence, source_key, torch.float32)
         if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
             raise ValueError(f"{source_key} must be a square matrix")
+        if token_index.numel() and int(token_index.max()) >= matrix.shape[0]:
+            raise ValueError(
+                f"{source_key} has size {matrix.shape[0]}, but selected token index "
+                f"{int(token_index.max())} is out of range"
+            )
+        if not bool(torch.isfinite(matrix).all()):
+            raise ValueError(f"{source_key} contains NaN or Inf")
+        if source_key == "contact_probs" and (float(matrix.min()) < 0.0 or float(matrix.max()) > 1.0):
+            raise ValueError("contact_probs is outside [0, 1]")
         pair_features[target_key] = matrix[token_index][:, token_index].half().contiguous()
 
     residue_index = torch.tensor(residue_index_list, dtype=torch.long)
@@ -615,6 +699,20 @@ def write_tsv(path: Path, rows: list[dict], fieldnames: list[str]) -> None:
         writer.writeheader(); writer.writerows(rows)
 
 
+def serialized_size(payload: dict) -> int:
+    """Run torch serialization without creating a .pt file and return its size."""
+    buffer = io.BytesIO()
+    torch.save(payload, buffer)
+    return buffer.tell()
+
+
+def format_duration(seconds: float) -> str:
+    seconds = max(0.0, seconds)
+    hours, remainder = divmod(int(round(seconds)), 3600)
+    minutes, secs = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+
+
 def load_resumable_sample(path: Path) -> dict:
     payload = torch.load(path, map_location="cpu", weights_only=True)
     if (not isinstance(payload, dict)
@@ -625,13 +723,13 @@ def load_resumable_sample(path: Path) -> dict:
     return payload
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     home = Path.home()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prediction-root", type=Path, default=home / "Data_V1")
     parser.add_argument("--native-root", type=Path, default=home / "pdb_data")
     parser.add_argument("--rnafm-root", type=Path, default=home / "Data_FM/RNA_FM_embeddings")
-    parser.add_argument("--output-root", type=Path, default=home / "Data_Refinement_PT")
+    parser.add_argument("--output-root", type=Path, default=home / "Data_PT_V1")
     parser.add_argument("--split", nargs="+", choices=("train", "val", "test"), default=("train", "val", "test"))
     parser.add_argument("--pdb-id", nargs="*", help="Optional case-insensitive PDB ID subset")
     parser.add_argument(
@@ -642,16 +740,31 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--fail-fast", action="store_true")
-    return parser.parse_args()
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help=(
+            "Build and validate every sample and serialize it in memory, but do not "
+            "create or modify any .pt file. Write dry-run reports under output-root."
+        ),
+    )
+    return parser.parse_args(argv)
 
 
-def main() -> int:
-    args = parse_args()
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
     if not 0.0 <= args.min_observed_atom_fraction <= 1.0:
         raise SystemExit("--min-observed-atom-fraction must be in [0, 1]")
+    run_started = time.perf_counter()
+    started_utc = datetime.now(timezone.utc).isoformat()
+    args.output_root.mkdir(parents=True, exist_ok=True)
+    for output_split in ("train", "val", "test"):
+        (args.output_root / output_split).mkdir(parents=True, exist_ok=True)
     selected_ids = {value.lower() for value in args.pdb_id} if args.pdb_id else None
     manifest: list[dict] = []
     issues: list[dict] = []
+    discovered_samples = 0
+    total_estimated_pt_bytes = 0
     for split in args.split:
         split_dir = args.prediction_root / split
         if not split_dir.is_dir():
@@ -667,14 +780,42 @@ def main() -> int:
                 predictions = list(find_predictions(pdb_dir))
                 if not predictions:
                     raise FileNotFoundError(f"no primary sample CIF under {pdb_dir}")
+                discovered_samples += len(predictions)
+                destinations: dict[tuple[int, int], list[Path]] = defaultdict(list)
+                for pred_cif, _, seed, sample_number in predictions:
+                    destinations[(seed, sample_number)].append(pred_cif)
+                collisions = {
+                    key: paths for key, paths in destinations.items() if len(paths) > 1
+                }
+                if collisions:
+                    details = "; ".join(
+                        f"seed_{seed}/sample_{sample}: {[str(path) for path in paths]}"
+                        for (seed, sample), paths in sorted(collisions.items())
+                    )
+                    raise ValueError(
+                        "multiple prediction CIFs map to the same output path: " + details
+                    )
                 if not native_cif.is_file():
                     raise FileNotFoundError(native_cif)
                 if not rnafm_path.is_file():
                     raise FileNotFoundError(rnafm_path)
                 for pred_cif, confidence_json, seed, sample_number in predictions:
+                    sample_started = time.perf_counter()
                     try:
                         output_path = args.output_root / split / pdb_id / f"seed_{seed}" / f"sample_{sample_number}.pt"
-                        if output_path.exists() and not args.overwrite:
+                        estimated_pt_bytes = ""
+                        if args.dry_run:
+                            payload = build_sample(pred_cif, confidence_json, native_cif, rnafm_path, pdb_id, seed, sample_number)
+                            if payload["observed_atom_fraction"] < args.min_observed_atom_fraction:
+                                raise ValueError(
+                                    "observed native atom fraction "
+                                    f"{payload['observed_atom_fraction']:.3f} is below "
+                                    f"{args.min_observed_atom_fraction:.3f}"
+                                )
+                            estimated_pt_bytes = serialized_size(payload)
+                            total_estimated_pt_bytes += estimated_pt_bytes
+                            status = "DRY_RUN_OK"
+                        elif output_path.exists() and not args.overwrite:
                             payload = load_resumable_sample(output_path)
                             status = "SKIPPED"
                         else:
@@ -690,6 +831,7 @@ def main() -> int:
                             torch.save(payload, temporary)
                             temporary.replace(output_path)
                             status = "CREATED"
+                        duration_seconds = time.perf_counter() - sample_started
                         manifest.append({
                             "split": split, "pdb_id": pdb_id.upper(), "seed": seed,
                             "sample": sample_number, "status": status,
@@ -697,44 +839,118 @@ def main() -> int:
                             "observed_atom_count": int(payload["target_mask"].sum()) if payload else "",
                             "observed_atom_fraction": f"{float(payload['target_mask'].float().mean()):.6f}" if payload else "",
                             "pre_refinement_aligned_rmsd": f"{float(payload['pre_refinement_aligned_rmsd']):.6f}" if payload else "",
+                            "duration_seconds": f"{duration_seconds:.6f}",
+                            "estimated_pt_bytes": estimated_pt_bytes,
                             "output": str(output_path),
                         })
                     except Exception as exc:
                         issues.append({
                             "split": split, "pdb_id": pdb_id.upper(),
                             "sample": f"seed_{seed}/sample_{sample_number}",
+                            "duration_seconds": f"{time.perf_counter() - sample_started:.6f}",
                             "error": f"{type(exc).__name__}: {exc}",
                         })
                         if args.fail_fast:
                             raise
             except Exception as exc:  # continue bulk generation but make every failure auditable
-                issues.append({"split": split, "pdb_id": pdb_id.upper(), "sample": "", "error": f"{type(exc).__name__}: {exc}"})
+                issues.append({"split": split, "pdb_id": pdb_id.upper(), "sample": "", "duration_seconds": "", "error": f"{type(exc).__name__}: {exc}"})
                 if args.fail_fast:
                     raise
-    args.output_root.mkdir(parents=True, exist_ok=True)
+    report_prefix = "dry_run_" if args.dry_run else "generation_"
+    manifest_path = args.output_root / f"{report_prefix}manifest.tsv"
+    issues_path = args.output_root / f"{report_prefix}issues.tsv"
+    summary_path = args.output_root / f"{report_prefix}summary.json"
     write_tsv(
-        args.output_root / "generation_manifest.tsv",
+        manifest_path,
         manifest,
         ["split", "pdb_id", "seed", "sample", "status", "atom_count",
          "observed_atom_count", "observed_atom_fraction",
-         "pre_refinement_aligned_rmsd", "output"],
+         "pre_refinement_aligned_rmsd", "duration_seconds", "estimated_pt_bytes", "output"],
     )
     write_tsv(
-        args.output_root / "generation_issues.tsv",
+        issues_path,
         issues,
-        ["split", "pdb_id", "sample", "error"],
+        ["split", "pdb_id", "sample", "duration_seconds", "error"],
     )
+    elapsed_seconds = time.perf_counter() - run_started
+    problem_pdb_ids = sorted({row["pdb_id"] for row in issues if row["pdb_id"]})
+    failed_samples = max(0, discovered_samples - len(manifest))
+    successful_sample_seconds = sum(float(row["duration_seconds"]) for row in manifest)
+    failed_attempt_seconds = sum(
+        float(row["duration_seconds"])
+        for row in issues
+        if row.get("duration_seconds")
+    )
+    non_sample_seconds = max(
+        0.0, elapsed_seconds - successful_sample_seconds - failed_attempt_seconds
+    )
+    average_successful_sample_seconds = (
+        successful_sample_seconds / len(manifest) if manifest else None
+    )
+    estimated_full_generation_seconds = None
+    estimated_total_pt_bytes = None
+    estimate_basis = None
+    if args.dry_run and manifest:
+        # A failed sample often exits much earlier than a valid one. Replace its
+        # failed-attempt duration with the mean validated-sample duration so the
+        # full-generation estimate is not artificially optimistic.
+        estimated_full_generation_seconds = (
+            non_sample_seconds
+            + successful_sample_seconds
+            + failed_samples * average_successful_sample_seconds
+        )
+        estimated_total_pt_bytes = round(
+            total_estimated_pt_bytes / len(manifest) * discovered_samples
+        )
+        estimate_basis = (
+            "full construction and in-memory torch serialization for successful "
+            "samples; failed samples use the successful-sample mean; physical disk "
+            "write latency is excluded"
+        )
+    elif args.dry_run:
+        estimate_basis = (
+            "unavailable because no sample completed successfully; see elapsed_seconds "
+            "for the validation-run duration"
+        )
     summary = {
         "schema_version": SCHEMA_VERSION,
         "generator_version": GENERATOR_VERSION,
         "mapping_policy": MAPPING_POLICY,
-        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "mode": "dry_run" if args.dry_run else "write",
+        "started_utc": started_utc,
+        "completed_utc": datetime.now(timezone.utc).isoformat(),
+        "elapsed_seconds": round(elapsed_seconds, 6),
+        "elapsed_duration": format_duration(elapsed_seconds),
+        "discovered_samples": discovered_samples,
+        "successful_samples": len(manifest),
+        "failed_samples": failed_samples,
         "created_samples": sum(row["status"] == "CREATED" for row in manifest),
         "skipped_samples": sum(row["status"] == "SKIPPED" for row in manifest),
+        "dry_run_samples": sum(row["status"] == "DRY_RUN_OK" for row in manifest),
         "issues": len(issues),
+        "problem_pdb_count": len(problem_pdb_ids),
+        "problem_pdb_ids": problem_pdb_ids,
+        "validated_pt_bytes": total_estimated_pt_bytes if args.dry_run else None,
+        "estimated_total_pt_bytes": estimated_total_pt_bytes,
+        "average_successful_sample_seconds": (
+            round(average_successful_sample_seconds, 6)
+            if args.dry_run and average_successful_sample_seconds is not None else None
+        ),
+        "estimated_full_generation_seconds": (
+            round(estimated_full_generation_seconds, 6)
+            if estimated_full_generation_seconds is not None else None
+        ),
+        "estimated_full_generation_duration": (
+            format_duration(estimated_full_generation_seconds)
+            if estimated_full_generation_seconds is not None else None
+        ),
+        "estimate_basis": estimate_basis,
         "output_root": str(args.output_root),
+        "manifest_path": str(manifest_path),
+        "issues_path": str(issues_path),
+        "summary_path": str(summary_path),
     }
-    (args.output_root / "generation_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
     return 1 if issues else 0
 
