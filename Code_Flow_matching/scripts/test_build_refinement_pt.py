@@ -17,7 +17,14 @@ sys.modules[SPEC.name] = module
 SPEC.loader.exec_module(module)
 
 
-def write_cif(path: Path, rows: list[tuple], sequence: str = "AC", quote_style: str = "single") -> None:
+def write_cif(
+    path: Path,
+    rows: list[tuple],
+    sequence: str | list[str] = "AC",
+    quote_style: str = "single",
+    component_parents: dict[str, str] | None = None,
+    component_one_letters: dict[str, str] | None = None,
+) -> None:
     def quoted(atom):
         if quote_style == "double":
             return '"' + atom + '"'
@@ -31,8 +38,24 @@ def write_cif(path: Path, rows: list[tuple], sequence: str = "AC", quote_style: 
         for index, (element, atom, comp, chain, residue, x, y, z) in enumerate(rows)
     )
     entity_rows = "\n".join(f"1 {index + 1} {symbol}" for index, symbol in enumerate(sequence))
+    component_ids = sorted(
+        set(component_parents or {}) | set(component_one_letters or {})
+    )
+    component_section = ""
+    if component_ids:
+        component_rows = "\n".join(
+            f"{component} {(component_parents or {}).get(component, '?')} "
+            f"{(component_one_letters or {}).get(component, '?')}"
+            for component in component_ids
+        )
+        component_section = f"""loop_
+_chem_comp.id
+_chem_comp.mon_nstd_parent_comp_id
+_chem_comp.one_letter_code
+{component_rows}
+"""
     text = f"""data_test
-loop_
+{component_section}loop_
 _entity_poly.entity_id
 _entity_poly.type
 1 polyribonucleotide
@@ -278,6 +301,179 @@ class BuildRefinementPtTest(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "atom_plddt.*different lengths"):
                 module.build_sample(pred, confidence, native, fm, "test", 0, 0)
 
+    def test_adjacent_modified_residues_are_grouped_and_pair_features_are_meaned(self):
+        residue_atoms = [
+            ("P", "P", (0.0, 0.0, 0.0)),
+            ("C", "C4'", (1.0, 0.0, 0.0)),
+            ("C", "C1'", (0.0, 1.0, 0.0)),
+            ("N", "N1", (0.0, 0.0, 1.0)),
+            ("C", "C5M", (1.0, 1.0, 1.0)),
+        ]
+        predicted = []
+        for residue, component in ((1, "PSU"), (2, "5MC")):
+            for element, atom_name, xyz in residue_atoms:
+                predicted.append((
+                    element, atom_name, component, "A", residue,
+                    xyz[0] + 5.0 * residue, xyz[1], xyz[2],
+                ))
+        native = [
+            row[:-3] + (row[-3] + 10.0, row[-2] - 4.0, row[-1] + 2.0)
+            for row in predicted
+        ]
+        pair = torch.arange(100, dtype=torch.float32).reshape(10, 10)
+        parents = {"PSU": "U", "5MC": "C"}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pred, target = root / "pred.cif", root / "native.cif"
+            confidence, fm = root / "conf.json", root / "fm.pt"
+            # The prediction CIF intentionally has no _chem_comp metadata;
+            # native metadata supplies the same CCD parent mapping available in
+            # downloaded PDB CIFs.
+            write_cif(pred, predicted, ["PSU", "5MC"])
+            write_cif(
+                target, native, ["PSU", "5MC"],
+                component_parents=parents,
+            )
+            confidence.write_text(json.dumps({
+                "atom_to_token_idx": list(range(10)),
+                "atom_plddt": [0.9] * 10,
+                "token_pair_pae": pair.tolist(),
+                "token_pair_pde": (pair / 10.0).tolist(),
+                "contact_probs": (pair / 99.0).tolist(),
+            }), encoding="utf-8")
+            torch.save({
+                "residue_embedding": torch.zeros(2, 640),
+                "sequences": ["UC"], "chain_offsets": [0, 2],
+            }, fm)
+            sample = module.build_sample(
+                pred, confidence, target, fm, "mods", 0, 0
+            )
+
+        self.assertEqual(sample["sequence"], "UC")
+        self.assertEqual(tuple(sample["pos"].shape), (8, 3))
+        self.assertEqual(tuple(sample["pos_pred"].shape), (8, 3))
+        self.assertEqual(sample["excluded_modification_atom_count"], 2)
+        self.assertEqual(sample["modified_residue_mask"].tolist(), [True, True])
+        self.assertEqual(
+            sample["protenix_residue_token_offsets"].tolist(), [0, 5, 10]
+        )
+        expected = torch.tensor([
+            [pair[:5, :5].mean(), pair[:5, 5:].mean()],
+            [pair[5:, :5].mean(), pair[5:, 5:].mean()],
+        ], dtype=torch.float16)
+        torch.testing.assert_close(sample["token_pair_pae"], expected)
+
+    def test_native_only_modified_atoms_never_create_coordinate_nodes(self):
+        predicted = [
+            ("P", "P", "U", "A", 1, 0.0, 0.0, 0.0),
+            ("C", "C4'", "U", "A", 1, 1.0, 0.0, 0.0),
+            ("C", "C1'", "U", "A", 1, 0.0, 1.0, 0.0),
+            ("N", "N1", "U", "A", 1, 0.0, 0.0, 1.0),
+        ]
+        native = [
+            (element, atom, "PSU", chain, residue, x + 8.0, y - 3.0, z + 2.0)
+            for element, atom, _, chain, residue, x, y, z in predicted
+        ] + [("C", "C5M", "PSU", "A", 1, 9.0, -2.0, 3.0)]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pred, target = root / "pred.cif", root / "native.cif"
+            confidence, fm = root / "conf.json", root / "fm.pt"
+            write_cif(pred, predicted, "U")
+            write_cif(
+                target, native, ["PSU"],
+                component_parents={"PSU": "U"},
+            )
+            confidence.write_text(json.dumps({
+                "atom_to_token_idx": [0] * 4,
+                "atom_plddt": [0.9] * 4,
+                "token_pair_pae": [[0.0]],
+                "token_pair_pde": [[0.0]],
+                "contact_probs": [[1.0]],
+            }), encoding="utf-8")
+            torch.save({
+                "residue_embedding": torch.zeros(1, 640),
+                "sequences": ["U"], "chain_offsets": [0, 1],
+            }, fm)
+            sample = module.build_sample(
+                pred, confidence, target, fm, "native_extra", 0, 0
+            )
+
+        self.assertEqual(tuple(sample["pos"].shape), (4, 3))
+        self.assertEqual(tuple(sample["pos_pred"].shape), (4, 3))
+        self.assertEqual(sample["native_atom_site_row"].tolist(), [0, 1, 2, 3])
+        self.assertTrue(bool(sample["target_mask"].all()))
+
+    def test_whole_modified_residue_missing_from_prediction_is_rejected(self):
+        predicted = [
+            ("P", "P", "A", "A", 1, 0.0, 0.0, 0.0),
+            ("C", "C4'", "A", "A", 1, 1.0, 0.0, 0.0),
+            ("C", "C1'", "A", "A", 1, 0.0, 1.0, 0.0),
+            ("N", "N9", "A", "A", 1, 0.0, 0.0, 1.0),
+        ]
+        native = [
+            row[:-3] + (row[-3] + 7.0, row[-2] - 2.0, row[-1] + 3.0)
+            for row in predicted
+        ] + [
+            ("P", "P", "PSU", "A", 2, 12.0, -2.0, 3.0),
+            ("C", "C4'", "PSU", "A", 2, 13.0, -2.0, 3.0),
+            ("C", "C1'", "PSU", "A", 2, 12.0, -1.0, 3.0),
+            ("N", "N1", "PSU", "A", 2, 12.0, -2.0, 4.0),
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pred, target = root / "pred.cif", root / "native.cif"
+            confidence, fm = root / "conf.json", root / "fm.pt"
+            # The predicted entity declares the modified residue but has no
+            # atom_site rows (and therefore no Protenix tokens) for it.
+            write_cif(pred, predicted, ["A", "PSU"])
+            write_cif(
+                target, native, ["A", "PSU"],
+                component_parents={"PSU": "U"},
+            )
+            confidence.write_text(json.dumps({
+                "atom_to_token_idx": [0] * 4,
+                "atom_plddt": [0.9] * 4,
+                "token_pair_pae": [[0.0]],
+                "token_pair_pde": [[0.0]],
+                "contact_probs": [[1.0]],
+            }), encoding="utf-8")
+            torch.save({
+                "residue_embedding": torch.zeros(2, 640),
+                "sequences": ["AU"], "chain_offsets": [0, 2],
+            }, fm)
+            with self.assertRaisesRegex(
+                ValueError, "residues have no Protenix atom/token coordinates"
+            ):
+                module.build_sample(
+                    pred, confidence, target, fm, "missing_mod", 0, 0
+                )
+
+    def test_inosine_is_explicitly_excluded(self):
+        rows = [
+            ("P", "P", "I", "A", 1, 0.0, 0.0, 0.0),
+            ("C", "C4'", "I", "A", 1, 1.0, 0.0, 0.0),
+            ("C", "C1'", "I", "A", 1, 0.0, 1.0, 0.0),
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pred, native = root / "pred.cif", root / "native.cif"
+            confidence, fm = root / "conf.json", root / "fm.pt"
+            write_cif(pred, rows, "I")
+            write_cif(native, rows, "I")
+            confidence.write_text(json.dumps({
+                "atom_to_token_idx": [0, 1, 2],
+                "atom_plddt": [0.9] * 3,
+                "token_pair_pae": torch.zeros(3, 3).tolist(),
+                "token_pair_pde": torch.zeros(3, 3).tolist(),
+                "contact_probs": torch.eye(3).tolist(),
+            }), encoding="utf-8")
+            torch.save({
+                "residue_embedding": torch.zeros(1, 640),
+                "sequences": ["I"], "chain_offsets": [0, 1],
+            }, fm)
+            with self.assertRaisesRegex(ValueError, "unsupported.*I/N/X/T"):
+                module.build_sample(pred, confidence, native, fm, "inosine", 0, 0)
+
     def test_dry_run_builds_and_reports_without_writing_pt(self):
         rows = [("P", "P", "A", "A", 1, 0., 0., 0.),
                 ("C", "C4'", "A", "A", 1, 1., 0., 0.),
@@ -317,22 +513,30 @@ class BuildRefinementPtTest(unittest.TestCase):
                 "--output-root", str(output_root),
                 "--split", "train",
                 "--dry-run",
+                "--run-name", "unittest_dry_run",
             ])
 
             self.assertEqual(result, 1)
             self.assertEqual(list(output_root.rglob("*.pt")), [])
             for split in ("train", "val", "test"):
                 self.assertTrue((output_root / split).is_dir())
-            summary = json.loads((output_root / "dry_run_summary.json").read_text(encoding="utf-8"))
+            run_dir = output_root / "logs" / "unittest_dry_run"
+            summary = json.loads(
+                (run_dir / "summary.json").read_text(encoding="utf-8")
+            )
             self.assertEqual(summary["mode"], "dry_run")
             self.assertEqual(summary["dry_run_samples"], 1)
             self.assertEqual(summary["failed_samples"], 1)
             self.assertEqual(summary["problem_pdb_ids"], ["2DEF"])
             self.assertGreater(summary["estimated_total_pt_bytes"], 0)
             self.assertIsNotNone(summary["estimated_full_generation_seconds"])
-            self.assertTrue((output_root / "dry_run_manifest.tsv").is_file())
-            self.assertTrue((output_root / "dry_run_issues.tsv").is_file())
-            self.assertIn("2DEF", (output_root / "dry_run_issues.tsv").read_text(encoding="utf-8"))
+            self.assertEqual(Path(summary["run_directory"]), run_dir)
+            self.assertTrue((run_dir / "manifest.tsv").is_file())
+            self.assertTrue((run_dir / "issues.tsv").is_file())
+            self.assertTrue((run_dir / "run.log").is_file())
+            self.assertIn(
+                "2DEF", (run_dir / "issues.tsv").read_text(encoding="utf-8")
+            )
 
 
 if __name__ == "__main__":

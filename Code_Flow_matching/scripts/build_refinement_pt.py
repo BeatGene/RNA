@@ -14,9 +14,10 @@ import functools
 import importlib.util
 import io
 import json
+import os
 import re
 import time
-from collections import Counter, defaultdict
+from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -45,8 +46,8 @@ normalize_atom_name = _constants.normalize_atom_name
 
 
 SCHEMA_VERSION = 2
-GENERATOR_VERSION = "2.2-strict-complete-sequence-mapping"
-MAPPING_POLICY = "complete-canonical-sequence-exact-unique-chain-v1"
+GENERATOR_VERSION = "2.3-residue-grouped-modified-rna"
+MAPPING_POLICY = "complete-canonical-sequence-ccd-parent-residue-grouped-v2"
 SAMPLE_CIF_RE = re.compile(r"^(?P<prefix>.+)_sample_(?P<sample>\d+)\.cif$", re.I)
 SEED_RE = re.compile(r"^seed_(?P<seed>\d+)$", re.I)
 
@@ -75,6 +76,23 @@ class NativeChain:
     atoms_by_residue: dict[int, dict[str, Atom]]
     sequence_source: str = "unknown"
     label_seq_ids: tuple[str, ...] = ()
+
+
+@dataclass
+class PredictedChain:
+    label_chain: str
+    auth_chain: str
+    sequence: str
+    label_seq_ids: tuple[str, ...]
+    comp_ids: tuple[str, ...]
+    residue_tokens: tuple[tuple[int, ...], ...]
+    atoms_by_residue: dict[int, list[Atom]]
+
+
+@dataclass(frozen=True)
+class ComponentMaps:
+    parents: dict[str, str]
+    one_letters: dict[str, str]
 
 
 def _column_values(block: gemmi.cif.Block, tag: str) -> list[str]:
@@ -150,8 +168,78 @@ def _comp_parent_map(block: gemmi.cif.Block) -> dict[str, str]:
     return {key.upper(): value.upper() for key, value in zip(ids, parents)}
 
 
-def comp_symbol(comp_id: str, parents: dict[str, str]) -> str:
+def _comp_one_letter_map(block: gemmi.cif.Block) -> dict[str, str]:
+    ids = _column_values(block, "_chem_comp.id")
+    one_letters = _column_values(block, "_chem_comp.one_letter_code")
+    if len(ids) != len(one_letters):
+        return {}
+    return {key.upper(): value.upper() for key, value in zip(ids, one_letters)}
+
+
+def _merge_component_maps(*maps: ComponentMaps) -> ComponentMaps:
+    parents: dict[str, str] = {}
+    one_letters: dict[str, str] = {}
+    for component_map in maps:
+        parents.update({
+            key: value
+            for key, value in component_map.parents.items()
+            if value not in {"", ".", "?"}
+        })
+        one_letters.update({
+            key: value
+            for key, value in component_map.one_letters.items()
+            if value not in {"", ".", "?"}
+        })
+    return ComponentMaps(parents, one_letters)
+
+
+def _block_component_maps(block: gemmi.cif.Block) -> ComponentMaps:
+    return ComponentMaps(_comp_parent_map(block), _comp_one_letter_map(block))
+
+
+@functools.lru_cache(maxsize=2)
+def load_ccd_component_maps(path: Path | None) -> ComponentMaps:
+    """Load CCD parent/one-letter metadata once for the whole bulk run."""
+    if path is None:
+        return ComponentMaps({}, {})
+    if not path.is_file():
+        raise FileNotFoundError(f"CCD components file does not exist: {path}")
+    document = gemmi.cif.read_file(str(path))
+    parents: dict[str, str] = {}
+    one_letters: dict[str, str] = {}
+    for block in document:
+        component_id = block.name.upper()
+        ids = _column_values(block, "_chem_comp.id")
+        if ids:
+            component_id = ids[0].upper()
+        parent_values = _column_values(block, "_chem_comp.mon_nstd_parent_comp_id")
+        if parent_values:
+            parents[component_id] = parent_values[0].upper()
+        one_letter_values = _column_values(block, "_chem_comp.one_letter_code")
+        if one_letter_values:
+            one_letters[component_id] = one_letter_values[0].upper()
+    return ComponentMaps(parents, one_letters)
+
+
+@functools.lru_cache(maxsize=8)
+def load_structure_component_maps(path: Path) -> ComponentMaps:
+    block = gemmi.cif.read_file(str(path)).sole_block()
+    return _block_component_maps(block)
+
+
+def comp_symbol(
+    comp_id: str,
+    parents: dict[str, str],
+    one_letters: dict[str, str] | None = None,
+) -> str:
+    """Map a CCD component to A/C/G/U, preserving unsupported I/N/X/T.
+
+    A unique CCD parent is preferred.  A single canonical one-letter code is
+    accepted only when no parent is declared.  Ambiguous/missing mappings are
+    returned as X and are rejected later by strict sequence validation.
+    """
     comp_id = comp_id.upper()
+    one_letters = one_letters or {}
     seen: set[str] = set()
     while comp_id not in seen:
         seen.add(comp_id)
@@ -159,6 +247,9 @@ def comp_symbol(comp_id: str, parents: dict[str, str]) -> str:
             return comp_id
         parent = parents.get(comp_id, "")
         if parent in {"", ".", "?"}:
+            one_letter = one_letters.get(comp_id, "")
+            if one_letter in {"A", "C", "G", "U"}:
+                return one_letter
             break
         # Some files list multiple comma-separated parents; those are ambiguous.
         if "," in parent:
@@ -167,7 +258,9 @@ def comp_symbol(comp_id: str, parents: dict[str, str]) -> str:
     return "X"
 
 
-def _entity_sequences(block: gemmi.cif.Block, parents: dict[str, str]) -> dict[str, tuple[list[str], list[str]]]:
+def _entity_component_sequences(
+    block: gemmi.cif.Block,
+) -> dict[str, tuple[list[str], list[str]]]:
     entities = _column_values(block, "_entity_poly_seq.entity_id")
     nums = _column_values(block, "_entity_poly_seq.num")
     monomers = _column_values(block, "_entity_poly_seq.mon_id")
@@ -185,15 +278,37 @@ def _entity_sequences(block: gemmi.cif.Block, parents: dict[str, str]) -> dict[s
         positions = sorted(rows)
         if positions != list(range(1, len(positions) + 1)):
             raise ValueError(f"incomplete _entity_poly_seq numbering for entity={entity}")
-        result[entity] = ([comp_symbol(rows[p], parents) for p in positions], [str(p) for p in positions])
+        result[entity] = ([rows[p].upper() for p in positions], [str(p) for p in positions])
     return result
 
 
+def _entity_sequences(
+    block: gemmi.cif.Block,
+    parents: dict[str, str],
+    one_letters: dict[str, str] | None = None,
+) -> dict[str, tuple[list[str], list[str]]]:
+    return {
+        entity: (
+            [comp_symbol(comp_id, parents, one_letters) for comp_id in comp_ids],
+            seq_ids,
+        )
+        for entity, (comp_ids, seq_ids) in _entity_component_sequences(block).items()
+    }
+
+
 @functools.lru_cache(maxsize=8)
-def native_chains(path: Path) -> list[NativeChain]:
+def native_chains(
+    path: Path,
+    ccd_components_file: Path | None = None,
+) -> list[NativeChain]:
     block, atoms = read_atoms(path)
-    parents = _comp_parent_map(block)
-    entity_sequences = _entity_sequences(block, parents)
+    component_maps = _merge_component_maps(
+        load_ccd_component_maps(ccd_components_file),
+        _block_component_maps(block),
+    )
+    parents = component_maps.parents
+    one_letters = component_maps.one_letters
+    entity_sequences = _entity_sequences(block, parents, one_letters)
     asym_ids = _column_values(block, "_struct_asym.id")
     entity_ids = _column_values(block, "_struct_asym.entity_id")
     asym_to_entity = dict(zip(asym_ids, entity_ids))
@@ -225,9 +340,13 @@ def native_chains(path: Path) -> list[NativeChain]:
             first_by_residue = {
                 atom.label_seq_id: atom for atom in chain_atoms if atom.label_seq_id in observed
             }
-            symbols = [comp_symbol(first_by_residue[key].comp_id, parents) for key in observed]
+            symbols = [
+                comp_symbol(first_by_residue[key].comp_id, parents, one_letters)
+                for key in observed
+            ]
         observed_rna_fraction = sum(
-            comp_symbol(atom.comp_id, parents) != "X" for atom in chain_atoms
+            comp_symbol(atom.comp_id, parents, one_letters) != "X"
+            for atom in chain_atoms
         ) / len(chain_atoms)
         if not symbols or (not polymer_type and observed_rna_fraction < 0.5):
             continue
@@ -239,7 +358,11 @@ def native_chains(path: Path) -> list[NativeChain]:
                 if seq_data:
                     raise ValueError(f"native chain {label_chain} atom row {atom.row} has label_seq_id={atom.label_seq_id!r} outside entity sequence")
                 continue
-            if seq_data and comp_symbol(atom.comp_id, parents) != symbols[residue_index]:
+            if (
+                seq_data
+                and comp_symbol(atom.comp_id, parents, one_letters)
+                != symbols[residue_index]
+            ):
                 raise ValueError(f"native chain {label_chain} label_seq_id={atom.label_seq_id}: atom component {atom.comp_id} disagrees with entity sequence")
             key = (residue_index, atom.atom_name)
             old = selected.get(key)
@@ -383,18 +506,97 @@ def load_rnafm(path: Path) -> dict:
     return payload
 
 
-def _predicted_chain_candidates(atoms: list[Atom], atom_to_token: torch.Tensor, parents: dict[str, str]) -> list[tuple[str, list[int], str]]:
-    by_chain_token: dict[str, dict[int, list[Atom]]] = defaultdict(lambda: defaultdict(list))
+def _predicted_chain_candidates(
+    block: gemmi.cif.Block,
+    atoms: list[Atom],
+    atom_to_token: torch.Tensor,
+    component_maps: ComponentMaps,
+) -> list[PredictedChain]:
+    """Build one residue-level candidate per predicted polymer chain.
+
+    Protenix represents a standard nucleotide with one token but a modified
+    nucleotide with one token per atom.  Residue identity must therefore come
+    from ``label_asym_id + label_seq_id``, never from token boundaries.
+    """
+    entity_components = _entity_component_sequences(block)
+    asym_ids = _column_values(block, "_struct_asym.id")
+    entity_ids = _column_values(block, "_struct_asym.entity_id")
+    asym_to_entity = dict(zip(asym_ids, entity_ids))
+    atoms_by_chain: dict[str, list[Atom]] = defaultdict(list)
     for atom in atoms:
-        by_chain_token[atom.label_chain][int(atom_to_token[atom.row])].append(atom)
-    candidates = []
-    for chain, token_atoms in by_chain_token.items():
-        tokens = sorted(token_atoms)
-        symbols = []
-        for token in tokens:
-            comp = Counter(atom.comp_id for atom in token_atoms[token]).most_common(1)[0][0]
-            symbols.append(comp_symbol(comp, parents))
-        candidates.append((chain, tokens, "".join(symbols)))
+        if atom.label_seq_id not in {"", ".", "?"}:
+            atoms_by_chain[atom.label_chain].append(atom)
+
+    candidates: list[PredictedChain] = []
+    for chain, chain_atoms in atoms_by_chain.items():
+        entity = asym_to_entity.get(chain, "")
+        sequence_data = entity_components.get(entity)
+        if sequence_data:
+            comp_ids, label_seq_ids = sequence_data
+        else:
+            observed_ids = sorted(
+                {atom.label_seq_id for atom in chain_atoms},
+                key=lambda value: int(value),
+            )
+            label_seq_ids = observed_ids
+            first_by_residue = {
+                atom.label_seq_id: atom for atom in chain_atoms
+            }
+            comp_ids = [first_by_residue[value].comp_id for value in observed_ids]
+
+        seq_to_index = {
+            label_seq_id: index
+            for index, label_seq_id in enumerate(label_seq_ids)
+        }
+        residue_atoms: dict[int, list[Atom]] = defaultdict(list)
+        residue_tokens: list[set[int]] = [set() for _ in label_seq_ids]
+        for atom in chain_atoms:
+            residue_index = seq_to_index.get(atom.label_seq_id)
+            if residue_index is None:
+                raise ValueError(
+                    f"predicted chain {chain} atom row {atom.row} has "
+                    f"label_seq_id={atom.label_seq_id!r} outside entity sequence"
+                )
+            declared_symbol = comp_symbol(
+                comp_ids[residue_index],
+                component_maps.parents,
+                component_maps.one_letters,
+            )
+            atom_symbol = comp_symbol(
+                atom.comp_id,
+                component_maps.parents,
+                component_maps.one_letters,
+            )
+            if declared_symbol != atom_symbol:
+                raise ValueError(
+                    f"predicted chain {chain} label_seq_id={atom.label_seq_id}: "
+                    f"atom component {atom.comp_id} disagrees with entity component "
+                    f"{comp_ids[residue_index]}"
+                )
+            residue_atoms[residue_index].append(atom)
+            residue_tokens[residue_index].add(int(atom_to_token[atom.row]))
+
+        sequence = "".join(
+            comp_symbol(
+                comp_id,
+                component_maps.parents,
+                component_maps.one_letters,
+            )
+            for comp_id in comp_ids
+        )
+        candidates.append(
+            PredictedChain(
+                label_chain=chain,
+                auth_chain=chain_atoms[0].auth_chain,
+                sequence=sequence,
+                label_seq_ids=tuple(label_seq_ids),
+                comp_ids=tuple(comp_ids),
+                residue_tokens=tuple(
+                    tuple(sorted(tokens)) for tokens in residue_tokens
+                ),
+                atoms_by_residue=dict(residue_atoms),
+            )
+        )
     return candidates
 
 
@@ -403,9 +605,11 @@ def choose_predicted_and_embedding_chain(
     atoms: list[Atom],
     atom_to_token: torch.Tensor,
     rnafm: dict,
-) -> tuple[str, list[int], str, torch.Tensor, str]:
-    parents = _comp_parent_map(block)
-    pred_candidates = _predicted_chain_candidates(atoms, atom_to_token, parents)
+    component_maps: ComponentMaps,
+) -> tuple[PredictedChain, torch.Tensor, str]:
+    pred_candidates = _predicted_chain_candidates(
+        block, atoms, atom_to_token, component_maps
+    )
     sequences = [str(value).upper() for value in rnafm["sequences"]]
     offsets = torch.as_tensor(rnafm["chain_offsets"], dtype=torch.long).tolist()
     all_embeddings = torch.as_tensor(rnafm["residue_embedding"])
@@ -430,22 +634,36 @@ def choose_predicted_and_embedding_chain(
     expected_ids = [str(value) for value in rnafm.get("expected_protenix_chain_ids", [])]
     original_ids = [str(value) for value in rnafm.get("original_chain_ids", [])]
     matches = []
-    for pred_chain, tokens, pred_sequence in pred_candidates:
+    for candidate in pred_candidates:
         for chain_index, sequence in enumerate(sequences):
-            if pred_sequence == sequence:
-                id_match = int(chain_index < len(expected_ids) and pred_chain == expected_ids[chain_index])
-                matches.append((id_match, pred_chain, tokens, sequence, chain_index))
+            if candidate.sequence == sequence:
+                id_match = int(
+                    chain_index < len(expected_ids)
+                    and candidate.label_chain == expected_ids[chain_index]
+                )
+                matches.append((id_match, candidate, chain_index))
     if not matches:
-        details = [(chain, sequence) for chain, _, sequence in pred_candidates]
-        raise ValueError(f"no exact predicted/RNA-FM sequence match; predicted={details}, RNA-FM={sequences}")
+        details = [
+            {
+                "label_chain": candidate.label_chain,
+                "sequence": candidate.sequence,
+                "components": list(candidate.comp_ids),
+            }
+            for candidate in pred_candidates
+        ]
+        raise ValueError(
+            "no exact residue-grouped predicted/RNA-FM sequence match; "
+            f"predicted={details}, RNA-FM={sequences}. I/N/X/T and ambiguous "
+            "CCD mappings are intentionally unsupported"
+        )
     matches.sort(reverse=True, key=lambda row: row[0])
     if len(matches) > 1 and matches[0][0] == matches[1][0]:
         raise ValueError("predicted/RNA-FM chain match is ambiguous")
-    _, pred_chain, tokens, sequence, chain_index = matches[0]
+    _, candidate, chain_index = matches[0]
     start, stop = offsets[chain_index], offsets[chain_index + 1]
     embedding = all_embeddings[start:stop]
     original_chain = original_ids[chain_index] if chain_index < len(original_ids) else ""
-    return pred_chain, tokens, sequence, embedding, original_chain
+    return candidate, embedding, original_chain
 
 
 def kabsch_align(mobile: torch.Tensor, fixed: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, float]:
@@ -481,6 +699,68 @@ BASE_BONDS = {
     "C": (("C1'", "N1", 1.470), ("N1", "C2", 1.380), ("C2", "N3", 1.340), ("N3", "C4", 1.350), ("C4", "C5", 1.430), ("C5", "C6", 1.340), ("C6", "N1", 1.370), ("C2", "O2", 1.230), ("C4", "N4", 1.340)),
     "U": (("C1'", "N1", 1.470), ("N1", "C2", 1.380), ("C2", "N3", 1.370), ("N3", "C4", 1.380), ("C4", "C5", 1.450), ("C5", "C6", 1.340), ("C6", "N1", 1.370), ("C2", "O2", 1.220), ("C4", "O4", 1.230)),
 }
+
+COMMON_STANDARD_ATOM_NAMES = frozenset(
+    atom_name
+    for left, right, _ in COMMON_BONDS
+    for atom_name in (left, right)
+)
+STANDARD_ATOM_NAMES = {
+    symbol: COMMON_STANDARD_ATOM_NAMES
+    | frozenset(
+        atom_name
+        for left, right, _ in bonds
+        for atom_name in (left, right)
+    )
+    for symbol, bonds in BASE_BONDS.items()
+}
+
+
+def aggregate_token_pair_matrix(
+    matrix: torch.Tensor,
+    residue_tokens: tuple[tuple[int, ...], ...],
+) -> torch.Tensor:
+    """Mean a Protenix token-pair matrix into a residue-pair matrix."""
+    empty = [index for index, tokens in enumerate(residue_tokens) if not tokens]
+    if empty:
+        raise ValueError(
+            "predicted residues have no Protenix atom/token coordinates: "
+            f"residue_indices={empty}"
+        )
+    flat_tokens = torch.tensor(
+        [token for tokens in residue_tokens for token in tokens],
+        dtype=torch.long,
+    )
+    if flat_tokens.numel() and int(flat_tokens.max()) >= matrix.shape[0]:
+        raise ValueError(
+            f"selected Protenix token index {int(flat_tokens.max())} is out of "
+            f"range for pair matrix size {matrix.shape[0]}"
+        )
+    if len(set(flat_tokens.tolist())) != len(flat_tokens):
+        raise ValueError("a Protenix token was assigned to more than one RNA residue")
+    token_residue = torch.tensor(
+        [
+            residue_index
+            for residue_index, tokens in enumerate(residue_tokens)
+            for _ in tokens
+        ],
+        dtype=torch.long,
+    )
+    counts = torch.bincount(token_residue, minlength=len(residue_tokens)).to(
+        matrix.dtype
+    )
+    selected = matrix[flat_tokens][:, flat_tokens]
+    row_means = torch.zeros(
+        (len(residue_tokens), len(flat_tokens)), dtype=matrix.dtype
+    )
+    row_means.index_add_(0, token_residue, selected)
+    row_means /= counts[:, None]
+    result = torch.zeros(
+        (len(residue_tokens), len(residue_tokens)), dtype=matrix.dtype
+    )
+    result.index_add_(1, token_residue, row_means)
+    result /= counts[None, :]
+    return result
 
 
 def build_graph(sequence: str, atom_lookup: dict[tuple[int, str], int]) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
@@ -530,7 +810,16 @@ def _atomic_number(element: str, atom_name: str) -> int:
     return number
 
 
-def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_path: Path, pdb_id: str, seed: int, sample_number: int) -> dict:
+def build_sample(
+    pred_cif: Path,
+    confidence_json: Path,
+    native_cif: Path,
+    rnafm_path: Path,
+    pdb_id: str,
+    seed: int,
+    sample_number: int,
+    ccd_components_file: Path | None = None,
+) -> dict:
     block, all_atoms = read_atoms(pred_cif)
     with confidence_json.open("r", encoding="utf-8") as handle:
         confidence = json.load(handle)
@@ -550,24 +839,75 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
     if bool((atom_to_token_all < 0).any()):
         raise ValueError("atom_to_token_idx contains a negative token index")
     rnafm = load_rnafm(rnafm_path)
-    pred_chain, original_tokens, sequence, embedding, original_chain = choose_predicted_and_embedding_chain(block, all_atoms, atom_to_token_all, rnafm)
+    component_maps = _merge_component_maps(
+        load_ccd_component_maps(ccd_components_file),
+        load_structure_component_maps(native_cif),
+        _block_component_maps(block),
+    )
+    pred_chain, embedding, original_chain = choose_predicted_and_embedding_chain(
+        block, all_atoms, atom_to_token_all, rnafm, component_maps
+    )
+    sequence = pred_chain.sequence
+    if not sequence or any(symbol not in "ACGU" for symbol in sequence):
+        unsupported = [
+            {
+                "residue_index": index,
+                "label_seq_id": pred_chain.label_seq_ids[index],
+                "component": pred_chain.comp_ids[index],
+                "mapped_symbol": symbol,
+            }
+            for index, symbol in enumerate(sequence)
+            if symbol not in "ACGU"
+        ]
+        raise ValueError(
+            "unsupported predicted RNA residues; I/N/X/T and ambiguous CCD "
+            f"mappings are excluded: {unsupported}"
+        )
     if embedding.shape != (len(sequence), 640):
         raise ValueError(f"RNA-FM embedding shape is {tuple(embedding.shape)}, expected {(len(sequence), 640)}")
-    token_to_local = {token: i for i, token in enumerate(original_tokens)}
-    selected_atoms = [atom for atom in all_atoms if atom.label_chain == pred_chain and int(atom_to_token_all[atom.row]) in token_to_local]
-    if not selected_atoms:
-        raise ValueError("no atoms selected from predicted RNA chain")
-    atom_lookup: dict[tuple[int, str], int] = {}
-    residue_index_list: list[int] = []
-    for index, atom in enumerate(selected_atoms):
-        local_residue = token_to_local[int(atom_to_token_all[atom.row])]
-        key = (local_residue, atom.atom_name)
-        if key in atom_lookup:
-            raise ValueError(f"duplicate predicted atom identity {key}")
-        atom_lookup[key] = index
-        residue_index_list.append(local_residue)
 
-    native_chain, residue_mapping, identity, coverage = choose_native_chain(native_chains(native_cif), sequence, original_chain)
+    # The graph is predicted-atom authoritative.  Keep only atom names shared
+    # with the canonical A/C/G/U parent; modification-specific extra atoms and
+    # native-only atoms are intentionally omitted from both coordinate arrays.
+    selected_by_identity: dict[tuple[int, str], Atom] = {}
+    excluded_extra_atoms: list[tuple[int, str, str]] = []
+    for residue_index, residue_atoms in pred_chain.atoms_by_residue.items():
+        allowed_names = STANDARD_ATOM_NAMES[sequence[residue_index]]
+        for atom in residue_atoms:
+            if atom.atom_name not in allowed_names:
+                excluded_extra_atoms.append(
+                    (residue_index, atom.comp_id, atom.atom_name)
+                )
+                continue
+            key = (residue_index, atom.atom_name)
+            old = selected_by_identity.get(key)
+            preferred_alt = atom.alt_id in {"", ".", "?", "A"}
+            old_preferred = (
+                old is not None and old.alt_id in {"", ".", "?", "A"}
+            )
+            if old is None or (preferred_alt and not old_preferred) or (
+                preferred_alt == old_preferred
+                and atom.occupancy > old.occupancy
+            ):
+                selected_by_identity[key] = atom
+    ordered_identities = sorted(
+        selected_by_identity,
+        key=lambda key: selected_by_identity[key].row,
+    )
+    selected_atoms = [selected_by_identity[key] for key in ordered_identities]
+    if not selected_atoms:
+        raise ValueError("no canonical parent atoms selected from predicted RNA chain")
+    atom_lookup = {
+        identity: atom_index
+        for atom_index, identity in enumerate(ordered_identities)
+    }
+    residue_index_list = [identity[0] for identity in ordered_identities]
+
+    native_chain, residue_mapping, identity, coverage = choose_native_chain(
+        native_chains(native_cif, ccd_components_file),
+        sequence,
+        original_chain,
+    )
     pred_pos = torch.tensor([atom.xyz for atom in selected_atoms], dtype=torch.float32)
     native_atom_rows = torch.full((len(selected_atoms),), -1, dtype=torch.long)
     native_pairs, pred_pairs, matched_indices = [], [], []
@@ -599,22 +939,18 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
         atom_plddt = atom_plddt / 100.0
     if atom_plddt.min() < 0 or atom_plddt.max() > 1:
         raise ValueError("atom_plddt is outside [0, 1]")
-    token_index = torch.tensor(original_tokens, dtype=torch.long)
     pair_features = {}
     for source_key, target_key in (("token_pair_pae", "token_pair_pae"), ("token_pair_pde", "token_pair_pde"), ("contact_probs", "contact_probs")):
         matrix = _tensor(confidence, source_key, torch.float32)
         if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
             raise ValueError(f"{source_key} must be a square matrix")
-        if token_index.numel() and int(token_index.max()) >= matrix.shape[0]:
-            raise ValueError(
-                f"{source_key} has size {matrix.shape[0]}, but selected token index "
-                f"{int(token_index.max())} is out of range"
-            )
         if not bool(torch.isfinite(matrix).all()):
             raise ValueError(f"{source_key} contains NaN or Inf")
         if source_key == "contact_probs" and (float(matrix.min()) < 0.0 or float(matrix.max()) > 1.0):
             raise ValueError("contact_probs is outside [0, 1]")
-        pair_features[target_key] = matrix[token_index][:, token_index].half().contiguous()
+        pair_features[target_key] = aggregate_token_pair_matrix(
+            matrix, pred_chain.residue_tokens
+        ).half().contiguous()
 
     residue_index = torch.tensor(residue_index_list, dtype=torch.long)
     edge_index, edge_attr, geometry_bond_index, ideal_bond_length, clash_exclusion_index = build_graph(sequence, atom_lookup)
@@ -622,6 +958,24 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
     atom_name_id = torch.tensor([ATOM_NAME_TO_ID.get(atom.atom_name, UNKNOWN_ATOM_NAME_ID) for atom in selected_atoms], dtype=torch.long)
     observed_residue_mask = torch.zeros(len(sequence), dtype=torch.bool)
     observed_residue_mask[residue_index[target_mask].unique()] = True
+    flat_original_tokens = torch.tensor(
+        [
+            token
+            for tokens in pred_chain.residue_tokens
+            for token in tokens
+        ],
+        dtype=torch.long,
+    )
+    token_offsets = [0]
+    for tokens in pred_chain.residue_tokens:
+        token_offsets.append(token_offsets[-1] + len(tokens))
+    modified_residue_mask = torch.tensor(
+        [
+            comp_id not in {"A", "C", "G", "U"}
+            for comp_id in pred_chain.comp_ids
+        ],
+        dtype=torch.bool,
+    )
     payload = {
         "schema_version": SCHEMA_VERSION,
         "sample_id": f"{pdb_id.lower()}_seed_{seed}_sample_{sample_number}",
@@ -644,12 +998,35 @@ def build_sample(pred_cif: Path, confidence_json: Path, native_cif: Path, rnafm_
         **pair_features,
         "native_structure_id": pdb_id.upper(),
         "native_chain_id": native_chain.auth_chain,
-        "predicted_chain_id": pred_chain,
+        "predicted_chain_id": pred_chain.label_chain,
         "protenix_seed": seed,
         "protenix_sample": sample_number,
         "protenix_model_name": "protenix_base_default_v1.0.0",
-        "protenix_original_token_index": token_index,
-        "atom_mapping_version": 3,
+        # One representative token per residue is retained for compatibility;
+        # the flat index + offsets below preserve every atom-level token used
+        # to aggregate residue-pair confidence features.
+        "protenix_original_token_index": torch.tensor(
+            [tokens[0] for tokens in pred_chain.residue_tokens],
+            dtype=torch.long,
+        ),
+        "protenix_residue_token_index": flat_original_tokens,
+        "protenix_residue_token_offsets": torch.tensor(
+            token_offsets, dtype=torch.long
+        ),
+        "protenix_original_atom_token_index": atom_to_token_all[selected_rows],
+        "predicted_label_seq_ids": list(pred_chain.label_seq_ids),
+        "predicted_component_ids": list(pred_chain.comp_ids),
+        "modified_residue_mask": modified_residue_mask,
+        "excluded_modification_atom_count": len(excluded_extra_atoms),
+        "excluded_modification_atoms": [
+            {
+                "residue_index": residue,
+                "component": component,
+                "atom_name": atom_name,
+            }
+            for residue, component, atom_name in excluded_extra_atoms
+        ],
+        "atom_mapping_version": 4,
         "mapping_policy": MAPPING_POLICY,
         "native_sequence_source": native_chain.sequence_source,
         "native_label_chain_id": native_chain.label_chain,
@@ -730,6 +1107,28 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--native-root", type=Path, default=home / "pdb_data")
     parser.add_argument("--rnafm-root", type=Path, default=home / "Data_FM/RNA_FM_embeddings")
     parser.add_argument("--output-root", type=Path, default=home / "Data_PT_V1")
+    parser.add_argument(
+        "--log-dir",
+        type=Path,
+        help="Run-report root (default: <output-root>/logs)",
+    )
+    parser.add_argument(
+        "--run-name",
+        help=(
+            "Optional readable run-directory name under --log-dir; only letters, "
+            "digits, dot, underscore and hyphen are allowed"
+        ),
+    )
+    parser.add_argument(
+        "--ccd-components-file",
+        type=Path,
+        help=(
+            "Protenix/RCSB components.cif. If omitted, use "
+            "$PROTENIX_ROOT_DIR/common/components.cif or ~/common/components.cif "
+            "when present. Required only when structure CIF metadata cannot map a "
+            "modified residue uniquely to A/C/G/U."
+        ),
+    )
     parser.add_argument("--split", nargs="+", choices=("train", "val", "test"), default=("train", "val", "test"))
     parser.add_argument("--pdb-id", nargs="*", help="Optional case-insensitive PDB ID subset")
     parser.add_argument(
@@ -745,21 +1144,75 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help=(
             "Build and validate every sample and serialize it in memory, but do not "
-            "create or modify any .pt file. Write dry-run reports under output-root."
+            "create or modify any .pt file. Write run reports under the log directory."
         ),
     )
     return parser.parse_args(argv)
+
+
+def resolve_ccd_components_file(explicit: Path | None) -> Path | None:
+    if explicit is not None:
+        path = explicit.expanduser().resolve()
+        if not path.is_file():
+            raise FileNotFoundError(f"CCD components file does not exist: {path}")
+        return path
+    protenix_root = Path(
+        os.environ.get("PROTENIX_ROOT_DIR", str(Path.home()))
+    ).expanduser()
+    candidates = (
+        protenix_root / "common" / "components.cif",
+        Path.home() / "common" / "components.cif",
+    )
+    return next((path.resolve() for path in candidates if path.is_file()), None)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     if not 0.0 <= args.min_observed_atom_fraction <= 1.0:
         raise SystemExit("--min-observed-atom-fraction must be in [0, 1]")
+    if args.run_name and not re.fullmatch(r"[A-Za-z0-9._-]+", args.run_name):
+        raise SystemExit(
+            "--run-name may contain only letters, digits, dot, underscore and hyphen"
+        )
+    args.prediction_root = args.prediction_root.expanduser()
+    args.native_root = args.native_root.expanduser()
+    args.rnafm_root = args.rnafm_root.expanduser()
+    args.output_root = args.output_root.expanduser()
+    ccd_components_file = resolve_ccd_components_file(args.ccd_components_file)
     run_started = time.perf_counter()
-    started_utc = datetime.now(timezone.utc).isoformat()
+    started_datetime = datetime.now(timezone.utc)
+    started_utc = started_datetime.isoformat()
     args.output_root.mkdir(parents=True, exist_ok=True)
     for output_split in ("train", "val", "test"):
         (args.output_root / output_split).mkdir(parents=True, exist_ok=True)
+    log_root = (
+        args.log_dir.expanduser()
+        if args.log_dir is not None
+        else args.output_root / "logs"
+    )
+    log_root.mkdir(parents=True, exist_ok=True)
+    mode_name = "dry_run" if args.dry_run else "write"
+    split_name = "-".join(args.split)
+    default_run_name = (
+        f"{mode_name}_{split_name}_"
+        f"{started_datetime.strftime('%Y%m%dT%H%M%S%fZ')}"
+    )
+    run_dir = log_root / (args.run_name or default_run_name)
+    run_dir.mkdir(parents=False, exist_ok=False)
+    run_log_path = run_dir / "run.log"
+
+    def emit(message: str) -> None:
+        timestamp = datetime.now(timezone.utc).isoformat()
+        line = f"[{timestamp}] {message}"
+        print(line, flush=True)
+        with run_log_path.open("a", encoding="utf-8") as handle:
+            handle.write(line + "\n")
+
+    emit(
+        f"START mode={mode_name} splits={','.join(args.split)} "
+        f"prediction_root={args.prediction_root} output_root={args.output_root} "
+        f"ccd_components_file={ccd_components_file}"
+    )
     selected_ids = {value.lower() for value in args.pdb_id} if args.pdb_id else None
     manifest: list[dict] = []
     issues: list[dict] = []
@@ -769,15 +1222,21 @@ def main(argv: list[str] | None = None) -> int:
         split_dir = args.prediction_root / split
         if not split_dir.is_dir():
             issues.append({"split": split, "pdb_id": "", "sample": "", "error": f"missing split directory: {split_dir}"})
+            emit(f"SPLIT_ERROR split={split} missing_directory={split_dir}")
             continue
         for pdb_dir in sorted(path for path in split_dir.iterdir() if path.is_dir()):
             pdb_id = pdb_dir.name.lower()
             if selected_ids is not None and pdb_id not in selected_ids:
                 continue
+            pdb_started = time.perf_counter()
+            manifest_before = len(manifest)
+            issues_before = len(issues)
+            prediction_count = 0
             native_cif = args.native_root / f"{pdb_id}.cif"
             rnafm_path = args.rnafm_root / pdb_id.upper() / "rnafm_t12_residue_embeddings.pt"
             try:
                 predictions = list(find_predictions(pdb_dir))
+                prediction_count = len(predictions)
                 if not predictions:
                     raise FileNotFoundError(f"no primary sample CIF under {pdb_dir}")
                 discovered_samples += len(predictions)
@@ -805,7 +1264,10 @@ def main(argv: list[str] | None = None) -> int:
                         output_path = args.output_root / split / pdb_id / f"seed_{seed}" / f"sample_{sample_number}.pt"
                         estimated_pt_bytes = ""
                         if args.dry_run:
-                            payload = build_sample(pred_cif, confidence_json, native_cif, rnafm_path, pdb_id, seed, sample_number)
+                            payload = build_sample(
+                                pred_cif, confidence_json, native_cif, rnafm_path,
+                                pdb_id, seed, sample_number, ccd_components_file,
+                            )
                             if payload["observed_atom_fraction"] < args.min_observed_atom_fraction:
                                 raise ValueError(
                                     "observed native atom fraction "
@@ -819,7 +1281,10 @@ def main(argv: list[str] | None = None) -> int:
                             payload = load_resumable_sample(output_path)
                             status = "SKIPPED"
                         else:
-                            payload = build_sample(pred_cif, confidence_json, native_cif, rnafm_path, pdb_id, seed, sample_number)
+                            payload = build_sample(
+                                pred_cif, confidence_json, native_cif, rnafm_path,
+                                pdb_id, seed, sample_number, ccd_components_file,
+                            )
                             if payload["observed_atom_fraction"] < args.min_observed_atom_fraction:
                                 raise ValueError(
                                     "observed native atom fraction "
@@ -856,10 +1321,17 @@ def main(argv: list[str] | None = None) -> int:
                 issues.append({"split": split, "pdb_id": pdb_id.upper(), "sample": "", "duration_seconds": "", "error": f"{type(exc).__name__}: {exc}"})
                 if args.fail_fast:
                     raise
-    report_prefix = "dry_run_" if args.dry_run else "generation_"
-    manifest_path = args.output_root / f"{report_prefix}manifest.tsv"
-    issues_path = args.output_root / f"{report_prefix}issues.tsv"
-    summary_path = args.output_root / f"{report_prefix}summary.json"
+            finally:
+                emit(
+                    f"PDB_DONE split={split} pdb_id={pdb_id.upper()} "
+                    f"discovered={prediction_count} "
+                    f"successful={len(manifest) - manifest_before} "
+                    f"issues={len(issues) - issues_before} "
+                    f"seconds={time.perf_counter() - pdb_started:.3f}"
+                )
+    manifest_path = run_dir / "manifest.tsv"
+    issues_path = run_dir / "issues.tsv"
+    summary_path = run_dir / "summary.json"
     write_tsv(
         manifest_path,
         manifest,
@@ -946,11 +1418,22 @@ def main(argv: list[str] | None = None) -> int:
         ),
         "estimate_basis": estimate_basis,
         "output_root": str(args.output_root),
+        "log_root": str(log_root),
+        "run_directory": str(run_dir),
+        "run_log_path": str(run_log_path),
+        "ccd_components_file": (
+            str(ccd_components_file) if ccd_components_file else None
+        ),
         "manifest_path": str(manifest_path),
         "issues_path": str(issues_path),
         "summary_path": str(summary_path),
     }
     summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    emit(
+        f"COMPLETE successful={len(manifest)} failed={failed_samples} "
+        f"problem_pdbs={len(problem_pdb_ids)} elapsed={format_duration(elapsed_seconds)} "
+        f"summary={summary_path}"
+    )
     print(json.dumps(summary, indent=2))
     return 1 if issues else 0
 
