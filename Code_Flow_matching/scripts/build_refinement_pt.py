@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import errno
 import functools
 import importlib.util
 import io
@@ -46,8 +47,9 @@ normalize_atom_name = _constants.normalize_atom_name
 
 
 SCHEMA_VERSION = 2
-GENERATOR_VERSION = "2.3-residue-grouped-modified-rna"
+GENERATOR_VERSION = "2.4-v1-filter-policy"
 MAPPING_POLICY = "complete-canonical-sequence-ccd-parent-residue-grouped-v2"
+DEFAULT_EXCLUSION_FILE = PROJECT_ROOT / "config/refinement_excluded_pdb_ids_v1.tsv"
 SAMPLE_CIF_RE = re.compile(r"^(?P<prefix>.+)_sample_(?P<sample>\d+)\.cif$", re.I)
 SEED_RE = re.compile(r"^seed_(?P<seed>\d+)$", re.I)
 
@@ -1090,12 +1092,66 @@ def format_duration(seconds: float) -> str:
     return f"{hours:02d}:{minutes:02d}:{secs:02d}"
 
 
-def load_resumable_sample(path: Path) -> dict:
+def is_storage_capacity_error(exc: BaseException) -> bool:
+    """Recognize quota/full-filesystem failures, including torch wrappers."""
+    capacity_errnos = {errno.ENOSPC}
+    if hasattr(errno, "EDQUOT"):
+        capacity_errnos.add(errno.EDQUOT)
+    messages: list[str] = []
+    seen: set[int] = set()
+    current: BaseException | None = exc
+    while current is not None and id(current) not in seen:
+        seen.add(id(current))
+        if isinstance(current, OSError) and current.errno in capacity_errnos:
+            return True
+        messages.append(str(current).lower())
+        current = current.__cause__ or current.__context__
+    joined = " ".join(messages)
+    return any(marker in joined for marker in (
+        "no space left on device",
+        "disk quota exceeded",
+        "pytorchstreamwriter failed writing file",
+    ))
+
+
+def load_excluded_pdb_ids(path: Path) -> dict[str, dict[str, str]]:
+    """Load and strictly validate the versioned PDB-level exclusion policy."""
+    path = path.expanduser().resolve()
+    if not path.is_file():
+        raise FileNotFoundError(f"PDB exclusion file does not exist: {path}")
+    excluded: dict[str, dict[str, str]] = {}
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        required = {"pdb_id", "split", "reason"}
+        if reader.fieldnames is None or not required.issubset(reader.fieldnames):
+            raise ValueError(
+                f"exclusion TSV must contain columns {sorted(required)}: {path}"
+            )
+        for line_number, row in enumerate(reader, start=2):
+            pdb_id = (row.get("pdb_id") or "").strip().lower()
+            split = (row.get("split") or "").strip().lower()
+            reason = (row.get("reason") or "").strip()
+            if not pdb_id or split not in {"train", "val", "test"} or not reason:
+                raise ValueError(
+                    f"invalid exclusion row at {path}:{line_number}: {row}"
+                )
+            if pdb_id in excluded:
+                raise ValueError(
+                    f"duplicate excluded PDB ID {pdb_id.upper()} at "
+                    f"{path}:{line_number}"
+                )
+            excluded[pdb_id] = {"split": split, "reason": reason}
+    return excluded
+
+
+def load_resumable_sample(path: Path, max_pre_refinement_rmsd: float) -> dict:
     payload = torch.load(path, map_location="cpu", weights_only=True)
     if (not isinstance(payload, dict)
             or payload.get("schema_version") != SCHEMA_VERSION
             or payload.get("generator_version") != GENERATOR_VERSION
-            or payload.get("mapping_policy") != MAPPING_POLICY):
+            or payload.get("mapping_policy") != MAPPING_POLICY
+            or payload.get("dataset_max_pre_refinement_rmsd")
+            != max_pre_refinement_rmsd):
         raise ValueError(f"existing PT was not built with current strict mapping: {path}; use a new output directory or explicitly rebuild with --overwrite")
     return payload
 
@@ -1107,6 +1163,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--native-root", type=Path, default=home / "pdb_data")
     parser.add_argument("--rnafm-root", type=Path, default=home / "Data_FM/RNA_FM_embeddings")
     parser.add_argument("--output-root", type=Path, default=home / "Data_PT_V1")
+    parser.add_argument(
+        "--exclude-pdb-file",
+        type=Path,
+        default=DEFAULT_EXCLUSION_FILE,
+        help=(
+            "TSV with pdb_id, split and reason columns (default: "
+            f"{DEFAULT_EXCLUSION_FILE})"
+        ),
+    )
     parser.add_argument(
         "--log-dir",
         type=Path,
@@ -1136,6 +1201,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=float,
         default=0.5,
         help="Reject samples with less native atom supervision (default: 0.5)",
+    )
+    parser.add_argument(
+        "--max-pre-refinement-rmsd",
+        type=float,
+        default=30.0,
+        help=(
+            "Keep only samples whose Kabsch-aligned pre-refinement RMSD is at "
+            "most this many Angstroms (default: 30.0)"
+        ),
     )
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--fail-fast", action="store_true")
@@ -1170,6 +1244,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     if not 0.0 <= args.min_observed_atom_fraction <= 1.0:
         raise SystemExit("--min-observed-atom-fraction must be in [0, 1]")
+    if args.max_pre_refinement_rmsd <= 0.0:
+        raise SystemExit("--max-pre-refinement-rmsd must be greater than zero")
     if args.run_name and not re.fullmatch(r"[A-Za-z0-9._-]+", args.run_name):
         raise SystemExit(
             "--run-name may contain only letters, digits, dot, underscore and hyphen"
@@ -1178,6 +1254,8 @@ def main(argv: list[str] | None = None) -> int:
     args.native_root = args.native_root.expanduser()
     args.rnafm_root = args.rnafm_root.expanduser()
     args.output_root = args.output_root.expanduser()
+    args.exclude_pdb_file = args.exclude_pdb_file.expanduser().resolve()
+    excluded_pdb_ids = load_excluded_pdb_ids(args.exclude_pdb_file)
     ccd_components_file = resolve_ccd_components_file(args.ccd_components_file)
     run_started = time.perf_counter()
     started_datetime = datetime.now(timezone.utc)
@@ -1211,12 +1289,17 @@ def main(argv: list[str] | None = None) -> int:
     emit(
         f"START mode={mode_name} splits={','.join(args.split)} "
         f"prediction_root={args.prediction_root} output_root={args.output_root} "
-        f"ccd_components_file={ccd_components_file}"
+        f"ccd_components_file={ccd_components_file} "
+        f"exclude_pdb_file={args.exclude_pdb_file} "
+        f"max_pre_refinement_rmsd={args.max_pre_refinement_rmsd:.3f}"
     )
     selected_ids = {value.lower() for value in args.pdb_id} if args.pdb_id else None
     manifest: list[dict] = []
     issues: list[dict] = []
+    filtered_samples: list[dict] = []
+    excluded_pdbs: list[dict] = []
     discovered_samples = 0
+    excluded_prediction_samples = 0
     total_estimated_pt_bytes = 0
     for split in args.split:
         split_dir = args.prediction_root / split
@@ -1228,9 +1311,31 @@ def main(argv: list[str] | None = None) -> int:
             pdb_id = pdb_dir.name.lower()
             if selected_ids is not None and pdb_id not in selected_ids:
                 continue
+            if pdb_id in excluded_pdb_ids:
+                exclusion = excluded_pdb_ids[pdb_id]
+                if exclusion["split"] != split:
+                    raise ValueError(
+                        f"excluded PDB {pdb_id.upper()} is listed as split "
+                        f"{exclusion['split']} but was found under {split}"
+                    )
+                prediction_count = len(list(find_predictions(pdb_dir)))
+                excluded_prediction_samples += prediction_count
+                excluded_pdbs.append({
+                    "split": split,
+                    "pdb_id": pdb_id.upper(),
+                    "prediction_samples": prediction_count,
+                    "reason": exclusion["reason"],
+                })
+                emit(
+                    f"PDB_EXCLUDED split={split} pdb_id={pdb_id.upper()} "
+                    f"prediction_samples={prediction_count} "
+                    f"reason={exclusion['reason']}"
+                )
+                continue
             pdb_started = time.perf_counter()
             manifest_before = len(manifest)
             issues_before = len(issues)
+            filtered_before = len(filtered_samples)
             prediction_count = 0
             native_cif = args.native_root / f"{pdb_id}.cif"
             rnafm_path = args.rnafm_root / pdb_id.upper() / "rnafm_t12_residue_embeddings.pt"
@@ -1263,34 +1368,49 @@ def main(argv: list[str] | None = None) -> int:
                     try:
                         output_path = args.output_root / split / pdb_id / f"seed_{seed}" / f"sample_{sample_number}.pt"
                         estimated_pt_bytes = ""
-                        if args.dry_run:
+                        output_exists = output_path.exists()
+                        if args.dry_run or not output_exists or args.overwrite:
                             payload = build_sample(
                                 pred_cif, confidence_json, native_cif, rnafm_path,
                                 pdb_id, seed, sample_number, ccd_components_file,
                             )
-                            if payload["observed_atom_fraction"] < args.min_observed_atom_fraction:
-                                raise ValueError(
-                                    "observed native atom fraction "
-                                    f"{payload['observed_atom_fraction']:.3f} is below "
-                                    f"{args.min_observed_atom_fraction:.3f}"
-                                )
+                            payload["dataset_max_pre_refinement_rmsd"] = (
+                                args.max_pre_refinement_rmsd
+                            )
+                        else:
+                            payload = load_resumable_sample(
+                                output_path, args.max_pre_refinement_rmsd
+                            )
+                        if payload["observed_atom_fraction"] < args.min_observed_atom_fraction:
+                            raise ValueError(
+                                "observed native atom fraction "
+                                f"{payload['observed_atom_fraction']:.3f} is below "
+                                f"{args.min_observed_atom_fraction:.3f}"
+                            )
+                        aligned_rmsd = float(payload["pre_refinement_aligned_rmsd"])
+                        if aligned_rmsd > args.max_pre_refinement_rmsd:
+                            duration_seconds = time.perf_counter() - sample_started
+                            filtered_samples.append({
+                                "split": split,
+                                "pdb_id": pdb_id.upper(),
+                                "seed": seed,
+                                "sample": sample_number,
+                                "pre_refinement_aligned_rmsd": f"{aligned_rmsd:.6f}",
+                                "max_pre_refinement_rmsd": (
+                                    f"{args.max_pre_refinement_rmsd:.6f}"
+                                ),
+                                "duration_seconds": f"{duration_seconds:.6f}",
+                                "output": str(output_path),
+                                "reason": "pre_refinement_aligned_rmsd_above_limit",
+                            })
+                            continue
+                        if args.dry_run:
                             estimated_pt_bytes = serialized_size(payload)
                             total_estimated_pt_bytes += estimated_pt_bytes
                             status = "DRY_RUN_OK"
-                        elif output_path.exists() and not args.overwrite:
-                            payload = load_resumable_sample(output_path)
+                        elif output_exists and not args.overwrite:
                             status = "SKIPPED"
                         else:
-                            payload = build_sample(
-                                pred_cif, confidence_json, native_cif, rnafm_path,
-                                pdb_id, seed, sample_number, ccd_components_file,
-                            )
-                            if payload["observed_atom_fraction"] < args.min_observed_atom_fraction:
-                                raise ValueError(
-                                    "observed native atom fraction "
-                                    f"{payload['observed_atom_fraction']:.3f} is below "
-                                    f"{args.min_observed_atom_fraction:.3f}"
-                                )
                             output_path.parent.mkdir(parents=True, exist_ok=True)
                             temporary = output_path.with_suffix(".pt.tmp")
                             torch.save(payload, temporary)
@@ -1315,22 +1435,34 @@ def main(argv: list[str] | None = None) -> int:
                             "duration_seconds": f"{time.perf_counter() - sample_started:.6f}",
                             "error": f"{type(exc).__name__}: {exc}",
                         })
+                        if not args.dry_run and is_storage_capacity_error(exc):
+                            emit(
+                                f"FATAL_STORAGE split={split} "
+                                f"pdb_id={pdb_id.upper()} seed={seed} "
+                                f"sample={sample_number} error={type(exc).__name__}: {exc}"
+                            )
+                            raise
                         if args.fail_fast:
                             raise
             except Exception as exc:  # continue bulk generation but make every failure auditable
                 issues.append({"split": split, "pdb_id": pdb_id.upper(), "sample": "", "duration_seconds": "", "error": f"{type(exc).__name__}: {exc}"})
-                if args.fail_fast:
+                if args.fail_fast or (
+                    not args.dry_run and is_storage_capacity_error(exc)
+                ):
                     raise
             finally:
                 emit(
                     f"PDB_DONE split={split} pdb_id={pdb_id.upper()} "
                     f"discovered={prediction_count} "
                     f"successful={len(manifest) - manifest_before} "
+                    f"filtered={len(filtered_samples) - filtered_before} "
                     f"issues={len(issues) - issues_before} "
                     f"seconds={time.perf_counter() - pdb_started:.3f}"
                 )
     manifest_path = run_dir / "manifest.tsv"
     issues_path = run_dir / "issues.tsv"
+    filtered_samples_path = run_dir / "filtered_samples.tsv"
+    excluded_pdbs_path = run_dir / "excluded_pdbs.tsv"
     summary_path = run_dir / "summary.json"
     write_tsv(
         manifest_path,
@@ -1344,17 +1476,36 @@ def main(argv: list[str] | None = None) -> int:
         issues,
         ["split", "pdb_id", "sample", "duration_seconds", "error"],
     )
+    write_tsv(
+        filtered_samples_path,
+        filtered_samples,
+        ["split", "pdb_id", "seed", "sample",
+         "pre_refinement_aligned_rmsd", "max_pre_refinement_rmsd",
+         "duration_seconds", "output", "reason"],
+    )
+    write_tsv(
+        excluded_pdbs_path,
+        excluded_pdbs,
+        ["split", "pdb_id", "prediction_samples", "reason"],
+    )
     elapsed_seconds = time.perf_counter() - run_started
     problem_pdb_ids = sorted({row["pdb_id"] for row in issues if row["pdb_id"]})
-    failed_samples = max(0, discovered_samples - len(manifest))
+    failed_samples = max(
+        0, discovered_samples - len(manifest) - len(filtered_samples)
+    )
     successful_sample_seconds = sum(float(row["duration_seconds"]) for row in manifest)
     failed_attempt_seconds = sum(
         float(row["duration_seconds"])
         for row in issues
         if row.get("duration_seconds")
     )
+    filtered_sample_seconds = sum(
+        float(row["duration_seconds"]) for row in filtered_samples
+    )
     non_sample_seconds = max(
-        0.0, elapsed_seconds - successful_sample_seconds - failed_attempt_seconds
+        0.0,
+        elapsed_seconds - successful_sample_seconds - failed_attempt_seconds
+        - filtered_sample_seconds,
     )
     average_successful_sample_seconds = (
         successful_sample_seconds / len(manifest) if manifest else None
@@ -1369,11 +1520,10 @@ def main(argv: list[str] | None = None) -> int:
         estimated_full_generation_seconds = (
             non_sample_seconds
             + successful_sample_seconds
+            + filtered_sample_seconds
             + failed_samples * average_successful_sample_seconds
         )
-        estimated_total_pt_bytes = round(
-            total_estimated_pt_bytes / len(manifest) * discovered_samples
-        )
+        estimated_total_pt_bytes = total_estimated_pt_bytes
         estimate_basis = (
             "full construction and in-memory torch serialization for successful "
             "samples; failed samples use the successful-sample mean; physical disk "
@@ -1394,6 +1544,14 @@ def main(argv: list[str] | None = None) -> int:
         "elapsed_seconds": round(elapsed_seconds, 6),
         "elapsed_duration": format_duration(elapsed_seconds),
         "discovered_samples": discovered_samples,
+        "candidate_samples_including_excluded": (
+            discovered_samples + excluded_prediction_samples
+        ),
+        "excluded_pdb_count": len(excluded_pdbs),
+        "excluded_pdb_ids": [row["pdb_id"] for row in excluded_pdbs],
+        "excluded_prediction_samples": excluded_prediction_samples,
+        "rmsd_filtered_samples": len(filtered_samples),
+        "max_pre_refinement_rmsd": args.max_pre_refinement_rmsd,
         "successful_samples": len(manifest),
         "failed_samples": failed_samples,
         "created_samples": sum(row["status"] == "CREATED" for row in manifest),
@@ -1424,13 +1582,17 @@ def main(argv: list[str] | None = None) -> int:
         "ccd_components_file": (
             str(ccd_components_file) if ccd_components_file else None
         ),
+        "exclude_pdb_file": str(args.exclude_pdb_file),
         "manifest_path": str(manifest_path),
         "issues_path": str(issues_path),
+        "filtered_samples_path": str(filtered_samples_path),
+        "excluded_pdbs_path": str(excluded_pdbs_path),
         "summary_path": str(summary_path),
     }
     summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
     emit(
-        f"COMPLETE successful={len(manifest)} failed={failed_samples} "
+        f"COMPLETE successful={len(manifest)} filtered={len(filtered_samples)} "
+        f"excluded_pdbs={len(excluded_pdbs)} failed={failed_samples} "
         f"problem_pdbs={len(problem_pdb_ids)} elapsed={format_duration(elapsed_seconds)} "
         f"summary={summary_path}"
     )

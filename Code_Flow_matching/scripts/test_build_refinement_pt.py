@@ -1,4 +1,5 @@
 import importlib.util
+import errno
 import json
 import sys
 import tempfile
@@ -92,6 +93,15 @@ _atom_site.pdbx_PDB_model_num
 
 
 class BuildRefinementPtTest(unittest.TestCase):
+    def test_storage_capacity_errors_are_fatal_candidates(self):
+        self.assertTrue(module.is_storage_capacity_error(
+            OSError(errno.ENOSPC, "No space left on device")
+        ))
+        self.assertTrue(module.is_storage_capacity_error(
+            RuntimeError("PytorchStreamWriter failed writing file data/0")
+        ))
+        self.assertFalse(module.is_storage_capacity_error(ValueError("bad CIF")))
+
     def test_alignment_and_missing_native_atom_mask(self):
         predicted = [
             ("P", "P", "A", "A", 1, 0.0, 0.0, 0.0),
@@ -273,11 +283,33 @@ class BuildRefinementPtTest(unittest.TestCase):
             path = Path(tmp) / "sample.pt"
             torch.save({"schema_version": 2, "generator_version": "2.1-cif-decoding-purine-bonds"}, path)
             with self.assertRaisesRegex(ValueError, "current strict mapping"):
-                module.load_resumable_sample(path)
+                module.load_resumable_sample(path, 30.0)
             payload = {"schema_version": 2, "generator_version": module.GENERATOR_VERSION,
-                       "mapping_policy": module.MAPPING_POLICY}
+                       "mapping_policy": module.MAPPING_POLICY,
+                       "dataset_max_pre_refinement_rmsd": 30.0}
             torch.save(payload, path)
-            self.assertEqual(module.load_resumable_sample(path), payload)
+            self.assertEqual(module.load_resumable_sample(path, 30.0), payload)
+            with self.assertRaisesRegex(ValueError, "current strict mapping"):
+                module.load_resumable_sample(path, 20.0)
+
+    def test_exclusion_table_is_strict_and_case_insensitive(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "excluded.tsv"
+            path.write_text(
+                "pdb_id\tsplit\treason\n1AbC\ttrain\tmanual_test\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                module.load_excluded_pdb_ids(path),
+                {"1abc": {"split": "train", "reason": "manual_test"}},
+            )
+            path.write_text(
+                "pdb_id\tsplit\treason\n1ABC\ttrain\tone\n"
+                "1abc\ttrain\ttwo\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "duplicate excluded PDB ID"):
+                module.load_excluded_pdb_ids(path)
 
     def test_builder_rejects_atom_plddt_length_mismatch(self):
         rows = [("P", "P", "A", "A", 1, 0., 0., 0.),
@@ -488,29 +520,53 @@ class BuildRefinementPtTest(unittest.TestCase):
             sample_dir.mkdir(parents=True)
             bad_sample_dir = prediction_root / "train" / "2def" / "seed_7" / "predictions"
             bad_sample_dir.mkdir(parents=True)
+            filtered_sample_dir = prediction_root / "train" / "3ghi" / "seed_7" / "predictions"
+            filtered_sample_dir.mkdir(parents=True)
+            excluded_sample_dir = prediction_root / "train" / "4jkl" / "seed_7" / "predictions"
+            excluded_sample_dir.mkdir(parents=True)
             native_root.mkdir()
             (rnafm_root / "1ABC").mkdir(parents=True)
+            (rnafm_root / "3GHI").mkdir(parents=True)
             pred = sample_dir / "1abc_sample_0.cif"
             confidence = sample_dir / "1abc_full_data_sample_0.json"
             write_cif(pred, rows, "A")
             write_cif(native_root / "1abc.cif", rows, "A")
             write_cif(bad_sample_dir / "2def_sample_0.cif", rows, "A")
-            confidence.write_text(json.dumps({
+            confidence_payload = {
                 "atom_to_token_idx": [0, 0, 0],
                 "atom_plddt": [0.9, 0.9, 0.9],
                 "token_pair_pae": [[0.0]],
                 "token_pair_pde": [[0.0]],
                 "contact_probs": [[1.0]],
-            }), encoding="utf-8")
-            torch.save({"residue_embedding": torch.zeros(1, 640),
-                        "sequences": ["A"], "chain_offsets": [0, 1]},
+            }
+            confidence.write_text(json.dumps(confidence_payload), encoding="utf-8")
+            fm_payload = {"residue_embedding": torch.zeros(1, 640),
+                          "sequences": ["A"], "chain_offsets": [0, 1]}
+            torch.save(fm_payload,
                        rnafm_root / "1ABC" / "rnafm_t12_residue_embeddings.pt")
+            write_cif(filtered_sample_dir / "3ghi_sample_0.cif", rows, "A")
+            deformed_native = list(rows)
+            deformed_native[-1] = deformed_native[-1][:-3] + (8.0, 7.0, 6.0)
+            write_cif(native_root / "3ghi.cif", deformed_native, "A")
+            (filtered_sample_dir / "3ghi_full_data_sample_0.json").write_text(
+                json.dumps(confidence_payload), encoding="utf-8"
+            )
+            torch.save(fm_payload,
+                       rnafm_root / "3GHI" / "rnafm_t12_residue_embeddings.pt")
+            write_cif(excluded_sample_dir / "4jkl_sample_0.cif", rows, "A")
+            exclusion_file = root / "excluded.tsv"
+            exclusion_file.write_text(
+                "pdb_id\tsplit\treason\n4JKL\ttrain\tunit_test_exclusion\n",
+                encoding="utf-8",
+            )
 
             result = module.main([
                 "--prediction-root", str(prediction_root),
                 "--native-root", str(native_root),
                 "--rnafm-root", str(rnafm_root),
                 "--output-root", str(output_root),
+                "--exclude-pdb-file", str(exclusion_file),
+                "--max-pre-refinement-rmsd", "0.01",
                 "--split", "train",
                 "--dry-run",
                 "--run-name", "unittest_dry_run",
@@ -527,15 +583,27 @@ class BuildRefinementPtTest(unittest.TestCase):
             self.assertEqual(summary["mode"], "dry_run")
             self.assertEqual(summary["dry_run_samples"], 1)
             self.assertEqual(summary["failed_samples"], 1)
+            self.assertEqual(summary["rmsd_filtered_samples"], 1)
+            self.assertEqual(summary["excluded_pdb_ids"], ["4JKL"])
+            self.assertEqual(summary["excluded_prediction_samples"], 1)
             self.assertEqual(summary["problem_pdb_ids"], ["2DEF"])
             self.assertGreater(summary["estimated_total_pt_bytes"], 0)
             self.assertIsNotNone(summary["estimated_full_generation_seconds"])
             self.assertEqual(Path(summary["run_directory"]), run_dir)
             self.assertTrue((run_dir / "manifest.tsv").is_file())
             self.assertTrue((run_dir / "issues.tsv").is_file())
+            self.assertTrue((run_dir / "filtered_samples.tsv").is_file())
+            self.assertTrue((run_dir / "excluded_pdbs.tsv").is_file())
             self.assertTrue((run_dir / "run.log").is_file())
             self.assertIn(
                 "2DEF", (run_dir / "issues.tsv").read_text(encoding="utf-8")
+            )
+            self.assertIn(
+                "3GHI",
+                (run_dir / "filtered_samples.tsv").read_text(encoding="utf-8"),
+            )
+            self.assertIn(
+                "4JKL", (run_dir / "excluded_pdbs.tsv").read_text(encoding="utf-8")
             )
 
 
