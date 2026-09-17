@@ -3,7 +3,6 @@ from typing import Any, Dict, Optional, TypeVar
 import torch
 import torch.nn.functional as F
 from torch import Tensor
-from pytorch_lightning import seed_everything
 from torch_geometric.utils import scatter
 
 
@@ -1186,6 +1185,42 @@ class BaseFlow(BaseModel):
                 "mobility_target_mean": mobility_target[valid_residue_mask].mean(),
                 "identity_pair_fraction": identity_pair_fraction,
                 "near_native_pair_fraction": near_native_pair_fraction,
+            }.items():
+                self.log_helper(
+                    f"{stage}/{metric_name}",
+                    metric_value,
+                    batch_size=batch_size,
+                )
+        if stage != "train":
+            graph_index = batch
+            if graph_index is None:
+                graph_index = torch.zeros(
+                    pos_estimate.size(0),
+                    dtype=torch.long,
+                    device=pos_estimate.device,
+                )
+            input_rmsd, input_valid = self.residue_rms_error(
+                prediction=x0_centered,
+                target=x1_centered,
+                global_residue_index=graph_index,
+                total_residues=batch_size,
+                atom_mask=target_mask,
+            )
+            refined_rmsd, refined_valid = self.residue_rms_error(
+                prediction=pos_estimate,
+                target=x1_centered,
+                global_residue_index=graph_index,
+                total_residues=batch_size,
+                atom_mask=target_mask,
+            )
+            valid_graph = input_valid & refined_valid
+            input_rmsd = input_rmsd[valid_graph]
+            refined_rmsd = refined_rmsd[valid_graph]
+            for metric_name, metric_value in {
+                "input_rmsd": input_rmsd.mean(),
+                "refined_rmsd": refined_rmsd.mean(),
+                "rmsd_improvement": (input_rmsd - refined_rmsd).mean(),
+                "worsened_fraction": (refined_rmsd > input_rmsd).float().mean(),
             }.items():
                 self.log_helper(
                     f"{stage}/{metric_name}",

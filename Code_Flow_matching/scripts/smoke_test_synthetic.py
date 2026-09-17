@@ -590,11 +590,16 @@ def check_confidence_pair_lookup(model, batch) -> None:
 def check_confidence_switch(enabled_model, disabled_model, batch) -> None:
     """The switch must use confidence when on and ignore it when off.
 
-    Use the already batched static graph here so this unit check does not mix
-    confidence sensitivity with CUDA radius-graph/scatter nondeterminism.
-    Dynamic-graph execution is covered separately by every training/sampling
-    test above.
+    Run this strict repeatability check on CPU.  A static CUDA graph still
+    contains scatter reductions whose atomic accumulation order is not
+    deterministic.  CUDA execution is covered separately by every
+    training/sampling test above.
     """
+    if batch.pos.device.type == "cuda":
+        enabled_model.cpu()
+        disabled_model.cpu()
+        batch = batch.cpu()
+
     num_graphs = int(batch.batch.max().item()) + 1
     t = torch.full((num_graphs, 1), 0.37, device=batch.pos.device)
     common = {
@@ -901,9 +906,11 @@ def main() -> None:
         enabled_model = models[(True, "residual", "deterministic")]
         disabled_model = models[(False, "residual", "deterministic")]
         check_confidence_pair_lookup(enabled_model, batch)
-        check_confidence_switch(enabled_model, disabled_model, batch)
         check_confidence_validation(enabled_model, batch)
         check_rotational_equivariance(enabled_model, batch)
+        # Keep this last: on CUDA it moves both models to CPU so that strict
+        # repeatability is tested without CUDA scatter atomic-order noise.
+        check_confidence_switch(enabled_model, disabled_model, batch)
 
     print("ALL SYNTHETIC SMOKE TESTS PASSED")
 

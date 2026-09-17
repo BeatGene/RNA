@@ -57,6 +57,23 @@ class MaskedRmsTest(unittest.TestCase):
         rms.sum().backward()
         torch.testing.assert_close(prediction.grad[-1], torch.zeros(3, dtype=torch.double))
 
+    def test_graph_indices_produce_per_sample_validation_rmsd(self):
+        target = torch.zeros(4, 3)
+        prediction = torch.tensor([
+            [3., 4., 0.], [0., 0., 0.],
+            [0., 0., 6.], [100., 100., 100.],
+        ])
+        graph_index = torch.tensor([0, 0, 1, 1])
+        mask = torch.tensor([True, True, True, False])
+        rms, valid = rms_error(
+            prediction, target, graph_index, 2, mask
+        )
+        torch.testing.assert_close(
+            rms,
+            torch.tensor([5.0 / (2.0 ** 0.5), 6.0]),
+        )
+        self.assertEqual(valid.tolist(), [True, True])
+
 
 if __name__ == "__main__":
     unittest.main()
