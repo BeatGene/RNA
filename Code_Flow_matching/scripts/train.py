@@ -26,62 +26,8 @@ from etflow.data.datamodule import BaseDataModule
 torch.set_float32_matmul_precision("high")
 
 
-def validate_config(config: dict) -> None:
-    """Fail before creating a WandB run when the training setup is invalid."""
-    for key in ("task_name", "datamodule_args", "model", "model_args",
-                "callbacks", "trainer", "trainer_args"):
-        if key not in config:
-            raise ValueError(f"Missing required config key: {key}")
-
-    data_dir = Path(config["datamodule_args"]["data_dir"]).expanduser()
-    for split in ("train", "val", "test"):
-        split_dir = data_dir / split
-        if not split_dir.is_dir():
-            raise FileNotFoundError(f"Missing PT split directory: {split_dir}")
-    config["datamodule_args"]["data_dir"] = str(data_dir.resolve())
-
-    loader_args = config["datamodule_args"].get("dataloader_args", {})
-    batch_size = int(loader_args.get("batch_size", 1))
-    num_workers = int(loader_args.get("num_workers", 0))
-    if batch_size < 1 or num_workers < 0:
-        raise ValueError("batch_size must be positive and num_workers non-negative")
-    if loader_args.get("persistent_workers", False) and num_workers == 0:
-        raise ValueError("persistent_workers=True requires num_workers > 0")
-
-    pretrained_ckpt = config.get("pretrained_ckpt")
-    resume_ckpt = config.get("ckpt_path")
-    if pretrained_ckpt and resume_ckpt:
-        raise ValueError("Set only one of pretrained_ckpt and ckpt_path")
-    for label, checkpoint in (
-        ("pretrained_ckpt", pretrained_ckpt),
-        ("ckpt_path", resume_ckpt),
-    ):
-        if checkpoint:
-            checkpoint_path = Path(checkpoint).expanduser()
-            if not checkpoint_path.is_file():
-                raise FileNotFoundError(f"{label} does not exist: {checkpoint}")
-            config[label] = str(checkpoint_path.resolve())
-
-    trainer_args = config["trainer_args"]
-    if trainer_args.get("accelerator") == "gpu":
-        if not torch.cuda.is_available():
-            raise RuntimeError("trainer accelerator is gpu but CUDA is unavailable")
-        devices = 1 if config.get("debug", False) else trainer_args.get("devices", 1)
-        if isinstance(devices, int) and torch.cuda.device_count() < devices:
-            raise RuntimeError(
-                f"Requested {devices} GPUs but only "
-                f"{torch.cuda.device_count()} are visible"
-            )
-
-    logger_args = config.get("logger_args") or {}
-    if logger_args.get("save_dir"):
-        wandb_dir = Path(logger_args["save_dir"]).expanduser()
-        wandb_dir.mkdir(parents=True, exist_ok=True)
-        logger_args["save_dir"] = str(wandb_dir.resolve())
-
 
 def run(config: dict) -> None:
-    validate_config(config)
 
     # check if debug mode
     debug = config.get("debug", False)
@@ -110,11 +56,9 @@ def run(config: dict) -> None:
     setup_log_dir(task_name)
 
     # instantiate datamodule
-
     datamodule = BaseDataModule(**config["datamodule_args"])
 
     # instantiate model
-    # ToDo 注意node_attr_dim、edge_attr_dim参数的修改
     model = instantiate_model(config["model"], config["model_args"])
 
     pretrained_ckpt = config.get("pretrained_ckpt", None)
@@ -129,15 +73,7 @@ def run(config: dict) -> None:
         log.info(f"Loaded pretrained model from checkpoint: {pretrained_ckpt}")
 
     # instantiate callbacks
-    callback_specs = config["callbacks"]
-    if logger is None:
-        # LearningRateMonitor requires a logger.  This keeps --debug and
-        # --no_logger usable for local pipeline checks.
-        callback_specs = [
-            spec for spec in callback_specs
-            if spec.get("callback") != "LearningRateMonitor"
-        ]
-    callbacks = instantiate_callbacks(callback_specs)
+    callbacks = instantiate_callbacks(config["callbacks"])
 
     # instantiate trainer
     trainer = instantiate_trainer(

@@ -3,14 +3,12 @@ from typing import List, Optional
 from lightning.pytorch.loggers import Logger, WandbLogger
 from lightning import Callback, LightningDataModule, LightningModule, Trainer
 from lightning.pytorch.callbacks import (
-    EarlyStopping,
     LearningRateMonitor,
     ModelCheckpoint,
 )
 from datetime import datetime
 import os
 from lightning.pytorch.utilities import rank_zero_only
-# ToDo
 from etflow.models.model import BaseFlow
 import yaml
 
@@ -48,12 +46,8 @@ def instantiate_callbacks(callbacks: list) -> List[Callback]:
     for callback_dict in callbacks:
         if callback_dict["callback"] == "ModelCheckpoint":
             final_callbacks.append(ModelCheckpoint(**callback_dict["callback_args"]))
-        elif callback_dict["callback"] == "EarlyStopping":
-            final_callbacks.append(EarlyStopping(**callback_dict["callback_args"]))
         elif callback_dict["callback"] == "LearningRateMonitor":
-            final_callbacks.append(
-                LearningRateMonitor(**callback_dict["callback_args"])
-            )
+            final_callbacks.append(LearningRateMonitor(**callback_dict["callback_args"]))
         else:
             raise NotImplementedError
 

@@ -22,7 +22,6 @@
 # !README.txt
 *.pptx
 
-*.yaml
 
 *.wandb
 

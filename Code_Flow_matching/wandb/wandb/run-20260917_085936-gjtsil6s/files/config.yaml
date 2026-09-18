@@ -1,0 +1,232 @@
+_wandb:
+    value:
+        cli_version: 0.22.3
+        e:
+            1adl92xflxr339zcbke93tnv1rxw5d2x:
+                args:
+                    - --config
+                    - /storage9920/home/tinghao.xia/Code_Flow_matching/config/RNA_train_residual_v1.yaml
+                codePath: scripts/train.py
+                codePathLocal: scripts/train.py
+                cpu_count: 96
+                cpu_count_logical: 192
+                cudaVersion: "12.9"
+                disk:
+                    /:
+                        total: "15360340262912"
+                        used: "652018229248"
+                email: 495865098@qq.com
+                executable: /storage9920/home/tinghao.xia/miniconda3/envs/protenix-1.0.5/bin/python
+                gpu: NVIDIA H20-3e
+                gpu_count: 8
+                gpu_nvidia:
+                    - architecture: Hopper
+                      cudaCores: 9984
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H20-3e
+                      uuid: GPU-a371b178-24ff-0c1c-0fd1-335ff9430784
+                    - architecture: Hopper
+                      cudaCores: 9984
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H20-3e
+                      uuid: GPU-a6ca4098-2536-0f47-1c54-fe642929d905
+                    - architecture: Hopper
+                      cudaCores: 9984
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H20-3e
+                      uuid: GPU-01e830b3-45a4-b476-71d7-4ab713854096
+                    - architecture: Hopper
+                      cudaCores: 9984
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H20-3e
+                      uuid: GPU-1aa030f8-16c4-9380-ae1d-4d5740038144
+                    - architecture: Hopper
+                      cudaCores: 9984
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H20-3e
+                      uuid: GPU-76b7fc6d-a628-bc1b-8164-26bfe21025f5
+                    - architecture: Hopper
+                      cudaCores: 9984
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H20-3e
+                      uuid: GPU-ac1c0d81-f263-7ba9-73c3-529a7ccd788d
+                    - architecture: Hopper
+                      cudaCores: 9984
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H20-3e
+                      uuid: GPU-2053c806-30a3-e121-b7ea-26d7ff1c4d33
+                    - architecture: Hopper
+                      cudaCores: 9984
+                      memoryTotal: "150754820096"
+                      name: NVIDIA H20-3e
+                      uuid: GPU-97fab9c5-1a42-eed8-c736-02f6c930ff81
+                host: terminal-rn-8159a0-ecx90flc
+                memory:
+                    total: "2164126552064"
+                os: Linux-6.8.0-87-generic-x86_64-with-glibc2.36
+                program: /storage9920/home/tinghao.xia/Code_Flow_matching/scripts/train.py
+                python: CPython 3.11.15
+                root: /storage9920/home/tinghao.xia/Code_Flow_matching/wandb
+                startedAt: "2026-09-17T08:59:36.488904Z"
+                writerId: 1adl92xflxr339zcbke93tnv1rxw5d2x
+        m:
+            - "1": trainer/global_step
+              "6":
+                - 3
+              "7": []
+            - "2": '*'
+              "5": 1
+              "6":
+                - 1
+              "7": []
+        python_version: 3.11.15
+        t:
+            "1":
+                - 1
+                - 41
+                - 77
+                - 106
+            "2":
+                - 1
+                - 41
+                - 77
+                - 106
+            "3":
+                - 7
+                - 13
+                - 66
+            "4": 3.11.15
+            "5": 0.22.3
+            "12": 0.22.3
+            "13": linux-x86_64
+callbacks:
+    value:
+        - callback: ModelCheckpoint
+          callback_args:
+            auto_insert_metric_name: false
+            dirpath: /storage9920/home/tinghao.xia/Code_Flow_matching/checkpoints/rna_refinement_v1_residual_mobility
+            every_n_epochs: 1
+            filename: epoch={epoch:02d}-step={step}
+            mode: min
+            monitor: val/refined_rmsd
+            save_last: true
+            save_top_k: 3
+        - callback: LearningRateMonitor
+          callback_args:
+            log_momentum: false
+            logging_interval: step
+        - callback: EarlyStopping
+          callback_args:
+            min_delta: 0.0001
+            mode: min
+            monitor: val/refined_rmsd
+            patience: 3
+ckpt_path:
+    value: null
+datamodule:
+    value: BaseDataModule
+datamodule_args:
+    value:
+        data_dir: /storage9920/home/tinghao.xia/Data_PT_V1
+        dataloader_args:
+            batch_size: 2
+            drop_last: false
+            num_workers: 2
+            persistent_workers: true
+            pin_memory: true
+extras:
+    value: null
+model:
+    value: BaseFlow
+model/params/non_trainable:
+    value: 0
+model/params/total:
+    value: 2175370
+model/params/trainable:
+    value: 2175370
+model_args:
+    value:
+        activation: silu
+        attn_activation: silu
+        beta1: 0.95
+        beta2: 0.999
+        bond_loss_weight: 0.1
+        clash_loss_weight: 0.01
+        clip_during_norm: false
+        confidence_conditioning: true
+        cutoff_lower: 0
+        cutoff_upper: 6
+        cycle_mult: 1
+        distance_influence: both
+        dynamic_edge_type: 3
+        dynamic_graph: true
+        dynamic_radius_cutoff: 6
+        edge_attr_dim: 7
+        first_cycle_steps: 32000
+        flow_path: deterministic
+        gamma: 1
+        grad_norm_max_val: 100
+        hidden_channels: 128
+        identity_pair_probability: 0.1
+        last_epoch: -1
+        lr: 0.0003
+        lr_scheduler_frequency: 1
+        lr_scheduler_interval: step
+        lr_scheduler_monitor: val/refined_rmsd
+        lr_scheduler_type: CosineAnnealingWarmupRestarts
+        max_lr: 0.0003
+        max_num_neighbors: 64
+        max_z: 20
+        min_lr: 3e-05
+        mobility_gate_loss_weight: 0.1
+        mobility_good_error: 0.3
+        mobility_move_error: 1.5
+        near_native_max_alpha: 0.25
+        near_native_min_alpha: 0.05
+        near_native_pair_probability: 0.2
+        neighbor_embedding: true
+        network_type: TorchMDDynamics
+        no_regret_loss_weight: 0.5
+        node_attr_dim: 674
+        num_edge_types: 7
+        num_heads: 8
+        num_layers: 6
+        num_rbf: 64
+        optimizer_type: AdamW
+        output_layer_norm: false
+        plane_loss_weight: 0.1
+        protect_error_threshold: 0.5
+        protect_loss_weight: 0.2
+        qk_norm: true
+        rbf_type: expnorm
+        reduce_op: sum
+        sample_time_dist: uniform
+        sigma: 0.1
+        so3_equivariant: true
+        source_conditioning: true
+        trainable_rbf: true
+        training_objective: residual
+        use_mobility_v1: true
+        velocity_budget_loss_weight: 0.01
+        warmup_steps: 1000
+        weight_decay: 1e-08
+seed:
+    value: 42
+tags:
+    value: null
+task_name:
+    value: rna_refinement_v1_residual_mobility
+trainer:
+    value: Trainer
+trainer_args:
+    value:
+        accelerator: gpu
+        accumulate_grad_batches: 4
+        devices: 6
+        enable_progress_bar: false
+        gradient_clip_val: 1
+        log_every_n_steps: 50
+        max_epochs: 10
+        num_sanity_val_steps: 0
+        precision: bf16-mixed
+        strategy: ddp

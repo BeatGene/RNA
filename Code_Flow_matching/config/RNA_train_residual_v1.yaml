@@ -1,14 +1,11 @@
-# task name for logging
-task_name: rna_refinement_v2_masked_residual
-
-# unique seed for experiment reproducibility
+task_name: rna_refinement_v1_residual_mobility
 seed: 42
+pretrained_ckpt: null
+ckpt_path: null
 
-# data config
 datamodule: BaseDataModule
 datamodule_args:
-    # dataloader
-    data_dir: "/storage9920/home/tinghao.xia/Data_Refinement_PT"
+    data_dir: /storage9920/home/tinghao.xia/Data_PT_V1
     dataloader_args:
         batch_size: 2
         num_workers: 2
@@ -16,10 +13,8 @@ datamodule_args:
         persistent_workers: true
         drop_last: false
 
-# model config
 model: BaseFlow
 model_args:
-    # network args
     network_type: TorchMDDynamics
     hidden_channels: 128
     num_layers: 6
@@ -30,27 +25,34 @@ model_args:
     neighbor_embedding: true
     cutoff_lower: 0.0
     cutoff_upper: 6.0
+    dynamic_graph: true
     dynamic_radius_cutoff: 6.0
     max_num_neighbors: 64
+    dynamic_edge_type: 3
     max_z: 20
     node_attr_dim: 674
     edge_attr_dim: 7
     num_edge_types: 7
+    source_conditioning: true
     confidence_conditioning: true
     attn_activation: silu
     num_heads: 8
     distance_influence: both
     reduce_op: sum
     qk_norm: true
+    output_layer_norm: false
     so3_equivariant: true
-    clip_during_norm: false
+    # Protect direction-vector normalization when two atoms are nearly coincident.
+    clip_during_norm: true
 
-    # flow matching specific
-    sigma: 0.1
-    # A single residual prediction is the intended refinement objective.
-    # It is much cheaper and more stable than integrating a 50-step ODE.
     training_objective: residual
     flow_path: deterministic
+    sigma: 0.1
+    sample_time_dist: uniform
+    bond_loss_weight: 0.1
+    clash_loss_weight: 0.01
+    plane_loss_weight: 0.1
+
     use_mobility_v1: true
     identity_pair_probability: 0.1
     near_native_pair_probability: 0.2
@@ -60,14 +62,17 @@ model_args:
     no_regret_loss_weight: 0.5
     protect_loss_weight: 0.2
     velocity_budget_loss_weight: 0.01
+    mobility_good_error: 0.3
+    mobility_move_error: 1.5
+    protect_error_threshold: 0.5
 
-
-    # optimizer args
     optimizer_type: AdamW
     lr: 3.e-4
+    beta1: 0.95
+    beta2: 0.999
     weight_decay: 1.e-8
+    grad_norm_max_val: 100.0
 
-    # lr scheduler args
     lr_scheduler_type: CosineAnnealingWarmupRestarts
     first_cycle_steps: 32_000
     cycle_mult: 1.0
@@ -76,45 +81,48 @@ model_args:
     warmup_steps: 1000
     gamma: 1.0
     last_epoch: -1
-    lr_scheduler_monitor: val/loss
+    lr_scheduler_monitor: val/refined_rmsd
     lr_scheduler_interval: step
     lr_scheduler_frequency: 1
 
-# callbacks
 callbacks:
-    -   callback: ModelCheckpoint
-        callback_args:
-            dirpath: './checkpoints/rna_refinement_v2_masked_residual'
-            monitor: val/loss
-            mode: min
-            save_last: true
-            every_n_epochs: 1
-            save_top_k: 3
+    - callback: ModelCheckpoint
+      callback_args:
+          dirpath: /storage9920/home/tinghao.xia/Code_Flow_matching/checkpoints/rna_refinement_v1_residual_mobility
+          filename: "epoch={epoch:02d}-step={step}"
+          auto_insert_metric_name: false
+          monitor: val/refined_rmsd
+          mode: min
+          save_last: true
+          every_n_epochs: 1
+          save_top_k: 3
+    - callback: LearningRateMonitor
+      callback_args:
+          log_momentum: false
+          logging_interval: step
 
-    -   callback: LearningRateMonitor
-        callback_args:
-            log_momentum: false
-            logging_interval: step
 
-# logger
 logger: WandbLogger
 logger_args:
     project: RNA-Flow-Refinement
-
-
+    save_dir: /storage9920/home/tinghao.xia/Code_Flow_matching/wandb
+    group: residual-mobility-v1
+    job_type: train
+    log_model: false
 
 trainer: Trainer
 trainer_args:
     max_epochs: 10
-    devices: 8
+    devices: 6
     accelerator: gpu
-    strategy: ddp_find_unused_parameters_true
-    accumulate_grad_batches: 3
+    strategy: ddp
+    accumulate_grad_batches: 4
     precision: bf16-mixed
     num_sanity_val_steps: 0
     gradient_clip_val: 1.0
+    log_every_n_steps: 50
+    enable_progress_bar: false
 
-# eval config
 eval_args:
     batch_size: 1
     sampler_args:
