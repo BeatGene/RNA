@@ -95,8 +95,11 @@ def get_log_dir():
     return log_dir
 
 def setup_log_dir(task_name):
-    """Sets log directory for a given task
-    and then moves to that directory
+    """Create and return the run log directory without changing cwd.
+
+    Lightning launches local DDP workers by re-executing ``sys.argv[0]``.
+    Changing the working directory here breaks that re-exec when train.py was
+    invoked through a relative path such as ``scripts/train.py``.
     """
     log_dir = get_log_dir()
     # use time to create unique log directory
@@ -106,7 +109,7 @@ def setup_log_dir(task_name):
 
     # create log directory
     os.makedirs(log_dir, exist_ok=True)
-    os.chdir(log_dir)
+    return log_dir
 
 @rank_zero_only
 def log_hyperparameters(object_dict: dict) -> None:
