@@ -247,42 +247,6 @@ class EquivariantMultiHeadAttention(MessagePassing):
 
 
 class TorchMD_ET_dynamics(nn.Module):
-    r"""The TorchMD equivariant Transformer architecture.
-
-    Parameters
-    ----------
-    hidden_channels (int, optional): Hidden embedding size.
-        (default: :obj:`128`)
-    num_layers (int, optional): The number of attention layers.
-        (default: :obj:`6`)
-    num_rbf (int, optional): The number of radial basis functions :math:`\mu`.
-        (default: :obj:`50`)
-    rbf_type (string, optional): The type of radial basis function to use.
-        (default: :obj:`"expnorm"`)
-    trainable_rbf (bool, optional): Whether to train RBF parameters with
-        backpropagation. (default: :obj:`True`)
-    activation (string, optional): The type of activation function to use.
-        (default: :obj:`"silu"`)
-    attn_activation (string, optional): The type of activation function to use
-        inside the attention mechanism. (default: :obj:`"silu"`)
-    neighbor_embedding (bool, optional): Whether to perform an initial neighbor
-        embedding step. (default: :obj:`True`)
-    num_heads (int, optional): Number of attention heads.
-        (default: :obj:`8`)
-    distance_influence (string, optional): Where distance information is used inside
-        the attention mechanism. (default: :obj:`"both"`)
-    cutoff_lower (float, optional): Lower cutoff distance for interatomic interactions.
-        (default: :obj:`0.0`)
-    cutoff_upper (float, optional): Upper cutoff distance for interatomic interactions.
-        (default: :obj:`5.0`)
-    max_z (int, optional): Maximum atomic number. Used for initializing embeddings.
-        (default: :obj:`100`)
-    qk_norm (bool, optional):
-        Applies layer norm to q and k projections. Supposed to
-        stabilize the training based on
-        https://arxiv.org/pdf/2302.05442.pdf. (default: :obj:`False`)
-    """
-
     def __init__(
         self,
         hidden_channels: int = 128,
@@ -308,20 +272,6 @@ class TorchMD_ET_dynamics(nn.Module):
         source_conditioning: bool = True,
     ):
         super(TorchMD_ET_dynamics, self).__init__()
-
-        assert distance_influence in ["keys", "values", "both", "none"]
-        assert rbf_type in rbf_class_mapping, (
-            f'Unknown RBF type "{rbf_type}". '
-            f'Choose from {", ".join(rbf_class_mapping.keys())}.'
-        )
-        assert activation in act_class_mapping, (
-            f'Unknown activation function "{activation}". '
-            f'Choose from {", ".join(act_class_mapping.keys())}.'
-        )
-        assert attn_activation in act_class_mapping, (
-            f'Unknown attention activation function "{attn_activation}". '
-            f'Choose from {", ".join(act_class_mapping.keys())}.'
-        )
         self.source_conditioning = source_conditioning
         self.hidden_channels = hidden_channels
         self.num_layers = num_layers
@@ -338,7 +288,7 @@ class TorchMD_ET_dynamics(nn.Module):
         self.max_z = max_z
         self.node_attr_dim = node_attr_dim
         self.edge_attr_dim = edge_attr_dim
-        # Modify_1
+
         self.edge_feature_dim = num_rbf + edge_attr_dim
         self.clip_during_norm = clip_during_norm
 
@@ -346,7 +296,7 @@ class TorchMD_ET_dynamics(nn.Module):
 
         self.embedding = nn.Embedding(self.max_z, self.hidden_channels)
 
-        # Modify_1
+
         self.source_edge_fusion = nn.Sequential(
             nn.Linear(self.edge_feature_dim + num_rbf, self.edge_feature_dim),
             act_class(),
@@ -393,11 +343,11 @@ class TorchMD_ET_dynamics(nn.Module):
                 norm_coors=norm_coors,
                 norm_coors_scale_init=norm_coors_scale_init,
                 so3_equivariant=so3_equivariant,
-            )  # .jittable() TODO: Removing for now
+            )
             self.attention_layers.append(layer)
 
         self.out_norm = nn.LayerNorm(hidden_channels)
-        # Modify_1
+
         self.source_delta_mlp = nn.Sequential(
             nn.Linear(2, hidden_channels),
             act_class(),
@@ -433,18 +383,16 @@ class TorchMD_ET_dynamics(nn.Module):
         z: Tensor,
         t: Tensor,
         pos: Tensor,
-        # Modify_1
         pos_source: Tensor,
         batch: Tensor,
         edge_index: Optional[Tensor] = None,
         node_attr: Optional[Tensor] = None,
         edge_attr: Optional[Tensor] = None,
     ) -> Tuple[Tensor, Tensor, Tensor, Tensor, Tensor]:
-        # embed atomic numbers using an embedding layer
         if z.dim() > 1:
             z = z.squeeze()  # (num_atoms,)
 
-        # Modify_1
+
         x_initial = self.embedding(z)  # (num_atoms, hidden_channels)
 
         # append time to node features
@@ -463,21 +411,8 @@ class TorchMD_ET_dynamics(nn.Module):
         if edge_attr is not None:
             if edge_attr.dim() == 1:
                 edge_attr = edge_attr.unsqueeze(1)
-
-            if edge_attr.size(1) != self.edge_attr_dim:
-                raise ValueError(
-                    f"edge_attr has dim {edge_attr.size(1)}, "
-                    f"but edge_attr_dim={self.edge_attr_dim}"
-                )
-
             current_edge_attr = torch.cat([current_rbf, edge_attr],dim=-1,)
         else:
-            if self.edge_attr_dim != 0:
-                raise ValueError(
-                    f"edge_attr_dim={self.edge_attr_dim}, "
-                    "but edge_attr is None"
-                )
-
             current_edge_attr = current_rbf
 
         # Source-structure conditioning branch
@@ -492,7 +427,9 @@ class TorchMD_ET_dynamics(nn.Module):
                 source_edge_attr = source_rbf
 
             source_distance_delta = source_rbf - current_rbf
+
             source_edge_update = self.source_edge_fusion(torch.cat([current_edge_attr, source_distance_delta],dim=-1,))
+
             f_ij = current_edge_attr + source_edge_update
         else:
             source_edge_dist = None
@@ -503,7 +440,8 @@ class TorchMD_ET_dynamics(nn.Module):
         mask = edge_index[0] == edge_index[1]
         masked_edge_weight = edge_weight.masked_fill(mask,1,).unsqueeze(1)
 
-        if self.clip_during_norm:masked_edge_weight = masked_edge_weight.clamp(min=1.0e-2)
+        if self.clip_during_norm:
+            masked_edge_weight = masked_edge_weight.clamp(min=1.0e-2)
 
         edge_vec = edge_vec / masked_edge_weight
         # Current/source node embeddings
@@ -533,13 +471,9 @@ class TorchMD_ET_dynamics(nn.Module):
         # Initialize the vector features.
         if self.source_conditioning:
             delta = pos - pos_source
-
             delta_norm = torch.linalg.vector_norm(delta,dim=-1,keepdim=True,)
-
             delta_dir = delta / delta_norm.clamp(min=1.0e-8)
-
             delta_scalar = torch.cat([delta_norm / self.cutoff_upper,t,],dim=-1,)
-
             delta_channels = self.source_delta_mlp(
                 delta_scalar
             )
@@ -549,14 +483,8 @@ class TorchMD_ET_dynamics(nn.Module):
                     * delta_channels.unsqueeze(1)
             )
         else:
-            vec = torch.zeros(
-                x.size(0),
-                3,
-                x.size(1),
-                dtype=x.dtype,
-                device=x.device,
-            )
-        #Modify_1
+            vec = torch.zeros(x.size(0),3,x.size(1),dtype=x.dtype,device=x.device,)
+
         for attn in self.attention_layers:
             dx, dvec = attn(
                 x=x,
@@ -594,54 +522,6 @@ class TorchMD_ET_dynamics(nn.Module):
 
 
 class TorchMDDynamics(nn.Module):
-    """
-    TorchMDDynamics Model for DDPM training.
-
-    Parameters
-    ----------
-    hidden_channels (int, optional):
-        Hidden embedding size. (default: :obj:`128`)
-    num_layers (int, optional):
-        The number of attention layers. (default: :obj:`8`)
-    num_rbf (int, optional):
-        The number of radial basis functions :math:`\mu`.
-        (default: :obj:`64`)
-    rbf_type (string, optional):
-        The type of radial basis function to use.
-        (default: :obj:`"expnorm"`)
-    trainable_rbf (bool, optional):
-        Whether to train RBF parameters with backpropagation.
-        (default: :obj:`False`)
-    activation (string, optional):
-        The type of activation function to use. (default: :obj:`"silu"`)
-    neighbor_embedding (bool, optional):
-        Whether to perform an initial neighbor embedding step.
-        (default: :obj:`True`)
-    cutoff_lower (float, optional):
-        Lower cutoff distance for interatomic interactions.
-        (default: :obj:`0.0`)
-    cutoff_upper (float, optional):
-        Upper cutoff distance for interatomic interactions.
-        (default: :obj:`5.0`)
-    max_z (int, optional):
-        Maximum atomic number. Used for initializing embeddings.
-        (default: :obj:`100`)
-    node_attr_dim (int, optional):
-        Dimension of additional input node  features (non-atomic numbers).
-    attn_activation (string, optional):
-        The type of activation function to use inside the attention
-        mechanism. (default: :obj:`"silu"`)
-    num_heads (int, optional):
-        Number of attention heads. (default: :obj:`8`)
-    distance_influence (string, optional):
-        Where distance information is used inside the attention
-        mechanism. (default: :obj:`"both"`)
-    qk_norm (bool, optional):
-        Applies layer norm to q and k projections. Supposed to
-        stabilize the training based on
-        https://arxiv.org/pdf/2302.05442.pdf. (default: :obj:`False`)
-    """
-
     def __init__(
         self,
         hidden_channels: int = 128,
@@ -705,42 +585,17 @@ class TorchMDDynamics(nn.Module):
         z: Tensor,
         t: Tensor,
         pos: Tensor,
-        # Modify_1
         pos_source: Tensor,
         edge_index: Tensor,
         batch: Tensor,
         edge_attr: Optional[Tensor] = None,
         node_attr: Optional[Tensor] = None,
-        # Modify_5
         return_hidden: bool = False,
     ) -> Tensor | Tuple[Tensor, Tensor]:
-        """Forward pass over torchmd-net model.
-
-        Parameters
-        ----------
-        z: torch.Tensor
-            Atomic numbers, shape (num_atoms,)
-        t: torch.Tensor
-            Time steps of diffusion, shape (num_atoms,)
-        pos: torch.Tensor
-            Atomic positions, shape (num_atoms, 3)
-        edge_index: torch.Tensor
-            Edge index, shape (2, num_edges)
-        batch: torch.Tensor, optional
-            Batch vector representing which atoms belong to which molecule,
-            shape (num_atoms,). If not given, all atoms are assumed to belong
-            to the same molecule.
-        edge_attr: torch.Tensor, optional
-            Edge attributes, shape (num_edges, edge_attr_dim)
-        node_attr: torch.Tensor, optional
-            Node attributes, shape (num_atoms, node_attr_dim)
-        """
-        # run the potentially wrapped representation model
         x, v, z, pos, batch = self.representation_model(
             z=z,
             t=t,
             pos=pos,
-            # Modify_1
             pos_source=pos_source,
             batch=batch,
             node_attr=node_attr,
@@ -751,7 +606,6 @@ class TorchMDDynamics(nn.Module):
         # latent representation
         _, v = self.output_model.pre_reduce(x, v, z, pos, batch)
 
-        # Modify_5
         velocity = center(v, batch)
 
         if return_hidden:
