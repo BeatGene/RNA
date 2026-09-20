@@ -56,6 +56,9 @@ model_args:
     plane_loss_weight: 0.1
 
     use_mobility_v1: true
+    # Keep the mobility gate, but do not replace raw Protenix inputs with
+    # identity or near-native structures in this experiment.
+    use_source_augmentation: false
     identity_pair_probability: 0.1
     near_native_pair_probability: 0.2
     near_native_min_alpha: 0.05
@@ -77,8 +80,8 @@ model_args:
     grad_norm_max_val: 1.0
 
     lr_scheduler_type: CosineAnnealingWarmupRestarts
-    # About four epochs at effective global batch size 48 (~3,034 steps/epoch).
-    first_cycle_steps: 12_000
+    # About three epochs at effective global batch size 48 (~3,034 steps/epoch).
+    first_cycle_steps: 9_000
     cycle_mult: 1.0
     max_lr: 3.e-4
     min_lr: 3.e-5

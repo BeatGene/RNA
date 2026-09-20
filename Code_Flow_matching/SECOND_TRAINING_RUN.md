@@ -91,7 +91,9 @@ tail -f "training_logs/train_residual_v2_6gpu_${run_stamp}.log"
 nvidia-smi dmon -i 0,1,2,3,4,5 -s pucm
 ```
 
-The 30 epochs are a maximum budget. Training metrics are logged by step and
+The 30 epochs are a maximum budget. The 9,000-step learning-rate cycle is
+approximately three epochs when the effective global batch remains 48.
+Training metrics are logged by step and
 validation metrics once per epoch. Select the model by the minimum
 `val/refined_rmsd` among the five retained checkpoints, not by the last epoch.
 Do not inspect the test split to choose a checkpoint; run the locked test only

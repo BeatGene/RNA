@@ -79,6 +79,7 @@ class BaseFlow(BaseModel):
 
             # Modify_5
             use_mobility_v1: bool = False,
+            use_source_augmentation: bool = True,
             mobility_gate_loss_weight: float = 0.1,
             no_regret_loss_weight: float = 0.5,
             protect_loss_weight: float = 0.2,
@@ -198,6 +199,7 @@ class BaseFlow(BaseModel):
 
         # Modify_5: first-version residue mobility refinement.
         self.use_mobility_v1 = use_mobility_v1
+        self.use_source_augmentation = use_source_augmentation
         self.mobility_gate_loss_weight = mobility_gate_loss_weight
         self.no_regret_loss_weight = no_regret_loss_weight
         self.protect_loss_weight = protect_loss_weight
@@ -615,7 +617,11 @@ class BaseFlow(BaseModel):
 
         identity_pair_fraction = x0_centered.new_zeros(())
         near_native_pair_fraction = x0_centered.new_zeros(())
-        if self.use_mobility_v1 and stage == "train":
+        if (
+            self.use_mobility_v1
+            and self.use_source_augmentation
+            and stage == "train"
+        ):
             if batch is None:
                 raise ValueError("use_mobility_v1=True requires a batch vector")
             (
@@ -700,6 +706,9 @@ class BaseFlow(BaseModel):
             + self.clash_loss_weight * clash_loss
             + self.plane_loss_weight * plane_loss
         )
+        displacement_rms = (
+            (pos_estimate - x0_centered).square().sum(dim=-1).mean().sqrt()
+        )
 
         if self.use_mobility_v1:
             global_residue_index = mobility_aux["global_residue_index"]
@@ -739,6 +748,9 @@ class BaseFlow(BaseModel):
                 + self.protect_loss_weight * protect_loss
                 + self.velocity_budget_loss_weight * velocity_budget_loss
             )
+            raw_velocity_rms = (
+                mobility_aux["raw_velocity"].square().sum(dim=-1).mean().sqrt()
+            )
 
         if not torch.isfinite(loss):
             raise ValueError("Loss 出现 NaN，请检查数据集是否异常！")
@@ -753,6 +765,11 @@ class BaseFlow(BaseModel):
             geometry_regularization_loss,
             batch_size=batch_size,
         )
+        self.log_helper(
+            f"{stage}/displacement_rms",
+            displacement_rms,
+            batch_size=batch_size,
+        )
 
         if self.use_mobility_v1:
             for metric_name, metric_value in {
@@ -761,6 +778,7 @@ class BaseFlow(BaseModel):
                 "protect_loss": protect_loss,
                 "velocity_budget_loss": velocity_budget_loss,
                 "mobility_regularization_loss": mobility_regularization_loss,
+                "raw_velocity_rms": raw_velocity_rms,
                 "mobility_mean": mobility_residue[valid_residue_mask].mean(),
                 "mobility_target_mean": mobility_target[valid_residue_mask].mean(),
                 "identity_pair_fraction": identity_pair_fraction,

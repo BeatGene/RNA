@@ -174,9 +174,31 @@ class BaseModel(LightningModule):
         ceiling for backward-compatible configs.
         """
         max_grad_norm = min(float(gradient_clip_val), self.grad_norm_max_val)
-        torch.nn.utils.clip_grad_norm_(
+        grad_norm = torch.nn.utils.clip_grad_norm_(
             self.parameters(),
             max_norm=max_grad_norm,
             norm_type=2.0,
             error_if_nonfinite=True,
+        )
+        clip_fraction = torch.clamp(
+            grad_norm.new_tensor(max_grad_norm) / grad_norm.clamp_min(1.0e-12),
+            max=1.0,
+        )
+        self.log(
+            "train/grad_norm_unclipped",
+            grad_norm,
+            on_step=True,
+            on_epoch=False,
+            logger=True,
+            prog_bar=False,
+            sync_dist=False,
+        )
+        self.log(
+            "train/grad_clip_fraction",
+            clip_fraction,
+            on_step=True,
+            on_epoch=False,
+            logger=True,
+            prog_bar=False,
+            sync_dist=False,
         )
