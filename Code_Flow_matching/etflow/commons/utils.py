@@ -117,7 +117,7 @@ def safe_index(l, e):
     """
     try:
         return l.index(e)
-    except Exception as e:
+    except ValueError:
         return len(l) - 1
 
 

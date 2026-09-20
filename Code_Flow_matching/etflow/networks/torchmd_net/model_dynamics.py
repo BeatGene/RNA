@@ -272,6 +272,23 @@ class TorchMD_ET_dynamics(nn.Module):
         source_conditioning: bool = True,
     ):
         super(TorchMD_ET_dynamics, self).__init__()
+        if distance_influence not in {"keys", "values", "both", "none"}:
+            raise ValueError(f"Unknown distance_influence: {distance_influence}")
+        if rbf_type not in rbf_class_mapping:
+            raise ValueError(
+                f'Unknown RBF type "{rbf_type}". '
+                f"Choose from {', '.join(rbf_class_mapping)}."
+            )
+        if activation not in act_class_mapping:
+            raise ValueError(
+                f'Unknown activation function "{activation}". '
+                f"Choose from {', '.join(act_class_mapping)}."
+            )
+        if attn_activation not in act_class_mapping:
+            raise ValueError(
+                f'Unknown attention activation function "{attn_activation}". '
+                f"Choose from {', '.join(act_class_mapping)}."
+            )
         self.source_conditioning = source_conditioning
         self.hidden_channels = hidden_channels
         self.num_layers = num_layers
@@ -411,8 +428,17 @@ class TorchMD_ET_dynamics(nn.Module):
         if edge_attr is not None:
             if edge_attr.dim() == 1:
                 edge_attr = edge_attr.unsqueeze(1)
+            if edge_attr.size(1) != self.edge_attr_dim:
+                raise ValueError(
+                    f"edge_attr has dim {edge_attr.size(1)}, "
+                    f"but edge_attr_dim={self.edge_attr_dim}"
+                )
             current_edge_attr = torch.cat([current_rbf, edge_attr],dim=-1,)
         else:
+            if self.edge_attr_dim != 0:
+                raise ValueError(
+                    f"edge_attr_dim={self.edge_attr_dim}, but edge_attr is None"
+                )
             current_edge_attr = current_rbf
 
         # Source-structure conditioning branch

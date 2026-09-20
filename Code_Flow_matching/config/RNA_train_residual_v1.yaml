@@ -1,4 +1,6 @@
-task_name: rna_refinement_v1_residual_mobility
+# Second formal run. Keep a distinct run/checkpoint namespace so the first
+# experiment remains reproducible and its checkpoints cannot be overwritten.
+task_name: rna_refinement_v2_residual_mobility
 seed: 42
 pretrained_ckpt: null
 ckpt_path: null
@@ -71,31 +73,33 @@ model_args:
     beta1: 0.95
     beta2: 0.999
     weight_decay: 1.e-8
-    grad_norm_max_val: 100.0
+    # BaseFlow and Trainer now agree on a fixed global-norm clipping threshold.
+    grad_norm_max_val: 1.0
 
     lr_scheduler_type: CosineAnnealingWarmupRestarts
-    first_cycle_steps: 32_000
+    # About four epochs at effective global batch size 48 (~3,034 steps/epoch).
+    first_cycle_steps: 12_000
     cycle_mult: 1.0
     max_lr: 3.e-4
     min_lr: 3.e-5
     warmup_steps: 1000
+    # Keep the same 3e-4 peak at every restart, as requested.
     gamma: 1.0
     last_epoch: -1
-    lr_scheduler_monitor: val/refined_rmsd
     lr_scheduler_interval: step
     lr_scheduler_frequency: 1
 
 callbacks:
     - callback: ModelCheckpoint
       callback_args:
-          dirpath: /storage9920/home/tinghao.xia/Code_Flow_matching/checkpoints/rna_refinement_v1_residual_mobility
+          dirpath: /storage9920/home/tinghao.xia/Code_Flow_matching/checkpoints/rna_refinement_v2_residual_mobility
           filename: "epoch={epoch:02d}-step={step}"
           auto_insert_metric_name: false
           monitor: val/refined_rmsd
           mode: min
           save_last: true
           every_n_epochs: 1
-          save_top_k: 3
+          save_top_k: 5
     - callback: LearningRateMonitor
       callback_args:
           log_momentum: false
@@ -106,13 +110,15 @@ logger: WandbLogger
 logger_args:
     project: RNA-Flow-Refinement
     save_dir: /storage9920/home/tinghao.xia/Code_Flow_matching/wandb
-    group: residual-mobility-v1
+    group: residual-mobility-v2
     job_type: train
     log_model: false
 
 trainer: Trainer
 trainer_args:
-    max_epochs: 10
+    # This is a safety cap, not an instruction to use the last checkpoint.
+    # Select the final model only by val/refined_rmsd from the saved top-k.
+    max_epochs: 30
     devices: 6
     accelerator: gpu
     strategy: ddp
@@ -120,9 +126,13 @@ trainer_args:
     precision: bf16-mixed
     num_sanity_val_steps: 0
     gradient_clip_val: 1.0
+    gradient_clip_algorithm: norm
+    check_val_every_n_epoch: 1
     log_every_n_steps: 50
     enable_progress_bar: false
 
+# Retained for a future inference/evaluation entry point. scripts/train.py does
+# not consume eval_args; validation during fit uses the datamodule batch size.
 eval_args:
     batch_size: 1
     sampler_args:

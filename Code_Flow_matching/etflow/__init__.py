@@ -1,1 +1,3 @@
-from etflow.models.model import BaseFlow as BaseFlow
+from etflow.models.model import BaseFlow
+
+__all__ = ["BaseFlow"]

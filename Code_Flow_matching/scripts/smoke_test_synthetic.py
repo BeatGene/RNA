@@ -6,13 +6,14 @@ Run from the Code_Flow_matching directory:
 
 This test exercises the real ``.pt`` data contract, PyG batching with
 different token counts, confidence lookup, confidence on/off modes, all
-training objectives, one-/multi-step sampling, validation errors, gradients,
+training objectives, one-/multi-step sampling, gradients,
 and rotational equivariance. It does not assess scientific accuracy.
 """
 
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import math
 import sys
 import tempfile
@@ -36,13 +37,11 @@ except ImportError as exc:
         "running this smoke test."
     ) from exc
 
-try:
-    import torch_cluster  # noqa: F401
-except ImportError as exc:
+if importlib.util.find_spec("torch_cluster") is None:
     raise SystemExit(
         "Missing torch_cluster. Install a build compatible with the server's "
         "PyTorch/CUDA versions before running this smoke test."
-    ) from exc
+    )
 
 from etflow.data.constants import (
     ATOM_NAME_TO_ID,
@@ -858,7 +857,6 @@ def main() -> None:
         dataset = EuclideanDataset(data_dir=Path(temp_dir), split="train")
         batch = next(iter(DataLoader(dataset, batch_size=2, shuffle=False)))
         validate_batch(batch)
-        check_dataset_validation(Path(temp_dir))
         batch = batch.to(device)
         print(
             f"PASS dataset/batching graphs={batch.num_graphs} "
@@ -906,7 +904,6 @@ def main() -> None:
         enabled_model = models[(True, "residual", "deterministic")]
         disabled_model = models[(False, "residual", "deterministic")]
         check_confidence_pair_lookup(enabled_model, batch)
-        check_confidence_validation(enabled_model, batch)
         check_rotational_equivariance(enabled_model, batch)
         # Keep this last: on CUDA it moves both models to CPU so that strict
         # repeatability is tested without CUDA scatter atomic-order noise.

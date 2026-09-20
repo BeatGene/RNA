@@ -83,16 +83,56 @@ class BaseFlow(BaseModel):
             no_regret_loss_weight: float = 0.5,
             protect_loss_weight: float = 0.2,
             velocity_budget_loss_weight: float = 0.01,
-            # identity_pair_probability: float = 0.1,
-            # near_native_pair_probability: float = 0.2,
-            # near_native_min_alpha: float = 0.05,
-            # near_native_max_alpha: float = 0.25,
+            identity_pair_probability: float = 0.1,
+            near_native_pair_probability: float = 0.2,
+            near_native_min_alpha: float = 0.05,
+            near_native_max_alpha: float = 0.25,
             mobility_good_error: float = 0.3,
             mobility_move_error: float = 1.5,
             protect_error_threshold: float = 0.5,
             **kwargs,
     ):
         super().__init__(**kwargs)
+        if dynamic_graph and edge_attr_dim != num_edge_types:
+            raise ValueError(
+                "dynamic_graph=True requires edge_attr_dim "
+                f"({edge_attr_dim}) to equal num_edge_types ({num_edge_types})"
+            )
+        if training_objective not in {"flow", "residual"}:
+            raise ValueError(f"Unknown training_objective: {training_objective}")
+        if use_mobility_v1 and training_objective != "residual":
+            raise ValueError(
+                "use_mobility_v1=True is only supported when "
+                "training_objective='residual'"
+            )
+        if not 0.0 <= identity_pair_probability <= 1.0:
+            raise ValueError("identity_pair_probability must be in [0, 1]")
+        if not 0.0 <= near_native_pair_probability <= 1.0:
+            raise ValueError("near_native_pair_probability must be in [0, 1]")
+        if identity_pair_probability + near_native_pair_probability > 1.0:
+            raise ValueError(
+                "identity_pair_probability + near_native_pair_probability "
+                "must not exceed 1"
+            )
+        if not 0.0 <= near_native_min_alpha <= near_native_max_alpha <= 1.0:
+            raise ValueError(
+                "near-native alpha bounds must satisfy 0 <= min <= max <= 1"
+            )
+        if not 0.0 <= mobility_good_error < mobility_move_error:
+            raise ValueError(
+                "mobility error bounds must satisfy 0 <= good_error < move_error"
+            )
+        if protect_error_threshold < 0.0:
+            raise ValueError("protect_error_threshold must be non-negative")
+        if flow_path not in {"deterministic", "stochastic"}:
+            raise ValueError(f"Unknown flow_path: {flow_path}")
+        if flow_path == "stochastic" and sigma <= 0:
+            raise ValueError("stochastic flow requires sigma > 0")
+        if dynamic_radius_cutoff <= 0:
+            raise ValueError("dynamic_radius_cutoff must be positive")
+        if dynamic_radius_cutoff > cutoff_upper:
+            raise ValueError("dynamic_radius_cutoff should not exceed cutoff_upper")
+
         vdw_radius_table = torch.zeros(max_z)
 
         for atomic_number, radius in {
@@ -162,10 +202,10 @@ class BaseFlow(BaseModel):
         self.no_regret_loss_weight = no_regret_loss_weight
         self.protect_loss_weight = protect_loss_weight
         self.velocity_budget_loss_weight = velocity_budget_loss_weight
-        # self.identity_pair_probability = identity_pair_probability
-        # self.near_native_pair_probability = near_native_pair_probability
-        # self.near_native_min_alpha = near_native_min_alpha
-        # self.near_native_max_alpha = near_native_max_alpha
+        self.identity_pair_probability = identity_pair_probability
+        self.near_native_pair_probability = near_native_pair_probability
+        self.near_native_min_alpha = near_native_min_alpha
+        self.near_native_max_alpha = near_native_max_alpha
         self.mobility_good_error = mobility_good_error
         self.mobility_move_error = mobility_move_error
         self.protect_error_threshold = protect_error_threshold
@@ -573,10 +613,20 @@ class BaseFlow(BaseModel):
         x0_centered = center_of_mass(x0, batch=batch)
         x1_centered = center_of_mass(pos, batch=batch)
 
-        # identity_pair_fraction = x0_centered.new_zeros(())
-        # near_native_pair_fraction = x0_centered.new_zeros(())
-        # if self.use_mobility_v1 and stage == "train":
-        #     x0 = x0_centered
+        identity_pair_fraction = x0_centered.new_zeros(())
+        near_native_pair_fraction = x0_centered.new_zeros(())
+        if self.use_mobility_v1 and stage == "train":
+            if batch is None:
+                raise ValueError("use_mobility_v1=True requires a batch vector")
+            (
+                x0_centered,
+                identity_pair_fraction,
+                near_native_pair_fraction,
+            ) = self.augment_residual_source(
+                x0_centered=x0_centered,
+                x1_centered=x1_centered,
+                batch=batch,
+            )
 
         if self.training_objective == "residual":
             t = torch.zeros(batch_size,1,dtype=x0_centered.dtype,device=x0_centered.device,)
@@ -645,6 +695,11 @@ class BaseFlow(BaseModel):
                 + self.clash_loss_weight * clash_loss
                 + self.plane_loss_weight * plane_loss
         )
+        geometry_regularization_loss = (
+            self.bond_loss_weight * bond_loss
+            + self.clash_loss_weight * clash_loss
+            + self.plane_loss_weight * plane_loss
+        )
 
         if self.use_mobility_v1:
             global_residue_index = mobility_aux["global_residue_index"]
@@ -678,6 +733,12 @@ class BaseFlow(BaseModel):
                 + self.protect_loss_weight * protect_loss
                 + self.velocity_budget_loss_weight * velocity_budget_loss
             )
+            mobility_regularization_loss = (
+                self.mobility_gate_loss_weight * mobility_loss
+                + self.no_regret_loss_weight * no_regret_loss
+                + self.protect_loss_weight * protect_loss
+                + self.velocity_budget_loss_weight * velocity_budget_loss
+            )
 
         if not torch.isfinite(loss):
             raise ValueError("Loss 出现 NaN，请检查数据集是否异常！")
@@ -687,6 +748,11 @@ class BaseFlow(BaseModel):
         self.log_helper(f"{stage}/bond_loss",bond_loss,batch_size=batch_size,)
         self.log_helper(f"{stage}/clash_loss",clash_loss,batch_size=batch_size,)
         self.log_helper(f"{stage}/plane_loss",plane_loss,batch_size=batch_size,)
+        self.log_helper(
+            f"{stage}/geometry_regularization_loss",
+            geometry_regularization_loss,
+            batch_size=batch_size,
+        )
 
         if self.use_mobility_v1:
             for metric_name, metric_value in {
@@ -694,6 +760,11 @@ class BaseFlow(BaseModel):
                 "no_regret_loss": no_regret_loss,
                 "protect_loss": protect_loss,
                 "velocity_budget_loss": velocity_budget_loss,
+                "mobility_regularization_loss": mobility_regularization_loss,
+                "mobility_mean": mobility_residue[valid_residue_mask].mean(),
+                "mobility_target_mean": mobility_target[valid_residue_mask].mean(),
+                "identity_pair_fraction": identity_pair_fraction,
+                "near_native_pair_fraction": near_native_pair_fraction,
             }.items():
                 self.log_helper(f"{stage}/{metric_name}",metric_value,batch_size=batch_size,)
         if stage != "train":
@@ -710,6 +781,7 @@ class BaseFlow(BaseModel):
             for metric_name, metric_value in {
                 "input_rmsd": input_rmsd.mean(),
                 "refined_rmsd": refined_rmsd.mean(),
+                "rmsd_improvement": (input_rmsd - refined_rmsd).mean(),
                 "worsened_fraction": (refined_rmsd > input_rmsd).float().mean(),
             }.items():
                 self.log_helper(f"{stage}/{metric_name}",metric_value,batch_size=batch_size,)
@@ -753,7 +825,7 @@ class BaseFlow(BaseModel):
         输出：
             x: 经过模型优化 (ODE积分) 后的最终精细坐标
         """
-        batch_size = int(batch.max().item()) + 1if batch is not None else 1
+        batch_size = int(batch.max().item()) + 1 if batch is not None else 1
         t_schedule = torch.linspace(0, 1.0, steps=n_timesteps + 1, device=self.device)
 
         # 【核心修改】：推理起点从随机噪声变成了质心居中的 pos_pred

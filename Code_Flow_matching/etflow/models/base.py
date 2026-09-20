@@ -6,7 +6,6 @@ from loguru import logger as log
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
 
-from etflow.commons.utils import Queue
 from etflow.schedulers import CosineAnnealingWarmupRestarts
 
 
@@ -63,10 +62,6 @@ class BaseModel(LightningModule):
         self.lr_scheduler_monitor = lr_scheduler_monitor
         self.lr_scheduler_interval = lr_scheduler_interval
         self.lr_scheduler_frequency = lr_scheduler_frequency
-
-        # gradient clipping queue
-        self.gradnorm_queue = Queue()
-        self.gradnorm_queue.add(3000)  # starting value
 
     def generic_step(self, batch, batch_idx: int, mode: str):
         raise NotImplementedError
@@ -147,15 +142,21 @@ class BaseModel(LightningModule):
         return {"optimizer": self.optimizer}
 
     def log_helper(self, key: str, value: torch.Tensor, batch_size: int):
+        is_train_metric = key.startswith("train/")
         self.log(
             key,
             value,
-            on_step=False,
-            on_epoch=True,
+            # Training curves are indexed by optimizer progress, while
+            # validation metrics are reduced once per validation epoch.
+            on_step=is_train_metric,
+            on_epoch=not is_train_metric,
             prog_bar=True,
             logger=True,
             batch_size=batch_size,
-            sync_dist=True,
+            # Avoid one distributed all-reduce per training metric and batch.
+            # Validation must be synchronized to obtain a global checkpoint
+            # metric over all DDP ranks.
+            sync_dist=not is_train_metric,
         )
 
     def configure_gradient_clipping(
@@ -164,36 +165,18 @@ class BaseModel(LightningModule):
             gradient_clip_val,
             gradient_clip_algorithm,
     ):
-        """Adaptive global gradient-norm clipping."""
+        """Apply fixed global-norm clipping configured by the Trainer.
 
-        # 根据最近的梯度历史动态计算裁剪阈值
-        max_grad_norm = max(
-            min(
-                1.5 * self.gradnorm_queue.mean()
-                + 2.0 * self.gradnorm_queue.std(),
-                self.grad_norm_max_val,
-            ),
-            0.01,
-        )
-
-        # 返回值是裁剪前的全局梯度范数
-        grad_norm = torch.nn.utils.clip_grad_norm_(
+        Lightning delegates clipping to this hook when a model overrides it.
+        The previous implementation ignored ``gradient_clip_val`` from the
+        Trainer, so the YAML value of 1.0 was not actually the clipping
+        threshold.  Keep ``grad_norm_max_val`` only as an additional safety
+        ceiling for backward-compatible configs.
+        """
+        max_grad_norm = min(float(gradient_clip_val), self.grad_norm_max_val)
+        torch.nn.utils.clip_grad_norm_(
             self.parameters(),
             max_norm=max_grad_norm,
             norm_type=2.0,
             error_if_nonfinite=True,
         )
-
-        grad_norm_value = grad_norm.detach().cpu().item()
-        max_grad_norm_value = float(max_grad_norm)
-
-        # 队列只记录裁剪后的有效范数，避免极端异常值污染历史
-        self.gradnorm_queue.add(
-            min(grad_norm_value, max_grad_norm_value)
-        )
-
-        if grad_norm_value > max_grad_norm_value:
-            log.info(
-                f"Clipped gradient with value {grad_norm_value:.1f} "
-                f"while allowed {max_grad_norm_value:.1f}"
-            )

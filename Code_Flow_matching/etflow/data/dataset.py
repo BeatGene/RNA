@@ -65,7 +65,6 @@ class EuclideanDataset(Dataset):
         target_mask = data["target_mask"].bool().view(-1)
 
         atomic_numbers = data["atomic_numbers"].long().view(-1)  # [N] 原子序数
-        sequence = data['sequence']# RNA的一级序列，比如 AUCGGG
         edge_index = data["edge_index"].long().contiguous()
         # [2,E] 包含:1.核苷酸内部 共价键连接(根据模板)
         #           2.核苷酸之间，添加磷酸二酯键
@@ -129,7 +128,6 @@ class EuclideanDataset(Dataset):
             pos_pred=pos_pred,
             target_mask=target_mask,
             atomic_numbers=atomic_numbers,
-            sequence=sequence,
             edge_index=edge_index,
             edge_attr=edge_attr,
             node_attr=node_attr,

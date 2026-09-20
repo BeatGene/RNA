@@ -1,7 +1,7 @@
 from loguru import logger as log
-from typing import List, Optional
+from typing import List
 from lightning.pytorch.loggers import Logger, WandbLogger
-from lightning import Callback, LightningDataModule, LightningModule, Trainer
+from lightning import Callback, LightningModule, Trainer
 from lightning.pytorch.callbacks import (
     LearningRateMonitor,
     ModelCheckpoint,
