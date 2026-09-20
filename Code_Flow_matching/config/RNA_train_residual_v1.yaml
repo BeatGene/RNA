@@ -60,7 +60,7 @@ model_args:
     near_native_max_alpha: 0.25
     mobility_gate_loss_weight: 0.1
     no_regret_loss_weight: 0.5
-    protect_loss_weight: 0.2
+    protect_loss_weight: 0.1
     velocity_budget_loss_weight: 0.01
     mobility_good_error: 0.3
     mobility_move_error: 1.5

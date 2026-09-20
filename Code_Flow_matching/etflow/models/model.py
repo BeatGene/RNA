@@ -34,7 +34,6 @@ class BaseFlow(BaseModel):
 
     def __init__(
             self,
-            # flow matching network args
             network_type: str = "TorchMDDynamics",
             hidden_channels: int = 128,
             num_layers: int = 8,
@@ -84,84 +83,16 @@ class BaseFlow(BaseModel):
             no_regret_loss_weight: float = 0.5,
             protect_loss_weight: float = 0.2,
             velocity_budget_loss_weight: float = 0.01,
-            identity_pair_probability: float = 0.1,
-            near_native_pair_probability: float = 0.2,
-            near_native_min_alpha: float = 0.05,
-            near_native_max_alpha: float = 0.25,
+            # identity_pair_probability: float = 0.1,
+            # near_native_pair_probability: float = 0.2,
+            # near_native_min_alpha: float = 0.05,
+            # near_native_max_alpha: float = 0.25,
             mobility_good_error: float = 0.3,
             mobility_move_error: float = 1.5,
             protect_error_threshold: float = 0.5,
             **kwargs,
     ):
         super().__init__(**kwargs)
-        # Modify_2
-        if dynamic_graph and edge_attr_dim != num_edge_types:
-            raise ValueError(
-                f"dynamic_graph=True requires edge_attr_dim "
-                f"({edge_attr_dim}) to equal num_edge_types "
-                f"({num_edge_types})"
-            )
-
-        # Modify_3
-        if training_objective not in {"flow", "residual"}:
-            raise ValueError(
-                f"Unknown training_objective: {training_objective}"
-            )
-
-        if use_mobility_v1 and training_objective != "residual":
-            raise ValueError(
-                "use_mobility_v1=True is only supported when "
-                "training_objective='residual'"
-            )
-
-        if not 0.0 <= identity_pair_probability <= 1.0:
-            raise ValueError("identity_pair_probability must be in [0, 1]")
-
-        if not 0.0 <= near_native_pair_probability <= 1.0:
-            raise ValueError("near_native_pair_probability must be in [0, 1]")
-
-        if identity_pair_probability + near_native_pair_probability > 1.0:
-            raise ValueError(
-                "identity_pair_probability + near_native_pair_probability "
-                "must not exceed 1"
-            )
-
-        if not 0.0 <= near_native_min_alpha <= near_native_max_alpha <= 1.0:
-            raise ValueError(
-                "near-native alpha bounds must satisfy "
-                "0 <= min <= max <= 1"
-            )
-
-        if not 0.0 <= mobility_good_error < mobility_move_error:
-            raise ValueError(
-                "mobility error bounds must satisfy "
-                "0 <= good_error < move_error"
-            )
-
-        if protect_error_threshold < 0.0:
-            raise ValueError("protect_error_threshold must be non-negative")
-
-        if flow_path not in {"deterministic", "stochastic"}:
-            raise ValueError(
-                f"Unknown flow_path: {flow_path}"
-            )
-
-        if flow_path == "stochastic" and sigma <= 0:
-            raise ValueError(
-                "stochastic flow requires sigma > 0"
-            )
-
-        if dynamic_radius_cutoff <= 0:
-            raise ValueError(
-                "dynamic_radius_cutoff must be positive"
-            )
-
-        if dynamic_radius_cutoff > cutoff_upper:
-            raise ValueError(
-                "dynamic_radius_cutoff should not exceed cutoff_upper"
-            )
-
-        # Modify_3
         vdw_radius_table = torch.zeros(max_z)
 
         for atomic_number, radius in {
@@ -185,7 +116,7 @@ class BaseFlow(BaseModel):
                 dtype=torch.long,
             ),
         )
-        #Modify_4
+
         self.confidence_conditioning = confidence_conditioning
         self.confidence_node_attr_dim = 1
         self.confidence_edge_attr_dim = 4
@@ -196,7 +127,7 @@ class BaseFlow(BaseModel):
         if self.confidence_conditioning:
             network_node_attr_dim += self.confidence_node_attr_dim
             network_edge_attr_dim += self.confidence_edge_attr_dim
-        # setup network
+
         if network_type == "TorchMDDynamics":
             self.network = TorchMDDynamics(
                 hidden_channels=hidden_channels,
@@ -231,10 +162,10 @@ class BaseFlow(BaseModel):
         self.no_regret_loss_weight = no_regret_loss_weight
         self.protect_loss_weight = protect_loss_weight
         self.velocity_budget_loss_weight = velocity_budget_loss_weight
-        self.identity_pair_probability = identity_pair_probability
-        self.near_native_pair_probability = near_native_pair_probability
-        self.near_native_min_alpha = near_native_min_alpha
-        self.near_native_max_alpha = near_native_max_alpha
+        # self.identity_pair_probability = identity_pair_probability
+        # self.near_native_pair_probability = near_native_pair_probability
+        # self.near_native_min_alpha = near_native_min_alpha
+        # self.near_native_max_alpha = near_native_max_alpha
         self.mobility_good_error = mobility_good_error
         self.mobility_move_error = mobility_move_error
         self.protect_error_threshold = protect_error_threshold
@@ -280,7 +211,7 @@ class BaseFlow(BaseModel):
         else:
             raise ValueError("cfg should be a dictionary or a path to a yaml file")
 
-    # Modify_3
+
     def sigma_t(self, t):
         if self.flow_path == "deterministic":
             return torch.zeros_like(t)
@@ -291,12 +222,7 @@ class BaseFlow(BaseModel):
         if self.flow_path == "deterministic":
             return torch.zeros_like(t)
 
-        return (
-                self.sigma
-                * 0.5
-                * (1 - 2 * t)
-                / torch.sqrt(t * (1 - t))
-        )
+        return (self.sigma* 0.5* (1 - 2 * t)/ torch.sqrt(t * (1 - t)))
 
     def sample_conditional_pt(self, x0: Tensor, x1: Tensor, t: Tensor, batch: Tensor):
         """
@@ -313,7 +239,6 @@ class BaseFlow(BaseModel):
 
         # 采样高斯噪声
 
-        # Modify_3
         if self.flow_path == "deterministic":
             eps = torch.zeros_like(x1)
         else:
@@ -332,228 +257,75 @@ class BaseFlow(BaseModel):
         if batch is None:
             batch = torch.zeros(x1.size(0), dtype=torch.long, device=self.device)
 
-        # Modify_1
         x0_centered = center_of_mass(x0, batch=batch)
         x1_centered = center_of_mass(x1, batch=batch)
         # 获取 t 时刻的扰动坐标 x_t 和噪声 eps
-        # Modify_1
         x_t, eps = self.sample_conditional_pt(x0_centered, x1_centered, t, batch=batch)
 
-        # Modify_1
         t_atom = unsqueeze_like(t[batch], x1_centered)
 
         # 真实的目标向量场 u_t：指向 x1 - x0 的方向，并加上噪声的导数
-        # Modify_1
         u_t = x1_centered - x0_centered + self.sigma_dot_t(t_atom) * eps
 
-        # Modify_3
         return x_t, u_t, eps
 
-    def sample_time(
-            self,
-            num_samples: int,
-            low: float = 1e-4,
-            high: float = 0.9999,
-            stage: str = "train",
-    ):
+    def sample_time(self,num_samples: int,low: float = 1e-4,high: float = 0.9999,stage: str = "train",):
         """均匀采样时间 t"""
         if self.sample_time_dist == "uniform" or stage == "val":
-            return torch.zeros(size=(num_samples, 1), device=self.device).uniform_(
-                low, high
-            )
+            return torch.zeros(size=(num_samples, 1), device=self.device).uniform_(low, high)
         raise NotImplementedError(f"Time sampling {self.sample_time_dist} not implemented")
 
-    #Modify_4
-    def build_confidence_edge_attr(
-            self,
-            edge_index: Tensor,
-            batch: Optional[Tensor],
-            atom_to_token_idx: Tensor,
-            token_pair_confidence: Tensor,
-            num_tokens: Tensor,
-    ) -> Tensor:
-        if atom_to_token_idx is None:
-            raise ValueError(
-                "confidence_conditioning=True requires atom_to_token_idx"
-            )
-
-        if token_pair_confidence is None:
-            raise ValueError(
-                "confidence_conditioning=True requires "
-                "token_pair_confidence"
-            )
-
-        if num_tokens is None:
-            raise ValueError(
-                "confidence_conditioning=True requires num_tokens"
-            )
-
+    # 构造边的置信度特征，返回[E,4]
+    def build_confidence_edge_attr(self,edge_index: Tensor,batch: Optional[Tensor],atom_to_token_idx: Tensor,token_pair_confidence: Tensor,num_tokens: Tensor,) -> Tensor:
         atom_to_token_idx = atom_to_token_idx.long().view(-1)
         num_tokens = num_tokens.long().view(-1)
 
-        if batch is not None and atom_to_token_idx.numel() != batch.numel():
-            raise ValueError(
-                "atom_to_token_idx and batch must have the same number of atoms"
-            )
-
-        if token_pair_confidence.dim() != 2:
-            raise ValueError(
-                "token_pair_confidence must have shape "
-                "[sum(num_tokens**2), 4]"
-            )
-
-        if (
-                token_pair_confidence.size(1)
-                != self.confidence_edge_attr_dim
-        ):
-            raise ValueError(
-                "token_pair_confidence must contain exactly "
-                f"{self.confidence_edge_attr_dim} features"
-            )
-
         if batch is None:
-            batch = torch.zeros(
-                atom_to_token_idx.numel(),
-                dtype=torch.long,
-                device=atom_to_token_idx.device,
-            )
-
-        num_graphs = (
-            int(batch.max().item()) + 1
-            if batch.numel() > 0
-            else 0
-        )
-        if num_tokens.numel() != num_graphs:
-            raise ValueError(
-                "num_tokens must contain exactly one value per graph"
-            )
+            batch = torch.zeros(atom_to_token_idx.numel(),dtype=torch.long,device=atom_to_token_idx.device,)
 
         pair_count = num_tokens.square()
 
-        expected_pair_rows = pair_count.sum()
-
-        if (
-                token_pair_confidence.size(0)
-                != int(expected_pair_rows.item())
-        ):
-            raise ValueError(
-                "token_pair_confidence row count does not equal "
-                "sum(num_tokens ** 2)"
-            )
-
-        pair_offset = torch.cat(
-            [
-                pair_count.new_zeros(1),
-                pair_count.cumsum(dim=0)[:-1],
-            ],
-            dim=0,
-        )
+        pair_offset = torch.cat([pair_count.new_zeros(1),pair_count.cumsum(dim=0)[:-1],],dim=0,)
 
         edge_source = edge_index[0]
         edge_target = edge_index[1]
 
         edge_batch = batch[edge_source]
-
-        if not torch.equal(
-                edge_batch,
-                batch[edge_target],
-        ):
-            raise ValueError(
-                "Found an edge connecting two different graphs"
-            )
-
         token_source = atom_to_token_idx[edge_source]
         token_target = atom_to_token_idx[edge_target]
 
         edge_num_tokens = num_tokens[edge_batch]
 
-        invalid_token_mask = (
-                (token_source < 0)
-                | (token_target < 0)
-                | (token_source >= edge_num_tokens)
-                | (token_target >= edge_num_tokens)
-        )
+        flat_pair_index = (pair_offset[edge_batch]+ token_source * edge_num_tokens+ token_target)
 
-        if invalid_token_mask.any():
-            raise ValueError(
-                "atom_to_token_idx contains an invalid local token id"
-            )
+        return token_pair_confidence[flat_pair_index]
 
-        flat_pair_index = (
-                pair_offset[edge_batch]
-                + token_source * edge_num_tokens
-                + token_target
-        )
 
-        return token_pair_confidence[
-            flat_pair_index
-        ]
-
-    # Modify_5
-    def build_global_residue_index(
-            self,
-            batch: Tensor,
-            atom_to_token_idx: Tensor,
-            num_tokens: Tensor,
-    ):
+    #对于一个batch，将每个RNA的残基索引全局化，并且返回总的残基数目(针对这个batch而言)  返回[N] 与 int
+    def build_global_residue_index(self,batch: Tensor,atom_to_token_idx: Tensor,num_tokens: Tensor,):
         """Convert per-graph token IDs into batch-global residue IDs."""
         if batch is None:
-            batch = torch.zeros(
-                atom_to_token_idx.numel(),
-                dtype=torch.long,
-                device=atom_to_token_idx.device,
-            )
+            batch = torch.zeros(atom_to_token_idx.numel(),dtype=torch.long,device=atom_to_token_idx.device,)
 
         atom_to_token_idx = atom_to_token_idx.long().view(-1)
         num_tokens = num_tokens.long().view(-1)
-        num_graphs = int(batch.max().item()) + 1 if batch.numel() > 0 else 0
 
-        if atom_to_token_idx.numel() != batch.numel():
-            raise ValueError(
-                "atom_to_token_idx and batch must have the same number of atoms"
-            )
-        if num_tokens.numel() != num_graphs:
-            raise ValueError("num_tokens must contain one value per graph")
-
-        token_offset = torch.cat(
-            [
-                num_tokens.new_zeros(1),
-                num_tokens.cumsum(dim=0)[:-1],
-            ],
-            dim=0,
-        )
-        global_residue_index = (
-            token_offset[batch] + atom_to_token_idx
-        )
+        token_offset = torch.cat([num_tokens.new_zeros(1),num_tokens.cumsum(dim=0)[:-1],],dim=0,)
+        global_residue_index = (token_offset[batch] + atom_to_token_idx)
         total_residues = int(num_tokens.sum().item())
-
-        if (
-                global_residue_index.numel() > 0
-                and (
-                global_residue_index.min() < 0
-                or global_residue_index.max() >= total_residues
-        )
-        ):
-            raise ValueError("atom_to_token_idx contains an invalid residue id")
 
         return global_residue_index, total_residues
 
-    # Modify_5
-    def augment_residual_source(
-            self,
-            x0_centered: Tensor,
-            x1_centered: Tensor,
-            batch: Tensor,
-    ):
-        """Apply graph-level identity/near-native training augmentation."""
+    #数据增强 但是只在use_mobility_v1是true并且是训练模式时使用，我觉得还不太行，现在把这个从模型里面去除掉了
+    #ToDo
+    def augment_residual_source(self,x0_centered:Tensor,x1_centered:Tensor,batch:Tensor,):
         num_graphs = int(batch.max().item()) + 1
-        random_value = torch.rand(
-            num_graphs,
-            device=x0_centered.device,
-        )
+        random_value = torch.rand(num_graphs,device=x0_centered.device,)
+
         identity_graph_mask = (
-            random_value < self.identity_pair_probability
+                random_value < self.identity_pair_probability
         )
+
         near_native_graph_mask = (
             (random_value >= self.identity_pair_probability)
             & (
@@ -572,10 +344,12 @@ class BaseFlow(BaseModel):
             self.near_native_min_alpha,
             self.near_native_max_alpha,
         )
+
         near_native_source = (
             x1_centered
             + alpha[batch] * (x0_centered - x1_centered)
         )
+
         identity_atom_mask = identity_graph_mask[batch].unsqueeze(-1)
         near_native_atom_mask = near_native_graph_mask[batch].unsqueeze(-1)
 
@@ -584,66 +358,50 @@ class BaseFlow(BaseModel):
             x1_centered,
             x0_centered,
         )
+
         augmented_source = torch.where(
             near_native_atom_mask,
             near_native_source,
             augmented_source,
         )
+
         return (
             augmented_source,
             identity_graph_mask.float().mean(),
             near_native_graph_mask.float().mean(),
         )
 
-    # Modify_5
+    #返回[T](每个残基的汇总的误差(已经开方))   [T](每个残基是不是包含至少一个有效原子)
     @staticmethod
-    def residue_rms_error(
-            prediction: Tensor,
-            target: Tensor,
-            global_residue_index: Tensor,
-            total_residues: int,
-            atom_mask: Optional[Tensor] = None,
-    ) -> tuple[Tensor, Tensor]:
-        atom_square_error = (
-            prediction - target
-        ).square().sum(dim=-1)
+    def residue_rms_error(prediction: Tensor,target: Tensor,global_residue_index: Tensor,total_residues: int,atom_mask: Optional[Tensor] = None,) -> tuple[Tensor, Tensor]:
+        atom_square_error = (prediction - target).square().sum(dim=-1)
+
         if atom_mask is None:
             atom_mask = torch.ones_like(atom_square_error, dtype=torch.bool)
+
         atom_mask = atom_mask.to(atom_square_error.device).bool().view(-1)
+
         weights = atom_mask.to(atom_square_error.dtype)
-        square_error_sum = scatter(
-            atom_square_error * weights,
-            global_residue_index,
-            dim=0,
-            dim_size=total_residues,
-            reduce="sum",
-        )
-        observed_count = scatter(
-            weights,
-            global_residue_index,
-            dim=0,
-            dim_size=total_residues,
-            reduce="sum",
-        )
+
+        #按照残基汇总平方误差
+        square_error_sum = scatter(atom_square_error * weights,global_residue_index,dim=0,dim_size=total_residues,reduce="sum",)
+
+        #按照残基汇总有效原子数目
+        observed_count = scatter(weights,global_residue_index,dim=0,dim_size=total_residues,reduce="sum",)
+
         valid_residue = observed_count > 0
+
         mean_square_error = square_error_sum / observed_count.clamp_min(1.0)
-        # Never evaluate sqrt at zero: masking its OUTPUT still allows
-        # 0 * inf in backward, including for wholly unobserved residues.
-        # At exact zero RMS use the zero subgradient, preserving exact values.
         positive_error = valid_residue & (mean_square_error > 0)
-        safe_mean_square_error = torch.where(
-            positive_error, mean_square_error, torch.ones_like(mean_square_error)
-        )
-        rms_error = torch.where(
-            positive_error,
-            torch.sqrt(safe_mean_square_error),
-            torch.zeros_like(mean_square_error),
-        )
+
+        safe_mean_square_error = torch.where(positive_error, mean_square_error, torch.ones_like(mean_square_error))
+
+        rms_error = torch.where(positive_error,torch.sqrt(safe_mean_square_error),torch.zeros_like(mean_square_error),)
+
         return rms_error, valid_residue
 
-    # Modify_5
-    def apply_residue_mobility_gate(
-            self,
+
+    def apply_residue_mobility_gate(self,
             raw_velocity: Tensor,
             hidden: Tensor,
             pos_source: Tensor,
@@ -657,64 +415,17 @@ class BaseFlow(BaseModel):
             ideal_bond_length: Tensor,
             clash_exclusion_index: Tensor,
     ):
-        required_values = {
-            "atom_plddt": atom_plddt,
-            "atom_mobility_attr": atom_mobility_attr,
-            "atom_to_token_idx": atom_to_token_idx,
-            "num_tokens": num_tokens,
-            "geometry_bond_index": geometry_bond_index,
-            "ideal_bond_length": ideal_bond_length,
-            "clash_exclusion_index": clash_exclusion_index,
-        }
-        missing = [name for name, value in required_values.items() if value is None]
-        if missing:
-            raise ValueError(
-                "use_mobility_v1=True requires: " + ", ".join(missing)
-            )
+        atom_plddt = atom_plddt.to(dtype=hidden.dtype,device=hidden.device,).view(-1, 1)
+        atom_mobility_attr = atom_mobility_attr.to(dtype=hidden.dtype,device=hidden.device,)
 
-        atom_plddt = atom_plddt.to(
-            dtype=hidden.dtype,
-            device=hidden.device,
-        ).view(-1, 1)
-        atom_mobility_attr = atom_mobility_attr.to(
-            dtype=hidden.dtype,
-            device=hidden.device,
-        )
-        if atom_mobility_attr.shape != (hidden.size(0), 4):
-            raise ValueError("atom_mobility_attr must have shape [num_atoms, 4]")
-        if atom_plddt.size(0) != hidden.size(0):
-            raise ValueError("atom_plddt must contain one value per atom")
+        source_bond_error = atomwise_bond_error(prediction=pos_source,geometry_bond_index=geometry_bond_index,ideal_bond_length=ideal_bond_length,).to(dtype=hidden.dtype, device=hidden.device)
 
-        source_bond_error = atomwise_bond_error(
-            prediction=pos_source,
-            geometry_bond_index=geometry_bond_index,
-            ideal_bond_length=ideal_bond_length,
-        ).to(dtype=hidden.dtype, device=hidden.device)
-        source_clash_score = atomwise_steric_clash_score(
-            prediction=pos_source,
-            atomic_numbers=z,
-            batch=batch,
-            geometry_bond_index=geometry_bond_index,
-            vdw_radius_table=self.vdw_radius_table,
-            clash_exclusion_index=clash_exclusion_index,
-        ).to(dtype=hidden.dtype, device=hidden.device)
-        atom_gate_input = torch.cat(
-            [
-                hidden,
-                atom_plddt.clamp(0.0, 1.0),
-                atom_mobility_attr,
-                source_bond_error,
-                source_clash_score,
-            ],
-            dim=-1,
-        )
-        global_residue_index, total_residues = (
-            self.build_global_residue_index(
-                batch=batch,
-                atom_to_token_idx=atom_to_token_idx,
-                num_tokens=num_tokens,
-            )
-        )
+        source_clash_score = atomwise_steric_clash_score(prediction=pos_source,atomic_numbers=z,batch=batch,geometry_bond_index=geometry_bond_index,vdw_radius_table=self.vdw_radius_table,clash_exclusion_index=clash_exclusion_index,).to(dtype=hidden.dtype, device=hidden.device)
+
+        atom_gate_input = torch.cat([hidden,atom_plddt.clamp(0.0, 1.0),atom_mobility_attr,source_bond_error,source_clash_score,],dim=-1,)
+
+        global_residue_index, total_residues = self.build_global_residue_index(batch=batch,atom_to_token_idx=atom_to_token_idx,num_tokens=num_tokens,)
+
         residue_gate_input = scatter(
             atom_gate_input,
             global_residue_index,
@@ -767,57 +478,13 @@ class BaseFlow(BaseModel):
         pos = center_of_mass(pos, batch=batch)
         # Modify_1
         pos_source = center_of_mass(pos_source, batch=batch)
-        # ToDo
-        # edge_index, edge_type = extend_bond_index(
-        #     pos=pos,
-        #     bond_index=bond_index,
-        #     batch=batch,
-        #     bond_attr=edge_attr,
-        #     device=self.device,
-        #     one_hot=self.edge_one_hot,
-        #     one_hot_types=self.edge_one_hot_types,
-        #     cutoff=self.cutoff,
-        #     max_num_neighbors=self.max_num_neighbors,
-        # )
-        # 【核心修改】：直接使用传入的 pre-computed edge_index
-        # 摒弃了原版消耗极大的 extend_bond_index
         # Modify_4
         if self.confidence_conditioning:
-            if node_attr is None:
-                raise ValueError(
-                    "confidence_conditioning=True requires node_attr"
-                )
+            atom_plddt = atom_plddt.to(dtype=node_attr.dtype,device=node_attr.device,).view(-1, 1)
 
-            if atom_plddt is None:
-                raise ValueError(
-                    "confidence_conditioning=True requires atom_plddt"
-                )
-
-            atom_plddt = atom_plddt.to(
-                dtype=node_attr.dtype,
-                device=node_attr.device,
-            ).view(-1, 1)
-
-            if atom_plddt.size(0) != node_attr.size(0):
-                raise ValueError(
-                    "atom_plddt and node_attr must have the "
-                    "same number of atoms"
-                )
-
-            node_attr = torch.cat(
-                [
-                    node_attr,
-                    atom_plddt.clamp(0.0, 1.0),
-                ],
-                dim=-1,
-            )
+            node_attr = torch.cat([node_attr,atom_plddt.clamp(0.0, 1.0),],dim=-1,)
         # Modify_2
         if self.dynamic_graph:
-            if edge_attr is None:
-                raise ValueError(
-                    "dynamic_graph=True requires typed static edge_attr"
-                )
-
             edge_index, edge_type = merge_dynamic_radius_edges(
                 pos=pos,
                 batch=batch,
@@ -833,31 +500,11 @@ class BaseFlow(BaseModel):
             edge_type = edge_attr
         # Modify_4
         if self.confidence_conditioning:
-            if edge_type is None:
-                raise ValueError(
-                    "confidence_conditioning=True requires edge_attr"
-                )
 
-            confidence_edge_attr = self.build_confidence_edge_attr(
-                edge_index=edge_index,
-                batch=batch,
-                atom_to_token_idx=atom_to_token_idx,
-                token_pair_confidence=token_pair_confidence,
-                num_tokens=num_tokens,
-            )
+            confidence_edge_attr = self.build_confidence_edge_attr(edge_index=edge_index,batch=batch,atom_to_token_idx=atom_to_token_idx,token_pair_confidence=token_pair_confidence,num_tokens=num_tokens,)
+            confidence_edge_attr = confidence_edge_attr.to(dtype=edge_type.dtype,device=edge_type.device,)
 
-            confidence_edge_attr = confidence_edge_attr.to(
-                dtype=edge_type.dtype,
-                device=edge_type.device,
-            )
-
-            edge_type = torch.cat(
-                [
-                    edge_type,
-                    confidence_edge_attr,
-                ],
-                dim=-1,
-            )
+            edge_type = torch.cat([edge_type,confidence_edge_attr,],dim=-1,)
         network_kwargs = {
             "z": z,
             "t": t[batch],
@@ -909,96 +556,46 @@ class BaseFlow(BaseModel):
         node_attr = batched_data.get("node_attr", None)
         edge_attr = batched_data.get("edge_attr", None)
         batch = batched_data.get("batch", None)
-        # Modify_3
         geometry_bond_index = batched_data["geometry_bond_index"]
         ideal_bond_length = batched_data["ideal_bond_length"]
         residue_index = batched_data["residue_index"]
         atom_name_id = batched_data["atom_name_id"]
-        clash_exclusion_index = batched_data[
-            "clash_exclusion_index"
-        ]
-        # Modify_4
-        atom_plddt = batched_data.get(
-            "atom_plddt",
-            None,
-        )
-        atom_to_token_idx = batched_data.get(
-            "atom_to_token_idx",
-            None,
-        )
-        token_pair_confidence = batched_data.get(
-            "token_pair_confidence",
-            None,
-        )
-        num_tokens = batched_data.get(
-            "num_tokens",
-            None,
-        )
-        # Modify_5
-        atom_mobility_attr = batched_data.get(
-            "atom_mobility_attr",
-            None,
-        )
+        clash_exclusion_index = batched_data["clash_exclusion_index"]
+        atom_plddt = batched_data.get("atom_plddt",None,)
+        atom_to_token_idx = batched_data.get("atom_to_token_idx",None,)
+        token_pair_confidence = batched_data.get("token_pair_confidence",None,)
+        num_tokens = batched_data.get("num_tokens",None,)
+        atom_mobility_attr = batched_data.get("atom_mobility_attr",None,)
         batch_size = int(batch.max().item()) + 1 if batch is not None else 1
 
-        # 【核心修改】：流匹配的起点不再是噪声，而是预测结构
         x0 = pos_pred
 
-        # Modify_3
         x0_centered = center_of_mass(x0, batch=batch)
         x1_centered = center_of_mass(pos, batch=batch)
 
-        identity_pair_fraction = x0_centered.new_zeros(())
-        near_native_pair_fraction = x0_centered.new_zeros(())
-        if self.use_mobility_v1 and stage == "train":
-            if batch is None:
-                raise ValueError("use_mobility_v1=True requires a batch vector")
-            (
-                x0_centered,
-                identity_pair_fraction,
-                near_native_pair_fraction,
-            ) = self.augment_residual_source(
-                x0_centered=x0_centered,
-                x1_centered=x1_centered,
-                batch=batch,
-            )
-            # Keep source conditioning and residual targets on the same
-            # augmented, already-centered source structure.
-            x0 = x0_centered
+        # identity_pair_fraction = x0_centered.new_zeros(())
+        # near_native_pair_fraction = x0_centered.new_zeros(())
+        # if self.use_mobility_v1 and stage == "train":
+        #     x0 = x0_centered
 
         if self.training_objective == "residual":
-            t = torch.zeros(
-                batch_size,
-                1,
-                dtype=x0.dtype,
-                device=x0.device,
-            )
+            t = torch.zeros(batch_size,1,dtype=x0_centered.dtype,device=x0_centered.device,)
 
             x_t = x0_centered
             u_t = x1_centered - x0_centered
             eps = torch.zeros_like(x_t)
-
         else:
-            t = self.sample_time(
-                num_samples=batch_size,
-                stage=stage,
-            )
+            t = self.sample_time(num_samples=batch_size,stage=stage,)
 
-            x_t, u_t, eps = (
-                self.compute_conditional_vector_field(
-                    x0=x0,
-                    x1=pos,
-                    t=t,
-                    batch=batch,
-                )
-            )
+            x_t, u_t, eps = self.compute_conditional_vector_field(x0=x0_centered,x1=x1_centered,t=t,batch=batch,)
+
 
         # 模型前向传播，预测向量场 v_t
         forward_result = self(
             z=z,
             t=t,
             pos=x_t,
-            pos_source=x0,
+            pos_source=x0_centered,
             bond_index=bond_index,
             edge_attr=edge_attr,
             node_attr=node_attr,
@@ -1023,59 +620,24 @@ class BaseFlow(BaseModel):
 
         # Modify_3
         # 根据网络输出构造几何 loss 使用的预测终点
-        t_atom = unsqueeze_like(
-            t[batch] if batch is not None else t,
-            target=x_t,
-        )
+        t_atom = unsqueeze_like(t[batch] if batch is not None else t,target=x_t,)
 
         if self.training_objective == "residual":
             # v_t 直接表示 x1 - x0
             pos_estimate = x0_centered + v_t
-
         elif self.flow_path == "deterministic":
             # x_t = (1 - t) * x0 + t * x1
             # 理想情况下 v_t = x1 - x0
             pos_estimate = x_t + (1 - t_atom) * v_t
-
         else:
             # 去掉随机路径中的已知噪声速度
-            clean_displacement = (
-                    v_t
-                    - self.sigma_dot_t(t_atom) * eps
-            )
+            clean_displacement = (v_t- self.sigma_dot_t(t_atom) * eps)
             pos_estimate = x0_centered + clean_displacement
 
-        # Modify_3
-        flow_matching_loss = batchwise_l2_loss(
-            v_t,
-            u_t,
-            batch=batch,
-            reduce="mean",
-            mask=target_mask,
-        )
-
-        bond_loss = bond_length_loss(
-            prediction=pos_estimate,
-            geometry_bond_index=geometry_bond_index,
-            ideal_bond_length=ideal_bond_length,
-        )
-
-        clash_loss = steric_clash_loss(
-            prediction=pos_estimate,
-            atomic_numbers=z,
-            batch=batch,
-            geometry_bond_index=geometry_bond_index,
-            vdw_radius_table=self.vdw_radius_table,
-            clash_exclusion_index=clash_exclusion_index,
-        )
-
-        plane_loss = base_plane_loss(
-            prediction=pos_estimate,
-            residue_index=residue_index,
-            atom_name_id=atom_name_id,
-            batch=batch,
-            base_atom_name_ids=self.base_atom_name_ids,
-        )
+        flow_matching_loss = batchwise_l2_loss(v_t,u_t,batch=batch,reduce="mean",mask=target_mask,)
+        bond_loss = bond_length_loss(prediction=pos_estimate,geometry_bond_index=geometry_bond_index,ideal_bond_length=ideal_bond_length,)
+        clash_loss = steric_clash_loss(prediction=pos_estimate,atomic_numbers=z,batch=batch,geometry_bond_index=geometry_bond_index,vdw_radius_table=self.vdw_radius_table,clash_exclusion_index=clash_exclusion_index,)
+        plane_loss = base_plane_loss(prediction=pos_estimate,residue_index=residue_index,atom_name_id=atom_name_id,batch=batch,base_atom_name_ids=self.base_atom_name_ids,)
 
         loss = (
                 flow_matching_loss
@@ -1084,63 +646,30 @@ class BaseFlow(BaseModel):
                 + self.plane_loss_weight * plane_loss
         )
 
-        # Modify_5: first-version mobility/no-regret objectives.
         if self.use_mobility_v1:
             global_residue_index = mobility_aux["global_residue_index"]
             total_residues = mobility_aux["total_residues"]
-            raw_residue_error, valid_residue_mask = self.residue_rms_error(
-                prediction=x0_centered,
-                target=x1_centered,
-                global_residue_index=global_residue_index,
-                total_residues=total_residues,
-                atom_mask=target_mask,
-            )
-            refined_residue_error, refined_valid_residue_mask = self.residue_rms_error(
-                prediction=pos_estimate,
-                target=x1_centered,
-                global_residue_index=global_residue_index,
-                total_residues=total_residues,
-                atom_mask=target_mask,
-            )
-            valid_residue_mask = (
-                valid_residue_mask & refined_valid_residue_mask
-            )
-            mobility_target = (
-                (raw_residue_error - self.mobility_good_error)
-                / (self.mobility_move_error - self.mobility_good_error)
-            ).clamp(0.0, 1.0)
+
+            raw_residue_error, valid_residue_mask = self.residue_rms_error(prediction=x0_centered,target=x1_centered,global_residue_index=global_residue_index,total_residues=total_residues,atom_mask=target_mask,)
+            refined_residue_error, refined_valid_residue_mask = self.residue_rms_error(prediction=pos_estimate,target=x1_centered,global_residue_index=global_residue_index,total_residues=total_residues,atom_mask=target_mask,)
+            valid_residue_mask = valid_residue_mask & refined_valid_residue_mask
+
+            mobility_target =((raw_residue_error-self.mobility_good_error)/(self.mobility_move_error-self.mobility_good_error)).clamp(0.0,1.0)
             mobility_residue = mobility_aux["mobility_residue"].view(-1)
-            mobility_loss = F.smooth_l1_loss(
-                mobility_residue[valid_residue_mask],
-                mobility_target[valid_residue_mask],
-            )
-            no_regret_loss = torch.relu(
-                refined_residue_error[valid_residue_mask]
-                - raw_residue_error[valid_residue_mask]
-            ).mean()
+            mobility_loss = F.smooth_l1_loss(mobility_residue[valid_residue_mask],mobility_target[valid_residue_mask],)
 
-            correct_residue_mask = (
-                (raw_residue_error < self.protect_error_threshold)
-                & valid_residue_mask
-            )
-            protect_atom_mask = correct_residue_mask[
-                global_residue_index
-            ] & target_mask
+            no_regret_loss = torch.relu(refined_residue_error[valid_residue_mask]-raw_residue_error[valid_residue_mask]).mean()
+
+            correct_residue_mask = ((raw_residue_error<self.protect_error_threshold)&valid_residue_mask)
+
+            protect_atom_mask = correct_residue_mask[global_residue_index]&target_mask
             protect_atom_mask = protect_atom_mask.to(dtype=pos_estimate.dtype)
-            atom_movement = (
-                pos_estimate - x0_centered
-            ).square().sum(dim=-1)
-            protect_loss = (
-                atom_movement * protect_atom_mask
-            ).sum() / protect_atom_mask.sum().clamp_min(1.0)
 
-            raw_velocity_square = mobility_aux[
-                "raw_velocity"
-            ].square().sum(dim=-1, keepdim=True)
-            velocity_budget_loss = (
-                (1.0 - mobility_aux["mobility_atom"].detach())
-                * raw_velocity_square
-            ).mean()
+            atom_movement = (pos_estimate-x0_centered).square().sum(dim=-1)
+            protect_loss = (atom_movement * protect_atom_mask).sum() / protect_atom_mask.sum().clamp_min(1.0)
+
+            raw_velocity_square = mobility_aux["raw_velocity"].square().sum(dim=-1, keepdim=True)
+            velocity_budget_loss = ((1.0 - mobility_aux["mobility_atom"].detach())* raw_velocity_square).mean()
 
             loss = (
                 loss
@@ -1154,84 +683,37 @@ class BaseFlow(BaseModel):
             raise ValueError("Loss 出现 NaN，请检查数据集是否异常！")
 
         # 记录 Loss
-        #Modify_3
-        self.log_helper(
-            f"{stage}/flow_matching_loss",
-            flow_matching_loss,
-            batch_size=batch_size,
-        )
-        self.log_helper(
-            f"{stage}/bond_loss",
-            bond_loss,
-            batch_size=batch_size,
-        )
-        self.log_helper(
-            f"{stage}/clash_loss",
-            clash_loss,
-            batch_size=batch_size,
-        )
-        self.log_helper(
-            f"{stage}/plane_loss",
-            plane_loss,
-            batch_size=batch_size,
-        )
+        self.log_helper(f"{stage}/flow_matching_loss",flow_matching_loss,batch_size=batch_size,)
+        self.log_helper(f"{stage}/bond_loss",bond_loss,batch_size=batch_size,)
+        self.log_helper(f"{stage}/clash_loss",clash_loss,batch_size=batch_size,)
+        self.log_helper(f"{stage}/plane_loss",plane_loss,batch_size=batch_size,)
+
         if self.use_mobility_v1:
             for metric_name, metric_value in {
                 "mobility_loss": mobility_loss,
                 "no_regret_loss": no_regret_loss,
                 "protect_loss": protect_loss,
                 "velocity_budget_loss": velocity_budget_loss,
-                "mobility_mean": mobility_residue[valid_residue_mask].mean(),
-                "mobility_target_mean": mobility_target[valid_residue_mask].mean(),
-                "identity_pair_fraction": identity_pair_fraction,
-                "near_native_pair_fraction": near_native_pair_fraction,
             }.items():
-                self.log_helper(
-                    f"{stage}/{metric_name}",
-                    metric_value,
-                    batch_size=batch_size,
-                )
+                self.log_helper(f"{stage}/{metric_name}",metric_value,batch_size=batch_size,)
         if stage != "train":
             graph_index = batch
             if graph_index is None:
-                graph_index = torch.zeros(
-                    pos_estimate.size(0),
-                    dtype=torch.long,
-                    device=pos_estimate.device,
-                )
-            input_rmsd, input_valid = self.residue_rms_error(
-                prediction=x0_centered,
-                target=x1_centered,
-                global_residue_index=graph_index,
-                total_residues=batch_size,
-                atom_mask=target_mask,
-            )
-            refined_rmsd, refined_valid = self.residue_rms_error(
-                prediction=pos_estimate,
-                target=x1_centered,
-                global_residue_index=graph_index,
-                total_residues=batch_size,
-                atom_mask=target_mask,
-            )
+                graph_index = torch.zeros(pos_estimate.size(0),dtype=torch.long,device=pos_estimate.device,)
+            input_rmsd, input_valid = self.residue_rms_error(prediction=x0_centered,target=x1_centered,global_residue_index=graph_index,total_residues=batch_size,atom_mask=target_mask,)
+            refined_rmsd, refined_valid = self.residue_rms_error(prediction=pos_estimate,target=x1_centered,global_residue_index=graph_index,total_residues=batch_size,atom_mask=target_mask,)
             valid_graph = input_valid & refined_valid
+
             input_rmsd = input_rmsd[valid_graph]
             refined_rmsd = refined_rmsd[valid_graph]
+
             for metric_name, metric_value in {
                 "input_rmsd": input_rmsd.mean(),
                 "refined_rmsd": refined_rmsd.mean(),
-                "rmsd_improvement": (input_rmsd - refined_rmsd).mean(),
                 "worsened_fraction": (refined_rmsd > input_rmsd).float().mean(),
             }.items():
-                self.log_helper(
-                    f"{stage}/{metric_name}",
-                    metric_value,
-                    batch_size=batch_size,
-                )
-        self.log_helper(
-            f"{stage}/loss",
-            loss,
-            batch_size=batch_size,
-        )
+                self.log_helper(f"{stage}/{metric_name}",metric_value,batch_size=batch_size,)
+        self.log_helper(f"{stage}/loss",loss,batch_size=batch_size,)
 
         return loss
 
@@ -1271,29 +753,17 @@ class BaseFlow(BaseModel):
         输出：
             x: 经过模型优化 (ODE积分) 后的最终精细坐标
         """
-        #Modify_3
-        batch_size = (
-            int(batch.max().item()) + 1
-            if batch is not None
-            else 1
-        )
+        batch_size = int(batch.max().item()) + 1if batch is not None else 1
         t_schedule = torch.linspace(0, 1.0, steps=n_timesteps + 1, device=self.device)
 
         # 【核心修改】：推理起点从随机噪声变成了质心居中的 pos_pred
-        # Modify_1
         source = center_of_mass(pos_pred, batch=batch)
         x = source.clone()
 
         n = t_schedule.size(0) - 1
 
-        # Modify_3
         if self.training_objective == "residual":
-            t = torch.zeros(
-                batch_size,
-                1,
-                dtype=source.dtype,
-                device=source.device,
-            )
+            t = torch.zeros(batch_size,1,dtype=source.dtype,device=source.device,)
             residual = self(
                 z=z,
                 t=t,
@@ -1318,12 +788,7 @@ class BaseFlow(BaseModel):
         # 欧拉法 (Euler Method) 解常微分方程 (ODE)
         for i in range(n):
             # Modify_3
-            t = torch.full(
-                (batch_size, 1),
-                fill_value=t_schedule[i].item(),
-                dtype=x.dtype,
-                device=x.device,
-            )
+            t = torch.full((batch_size, 1),fill_value=t_schedule[i].item(),dtype=x.dtype,device=x.device,)
             delta_t = self._compute_delta_t(t_schedule, t=i)
 
             # 获取当前 t 下的向量场方向
