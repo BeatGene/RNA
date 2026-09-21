@@ -121,6 +121,11 @@ def main():
             self.finish_batch("val", batch)
 
         def on_fit_end(self, trainer, pl_module):
+            # Lightning may already report the module as being on CPU when
+            # on_fit_end runs.  The CUDA context for this DDP rank is still
+            # active, so query the rank-local CUDA device directly.
+            cuda_device = torch.device("cuda", torch.cuda.current_device())
+            device_total_memory = torch.cuda.get_device_properties(cuda_device).total_memory
             result = {"synthetic": synthetic, "world_size": trainer.world_size,
                       "precision": str(trainer.precision),
                       "training_objective": pl_module.training_objective,
@@ -128,18 +133,16 @@ def main():
                       "accumulate_grad_batches": trainer.accumulate_grad_batches,
                       "num_workers_per_rank": train_loader.num_workers,
                       "largest_files": args.largest_files,
-                      "device_total_memory_gib": (
-                          torch.cuda.get_device_properties(pl_module.device).total_memory / 2**30
-                      ),
+                      "device_total_memory_gib": device_total_memory / 2**30,
                       "warning": "Synthetic timings are not representative of real RNAs." if synthetic
                                  else "Extrapolate only if measured samples represent real RNA lengths and storage."}
             for name, state in self.state.items():
                 if not state["batches"]:
                     continue
-                elapsed = torch.tensor(state["end"] - state["start"], device=pl_module.device)
-                graphs = torch.tensor(state["graphs"], device=pl_module.device)
-                max_allocated = torch.tensor(state["max_allocated"], device=pl_module.device)
-                max_reserved = torch.tensor(state["max_reserved"], device=pl_module.device)
+                elapsed = torch.tensor(state["end"] - state["start"], device=cuda_device)
+                graphs = torch.tensor(state["graphs"], device=cuda_device)
+                max_allocated = torch.tensor(state["max_allocated"], device=cuda_device)
+                max_reserved = torch.tensor(state["max_reserved"], device=cuda_device)
                 if torch.distributed.is_initialized():
                     torch.distributed.all_reduce(elapsed, op=torch.distributed.ReduceOp.MAX)
                     torch.distributed.all_reduce(graphs, op=torch.distributed.ReduceOp.SUM)
@@ -151,8 +154,7 @@ def main():
                                     max_allocated_gib=float(max_allocated) / 2**30,
                                     max_reserved_gib=float(max_reserved) / 2**30,
                                     max_reserved_fraction=(
-                                        float(max_reserved)
-                                        / torch.cuda.get_device_properties(pl_module.device).total_memory
+                                        float(max_reserved) / device_total_memory
                                     ))
             if trainer.is_global_zero:
                 print("RUNTIME_RESULT " + json.dumps(result), flush=True)
@@ -198,8 +200,9 @@ def main():
         trainer_args = dict(config.get("trainer_args", {}))
         if args.accumulate_grad_batches is not None:
             trainer_args["accumulate_grad_batches"] = args.accumulate_grad_batches
+        strategy = trainer_args.get("strategy", "ddp") if args.devices > 1 else "auto"
         trainer_args.update(devices=args.devices, accelerator="gpu", max_epochs=1,
-                            strategy="ddp_find_unused_parameters_true" if args.devices > 1 else "auto",
+                            strategy=strategy,
                             limit_train_batches=args.train_batches, limit_val_batches=args.val_batches,
                             num_sanity_val_steps=0, logger=False, enable_checkpointing=False,
                             enable_progress_bar=False, callbacks=[RuntimeChecks()])
