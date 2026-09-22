@@ -17,7 +17,6 @@ from etflow.models.loss import (
       bond_length_loss,
       steric_clash_loss,
   )
-#Modify_2
 from etflow.models.utils import (
       center_of_mass,
       merge_dynamic_radius_edges,
