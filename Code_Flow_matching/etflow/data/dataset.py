@@ -35,11 +35,13 @@ class EuclideanDataset(Dataset):
         self,
         data_dir: Path | None = None,
         split: str = "train",
+        include_metadata: bool = False,
     ):
         super().__init__()
 
         self.data_dir = Path(data_dir)
         self.split = split
+        self.include_metadata = include_metadata
 
         self.data_files = list((self.data_dir / split).rglob("*.pt"))
 
@@ -123,7 +125,7 @@ class EuclideanDataset(Dataset):
 
         atom_mobility_attr = token_mobility_attr[atom_to_token_idx].contiguous()
 
-        return RNAData(
+        result = RNAData(
             pos=pos,
             pos_pred=pos_pred,
             target_mask=target_mask,
@@ -147,3 +149,30 @@ class EuclideanDataset(Dataset):
             # Modify_5
             atom_mobility_attr=atom_mobility_attr,
         )
+
+        # Training does not need Python/string metadata, but evaluation needs a
+        # stable mapping from every prediction back to its PDB/chain/candidate.
+        # PyG batches string attributes as lists and leaves them on the CPU.
+        if self.include_metadata:
+            result.sample_id = str(data.get("sample_id", data_path.stem))
+            result.native_structure_id = str(
+                data.get("native_structure_id", data_path.parents[1].name)
+            )
+            result.native_chain_id = str(data.get("native_chain_id", ""))
+            result.predicted_chain_id = str(data.get("predicted_chain_id", ""))
+            result.sample_path = str(data_path)
+            result.protenix_seed = torch.tensor(
+                [int(data.get("protenix_seed", -1))], dtype=torch.long
+            )
+            result.protenix_sample = torch.tensor(
+                [int(data.get("protenix_sample", -1))], dtype=torch.long
+            )
+            result.sequence_length = torch.tensor(
+                [len(str(data.get("sequence", "")))], dtype=torch.long
+            )
+            result.stored_input_rmsd = torch.tensor(
+                [float(data.get("pre_refinement_aligned_rmsd", float("nan")))],
+                dtype=torch.float32,
+            )
+
+        return result
