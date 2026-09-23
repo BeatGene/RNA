@@ -1,0 +1,2 @@
+pdb_id	native_chain_id	predicted_chain_id	sample_count	length	mean_plddt	input_rmsd_mean	input_rmsd_median	refined_rmsd_mean	refined_rmsd_median	improvement_mean	improvement_median	improvement_p10	improvement_p90	candidate_win_rate	candidate_worsen_rate	improvement_ge_0.5_rate	damage_ge_0.5_rate	outcome_by_mean
+6XKN	A	A	12	101	0.78592258	8.46407599	9.60184582	7.68758455	8.65756138	0.77649144	0.87918655	0.47561093	0.99379110	1.00000000	0.00000000	0.83333333	0.00000000	improved
