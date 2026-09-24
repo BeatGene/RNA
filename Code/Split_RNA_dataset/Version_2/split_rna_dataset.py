@@ -45,17 +45,23 @@ PIPELINE_VERSION = "2.0-chain-evaluation-mask"
 DEFAULT_CIF_DIR = Path("~/pdb_data").expanduser()
 DEFAULT_DATA_DIR = Path("~/Data").expanduser()
 DEFAULT_REPORT_ROOT = Path("~/Code/pipeline_reports").expanduser()
-DEFAULT_EXCLUSION_XLSX = (
-    SCRIPT_DIR.parent
-    / "Download_PDB_RAW"
+_EXCLUSION_XLSX_CANDIDATES = (
+    SCRIPT_DIR.parents[1] / "Download_PDB_RAW" / "Version_2"
+    / "Second_PDB_ID_xlsx_and_InOut_version_2"
+    / "alignment_pdb_ids_not_in_experimental_pure_rna.xlsx",
+    SCRIPT_DIR.parents[1] / "Download_PDB_RAW"
     / "Second_PDB_ID_xlsx_and_InOut"
-    / "alignment_pdb_ids_not_in_experimental_pure_rna.xlsx"
+    / "alignment_pdb_ids_not_in_experimental_pure_rna.xlsx",
+)
+DEFAULT_EXCLUSION_XLSX = next(
+    (path for path in _EXCLUSION_XLSX_CANDIDATES if path.is_file()),
+    _EXCLUSION_XLSX_CANDIDATES[0],
 )
 
 EXPECTED_SOURCE_CIFS = 2246
 EXPECTED_EXCLUSIONS = 5
 EXPECTED_INCLUDED_PDBS = 2241
-SHORT_SEQUENCE_THRESHOLD = 15
+SHORT_SEQUENCE_THRESHOLD = 51  # inclusive through 50 nt; MMseqs2 misses some 16 nt hits
 PDB_ID_RE = re.compile(r"^[A-Z0-9]{4}$")
 RNA_POLYMER_TYPE = "polyribonucleotide"
 NULL_VALUES = {"", ".", "?"}
@@ -757,6 +763,8 @@ def short_sequence_hits(
             if longest == 0:
                 continue
             maximum_edits = math.floor((1.0 - min_seq_id + 1e-12) * longest)
+            if longest - min(len(query.search_sequence), len(target.search_sequence)) > maximum_edits:
+                continue
             distance = levenshtein_distance(
                 query.search_sequence, target.search_sequence, maximum_edits
             )

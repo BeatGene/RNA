@@ -50,6 +50,8 @@ def main() -> None:
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument("--seeds", type=parse_seeds, required=True)
     parser.add_argument("--samples", type=int, default=4)
+    parser.add_argument("--allow-variable-split-counts", action="store_true",
+                        help="accept the counts in a new split manifest instead of the old 774/117/97")
     args = parser.parse_args()
 
     for name in (
@@ -122,12 +124,12 @@ def main() -> None:
             "contact_probs",
             "atom_to_token_idx",
         ],
-        "output_layout": "Data_V1/<split>/<pdb>/seed_<seed>/predictions",
+        "output_layout": f"{args.data_root}/<split>/<pdb>/seed_<seed>/predictions",
     }
 
     total_targets = 0
     for split in SPLITS:
-        expected = EXPECTED_COUNTS[split]
+        expected = len(split_ids[split]) if args.allow_variable_split_counts else EXPECTED_COUNTS[split]
         selected = split_ids[split]
         if len(selected) != expected:
             raise ValueError(

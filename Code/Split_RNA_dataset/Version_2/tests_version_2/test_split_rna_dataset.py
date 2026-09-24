@@ -131,6 +131,15 @@ class SplitPipelineTests(unittest.TestCase):
         )
         self.assertEqual([(hit.target_pdb_id, hit.alignment_source) for hit in hits], [("1AAA", "SHORT_GLOBAL_FALLBACK")])
 
+    def test_short_sequence_fallback_catches_sixteen_nt_homologs(self):
+        query = pipeline.Entity("9AAA", "1", ("A",), "A" * 16, "A" * 16, date(2025, 1, 1), "NMR", None)
+        target = pipeline.Entity("1AAA", "1", ("A",), "A" * 14 + "CC", "A" * 14 + "CC", date(2020, 1, 1), "NMR", None)
+        hits = pipeline.short_sequence_hits(
+            [query], [target], 0.80, 0.80, 0.80, exclude_same_pdb=False
+        )
+        self.assertEqual(len(hits), 1)
+        self.assertAlmostEqual(hits[0].identity, 0.875)
+
     def test_materialization_dry_run_does_not_create_data_tree(self):
         with tempfile.TemporaryDirectory() as directory:
             data_dir = Path(directory) / "Data"

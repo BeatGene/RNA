@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Build the single-chain RNA Data_V1 chronological split.
 
-The pipeline keeps only PDB entries containing exactly one RNA chain, joins
-each entry to the strict rank-1 Protenix C3' RMSD table, applies the RMSD
-cutoff only to the training period, and preserves the original test-set
-homology/de-redundancy contract.
+The pipeline keeps only PDB entries containing exactly one RNA chain, assigns
+sets by release date, and filters test against train+val and within test.
+Rank-1 metrics can be retained solely as audit annotations.
 
 Dry-run is the default.  Execute mode creates empty lower-case PDB directories
 under ``~/Data_V1/{train,val,test}``; it never copies or deletes CIF files.
@@ -29,7 +28,7 @@ from typing import Any, Iterable, Sequence
 import split_rna_dataset as legacy
 
 
-PIPELINE_VERSION = "3.0-single-chain-rmsd15"
+PIPELINE_VERSION = "3.1-single-chain-short-fallback-rmsd-optional"
 DEFAULT_CIF_DIR = Path("~/pdb_data").expanduser()
 DEFAULT_DATA_DIR = Path("~/Data_V1").expanduser()
 DEFAULT_REPORT_ROOT = Path("~/Code/pipeline_reports").expanduser()
@@ -101,8 +100,7 @@ class Rank1Record:
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Create the single-chain Data_V1 split with a training-only strict "
-            "rank-1 C3' RMSD cutoff and test-set homology filtering."
+            "Create a single-chain chronological split with test-set homology filtering."
         )
     )
     parser.add_argument("--cif-dir", type=Path, default=DEFAULT_CIF_DIR)
@@ -116,6 +114,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--train-end", type=date.fromisoformat, default=date(2021, 9, 30))
     parser.add_argument("--val-end", type=date.fromisoformat, default=date(2023, 12, 31))
     parser.add_argument("--train-rmsd-max", type=float, default=15.0)
+    parser.add_argument("--rank1-annotation-only", action="store_true",
+                        help="never exclude a PDB because rank-1 output, RMSD, or frozen RMSD list is missing/invalid")
+    parser.add_argument("--disable-train-rmsd-filter", action="store_true",
+                        help="do not exclude a train PDB based on rank-1 RMSD")
+    parser.add_argument("--ignore-frozen-rmsd-exclusions", action="store_true",
+                        help="audit the frozen exclusion list but do not apply it")
     parser.add_argument("--min-seq-id", type=float, default=0.80)
     parser.add_argument("--min-query-cov", type=float, default=0.80)
     parser.add_argument("--min-target-cov", type=float, default=0.80)
@@ -150,12 +154,19 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     return args
 
 
-def make_report_dir(root: Path, execute: bool, rmsd_max: float) -> Path:
+def make_report_dir(
+    root: Path, execute: bool, rmsd_max: float | None,
+    rank1_annotation_only: bool = False,
+) -> Path:
     root.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     mode = "EXECUTE" if execute else "DRYRUN"
-    cutoff = f"{rmsd_max:g}A".replace(".", "p")
-    base = f"DATA_SPLIT_V1_SINGLECHAIN_RMSD{cutoff}_{timestamp}_{mode}"
+    cutoff = f"{rmsd_max:g}A".replace(".", "p") if rmsd_max is not None else "NONE"
+    base = (
+        f"DATA_SPLIT_V2_SINGLECHAIN_RANK1_ANNOTATION_{timestamp}_{mode}"
+        if rank1_annotation_only else
+        f"DATA_SPLIT_V1_SINGLECHAIN_RMSD{cutoff}_{timestamp}_{mode}"
+    )
     candidate = root / base
     counter = 2
     while candidate.exists():
@@ -255,7 +266,9 @@ def select_entries(
     frozen_rmsd_exclusions: set[str],
     train_end: date,
     val_end: date,
-    train_rmsd_max: float,
+    train_rmsd_max: float | None,
+    frozen_rmsd_audit: set[str] | None = None,
+    require_valid_rank1: bool = True,
 ) -> tuple[dict[str, str], list[dict[str, Any]], Counter[str]]:
     assignments: dict[str, str] = {}
     rows: list[dict[str, Any]] = []
@@ -264,7 +277,7 @@ def select_entries(
         split = legacy.initial_split(entry.release.release_date, train_end, val_end)
         chain_count = entry_chain_count(entry)
         record = rank1.get(pdb_id)
-        if record is not None:
+        if record is not None and require_valid_rank1:
             if record.release_date != entry.release.release_date:
                 raise ValueError(
                     f"Release-date mismatch for {pdb_id}: CIF={entry.release.release_date}, "
@@ -280,16 +293,17 @@ def select_entries(
         if chain_count != 1:
             status = "EXCLUDE_MULTI_RNA_CHAIN"
             reason = f"RNA_CHAIN_COUNT={chain_count}; required exactly 1"
-        elif record is None:
+        elif require_valid_rank1 and record is None:
             status = "EXCLUDE_NO_STRICT_RANK1"
             reason = "PDB is absent from rank1_targets.csv"
         elif pdb_id in frozen_rmsd_exclusions:
             status = "EXCLUDE_FROZEN_RMSD"
             reason = "PDB is listed in exclude_strict_rank1_rmsd_pdb.txt"
-        elif not record.metric_valid:
+        elif require_valid_rank1 and not record.metric_valid:
             status = "EXCLUDE_INVALID_RMSD"
             reason = f"eval_status={record.eval_status!r}, rmsd={record.rmsd!r}"
-        elif split == "train" and record.rmsd > train_rmsd_max:
+        elif (split == "train" and train_rmsd_max is not None and record is not None
+              and record.metric_valid and record.rmsd > train_rmsd_max):
             status = "EXCLUDE_TRAIN_RMSD_CUTOFF"
             reason = f"strict rank-1 RMSD {record.rmsd:g} A > {train_rmsd_max:g} A"
         else:
@@ -308,7 +322,9 @@ def select_entries(
                 "RNA_LENGTH": entry_rna_length(entry),
                 "STRICT_RANK1_RMSD_ANGSTROM": record.rmsd if record else None,
                 "RMSD_EVAL_STATUS": record.eval_status if record else "",
-                "FROZEN_RMSD_EXCLUSION": pdb_id in frozen_rmsd_exclusions,
+                "FROZEN_RMSD_EXCLUSION": pdb_id in (
+                    frozen_rmsd_audit if frozen_rmsd_audit is not None else frozen_rmsd_exclusions
+                ),
                 "SELECTION_STATUS": status,
                 "SELECTION_REASON": reason,
                 "SELECTED_SPLIT": selected_split,
@@ -444,13 +460,14 @@ def distribution_rows(
     rows: list[dict[str, Any]] = []
     for split in ("train", "val", "test"):
         ids = sorted(expected[split])
-        rmsd = [rank1[pdb_id].rmsd for pdb_id in ids]
-        values = [float(value) for value in rmsd if value is not None]
+        values = [float(rank1[pdb_id].rmsd) for pdb_id in ids
+                  if pdb_id in rank1 and rank1[pdb_id].metric_valid]
         lengths = [entry_rna_length(entries[pdb_id]) for pdb_id in ids]
         rows.append(
             {
                 "SPLIT": split,
                 "PDB_COUNT": len(ids),
+                "RMSD_WITH_VALUE_COUNT": len(values),
                 "RMSD_MEAN": sum(values) / len(values) if values else None,
                 "RMSD_Q25": percentile(values, 0.25),
                 "RMSD_MEDIAN": percentile(values, 0.50),
@@ -490,7 +507,7 @@ def plot_distributions(
     expected: dict[str, set[str]],
     rank1: dict[str, Rank1Record],
     entries: dict[str, legacy.Entry],
-    train_rmsd_max: float,
+    train_rmsd_max: float | None,
 ) -> None:
     try:
         import matplotlib
@@ -508,7 +525,8 @@ def plot_distributions(
     figures.mkdir()
     colors = {"train": "#4C78A8", "val": "#F2A541", "test": "#E45756"}
     rmsd_groups = {
-        split: [float(rank1[pdb_id].rmsd) for pdb_id in sorted(ids)]
+        split: [float(rank1[pdb_id].rmsd) for pdb_id in sorted(ids)
+                if pdb_id in rank1 and rank1[pdb_id].metric_valid]
         for split, ids in expected.items()
     }
     length_groups = {
@@ -522,10 +540,11 @@ def plot_distributions(
         if len(grid):
             ax.plot(grid, density, color=colors[split], linewidth=2, label=f"{split} (n={len(rmsd_groups[split])})")
             ax.fill_between(grid, density, color=colors[split], alpha=0.12)
-    ax.axvline(train_rmsd_max, color="#333333", linestyle="--", linewidth=1.5, label=f"train cutoff = {train_rmsd_max:g} A")
+    if train_rmsd_max is not None:
+        ax.axvline(train_rmsd_max, color="#333333", linestyle="--", linewidth=1.5, label=f"train cutoff = {train_rmsd_max:g} A")
     ax.set_xlabel("Strict rank-1 C3' RMSD (A)")
     ax.set_ylabel("Kernel density")
-    ax.set_title("Final Data_V1 RMSD distributions")
+    ax.set_title("Final split RMSD distributions (scored PDBs only)")
     ax.legend(frameon=False)
     ax.grid(alpha=0.2)
     fig.tight_layout()
@@ -542,7 +561,7 @@ def plot_distributions(
             ax.fill_between(grid, density, color=colors[split], alpha=0.12)
     ax.set_xlabel("log1p(strict rank-1 C3' RMSD [A])")
     ax.set_ylabel("Kernel density")
-    ax.set_title("Final Data_V1 RMSD distributions (log scale)")
+    ax.set_title("Final split RMSD distributions (scored PDBs only; log scale)")
     ax.legend(frameon=False)
     ax.grid(alpha=0.2)
     fig.tight_layout()
@@ -556,10 +575,11 @@ def plot_distributions(
         if values.size:
             y = np.arange(1, values.size + 1) / values.size
             ax.step(values, y, where="post", color=colors[split], linewidth=2, label=f"{split} (n={values.size})")
-    ax.axvline(train_rmsd_max, color="#333333", linestyle="--", linewidth=1.5)
+    if train_rmsd_max is not None:
+        ax.axvline(train_rmsd_max, color="#333333", linestyle="--", linewidth=1.5)
     ax.set_xlabel("Strict rank-1 C3' RMSD (A)")
     ax.set_ylabel("Empirical cumulative fraction")
-    ax.set_title("Final Data_V1 RMSD ECDF")
+    ax.set_title("Final split RMSD ECDF (scored PDBs only)")
     ax.legend(frameon=False)
     ax.grid(alpha=0.2)
     fig.tight_layout()
@@ -574,7 +594,7 @@ def plot_distributions(
             ax.fill_between(grid, density, color=colors[split], alpha=0.12)
     ax.set_xlabel("RNA length (nt)")
     ax.set_ylabel("Kernel density")
-    ax.set_title("Final Data_V1 RNA-length distributions")
+    ax.set_title("Final split RNA-length distributions")
     ax.legend(frameon=False)
     ax.grid(alpha=0.2)
     fig.tight_layout()
@@ -605,6 +625,15 @@ def run_pipeline(
     logger.log(f"MMseqs2 version: {mmseqs_version}")
     source_exclusions = legacy.load_exclusion_ids(exclusion_xlsx)
     frozen_rmsd_exclusions = read_id_list(rmsd_exclusion_list)
+    rank1_annotation_only = getattr(args, "rank1_annotation_only", False)
+    applied_frozen_rmsd_exclusions = (
+        set() if rank1_annotation_only or getattr(args, "ignore_frozen_rmsd_exclusions", False)
+        else frozen_rmsd_exclusions
+    )
+    applied_train_rmsd_max = (
+        None if rank1_annotation_only or getattr(args, "disable_train_rmsd_filter", False)
+        else args.train_rmsd_max
+    )
     rank1 = load_rank1_records(rank1_csv)
     entries, cif_files = parse_all_entries(cif_dir, source_exclusions, report_dir, logger)
 
@@ -630,7 +659,7 @@ def run_pipeline(
     if unexpected_rank1:
         raise ValueError(f"rank1_targets.csv contains PDBs outside the curated 2241: {sorted(unexpected_rank1)}")
     unexpected_frozen = frozen_rmsd_exclusions - set(rank1)
-    if unexpected_frozen:
+    if unexpected_frozen and not rank1_annotation_only:
         raise ValueError(f"RMSD exclusion list contains PDBs absent from rank1 table: {sorted(unexpected_frozen)}")
 
     date_rows = []
@@ -669,10 +698,12 @@ def run_pipeline(
     assignments, selection_rows, selection_statuses = select_entries(
         entries,
         rank1,
-        frozen_rmsd_exclusions,
+        applied_frozen_rmsd_exclusions,
         args.train_end,
         args.val_end,
-        args.train_rmsd_max,
+        applied_train_rmsd_max,
+        frozen_rmsd_exclusions,
+        not rank1_annotation_only,
     )
     legacy.write_tsv(report_dir / "selection_audit.tsv", SELECTION_COLUMNS, selection_rows)
     selected_counts = Counter(assignments.values())
@@ -781,7 +812,7 @@ def run_pipeline(
                 "ENTITY_ID": entity.entity_id,
                 "RELEASE_DATE": entity.release_date.isoformat(),
                 "SEQUENCE_LENGTH": len(entity.search_sequence),
-                "STRICT_RANK1_RMSD_ANGSTROM": rank1[pdb_id].rmsd,
+                "STRICT_RANK1_RMSD_ANGSTROM": rank1[pdb_id].rmsd if pdb_id in rank1 else None,
                 "EVALUATE": evaluate,
                 "CHAIN_STATUS": status,
                 "REASON": reason,
@@ -800,7 +831,7 @@ def run_pipeline(
             "release_date": entity.release_date.isoformat(),
             "chain_id": chain_id,
             "entity_id": entity.entity_id,
-            "strict_rank1_rmsd_angstrom": rank1[pdb_id].rmsd,
+            "strict_rank1_rmsd_angstrom": rank1[pdb_id].rmsd if pdb_id in rank1 else None,
             "evaluate": evaluate,
             "status": status,
             "match_pdb_id": match.target_pdb_id if match else None,
@@ -872,12 +903,12 @@ def run_pipeline(
     legacy.write_tsv(report_dir / "mkdir_actions.tsv", legacy.REPORT_COLUMNS["mkdir_actions.tsv"], actions)
     stats_rows = distribution_rows(expected, rank1, entries)
     stats_columns = [
-        "SPLIT", "PDB_COUNT", "RMSD_MEAN", "RMSD_Q25", "RMSD_MEDIAN",
+        "SPLIT", "PDB_COUNT", "RMSD_WITH_VALUE_COUNT", "RMSD_MEAN", "RMSD_Q25", "RMSD_MEDIAN",
         "RMSD_Q75", "RMSD_P90", "RMSD_MAX", "RNA_LENGTH_MEDIAN", "RNA_LENGTH_P90",
     ]
     legacy.write_tsv(report_dir / "distribution_summary.tsv", stats_columns, stats_rows)
     if not args.skip_plots:
-        plot_distributions(report_dir, expected, rank1, entries, args.train_rmsd_max)
+        plot_distributions(report_dir, expected, rank1, entries, applied_train_rmsd_max)
 
     final_counts = {split: len(ids) for split, ids in expected.items()}
     summary = {
@@ -892,9 +923,10 @@ def run_pipeline(
         },
         "selection_rules": {
             "rna_chain_count": "exactly 1",
-            "strict_rank1_rmsd_required": True,
-            "train_rmsd_max_angstrom_inclusive": args.train_rmsd_max,
-            "rmsd_cutoff_applies_to": "train only",
+            "strict_rank1_rmsd_required": not rank1_annotation_only,
+            "train_rmsd_max_angstrom_inclusive": applied_train_rmsd_max,
+            "frozen_rmsd_exclusions_applied": bool(applied_frozen_rmsd_exclusions),
+            "rmsd_cutoff_applies_to": "train only" if applied_train_rmsd_max is not None else "disabled",
             "directory_case": "lowercase",
         },
         "selection_status_counts": dict(sorted(selection_statuses.items())),
@@ -937,7 +969,9 @@ def run_pipeline(
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
     report_dir = make_report_dir(
-        args.report_root.expanduser().resolve(), args.execute, args.train_rmsd_max
+        args.report_root.expanduser().resolve(), args.execute,
+        None if args.rank1_annotation_only or args.disable_train_rmsd_filter else args.train_rmsd_max,
+        args.rank1_annotation_only,
     )
     logger = legacy.RunLogger(report_dir / "pipeline.log")
     config = {

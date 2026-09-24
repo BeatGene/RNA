@@ -15,6 +15,7 @@ import functools
 import importlib.util
 import io
 import json
+import math
 import os
 import re
 import time
@@ -1164,6 +1165,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--rnafm-root", type=Path, default=home / "Data_FM/RNA_FM_embeddings")
     parser.add_argument("--output-root", type=Path, default=home / "Data_PT_V1")
     parser.add_argument(
+        "--high-rmsd-root", type=Path,
+        help="Save samples above --max-pre-refinement-rmsd outside the training PT root",
+    )
+    parser.add_argument(
         "--exclude-pdb-file",
         type=Path,
         default=DEFAULT_EXCLUSION_FILE,
@@ -1254,6 +1259,12 @@ def main(argv: list[str] | None = None) -> int:
     args.native_root = args.native_root.expanduser()
     args.rnafm_root = args.rnafm_root.expanduser()
     args.output_root = args.output_root.expanduser()
+    if args.high_rmsd_root is not None:
+        args.high_rmsd_root = args.high_rmsd_root.expanduser().resolve()
+        if (args.high_rmsd_root == args.output_root.resolve()
+                or args.output_root.resolve() in args.high_rmsd_root.parents
+                or args.high_rmsd_root in args.output_root.resolve().parents):
+            raise SystemExit("--high-rmsd-root must be outside --output-root")
     args.exclude_pdb_file = args.exclude_pdb_file.expanduser().resolve()
     excluded_pdb_ids = load_excluded_pdb_ids(args.exclude_pdb_file)
     ccd_components_file = resolve_ccd_components_file(args.ccd_components_file)
@@ -1297,6 +1308,7 @@ def main(argv: list[str] | None = None) -> int:
     manifest: list[dict] = []
     issues: list[dict] = []
     filtered_samples: list[dict] = []
+    high_rmsd_saved = 0
     excluded_pdbs: list[dict] = []
     discovered_samples = 0
     excluded_prediction_samples = 0
@@ -1313,16 +1325,12 @@ def main(argv: list[str] | None = None) -> int:
                 continue
             if pdb_id in excluded_pdb_ids:
                 exclusion = excluded_pdb_ids[pdb_id]
-                if exclusion["split"] != split:
-                    raise ValueError(
-                        f"excluded PDB {pdb_id.upper()} is listed as split "
-                        f"{exclusion['split']} but was found under {split}"
-                    )
                 prediction_count = len(list(find_predictions(pdb_dir)))
                 excluded_prediction_samples += prediction_count
                 excluded_pdbs.append({
                     "split": split,
                     "pdb_id": pdb_id.upper(),
+                    "policy_split": exclusion["split"],
                     "prediction_samples": prediction_count,
                     "reason": exclusion["reason"],
                 })
@@ -1388,7 +1396,34 @@ def main(argv: list[str] | None = None) -> int:
                                 f"{args.min_observed_atom_fraction:.3f}"
                             )
                         aligned_rmsd = float(payload["pre_refinement_aligned_rmsd"])
+                        score_path = pred_cif.with_name(
+                            f"{SAMPLE_CIF_RE.match(pred_cif.name).group('prefix')}_summary_confidence_sample_{sample_number}.json"
+                        )
+                        ranking_score = ""
+                        if score_path.is_file():
+                            try:
+                                ranking_score = float(json.loads(score_path.read_text(encoding="utf-8"))["ranking_score"])
+                                if not math.isfinite(ranking_score):
+                                    ranking_score = ""
+                            except (ValueError, KeyError, TypeError, OSError):
+                                ranking_score = ""
                         if aligned_rmsd > args.max_pre_refinement_rmsd:
+                            high_output = (
+                                args.high_rmsd_root / split / pdb_id / f"seed_{seed}" / f"sample_{sample_number}.pt"
+                                if args.high_rmsd_root is not None else None
+                            )
+                            high_status = "NOT_SAVED"
+                            if high_output is not None and not args.dry_run:
+                                if high_output.exists() and not args.overwrite:
+                                    load_resumable_sample(high_output, args.max_pre_refinement_rmsd)
+                                    high_status = "SKIPPED"
+                                else:
+                                    high_output.parent.mkdir(parents=True, exist_ok=True)
+                                    temporary = high_output.with_suffix(".pt.tmp")
+                                    torch.save(payload, temporary)
+                                    temporary.replace(high_output)
+                                    high_status = "CREATED"
+                                high_rmsd_saved += 1
                             duration_seconds = time.perf_counter() - sample_started
                             filtered_samples.append({
                                 "split": split,
@@ -1401,6 +1436,9 @@ def main(argv: list[str] | None = None) -> int:
                                 ),
                                 "duration_seconds": f"{duration_seconds:.6f}",
                                 "output": str(output_path),
+                                "ranking_score": ranking_score,
+                                "high_rmsd_output": str(high_output) if high_output else "",
+                                "high_rmsd_status": high_status,
                                 "reason": "pre_refinement_aligned_rmsd_above_limit",
                             })
                             continue
@@ -1426,6 +1464,7 @@ def main(argv: list[str] | None = None) -> int:
                             "pre_refinement_aligned_rmsd": f"{float(payload['pre_refinement_aligned_rmsd']):.6f}" if payload else "",
                             "duration_seconds": f"{duration_seconds:.6f}",
                             "estimated_pt_bytes": estimated_pt_bytes,
+                            "ranking_score": ranking_score,
                             "output": str(output_path),
                         })
                     except Exception as exc:
@@ -1469,7 +1508,7 @@ def main(argv: list[str] | None = None) -> int:
         manifest,
         ["split", "pdb_id", "seed", "sample", "status", "atom_count",
          "observed_atom_count", "observed_atom_fraction",
-         "pre_refinement_aligned_rmsd", "duration_seconds", "estimated_pt_bytes", "output"],
+         "pre_refinement_aligned_rmsd", "duration_seconds", "estimated_pt_bytes", "ranking_score", "output"],
     )
     write_tsv(
         issues_path,
@@ -1481,12 +1520,12 @@ def main(argv: list[str] | None = None) -> int:
         filtered_samples,
         ["split", "pdb_id", "seed", "sample",
          "pre_refinement_aligned_rmsd", "max_pre_refinement_rmsd",
-         "duration_seconds", "output", "reason"],
+         "duration_seconds", "output", "ranking_score", "high_rmsd_output", "high_rmsd_status", "reason"],
     )
     write_tsv(
         excluded_pdbs_path,
         excluded_pdbs,
-        ["split", "pdb_id", "prediction_samples", "reason"],
+        ["split", "pdb_id", "policy_split", "prediction_samples", "reason"],
     )
     elapsed_seconds = time.perf_counter() - run_started
     problem_pdb_ids = sorted({row["pdb_id"] for row in issues if row["pdb_id"]})
@@ -1551,6 +1590,8 @@ def main(argv: list[str] | None = None) -> int:
         "excluded_pdb_ids": [row["pdb_id"] for row in excluded_pdbs],
         "excluded_prediction_samples": excluded_prediction_samples,
         "rmsd_filtered_samples": len(filtered_samples),
+        "high_rmsd_saved_samples": high_rmsd_saved,
+        "high_rmsd_root": str(args.high_rmsd_root) if args.high_rmsd_root else None,
         "max_pre_refinement_rmsd": args.max_pre_refinement_rmsd,
         "successful_samples": len(manifest),
         "failed_samples": failed_samples,

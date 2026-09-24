@@ -13,9 +13,10 @@ PREPARE="$SCRIPT_DIR/prepare_data_v1_confidence_run.py"
 WORKER="$SCRIPT_DIR/run_data_v1_50x4_confidence.sh"
 
 MASTER_MANIFEST="$USER_ROOT/Code/pipeline_reports/PDB_RAW/pdb_cif_manifest.csv"
-SPLIT_MANIFEST="$USER_ROOT/Code/pipeline_reports/DATA_SPLIT_V1_SINGLECHAIN_RMSD15A_20260826T100510Z_EXECUTE/final_manifest.tsv"
-DATA_ROOT="$USER_ROOT/Data_V1"
-BASE_REPORT="$USER_ROOT/Code/pipeline_reports/DATA_V1_50X4_CONFIDENCE"
+SPLIT_MANIFEST="${SPLIT_MANIFEST:-$USER_ROOT/Code/pipeline_reports/DATA_SPLIT_V1_SINGLECHAIN_RMSD15A_20260826T100510Z_EXECUTE/final_manifest.tsv}"
+DATA_ROOT="${DATA_ROOT:-$USER_ROOT/Data_V1}"
+BASE_REPORT="${BASE_REPORT:-$USER_ROOT/Code/pipeline_reports/DATA_V1_50X4_CONFIDENCE}"
+ALLOW_VARIABLE_SPLIT_COUNTS="${ALLOW_VARIABLE_SPLIT_COUNTS:-0}"
 RUN_ID="${RUN_ID:-data_v1_50x4_conf_8gpu_$(date -u +%Y%m%dT%H%M%SZ)}"
 RUN_DIR="$BASE_REPORT/pred_runs/$RUN_ID"
 
@@ -108,6 +109,11 @@ seq 300 349 > "$RUN_DIR/seeds.txt"
 SEEDS="$(paste -sd, "$RUN_DIR/seeds.txt")"
 
 echo '=== 生成并审计 Data_V1 50x4 清单 ==='
+count_args=()
+if [[ "$ALLOW_VARIABLE_SPLIT_COUNTS" == 1 ]]
+then
+    count_args+=(--allow-variable-split-counts)
+fi
 "$PYTHON" "$PREPARE" \
     --master-manifest "$MASTER_MANIFEST" \
     --split-manifest "$SPLIT_MANIFEST" \
@@ -116,7 +122,8 @@ echo '=== 生成并审计 Data_V1 50x4 清单 ==='
     --complex-json-dir "$USER_ROOT/Json_data/Complex_json" \
     --run-dir "$RUN_DIR" \
     --seeds "$SEEDS" \
-    --samples 4
+    --samples 4 \
+    "${count_args[@]}"
 
 source "$USER_ROOT/Code/predict_protenix/protenix_env.sh"
 export PROTENIX_ROOT_DIR="$USER_ROOT/protenix_data"
@@ -163,6 +170,8 @@ date -u +%Y-%m-%dT%H:%M:%SZ > "$RUN_DIR/launcher.started_at_utc"
 
 nohup env \
     RUN_DIR="$RUN_DIR" \
+    DATA_ROOT="$DATA_ROOT" \
+    BASE_REPORT="$BASE_REPORT" \
     GPU_LIST="$GPU_LIST" \
     SPLIT_ORDER="$SPLIT_ORDER" \
     ROUND_MAX_TARGETS="$ROUND_MAX_TARGETS" \

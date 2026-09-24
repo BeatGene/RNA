@@ -1,5 +1,6 @@
 import importlib.util
 import errno
+import csv
 import json
 import sys
 import tempfile
@@ -551,12 +552,15 @@ class BuildRefinementPtTest(unittest.TestCase):
             (filtered_sample_dir / "3ghi_full_data_sample_0.json").write_text(
                 json.dumps(confidence_payload), encoding="utf-8"
             )
+            (filtered_sample_dir / "3ghi_summary_confidence_sample_0.json").write_text(
+                json.dumps({"ranking_score": 0.42}), encoding="utf-8"
+            )
             torch.save(fm_payload,
                        rnafm_root / "3GHI" / "rnafm_t12_residue_embeddings.pt")
             write_cif(excluded_sample_dir / "4jkl_sample_0.cif", rows, "A")
             exclusion_file = root / "excluded.tsv"
             exclusion_file.write_text(
-                "pdb_id\tsplit\treason\n4JKL\ttrain\tunit_test_exclusion\n",
+                "pdb_id\tsplit\treason\n4JKL\tval\tunit_test_exclusion\n",
                 encoding="utf-8",
             )
 
@@ -605,6 +609,30 @@ class BuildRefinementPtTest(unittest.TestCase):
             self.assertIn(
                 "4JKL", (run_dir / "excluded_pdbs.tsv").read_text(encoding="utf-8")
             )
+            with (run_dir / "excluded_pdbs.tsv").open(encoding="utf-8") as handle:
+                exclusion_row = next(csv.DictReader(handle, delimiter="\t"))
+            self.assertEqual(exclusion_row["split"], "train")
+            self.assertEqual(exclusion_row["policy_split"], "val")
+
+            high_root = root / "high_rmsd"
+            write_result = module.main([
+                "--prediction-root", str(prediction_root),
+                "--native-root", str(native_root),
+                "--rnafm-root", str(rnafm_root),
+                "--output-root", str(output_root),
+                "--high-rmsd-root", str(high_root),
+                "--exclude-pdb-file", str(exclusion_file),
+                "--max-pre-refinement-rmsd", "0.01",
+                "--split", "train", "--run-name", "unittest_write",
+            ])
+            self.assertEqual(write_result, 1)  # 2DEF lacks its native CIF.
+            self.assertTrue((output_root / "train/1abc/seed_7/sample_0.pt").is_file())
+            self.assertFalse((output_root / "train/3ghi/seed_7/sample_0.pt").exists())
+            self.assertTrue((high_root / "train/3ghi/seed_7/sample_0.pt").is_file())
+            with (output_root / "logs/unittest_write/filtered_samples.tsv").open(encoding="utf-8") as handle:
+                row = next(module.csv.DictReader(handle, delimiter="\t"))
+            self.assertEqual(row["ranking_score"], "0.42")
+            self.assertEqual(row["high_rmsd_status"], "CREATED")
 
 
 if __name__ == "__main__":

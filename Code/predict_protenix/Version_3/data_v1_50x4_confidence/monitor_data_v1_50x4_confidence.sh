@@ -2,8 +2,8 @@
 set -euo pipefail
 
 USER_ROOT="/storage9920/home/tinghao.xia"
-BASE_REPORT="$USER_ROOT/Code/pipeline_reports/DATA_V1_50X4_CONFIDENCE"
-DATA_ROOT="$USER_ROOT/Data_V1"
+BASE_REPORT="${BASE_REPORT:-$USER_ROOT/Code/pipeline_reports/DATA_V1_50X4_CONFIDENCE}"
+DATA_ROOT="${DATA_ROOT:-$USER_ROOT/Data_V1}"
 PYTHON="$USER_ROOT/miniconda3/envs/protenix-1.0.5/bin/python"
 
 run_id="${1:-}"

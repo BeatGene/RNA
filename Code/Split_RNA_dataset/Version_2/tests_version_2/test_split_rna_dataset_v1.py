@@ -109,6 +109,18 @@ class DataV1PipelineTests(unittest.TestCase):
         self.assertEqual(by_id["2AAA"]["SELECTION_STATUS"], "SELECTED")
         self.assertEqual(by_id["3AAA"]["SELECTION_STATUS"], "SELECTED")
 
+    def test_disable_both_rmsd_exclusions_keeps_high_rmsd_train_pdb(self):
+        released = date(2020, 1, 1)
+        entries = {"1AAA": make_entry("1AAA", released)}
+        rank1 = {"1AAA": make_rank1("1AAA", released, 35.0)}
+        assignments, rows, _ = pipeline.select_entries(
+            entries, rank1, set(), date(2021, 9, 30),
+            date(2023, 12, 31), None, {"1AAA"},
+        )
+        self.assertEqual(assignments, {"1AAA": "train"})
+        self.assertEqual(rows[0]["SELECTION_STATUS"], "SELECTED")
+        self.assertTrue(rows[0]["FROZEN_RMSD_EXCLUSION"])
+
     def test_single_chain_and_metric_requirements(self):
         released = date(2020, 1, 1)
         entries = {
@@ -304,6 +316,38 @@ _entity_poly.pdbx_strand_id
             self.assertTrue((report_dir / "selection_audit.tsv").is_file())
             self.assertTrue((report_dir / "final_manifest.tsv").is_file())
             self.assertTrue((report_dir / "distribution_summary.tsv").is_file())
+
+            # Rank-1 records are annotations in the revised policy. A missing
+            # test record and an invalid val record must not block selection.
+            with rank1_csv.open("w", encoding="utf-8", newline="") as handle:
+                writer = csv.writer(handle)
+                writer.writerow(["pdb_id", "seed", "sample", "ranking_score",
+                                 "eval_status", "rmsd", "release_date", "chain_count"])
+                for pdb_id, released, _, _, rmsd, chain_count in specs:
+                    if pdb_id == "4AAA":
+                        continue
+                    writer.writerow([pdb_id, 42, 0, 0.5,
+                                     "missing_output" if pdb_id == "2AAA" else "SUCCESS",
+                                     "" if pdb_id == "2AAA" else rmsd,
+                                     released, chain_count])
+            rmsd_exclusions.write_text("1AAB\n", encoding="utf-8")
+            args.rank1_annotation_only = True
+            revised_report = root / "revised_report"
+            revised_report.mkdir()
+            revised_logger = legacy.RunLogger(revised_report / "pipeline.log")
+            with patch.object(legacy, "mmseqs_version", return_value="test"), patch.object(
+                legacy, "run_mmseqs", side_effect=fake_mmseqs
+            ):
+                revised = pipeline.run_pipeline(args, revised_report, revised_logger)
+            self.assertEqual(revised["selected_before_test_filtering"],
+                             {"test": 2, "train": 2, "val": 1})
+            self.assertEqual(revised["final_directory_counts"],
+                             {"train": 2, "val": 1, "test": 1})
+            with (revised_report / "final_manifest.tsv").open(encoding="utf-8") as handle:
+                revised_rows = {row["PDB_ID"]: row for row in csv.DictReader(handle, delimiter="\t")}
+            self.assertEqual(revised_rows["1AAB"]["FINAL_SPLIT"], "train")
+            self.assertEqual(revised_rows["2AAA"]["FINAL_SPLIT"], "val")
+            self.assertEqual(revised_rows["4AAA"]["FINAL_SPLIT"], "test")
 
 
 if __name__ == "__main__":

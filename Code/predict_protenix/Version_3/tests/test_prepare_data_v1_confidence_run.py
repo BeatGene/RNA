@@ -103,6 +103,16 @@ class PrepareDataV1ConfidenceRunTests(unittest.TestCase):
                 ) as handle:
                     self.assertEqual(len(list(csv.DictReader(handle))), count)
 
+            revised_dir = root / "new_split_run"
+            revised_argv = [revised_dir.as_posix() if item == str(run_dir) else item for item in argv]
+            revised_argv.append("--allow-variable-split-counts")
+            with mock.patch.dict(prepare.EXPECTED_COUNTS, {"train": 0, "val": 0, "test": 0}), mock.patch.object(sys, "argv", revised_argv):
+                prepare.main()
+            revised_summary = json.loads(
+                (revised_dir / "selection_summary.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(revised_summary["total_target_count"], 988)
+
 
 if __name__ == "__main__":
     unittest.main()
