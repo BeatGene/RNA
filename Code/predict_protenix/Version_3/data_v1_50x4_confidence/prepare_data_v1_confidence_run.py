@@ -40,6 +40,20 @@ def parse_seeds(value: str) -> list[int]:
     return result
 
 
+def read_target_ids(path: Path) -> set[str]:
+    result: set[str] = set()
+    for line in path.read_text(encoding="utf-8-sig").splitlines():
+        key = pdb_id(line.split("#", 1)[0])
+        if not key:
+            continue
+        if key in result:
+            raise ValueError(f"target IDs file contains duplicate PDB_ID: {key}")
+        result.add(key)
+    if not result:
+        raise ValueError(f"target IDs file is empty: {path}")
+    return result
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--master-manifest", type=Path, required=True)
@@ -52,6 +66,8 @@ def main() -> None:
     parser.add_argument("--samples", type=int, default=4)
     parser.add_argument("--allow-variable-split-counts", action="store_true",
                         help="accept the counts in a new split manifest instead of the old 774/117/97")
+    parser.add_argument("--target-ids-file", type=Path,
+                        help="schedule only these selected PDB IDs; keep full split directory validation")
     args = parser.parse_args()
 
     for name in (
@@ -61,8 +77,11 @@ def main() -> None:
         "simple_json_dir",
         "complex_json_dir",
         "run_dir",
+        "target_ids_file",
     ):
-        setattr(args, name, getattr(args, name).expanduser().resolve())
+        value = getattr(args, name)
+        if value is not None:
+            setattr(args, name, value.expanduser().resolve())
     if args.samples < 1:
         raise ValueError("--samples 必须大于 0")
 
@@ -96,6 +115,10 @@ def main() -> None:
 
     if any(split_ids[a] & split_ids[b] for a in SPLITS for b in SPLITS if a < b):
         raise ValueError("train/val/test 清单存在交集")
+    target_ids = read_target_ids(args.target_ids_file) if args.target_ids_file else None
+    all_selected = set().union(*split_ids.values())
+    if target_ids is not None and not target_ids <= all_selected:
+        raise ValueError(f"target IDs absent from the selected split: {sorted(target_ids - all_selected)}")
 
     suffix = "-final-updated.json"
     updated_ids = {
@@ -125,23 +148,31 @@ def main() -> None:
             "atom_to_token_idx",
         ],
         "output_layout": f"{args.data_root}/<split>/<pdb>/seed_<seed>/predictions",
+        "target_ids_file": str(args.target_ids_file) if args.target_ids_file else None,
+        "full_split_target_count": len(all_selected),
     }
 
     total_targets = 0
     for split in SPLITS:
-        expected = len(split_ids[split]) if args.allow_variable_split_counts else EXPECTED_COUNTS[split]
-        selected = split_ids[split]
+        full_selected = split_ids[split]
+        selected = full_selected if target_ids is None else full_selected & target_ids
+        expected = len(selected) if args.allow_variable_split_counts else EXPECTED_COUNTS[split]
         if len(selected) != expected:
             raise ValueError(
                 f"划分日志中 {split} 的 KEPT 数量为 {len(selected)}，预期 {expected}"
             )
         folders = directory_ids(args.data_root / split)
-        if folders != selected:
+        if folders != full_selected:
             raise ValueError(
                 f"Data_V1/{split} 与划分日志不一致："
-                f"missing={sorted(selected - folders)[:20]} "
-                f"extra={sorted(folders - selected)[:20]}"
+                f"missing={sorted(full_selected - folders)[:20]} "
+                f"extra={sorted(folders - full_selected)[:20]}"
             )
+        symlink_targets = sorted(
+            key for key in selected if (args.data_root / split / key.lower()).is_symlink()
+        )
+        if symlink_targets:
+            raise ValueError(f"scheduled targets must not be reused symlinks: {symlink_targets[:20]}")
         missing_master = selected - set(current_rows)
         missing_updated = selected - updated_ids
         missing_prep = selected - prep_ids
@@ -171,6 +202,7 @@ def main() -> None:
         target_count = len(selected)
         total_targets += target_count
         summary[f"{split}_count"] = target_count
+        summary[f"full_{split}_selected_count"] = len(full_selected)
         summary[f"expected_{split}_seed_tasks"] = target_count * len(args.seeds)
         summary[f"expected_{split}_decoys"] = (
             target_count * len(args.seeds) * args.samples

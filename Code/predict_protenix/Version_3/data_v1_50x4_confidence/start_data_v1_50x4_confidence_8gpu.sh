@@ -17,6 +17,7 @@ SPLIT_MANIFEST="${SPLIT_MANIFEST:-$USER_ROOT/Code/pipeline_reports/DATA_SPLIT_V1
 DATA_ROOT="${DATA_ROOT:-$USER_ROOT/Data_V1}"
 BASE_REPORT="${BASE_REPORT:-$USER_ROOT/Code/pipeline_reports/DATA_V1_50X4_CONFIDENCE}"
 ALLOW_VARIABLE_SPLIT_COUNTS="${ALLOW_VARIABLE_SPLIT_COUNTS:-0}"
+TARGET_IDS_FILE="${TARGET_IDS_FILE:-}"
 RUN_ID="${RUN_ID:-data_v1_50x4_conf_8gpu_$(date -u +%Y%m%dT%H%M%SZ)}"
 RUN_DIR="$BASE_REPORT/pred_runs/$RUN_ID"
 
@@ -113,6 +114,11 @@ count_args=()
 if [[ "$ALLOW_VARIABLE_SPLIT_COUNTS" == 1 ]]
 then
     count_args+=(--allow-variable-split-counts)
+fi
+if [[ -n "$TARGET_IDS_FILE" ]]
+then
+    [[ -f "$TARGET_IDS_FILE" ]] || die "TARGET_IDS_FILE does not exist: $TARGET_IDS_FILE"
+    count_args+=(--target-ids-file "$TARGET_IDS_FILE")
 fi
 "$PYTHON" "$PREPARE" \
     --master-manifest "$MASTER_MANIFEST" \
