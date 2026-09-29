@@ -6,21 +6,22 @@ new_run="${2:?Usage: bash run_v2_pt_retained.sh <V2 PT hard-link report director
 user_root="$HOME"
 run_name="step2_retained_$(date -u +%Y%m%dT%H%M%SZ)"
 
-python3 - "$plan/summary.json" "$new_run/summary.json" <<'PY'
+python3 - "$plan/summary.json" <<'PY'
 import json
 import sys
 from pathlib import Path
-plan, new = (json.loads(Path(path).read_text()) for path in sys.argv[1:])
+plan = json.loads(Path(sys.argv[1]).read_text())
 if (plan['mode'], plan['new_train_eligible'], plan['retained_eligible'],
         plan['blockers']) != ('EXECUTE_HARDLINKS', 40, 908, 0):
     raise SystemExit(f"V2 PT hard-link plan is incomplete: {plan}")
 if plan['created_hardlinks'] + plan['already_hardlinked'] != plan['old_main_pt_files']:
     raise SystemExit(f"old PT reuse count mismatch: {plan}")
-if (new['discovered_samples'], new['failed_samples'], new['issues']) != (8000, 0, 0):
-    raise SystemExit(f"new-train PT run is incomplete: {new}")
-if new['successful_samples'] + new['high_rmsd_saved_samples'] != 8000:
-    raise SystemExit(f"new-train PT accounting mismatch: {new}")
 PY
+
+python3 "$user_root/Code/Split_RNA_dataset/Version_2/validate_v2_new_train_pt.py" \
+  --new-pt-run "$new_run" \
+  --new-pdb-ids "$plan/new_train_pdb_ids.txt" \
+  --unusable-file "$user_root/Code/Split_RNA_dataset/Version_2/pt_unusable_new_train_v2.tsv"
 
 mapfile -t ids < "$plan/retained_eligible_pdb_ids.txt"
 [[ "${#ids[@]}" == 908 ]] || { echo "Expected 908 retained eligible IDs" >&2; exit 2; }

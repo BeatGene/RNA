@@ -13,6 +13,7 @@ python3 "$user_root/Code/Split_RNA_dataset/Version_2/audit_v2_pt_samples.py" \
   --high-pt-root "$user_root/Data_PT_V2_RMSD_GT30" \
   --exclude-pdb-file "$user_root/Code_Flow_matching/config/refinement_excluded_pdb_ids_v2.tsv" \
   --skip-pdb-file "$user_root/Code/Split_RNA_dataset/Version_2/pt_upstream_skipped_v2.tsv" \
+  --unusable-pdb-file "$user_root/Code/Split_RNA_dataset/Version_2/pt_unusable_new_train_v2.tsv" \
   --new-pt-run "$new_run" \
   --retained-pt-run "$retained_run" \
   --old-pt-run "$user_root/Data_PT_V1/logs/write_v1_rmsd30_20260916" \
@@ -33,7 +34,9 @@ python3 "$user_root/Code/Split_RNA_dataset/Version_2/audit_pdb_lifecycle.py" \
   --pred-audit "$new_pred/test/rounds/001/decoy_manifest.csv" \
   --pt-log-dir "$new_run" \
   --pt-log-dir "$retained_run" \
+  --pt-policy-file "$user_root/Code_Flow_matching/config/refinement_excluded_pdb_ids_v2.tsv" \
   --skip-pdb-file "$user_root/Code/Split_RNA_dataset/Version_2/pt_upstream_skipped_v2.tsv" \
+  --pt-unusable-file "$user_root/Code/Split_RNA_dataset/Version_2/pt_unusable_new_train_v2.tsv" \
   --output-dir "$report/lifecycle"
 
 python3 "$user_root/Code_Flow_matching/scripts/analyze_ranking_vs_rmsd.py" \

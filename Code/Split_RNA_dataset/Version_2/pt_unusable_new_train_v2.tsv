@@ -1,0 +1,7 @@
+PDB_ID	STATUS	REASON
+1QZA	SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+1QZB	SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+2Z9Q	SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+5K8H	SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+2JJA	UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+2XC6	UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue

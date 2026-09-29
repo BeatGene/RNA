@@ -88,6 +88,8 @@ def main() -> None:
     parser.add_argument("--high-pt-root", required=True, type=Path)
     parser.add_argument("--exclude-pdb-file", required=True, type=Path)
     parser.add_argument("--skip-pdb-file", required=True, type=Path)
+    parser.add_argument("--unusable-pdb-file", type=Path,
+                        help="Selected PDBs whose predicted samples have audited, unusable PT supervision")
     parser.add_argument("--new-pt-run", required=True, type=Path)
     parser.add_argument("--retained-pt-run", required=True, type=Path)
     parser.add_argument("--old-pt-run", required=True, type=Path)
@@ -126,6 +128,14 @@ def main() -> None:
         row["PDB_ID"].upper(): row["REASON"]
         for row in read_tsv(args.skip_pdb_file.expanduser())
     }
+    unusable = {
+        row["PDB_ID"].upper(): row
+        for row in read_tsv(args.unusable_pdb_file.expanduser())
+    } if args.unusable_pdb_file else {}
+    if set(unusable) & (excluded | set(skipped)):
+        raise ValueError("unusable PT PDB overlaps an upstream skip or PT policy exclusion")
+    if any(selected.get(pdb_id) != "train" for pdb_id in unusable):
+        raise ValueError("unusable PT PDB is not a selected V2 train target")
     run_dirs = [args.new_pt_run.expanduser(), args.retained_pt_run.expanduser()]
     main_rows = run_rows(run_dirs, "manifest.tsv")
     filtered_rows = run_rows(run_dirs, "filtered_samples.tsv")
@@ -168,6 +178,8 @@ def main() -> None:
         pred = prediction_keys(args.prediction_root.expanduser(), split, pdb_id)
         main = pt_keys(args.main_pt_root.expanduser(), split, pdb_id)
         high = pt_keys(args.high_pt_root.expanduser(), split, pdb_id)
+        if pdb_id in unusable and (main or high):
+            raise ValueError(f"unusable PT PDB unexpectedly has a PT file: {pdb_id}")
         logged_high = high_by_pdb[base]
         causes: Counter[str] = Counter()
         if pdb_id in skipped:
@@ -182,7 +194,10 @@ def main() -> None:
                                         "sample": sample, "stage": "prediction", "reason": cause})
             for seed, sample in sorted(pred - main - high):
                 key = (*base, seed, sample)
-                if key in sample_issues:
+                if pdb_id in unusable:
+                    cause = "PT_UNUSABLE_" + unusable[pdb_id]["STATUS"]
+                    detail = unusable[pdb_id]["REASON"]
+                elif key in sample_issues:
                     cause = "PT_BUILD_ERROR"
                     detail = " | ".join(sample_issues[key])
                 elif base in pdb_issues:
@@ -212,6 +227,8 @@ def main() -> None:
                                            "reason": "HIGH_PT_WITHOUT_RMSD_LOG"})
             if pred != expected_keys:
                 status = "PRED_INCOMPLETE"
+            elif pdb_id in unusable:
+                status = "PT_UNUSABLE_" + unusable[pdb_id]["STATUS"]
             elif causes["PT_BUILD_ERROR"] or causes["PT_PDB_ERROR"]:
                 status = "PT_BUILD_ERROR"
             elif (len(main | high) == 200 and not ((main | high) - pred)
@@ -284,6 +301,8 @@ def main() -> None:
         "high_rmsd_pt_count": sum(row["high_rmsd_pt_count"] for row in pdb_records),
         "missing_reason_counts": dict(Counter(row["reason"] for row in missing_records)),
         "old_gt30_recovery_counts": dict(Counter(row["recovery_status"] for row in old_recovery)),
+        "unusable_pt_pdb_count": len(unusable),
+        "unusable_pt_pdb_ids": sorted(unusable),
         "combined_pt_log": str(combined),
     }
     (output / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")

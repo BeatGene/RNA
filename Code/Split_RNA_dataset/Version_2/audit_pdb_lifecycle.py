@@ -24,6 +24,7 @@ FIELDS = (
     "UPSTREAM_SKIP", "UPSTREAM_SKIP_REASON",
     "PT_COUNT", "PT_ISSUE_COUNT", "PT_RMSD_GT30_COUNT", "PT_RMSD_GT30_SAVED_COUNT", "PT_RMSD_GT30_SOURCE",
     "PT_POLICY_EXCLUDED", "PT_POLICY_REASON", "PT_EXPECTED_COUNT", "PT_ACCOUNTED_COUNT",
+    "PT_UNUSABLE_STATUS", "PT_UNUSABLE_REASON",
     "NEXT_STAGE", "EVIDENCE_NOTE",
 )
 
@@ -113,6 +114,19 @@ def policy_exclusions(log_dirs: list[Path]) -> dict[tuple[str, str], str]:
     return excluded
 
 
+def policy_file_exclusions(path: Path) -> dict[tuple[str, str], str]:
+    excluded: dict[tuple[str, str], str] = {}
+    for row in tsv_rows(path):
+        split = row["split"].strip().lower()
+        pdb_id = row["pdb_id"].strip().upper()
+        reason = row["reason"].strip()
+        key = (split, pdb_id)
+        if split not in SPLITS or not pdb_id or not reason or key in excluded:
+            raise ValueError(f"invalid or duplicate PT policy exclusion: {key}")
+        excluded[key] = reason
+    return excluded
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--split-report", required=True, type=Path)
@@ -124,8 +138,12 @@ def main() -> None:
     parser.add_argument("--pred-audit", action="append", default=[], type=Path,
                         help="stage2 decoy_manifest.csv; pass once per split")
     parser.add_argument("--pt-log-dir", action="append", default=[], type=Path)
+    parser.add_argument("--pt-policy-file", type=Path,
+                        help="Authoritative PDB_ID/split/reason TSV for PT policy exclusions")
     parser.add_argument("--skip-pdb-file", type=Path,
                         help="PDB_ID/REASON TSV for assigned targets intentionally skipped before prediction")
+    parser.add_argument("--pt-unusable-file", type=Path,
+                        help="PDB_ID/STATUS/REASON TSV for selected targets with unusable PT supervision")
     args = parser.parse_args()
     report = args.split_report.expanduser().resolve()
     output = args.output_dir.expanduser().resolve()
@@ -155,6 +173,17 @@ def main() -> None:
     high = filtered_counts(args.pt_log_dir)
     issues = issue_counts(args.pt_log_dir)
     pt_exclusions = policy_exclusions(args.pt_log_dir)
+    if args.pt_policy_file is not None:
+        configured = policy_file_exclusions(args.pt_policy_file.expanduser().resolve())
+        for key, reason in configured.items():
+            actual_split = manifest.get(key[1], {}).get("FINAL_SPLIT", "").lower()
+            if key[1] not in manifest or (actual_split and actual_split != key[0]):
+                raise ValueError(f"PT policy exclusion disagrees with split manifest: {key}")
+            if key in pt_exclusions and pt_exclusions[key] != reason:
+                raise ValueError(f"PT policy exclusion reason differs from PT log: {key}")
+        if set(pt_exclusions) - set(configured):
+            raise ValueError("PT logs contain exclusions missing from PT policy file")
+        pt_exclusions = configured
     progress("index_outputs", 1, 1)
     skipped = {}
     if args.skip_pdb_file is not None:
@@ -164,6 +193,11 @@ def main() -> None:
             if not pdb_id or not reason or pdb_id in skipped:
                 raise ValueError(f"invalid or duplicate upstream skip PDB: {pdb_id}")
             skipped[pdb_id] = reason
+    unusable = keyed(tsv_rows(args.pt_unusable_file.expanduser().resolve())) if args.pt_unusable_file else {}
+    if any(manifest.get(pdb_id, {}).get("FINAL_SPLIT") != "train" for pdb_id in unusable):
+        raise ValueError("PT unusable list contains a PDB outside the V2 train split")
+    if set(unusable) & set(skipped):
+        raise ValueError("PT unusable PDB overlaps an upstream skip")
     pred_audit = {}
     for audit_path in args.pred_audit:
         with audit_path.expanduser().open("r", encoding="utf-8-sig", newline="") as handle:
@@ -196,6 +230,7 @@ def main() -> None:
         issue_count = issues[(split, pdb_id)] if split else 0
         pt_policy_reason = pt_exclusions.get((split, pdb_id), "") if split else ""
         upstream_skip_reason = skipped.get(pdb_id, "") if split else ""
+        pt_unusable = unusable.get(pdb_id, {}) if split else {}
         pred_row = pred_audit.get(pdb_id, {})
         audit_status = pred_row.get("OVERALL_STATUS", "")
         prep_status = pred_row.get("PREP_STATUS", "")
@@ -217,6 +252,9 @@ def main() -> None:
                 else "PRED_SKIPPED_UPSTREAM"
             )
             note = upstream_skip_reason
+        elif pt_unusable:
+            stage = "PT_UNUSABLE_" + pt_unusable["STATUS"]
+            note = pt_unusable["REASON"]
         elif args.prediction_root is None and args.pt_root is None and prep_ids is None and not pred_audit:
             stage = "NOT_AUDITED"
             note = "server stage paths were not provided"
@@ -293,6 +331,8 @@ def main() -> None:
             ) if high_count or high_pt_count else "",
             "PT_POLICY_EXCLUDED": bool(pt_policy_reason) if split else "",
             "PT_POLICY_REASON": pt_policy_reason,
+            "PT_UNUSABLE_STATUS": pt_unusable.get("STATUS", ""),
+            "PT_UNUSABLE_REASON": pt_unusable.get("REASON", ""),
             "PT_EXPECTED_COUNT": effective_pred_count if split and (args.prediction_root is not None or pred_valid) else "",
             "PT_ACCOUNTED_COUNT": pt_accounted_count if split and args.pt_root is not None else "",
             "NEXT_STAGE": stage,
@@ -310,6 +350,7 @@ def main() -> None:
         "assigned_counts": dict(Counter(row["FINAL_SPLIT"] for row in rows if row["FINAL_SPLIT"])),
         "stage_counts": dict(stages),
         "upstream_skipped_assigned": sum(bool(row["UPSTREAM_SKIP"]) for row in rows),
+        "pt_unusable_assigned": len(unusable),
         "limitations": "Counts locate the next stage; use run logs for failure cause. Run the audit with matching split, prediction and PT versions. High-RMSD saved counts require the separate PT directory and matching PT log.",
     }
     (output / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")

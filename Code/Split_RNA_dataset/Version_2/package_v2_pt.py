@@ -16,8 +16,9 @@ BUNDLES = {
     "V2_PT_WORKFLOW_20260929.zip": {
         name: VERSION / name
         for name in (
-            "pt_upstream_skipped_v2.tsv", "plan_v2_pt_reuse.py",
-            "audit_v2_pt_samples.py", "audit_pdb_lifecycle.py",
+            "pt_upstream_skipped_v2.tsv", "pt_unusable_new_train_v2.tsv",
+            "plan_v2_pt_reuse.py", "validate_v2_new_train_pt.py",
+            "audit_v2_pt_samples.py", "audit_pdb_lifecycle.py", "correct_v2_lifecycle_policy.py",
             "run_v2_pt_reuse_plan.sh", "run_v2_pt_new_train.sh",
             "run_v2_pt_retained.sh", "run_v2_pt_final_audit.sh",
             "V2_PT_RECOVERY_20260929.md",

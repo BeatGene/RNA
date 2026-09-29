@@ -2,6 +2,8 @@
 
 本流程保留已完成的 V2 划分。`9R82` 因 7587-token 复合物在 140 GiB GPU 上预测 OOM，保留空预测目录，跳过 PT。10 个已入选但放弃 prep 的 PDB 同样跳过；4 个未入选的 3DG* 仅保留在状态名单中。V2 的 PT 策略排除清单覆盖 56 个已入选 PDB，不把它们当成 PT 失败。已复用的 964 个预测目录不再预测。
 
+新增 train 的 PT 首轮运行 `step1_new_train_20260929T073447Z` 在 40×200 个预测中生成 5620 个正常 PT、1180 个单独保存的高 RMSD PT。其余 6 个 PDB 各有 200 个 PT 失败：`1QZA`、`1QZB`、`2Z9Q` 的 native 各仅有约 75 个 RNA 原子，`5K8H` 的 7 个残基中只有 2 个有坐标；`2JJA`、`2XC6` 涉及不能证明唯一 A/C/G/U 身份的修饰残基。它们仍属于 V2 train，但不作为训练 PT 使用；原因及逐样本失败证据保存在 `pt_unusable_new_train_v2.tsv` 和原运行的 `issues.tsv`。不得通过降低监督比例阈值或强行指定未知碱基来伪造可用 PT。
+
 ## 目录与产物
 
 - 正常 PT：`~/Data_PT_V2/<split>/<pdb>/seed_<seed>/sample_<index>.pt`。
@@ -13,10 +15,10 @@
 
 1. 上传 `V2_PT_CODE_20260929.zip` 到 `~/Code_Flow_matching/`，上传 `V2_PT_WORKFLOW_20260929.zip` 到 `~/Code/Split_RNA_dataset/Version_2/`。分别在这两个目录执行 `python3 -m zipfile -e <包名> .`。运行 `bash -n` 检查所有新 shell 脚本。
 2. 运行 `bash ~/Code/Split_RNA_dataset/Version_2/run_v2_pt_reuse_plan.sh dry-run`。核对 `summary.json`：988 个 V1、1015 个 V2、964 个保留、40 个新增 train PT 目标、908 个旧目标可复用、11 个已入选上游跳过、56 个 V2 PT 策略排除；`blockers=0`。保存此 dry-run 报告路径。
-3. 用上一步报告路径执行 `bash ~/Code/Split_RNA_dataset/Version_2/run_v2_pt_new_train.sh <dry-run报告目录>`。此步处理新增 train 的 40×200 个预测。报告 `discovered_samples=8000`，`failed_samples=issues=0`，`successful_samples+high_rmsd_saved_samples=8000` 才进入下一步。高 RMSD PT 已写入单独目录。
-4. 运行 `bash ~/Code/Split_RNA_dataset/Version_2/run_v2_pt_reuse_plan.sh execute`。此步仅将 V2 保留且符合 PT 策略的旧主 PT 逐文件硬链接到新 PT 根目录。检查 `created_hardlinks+already_hardlinked=old_main_pt_files`、`blockers=0`；保存 execute 报告路径。
+3. 新增 train 的 PT 首轮已经运行。先用 `validate_v2_new_train_pt.py` 核对全部 8000 个候选：34 个 PDB 各有 200 个保存的正常或高 RMSD PT；6 个有稀疏 native 坐标或修饰残基歧义的 PDB 各有 200 条预期失败记录，且无 PT 文件。验证器发现任何额外失败、重复样本、缺失文件或错误原因变化都会停止。
+4. 运行 `bash ~/Code/Split_RNA_dataset/Version_2/run_v2_pt_reuse_plan.sh execute <dry-run报告目录> <第3步PT报告目录>`。脚本先自动验证第 3 步的实际运行结果，再将 V2 保留且符合 PT 策略的旧主 PT 逐文件硬链接到新 PT 根目录。检查 `created_hardlinks+already_hardlinked=old_main_pt_files`、`blockers=0`；保存 execute 报告路径。
 5. 执行 `bash ~/Code/Split_RNA_dataset/Version_2/run_v2_pt_retained.sh <execute报告目录> <第3步PT报告目录>`。此步处理 908 个保留旧目标；已有正常 PT 经版本检查后跳过，旧版因 RMSD＞30 Å 未保存的候选重新构建至单独目录，旧版 `9ZC9` 的 200 个预测也纳入。若有问题，报告仍会列出逐样本 `issues.tsv`；不要删除目录或用 `--overwrite`。
-6. 执行 `bash ~/Code/Split_RNA_dataset/Version_2/run_v2_pt_final_audit.sh <第3步PT报告目录> <第5步PT报告目录>`。输出 `per_pdb.tsv`、`missing_samples.tsv`、`old_gt30_recovery.tsv`、`summary.json`、`ranking_vs_rmsd/` 和 `lifecycle/pdb_lifecycle.tsv`。逐 PDB 表检查有 200 个预测的 PDB 是否得到合计 200 个正常或高 RMSD PT；缺失样本按预测缺失、PT 构建错误、高 RMSD 未保存等原因分类。`lifecycle/` 涵盖全部 2246 个源 PDB，并保留未划分原因。
+6. 执行 `bash ~/Code/Split_RNA_dataset/Version_2/run_v2_pt_final_audit.sh <第3步PT报告目录> <第5步PT报告目录>`。输出 `per_pdb.tsv`、`missing_samples.tsv`、`old_gt30_recovery.tsv`、`summary.json`、`ranking_vs_rmsd/` 和 `lifecycle/pdb_lifecycle.tsv`。逐 PDB 表检查有 200 个预测的 PDB 是否得到合计 200 个正常或高 RMSD PT；6 个已确认 PT 不可用的 PDB 单独标明稀疏 native 坐标或修饰残基映射歧义，其余缺失样本按原因分类。`lifecycle/` 涵盖全部 2246 个源 PDB，并保留未划分原因。
 
 `Data_PT_V2` 与 `Data_PT_V1` 的硬链接共享底层文件；生成器以临时文件原子替换 V2 路径，未使用 `--overwrite`，不会原地改写 V1 文件。之后若要修改 PT 文件内容，应先将对应硬链接复制成独立文件。旧版 `filtered_samples.tsv` 中 3168 个候选属于整个 V1 选集；最终 `old_gt30_recovery.tsv` 只统计 V2 中保留且符合 PT 策略的交集，不应要求全部 3168 个进入 V2。
 
