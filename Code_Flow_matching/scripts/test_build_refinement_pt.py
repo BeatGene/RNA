@@ -597,6 +597,7 @@ class BuildRefinementPtTest(unittest.TestCase):
                 "--output-root", str(output_root),
                 "--exclude-pdb-file", str(exclusion_file),
                 "--max-pre-refinement-rmsd", "0.01",
+                "--expected-samples", "2",
                 "--split", "train",
                 "--dry-run",
                 "--run-name", "unittest_dry_run",
@@ -625,6 +626,8 @@ class BuildRefinementPtTest(unittest.TestCase):
             self.assertTrue((run_dir / "filtered_samples.tsv").is_file())
             self.assertTrue((run_dir / "excluded_pdbs.tsv").is_file())
             self.assertTrue((run_dir / "run.log").is_file())
+            self.assertIn("PROGRESS [####################] 100.0% samples=2/2",
+                          (run_dir / "run.log").read_text(encoding="utf-8"))
             self.assertIn(
                 "2DEF", (run_dir / "issues.tsv").read_text(encoding="utf-8")
             )

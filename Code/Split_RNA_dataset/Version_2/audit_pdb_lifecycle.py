@@ -129,6 +129,18 @@ def main() -> None:
     args = parser.parse_args()
     report = args.split_report.expanduser().resolve()
     output = args.output_dir.expanduser().resolve()
+    output.mkdir(parents=True, exist_ok=True)
+
+    def progress(stage: str, done: int, total: int) -> None:
+        fraction = done / total if total else 1.0
+        filled = int(fraction * 20)
+        line = (f"PROGRESS {stage} [{'#' * filled}{'-' * (20 - filled)}] "
+                f"{fraction * 100:.1f}% {done}/{total}")
+        print(line, flush=True)
+        with (output / "run.log").open("a", encoding="utf-8") as handle:
+            handle.write(line + "\n")
+
+    progress("index_outputs", 0, 1)
     inventory = keyed(tsv_rows(report / "source_inventory.tsv"))
     manifest = keyed(tsv_rows(report / "final_manifest.tsv"))
     selection = keyed(tsv_rows(report / "selection_audit.tsv"))
@@ -143,6 +155,7 @@ def main() -> None:
     high = filtered_counts(args.pt_log_dir)
     issues = issue_counts(args.pt_log_dir)
     pt_exclusions = policy_exclusions(args.pt_log_dir)
+    progress("index_outputs", 1, 1)
     skipped = {}
     if args.skip_pdb_file is not None:
         for row in tsv_rows(args.skip_pdb_file.expanduser().resolve()):
@@ -170,7 +183,8 @@ def main() -> None:
         }
     rows = []
     stages = Counter()
-    for pdb_id in sorted(inventory):
+    progress("pdb_lifecycle", 0, len(inventory))
+    for index, pdb_id in enumerate(sorted(inventory), 1):
         source = inventory[pdb_id]
         assigned = manifest.get(pdb_id, {})
         choice = selection.get(pdb_id, {})
@@ -197,7 +211,11 @@ def main() -> None:
             stage = "NOT_ASSIGNED"
             note = "see FINAL_STATUS and EXCLUSION_REASON"
         elif upstream_skip_reason:
-            stage = "PREP_ABANDONED_LONG_CHAIN"
+            stage = (
+                "PREP_ABANDONED_LONG_CHAIN"
+                if upstream_skip_reason == "PROTENIX_PREP_ABANDONED_LONG_CHAIN"
+                else "PRED_SKIPPED_UPSTREAM"
+            )
             note = upstream_skip_reason
         elif args.prediction_root is None and args.pt_root is None and prep_ids is None and not pred_audit:
             stage = "NOT_AUDITED"
@@ -280,6 +298,8 @@ def main() -> None:
             "NEXT_STAGE": stage,
             "EVIDENCE_NOTE": note,
         })
+        if index % 100 == 0 or index == len(inventory):
+            progress("pdb_lifecycle", index, len(inventory))
     output.mkdir(parents=True, exist_ok=True)
     with (output / "pdb_lifecycle.tsv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, delimiter="\t", fieldnames=FIELDS)

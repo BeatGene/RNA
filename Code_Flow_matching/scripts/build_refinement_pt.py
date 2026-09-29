@@ -18,6 +18,7 @@ import json
 import math
 import os
 import re
+import threading
 import time
 from collections import defaultdict
 from dataclasses import dataclass
@@ -1243,6 +1244,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--fail-fast", action="store_true")
+    parser.add_argument("--expected-samples", type=int,
+                        help="Expected sample attempts for progress reporting (does not change selection)")
+    parser.add_argument("--progress-interval-seconds", type=float, default=60.0,
+                        help="Write a progress heartbeat to run.log at this interval (default: 60)")
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -1276,6 +1281,10 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit("--min-observed-atom-fraction must be in [0, 1]")
     if args.max_pre_refinement_rmsd <= 0.0:
         raise SystemExit("--max-pre-refinement-rmsd must be greater than zero")
+    if args.expected_samples is not None and args.expected_samples <= 0:
+        raise SystemExit("--expected-samples must be greater than zero")
+    if args.progress_interval_seconds <= 0:
+        raise SystemExit("--progress-interval-seconds must be greater than zero")
     if args.run_name and not re.fullmatch(r"[A-Za-z0-9._-]+", args.run_name):
         raise SystemExit(
             "--run-name may contain only letters, digits, dot, underscore and hyphen"
@@ -1320,12 +1329,15 @@ def main(argv: list[str] | None = None) -> int:
     run_dir.mkdir(parents=False, exist_ok=False)
     run_log_path = run_dir / "run.log"
 
+    log_lock = threading.Lock()
+
     def emit(message: str) -> None:
         timestamp = datetime.now(timezone.utc).isoformat()
         line = f"[{timestamp}] {message}"
-        print(line, flush=True)
-        with run_log_path.open("a", encoding="utf-8") as handle:
-            handle.write(line + "\n")
+        with log_lock:
+            print(line, flush=True)
+            with run_log_path.open("a", encoding="utf-8") as handle:
+                handle.write(line + "\n")
 
     emit(
         f"START mode={mode_name} splits={','.join(args.split)} "
@@ -1342,6 +1354,35 @@ def main(argv: list[str] | None = None) -> int:
     excluded_pdbs: list[dict] = []
     skipped_pdbs: list[dict] = []
     discovered_samples = 0
+    progress_samples_done = 0
+    progress_pdb_done = 0
+    progress_active = "idle"
+    progress_expected_pdbs = len(selected_ids) if selected_ids is not None else None
+    progress_stop = threading.Event()
+
+    def emit_progress() -> None:
+        elapsed = time.perf_counter() - run_started
+        total = args.expected_samples
+        done = progress_samples_done
+        fraction = min(done / total, 1.0) if total else None
+        bar = ("[" + "#" * int(fraction * 20) + "-" * (20 - int(fraction * 20)) + "]") if fraction is not None else ""
+        percent = f"{fraction * 100:.1f}%" if fraction is not None else "unknown"
+        eta = (format_duration(elapsed / done * (total - done))
+               if total and done and done < total else "unknown")
+        emit(
+            f"PROGRESS {bar} {percent} samples={done}/{total if total else '?'} "
+            f"pdbs={progress_pdb_done}/{progress_expected_pdbs if progress_expected_pdbs is not None else '?'} "
+            f"active={progress_active} normal={len(manifest)} high={len(filtered_samples)} "
+            f"issues={len(issues)} elapsed={format_duration(elapsed)} eta_approx={eta}"
+        )
+
+    def heartbeat() -> None:
+        while not progress_stop.wait(args.progress_interval_seconds):
+            emit_progress()
+
+    progress_thread = threading.Thread(target=heartbeat, name="pt-progress", daemon=True)
+    progress_thread.start()
+    emit_progress()
     excluded_prediction_samples = 0
     total_estimated_pt_bytes = 0
     for split in args.split:
@@ -1354,6 +1395,7 @@ def main(argv: list[str] | None = None) -> int:
             pdb_id = pdb_dir.name.lower()
             if selected_ids is not None and pdb_id not in selected_ids:
                 continue
+            progress_active = f"{split}/{pdb_id.upper()}"
             if pdb_id in skipped_pdb_ids:
                 skipped_pdbs.append({
                     "split": split,
@@ -1364,6 +1406,9 @@ def main(argv: list[str] | None = None) -> int:
                     f"PDB_SKIPPED_UPSTREAM split={split} pdb_id={pdb_id.upper()} "
                     f"reason={skipped_pdb_ids[pdb_id]}"
                 )
+                progress_pdb_done += 1
+                progress_active = "idle"
+                emit_progress()
                 continue
             if pdb_id in excluded_pdb_ids:
                 exclusion = excluded_pdb_ids[pdb_id]
@@ -1381,6 +1426,9 @@ def main(argv: list[str] | None = None) -> int:
                     f"prediction_samples={prediction_count} "
                     f"reason={exclusion['reason']}"
                 )
+                progress_pdb_done += 1
+                progress_active = "idle"
+                emit_progress()
                 continue
             pdb_started = time.perf_counter()
             manifest_before = len(manifest)
@@ -1415,6 +1463,7 @@ def main(argv: list[str] | None = None) -> int:
                     raise FileNotFoundError(rnafm_path)
                 for pred_cif, confidence_json, seed, sample_number in predictions:
                     sample_started = time.perf_counter()
+                    progress_active = f"{split}/{pdb_id.upper()}/seed_{seed}/sample_{sample_number}"
                     try:
                         output_path = args.output_root / split / pdb_id / f"seed_{seed}" / f"sample_{sample_number}.pt"
                         estimated_pt_bytes = ""
@@ -1525,6 +1574,8 @@ def main(argv: list[str] | None = None) -> int:
                             raise
                         if args.fail_fast:
                             raise
+                    finally:
+                        progress_samples_done += 1
             except Exception as exc:  # continue bulk generation but make every failure auditable
                 issues.append({"split": split, "pdb_id": pdb_id.upper(), "sample": "", "duration_seconds": "", "error": f"{type(exc).__name__}: {exc}"})
                 if args.fail_fast or (
@@ -1532,6 +1583,8 @@ def main(argv: list[str] | None = None) -> int:
                 ):
                     raise
             finally:
+                progress_pdb_done += 1
+                progress_active = "idle"
                 emit(
                     f"PDB_DONE split={split} pdb_id={pdb_id.upper()} "
                     f"discovered={prediction_count} "
@@ -1540,6 +1593,10 @@ def main(argv: list[str] | None = None) -> int:
                     f"issues={len(issues) - issues_before} "
                     f"seconds={time.perf_counter() - pdb_started:.3f}"
                 )
+                emit_progress()
+    progress_stop.set()
+    progress_thread.join(timeout=1.0)
+    emit_progress()
     manifest_path = run_dir / "manifest.tsv"
     issues_path = run_dir / "issues.tsv"
     filtered_samples_path = run_dir / "filtered_samples.tsv"

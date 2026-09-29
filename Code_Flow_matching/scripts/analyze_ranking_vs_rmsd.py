@@ -63,6 +63,18 @@ def main() -> None:
     args = parser.parse_args()
     run = args.pt_run_dir.expanduser().resolve()
     output = args.output_dir.expanduser().resolve()
+    output.mkdir(parents=True, exist_ok=True)
+
+    def progress(stage: str, done: int, total: int) -> None:
+        fraction = done / total if total else 1.0
+        filled = int(fraction * 20)
+        line = (f"PROGRESS {stage} [{'#' * filled}{'-' * (20 - filled)}] "
+                f"{fraction * 100:.1f}% {done}/{total}")
+        print(line, flush=True)
+        with (output / "run.log").open("a", encoding="utf-8") as handle:
+            handle.write(line + "\n")
+
+    progress("load_pt_scores", 0, 2)
     score_files = {}
     if args.prediction_root is not None:
         root = args.prediction_root.expanduser().resolve()
@@ -78,7 +90,7 @@ def main() -> None:
                     raise ValueError(f"duplicate ranking score file for {key}")
                 score_files[key] = path
     by_key = {}
-    for name in ("manifest.tsv", "filtered_samples.tsv"):
+    for file_index, name in enumerate(("manifest.tsv", "filtered_samples.tsv"), 1):
         for row in read_tsv(run / name):
             key = (row["split"].lower(), row["pdb_id"].upper(), str(row["seed"]), str(row["sample"]))
             if key in by_key:
@@ -96,8 +108,8 @@ def main() -> None:
                            "sample": key[3], "rmsd": rmsd, "score": score,
                            "bad": rmsd > args.rmsd_threshold,
                            "pt_category": "rmsd_filtered" if name == "filtered_samples.tsv" else "main"}
+        progress("load_pt_scores", file_index, 2)
     rows = list(by_key.values())
-    output.mkdir(parents=True, exist_ok=True)
     with (output / "candidates.tsv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=("split", "pdb_id", "seed", "sample",
                                   "rmsd", "score", "bad", "pt_category"), delimiter="\t")
@@ -138,7 +150,8 @@ def main() -> None:
     if len(thresholds) > 201:
         thresholds = sorted({thresholds[round(i * (len(thresholds) - 1) / 200)] for i in range(201)})
     curve = []
-    for threshold in thresholds:
+    progress("score_cutoff_curve", 0, len(thresholds))
+    for index, threshold in enumerate(thresholds, 1):
         for split in ("train", "val", "test"):
             group = [row for row in rows if row["split"] == split and row["score"] is not None]
             bad_total = sum(row["bad"] for row in group)
@@ -149,6 +162,8 @@ def main() -> None:
                           "bad_recall": bad_removed / bad_total if bad_total else "",
                           "good_removed_fraction": good_removed / good_total if good_total else "",
                           "bad_removed": bad_removed, "good_removed": good_removed})
+        if index % 10 == 0 or index == len(thresholds):
+            progress("score_cutoff_curve", index, len(thresholds))
     with (output / "score_cutoff_curve.tsv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=("split", "score_cutoff_exclusive", "bad_recall",
                                   "good_removed_fraction", "bad_removed", "good_removed"), delimiter="\t")
