@@ -1145,6 +1145,27 @@ def load_excluded_pdb_ids(path: Path) -> dict[str, dict[str, str]]:
     return excluded
 
 
+def load_skipped_pdb_ids(path: Path | None) -> dict[str, str]:
+    """Load upstream-unavailable PDBs, distinct from the PT exclusion policy."""
+    if path is None:
+        return {}
+    path = path.expanduser().resolve()
+    if not path.is_file():
+        raise FileNotFoundError(f"PDB skip file does not exist: {path}")
+    skipped: dict[str, str] = {}
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        if reader.fieldnames is None or not {"PDB_ID", "REASON"}.issubset(reader.fieldnames):
+            raise ValueError(f"skip TSV must contain PDB_ID and REASON columns: {path}")
+        for line_number, row in enumerate(reader, start=2):
+            pdb_id = (row.get("PDB_ID") or "").strip().lower()
+            reason = (row.get("REASON") or "").strip()
+            if not pdb_id or not reason or pdb_id in skipped:
+                raise ValueError(f"invalid or duplicate skip row at {path}:{line_number}: {row}")
+            skipped[pdb_id] = reason
+    return skipped
+
+
 def load_resumable_sample(path: Path, max_pre_refinement_rmsd: float) -> dict:
     payload = torch.load(path, map_location="cpu", weights_only=True)
     if (not isinstance(payload, dict)
@@ -1176,6 +1197,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "TSV with pdb_id, split and reason columns (default: "
             f"{DEFAULT_EXCLUSION_FILE})"
         ),
+    )
+    parser.add_argument(
+        "--skip-pdb-file", type=Path,
+        help="TSV of upstream-unavailable PDBs (PDB_ID, REASON); report separately from PT policy exclusions",
     )
     parser.add_argument(
         "--log-dir",
@@ -1266,7 +1291,12 @@ def main(argv: list[str] | None = None) -> int:
                 or args.high_rmsd_root in args.output_root.resolve().parents):
             raise SystemExit("--high-rmsd-root must be outside --output-root")
     args.exclude_pdb_file = args.exclude_pdb_file.expanduser().resolve()
+    if args.skip_pdb_file is not None:
+        args.skip_pdb_file = args.skip_pdb_file.expanduser().resolve()
     excluded_pdb_ids = load_excluded_pdb_ids(args.exclude_pdb_file)
+    skipped_pdb_ids = load_skipped_pdb_ids(args.skip_pdb_file)
+    if set(excluded_pdb_ids) & set(skipped_pdb_ids):
+        raise ValueError("PDBs cannot appear in both --exclude-pdb-file and --skip-pdb-file")
     ccd_components_file = resolve_ccd_components_file(args.ccd_components_file)
     run_started = time.perf_counter()
     started_datetime = datetime.now(timezone.utc)
@@ -1310,6 +1340,7 @@ def main(argv: list[str] | None = None) -> int:
     filtered_samples: list[dict] = []
     high_rmsd_saved = 0
     excluded_pdbs: list[dict] = []
+    skipped_pdbs: list[dict] = []
     discovered_samples = 0
     excluded_prediction_samples = 0
     total_estimated_pt_bytes = 0
@@ -1322,6 +1353,17 @@ def main(argv: list[str] | None = None) -> int:
         for pdb_dir in sorted(path for path in split_dir.iterdir() if path.is_dir()):
             pdb_id = pdb_dir.name.lower()
             if selected_ids is not None and pdb_id not in selected_ids:
+                continue
+            if pdb_id in skipped_pdb_ids:
+                skipped_pdbs.append({
+                    "split": split,
+                    "pdb_id": pdb_id.upper(),
+                    "reason": skipped_pdb_ids[pdb_id],
+                })
+                emit(
+                    f"PDB_SKIPPED_UPSTREAM split={split} pdb_id={pdb_id.upper()} "
+                    f"reason={skipped_pdb_ids[pdb_id]}"
+                )
                 continue
             if pdb_id in excluded_pdb_ids:
                 exclusion = excluded_pdb_ids[pdb_id]
@@ -1502,6 +1544,7 @@ def main(argv: list[str] | None = None) -> int:
     issues_path = run_dir / "issues.tsv"
     filtered_samples_path = run_dir / "filtered_samples.tsv"
     excluded_pdbs_path = run_dir / "excluded_pdbs.tsv"
+    skipped_pdbs_path = run_dir / "skipped_pdbs.tsv"
     summary_path = run_dir / "summary.json"
     write_tsv(
         manifest_path,
@@ -1526,6 +1569,11 @@ def main(argv: list[str] | None = None) -> int:
         excluded_pdbs_path,
         excluded_pdbs,
         ["split", "pdb_id", "policy_split", "prediction_samples", "reason"],
+    )
+    write_tsv(
+        skipped_pdbs_path,
+        skipped_pdbs,
+        ["split", "pdb_id", "reason"],
     )
     elapsed_seconds = time.perf_counter() - run_started
     problem_pdb_ids = sorted({row["pdb_id"] for row in issues if row["pdb_id"]})
@@ -1589,6 +1637,8 @@ def main(argv: list[str] | None = None) -> int:
         "excluded_pdb_count": len(excluded_pdbs),
         "excluded_pdb_ids": [row["pdb_id"] for row in excluded_pdbs],
         "excluded_prediction_samples": excluded_prediction_samples,
+        "upstream_skipped_pdb_count": len(skipped_pdbs),
+        "upstream_skipped_pdb_ids": [row["pdb_id"] for row in skipped_pdbs],
         "rmsd_filtered_samples": len(filtered_samples),
         "high_rmsd_saved_samples": high_rmsd_saved,
         "high_rmsd_root": str(args.high_rmsd_root) if args.high_rmsd_root else None,
@@ -1624,10 +1674,12 @@ def main(argv: list[str] | None = None) -> int:
             str(ccd_components_file) if ccd_components_file else None
         ),
         "exclude_pdb_file": str(args.exclude_pdb_file),
+        "skip_pdb_file": str(args.skip_pdb_file) if args.skip_pdb_file else None,
         "manifest_path": str(manifest_path),
         "issues_path": str(issues_path),
         "filtered_samples_path": str(filtered_samples_path),
         "excluded_pdbs_path": str(excluded_pdbs_path),
+        "skipped_pdbs_path": str(skipped_pdbs_path),
         "summary_path": str(summary_path),
     }
     summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")

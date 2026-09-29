@@ -78,6 +78,9 @@ def build(old_dir: Path, new_dir: Path, output: Path) -> None:
     new_selected = {p: row["FINAL_SPLIT"] for p, row in new_manifest.items() if row["FINAL_SPLIT"]}
     removed = sorted(old_selected.keys() - new_selected.keys())
     added = sorted(new_selected.keys() - old_selected.keys())
+    abandoned_file = Path(__file__).with_name("prep_abandoned_long_chain_v2.tsv")
+    abandoned = {row["PDB_ID"] for row in read_tsv(abandoned_file)}
+    assert len(abandoned) == 14 and len(abandoned & set(new_selected)) == 10
     retained = old_selected.keys() & new_selected.keys()
     moved = [p for p in retained if old_selected[p] != new_selected[p]]
     assert not moved, f"PDBs changed split: {moved}"
@@ -96,6 +99,8 @@ def build(old_dir: Path, new_dir: Path, output: Path) -> None:
     overview.append(["已入选 PDB 总数", len(old_selected), len(new_selected), f"净增加 {len(added) - len(removed)}"])
     overview.append(["从旧版移出", len(removed), "", "见“移出24个”工作表；均原属测试集"])
     overview.append(["新版新增", "", len(added), "见“新增51个”工作表"])
+    overview.append(["新增中 prep 已放弃", "", len(abandoned & set(added)), "9 个 train、1 个 val；保留划分，后续任务跳过"])
+    overview.append(["新增中 prep 可用", "", len(set(added) - abandoned), "40 个 train、1 个 test；需新增 50×4 预测"])
     overview.append(["跨 train/val/test 移动", 0, 0, "保留条目无跨集合移动"])
     overview.append(["比较范围", "PDB_ID", "PDB_ID", "比较最终入选名单；原始 CIF 未删除"])
     overview.append(["移出：与 train/val 同源", "", 22, "短序列全局比对命中；具体对象和指标见明细"])
@@ -166,7 +171,7 @@ def build(old_dir: Path, new_dir: Path, output: Path) -> None:
     added_sheet.append([
         "PDB_ID", "新版划分", "旧版未入选状态", "旧版未入选具体原因", "旧版 rank-1 RMSD Å",
         "旧版 RMSD 评估状态", "新版 RMSD 评估状态", "RNA 长度 nt", "原始 CIF 路径",
-        "原始 CIF SHA256", "新版目录",
+        "原始 CIF SHA256", "新版目录", "后续处理状态",
     ])
     for pdb in added:
         old = old_manifest[pdb]
@@ -178,6 +183,8 @@ def build(old_dir: Path, new_dir: Path, output: Path) -> None:
             as_number(old["STRICT_RANK1_RMSD_ANGSTROM"]), audit["RMSD_EVAL_STATUS"],
             new_audit[pdb]["RMSD_EVAL_STATUS"], as_number(new_audit[pdb]["RNA_LENGTH"]),
             old_source[pdb]["CIF_PATH"], old_source[pdb]["SHA256"], new["TARGET_DIRECTORY"],
+            ("保留划分；超长链 prep 已放弃，预测/PT/训练跳过" if pdb in abandoned
+             else "prep 可用；需新增 50×4 预测"),
         ])
         added_sheet.cell(added_sheet.max_row, 5).number_format = "0.000"
     assert reason_counts == {
@@ -185,7 +192,7 @@ def build(old_dir: Path, new_dir: Path, output: Path) -> None:
         "EXCLUDE_FROZEN_RMSD": 12,
         "EXCLUDE_NO_STRICT_RANK1": 11,
     }
-    style_sheet(added_sheet, [13, 14, 31, 85, 22, 25, 25, 17, 78, 66, 78])
+    style_sheet(added_sheet, [13, 14, 31, 85, 22, 25, 25, 17, 78, 66, 78, 55])
 
     output.parent.mkdir(parents=True, exist_ok=True)
     wb.save(output)

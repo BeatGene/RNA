@@ -21,6 +21,7 @@ FIELDS = (
     "STRICT_RANK1_RMSD_ANGSTROM", "PREP_DIR_PRESENT", "PRED_CIF_COUNT",
     "PRED_AUDIT_STATUS", "PRED_EXPECTED_COUNT", "PRED_VALID_COUNT",
     "PREP_AUDIT_STATUS", "PREP_AUDIT_REASON",
+    "UPSTREAM_SKIP", "UPSTREAM_SKIP_REASON",
     "PT_COUNT", "PT_ISSUE_COUNT", "PT_RMSD_GT30_COUNT", "PT_RMSD_GT30_SAVED_COUNT", "PT_RMSD_GT30_SOURCE",
     "PT_POLICY_EXCLUDED", "PT_POLICY_REASON", "PT_EXPECTED_COUNT", "PT_ACCOUNTED_COUNT",
     "NEXT_STAGE", "EVIDENCE_NOTE",
@@ -123,6 +124,8 @@ def main() -> None:
     parser.add_argument("--pred-audit", action="append", default=[], type=Path,
                         help="stage2 decoy_manifest.csv; pass once per split")
     parser.add_argument("--pt-log-dir", action="append", default=[], type=Path)
+    parser.add_argument("--skip-pdb-file", type=Path,
+                        help="PDB_ID/REASON TSV for assigned targets intentionally skipped before prediction")
     args = parser.parse_args()
     report = args.split_report.expanduser().resolve()
     output = args.output_dir.expanduser().resolve()
@@ -140,6 +143,14 @@ def main() -> None:
     high = filtered_counts(args.pt_log_dir)
     issues = issue_counts(args.pt_log_dir)
     pt_exclusions = policy_exclusions(args.pt_log_dir)
+    skipped = {}
+    if args.skip_pdb_file is not None:
+        for row in tsv_rows(args.skip_pdb_file.expanduser().resolve()):
+            pdb_id = row["PDB_ID"].strip().upper()
+            reason = row["REASON"].strip()
+            if not pdb_id or not reason or pdb_id in skipped:
+                raise ValueError(f"invalid or duplicate upstream skip PDB: {pdb_id}")
+            skipped[pdb_id] = reason
     pred_audit = {}
     for audit_path in args.pred_audit:
         with audit_path.expanduser().open("r", encoding="utf-8-sig", newline="") as handle:
@@ -170,6 +181,7 @@ def main() -> None:
         high_count = high[(split, pdb_id)] if split else 0
         issue_count = issues[(split, pdb_id)] if split else 0
         pt_policy_reason = pt_exclusions.get((split, pdb_id), "") if split else ""
+        upstream_skip_reason = skipped.get(pdb_id, "") if split else ""
         pred_row = pred_audit.get(pdb_id, {})
         audit_status = pred_row.get("OVERALL_STATUS", "")
         prep_status = pred_row.get("PREP_STATUS", "")
@@ -184,6 +196,9 @@ def main() -> None:
         elif not split:
             stage = "NOT_ASSIGNED"
             note = "see FINAL_STATUS and EXCLUSION_REASON"
+        elif upstream_skip_reason:
+            stage = "PREP_ABANDONED_LONG_CHAIN"
+            note = upstream_skip_reason
         elif args.prediction_root is None and args.pt_root is None and prep_ids is None and not pred_audit:
             stage = "NOT_AUDITED"
             note = "server stage paths were not provided"
@@ -248,6 +263,8 @@ def main() -> None:
             "PRED_VALID_COUNT": pred_valid if split else "",
             "PREP_AUDIT_STATUS": prep_status if split else "",
             "PREP_AUDIT_REASON": pred_row.get("PREP_REASON", "") if split else "",
+            "UPSTREAM_SKIP": bool(upstream_skip_reason) if split else "",
+            "UPSTREAM_SKIP_REASON": upstream_skip_reason,
             "PT_COUNT": pt_count if args.pt_root is not None and split else "",
             "PT_ISSUE_COUNT": issue_count if args.pt_log_dir and split else "",
             "PT_RMSD_GT30_COUNT": high_count if args.pt_log_dir and split else "",
@@ -272,7 +289,8 @@ def main() -> None:
         "split_report": str(report), "source_pdbs": len(inventory),
         "assigned_counts": dict(Counter(row["FINAL_SPLIT"] for row in rows if row["FINAL_SPLIT"])),
         "stage_counts": dict(stages),
-        "limitations": "Counts locate the next stage; use run logs for failure cause. Run the audit with matching split, prediction and PT versions. Old filtered RMSD >30 samples were not saved.",
+        "upstream_skipped_assigned": sum(bool(row["UPSTREAM_SKIP"]) for row in rows),
+        "limitations": "Counts locate the next stage; use run logs for failure cause. Run the audit with matching split, prediction and PT versions. High-RMSD saved counts require the separate PT directory and matching PT log.",
     }
     (output / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2))

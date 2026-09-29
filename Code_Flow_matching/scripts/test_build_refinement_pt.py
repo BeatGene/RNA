@@ -94,6 +94,32 @@ _atom_site.pdbx_PDB_model_num
 
 
 class BuildRefinementPtTest(unittest.TestCase):
+    def test_upstream_prep_skip_is_reported_without_pt_issue(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "pred" / "train" / "1abc").mkdir(parents=True)
+            exclusions = root / "exclude.tsv"
+            exclusions.write_text("pdb_id\tsplit\treason\n", encoding="utf-8")
+            skips = root / "skip.tsv"
+            skips.write_text("PDB_ID\tREASON\n1ABC\tPROTENIX_PREP_ABANDONED_LONG_CHAIN\n", encoding="utf-8")
+            result = module.main([
+                "--prediction-root", str(root / "pred"),
+                "--native-root", str(root / "native"),
+                "--rnafm-root", str(root / "fm"),
+                "--output-root", str(root / "pt"),
+                "--log-dir", str(root / "logs"),
+                "--run-name", "skip_demo",
+                "--exclude-pdb-file", str(exclusions),
+                "--skip-pdb-file", str(skips),
+                "--split", "train",
+            ])
+            summary = json.loads((root / "logs" / "skip_demo" / "summary.json").read_text(encoding="utf-8"))
+            self.assertEqual(result, 0)
+            self.assertEqual(summary["upstream_skipped_pdb_count"], 1)
+            self.assertEqual(summary["upstream_skipped_pdb_ids"], ["1ABC"])
+            self.assertEqual(summary["excluded_pdb_count"], 0)
+            self.assertEqual(summary["issues"], 0)
+
     def test_storage_capacity_errors_are_fatal_candidates(self):
         self.assertTrue(module.is_storage_capacity_error(
             OSError(errno.ENOSPC, "No space left on device")

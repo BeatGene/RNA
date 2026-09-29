@@ -15,6 +15,8 @@ bash ~/Code/Split_RNA_dataset/Version_2/run_v2_prediction_reuse_audit.sh
 
 2026-09-24T164258Z 的 dry run 已核对通过：964 个 `REUSE_READY_TO_LINK`、41 个 `NEW_PREDICTION_REQUIRED`、10 个 `SKIP_PREP_ABANDONED_LONG_CHAIN`，无 blocker。同步新版 `audit_v2_prediction_reuse.py` 和 `run_v2_prediction_reuse_link.sh` 后，运行 `bash -n` 和 `bash ~/Code/Split_RNA_dataset/Version_2/run_v2_prediction_reuse_link.sh`。该脚本仅移除 964 个已经审计为空的 V2 PDB 目录，并以指向 V1 PDB 目录的符号链接代替；每个链接均检查能否读取 200 个原始预测 CIF。遇到不一致会停止，不递归删除，也不修改 V1。链接报告应为 `REUSE_LINKED=964`、`NEW_PREDICTION_REQUIRED=41`、`SKIP_PREP_ABANDONED_LONG_CHAIN=10`。新版 `predict_all_pdb_ids.txt` 是后续仅调度 41 个新 PDB 的输入清单。符号链接不提供文件系统只读保护，因此后续预测程序必须仅接收 41 个新 PDB 的 manifest。
 
+链接报告完成后，再同步新版 `prepare_data_v1_confidence_run.py`、`start_data_v1_50x4_confidence_8gpu.sh` 和 `start_v2_41_prediction.sh`。后者接收链接报告目录，先检查 `REUSE_LINKED + REUSE_ALREADY_LINKED = 964`、新增任务 41 和跳过 10，再设置 `TARGET_IDS_FILE`，仅调度 train 40 和 test 1。已有 964 个链接不进入预测 manifest。命令：`bash ~/Code/Split_RNA_dataset/Version_2/start_v2_41_prediction.sh <完整链接报告目录>`。此脚本调用已有 GPU 资源守卫和后台 launcher；启动前应先检查服务器脚本版本与 GPU 资源。
+
 ## 1. 记录旧版逐 PDB 状态
 
 ```bash
@@ -72,7 +74,7 @@ SPLIT_MANIFEST="$new_split/final_manifest.tsv" DATA_ROOT="$HOME/Data_V2" BASE_RE
 ## 5. 生成新版 PT，单独保存 >30 Å
 
 ```bash
-python ~/Code_Flow_matching/scripts/build_refinement_pt.py --prediction-root ~/Data_V2 --native-root ~/pdb_data --rnafm-root ~/Data_FM/RNA_FM_embeddings --output-root ~/Data_PT_V2 --high-rmsd-root ~/Data_PT_V2_RMSD_GT30 --exclude-pdb-file ~/Code_Flow_matching/config/refinement_excluded_pdb_ids_v2.tsv --log-dir ~/Code/pipeline_reports/PT_V2 --run-name write_v2_rmsd30_20260924 --ccd-components-file ~/protenix_data/common/components.cif --max-pre-refinement-rmsd 30
+python ~/Code_Flow_matching/scripts/build_refinement_pt.py --prediction-root ~/Data_V2 --native-root ~/pdb_data --rnafm-root ~/Data_FM/RNA_FM_embeddings --output-root ~/Data_PT_V2 --high-rmsd-root ~/Data_PT_V2_RMSD_GT30 --exclude-pdb-file ~/Code_Flow_matching/config/refinement_excluded_pdb_ids_v2.tsv --skip-pdb-file ~/Code/Split_RNA_dataset/Version_2/prep_abandoned_long_chain_v2.tsv --log-dir ~/Code/pipeline_reports/PT_V2 --run-name write_v2_rmsd30_20260924 --ccd-components-file ~/protenix_data/common/components.cif --max-pre-refinement-rmsd 30
 ```
 
 V2 排除名单保留原有数据质量排除项，移除了仅因构象 RMSD 极高而整 PDB 排除的 `9ZC9`；它的 >30 Å 样本应进入单独的高 RMSD PT 目录。日志会记录原策略中的 split 和本次实际 split。主训练 PT 根目录不会包含 >30 Å 样本。检查 `summary.json` 中 `issues`、`failed_samples`、`rmsd_filtered_samples` 和 `high_rmsd_saved_samples`，后两项应一致。重跑前应使用新的 run name；只有明确需要重建样本时才加 `--overwrite`。
@@ -89,7 +91,7 @@ python ~/Code_Flow_matching/scripts/analyze_ranking_vs_rmsd.py --pt-run-dir ~/Co
 
 ## 7. 生成新版逐 PDB 状态表
 
-用第 1 步相同的审计脚本，将 `--split-report`、`--prediction-root`、`--pt-root`、`--high-pt-root`、三个 `--pred-audit` 和 `--pt-log-dir` 改为第 2～5 步对应的新版路径，输出到 `~/Code/pipeline_reports/PDB_LIFECYCLE_V2_<日期>/`。每行显示是否入选及原因、prep/pred 审计、PT 数量、>30 Å 数量、单独保存数量和 PT 策略排除原因。
+用第 1 步相同的审计脚本，将 `--split-report`、`--prediction-root`、`--pt-root`、`--high-pt-root`、三个 `--pred-audit` 和 `--pt-log-dir` 改为第 2～5 步对应的新版路径，并加 `--skip-pdb-file ~/Code/Split_RNA_dataset/Version_2/prep_abandoned_long_chain_v2.tsv`，输出到 `~/Code/pipeline_reports/PDB_LIFECYCLE_V2_<日期>/`。每行显示是否入选及原因、prep/pred 审计、PT 数量、>30 Å 数量、单独保存数量和 PT 策略排除原因；10 个已入选但放弃 prep 的超长链单列为 `PREP_ABANDONED_LONG_CHAIN`。
 
 ## 8. 训练时对 >50 nt 上采样
 
