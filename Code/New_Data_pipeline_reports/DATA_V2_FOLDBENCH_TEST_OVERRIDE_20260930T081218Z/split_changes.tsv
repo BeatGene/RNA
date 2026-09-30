@@ -1,0 +1,11 @@
+PDB_ID	FROM	TO	REASON
+7SXP	val	test	FoldBench benchmark promotion; 7WIA/7WII internal homology is an explicit exception
+7WI9	val	holdout	Homologous to promoted FoldBench test PDB at >=80% identity and both coverages
+7WIA	val	test	FoldBench benchmark promotion; 7WIA/7WII internal homology is an explicit exception
+7WIB	val	holdout	Homologous to promoted FoldBench test PDB at >=80% identity and both coverages
+7WIE	val	holdout	Homologous to promoted FoldBench test PDB at >=80% identity and both coverages
+7WIF	val	holdout	Homologous to promoted FoldBench test PDB at >=80% identity and both coverages
+7WII	val	test	FoldBench benchmark promotion; 7WIA/7WII internal homology is an explicit exception
+7ZJ4	val	test	FoldBench benchmark promotion; 7WIA/7WII internal homology is an explicit exception
+7ZJ5	val	holdout	Homologous to promoted FoldBench test PDB at >=80% identity and both coverages
+8HB8	val	test	FoldBench benchmark promotion; 7WIA/7WII internal homology is an explicit exception

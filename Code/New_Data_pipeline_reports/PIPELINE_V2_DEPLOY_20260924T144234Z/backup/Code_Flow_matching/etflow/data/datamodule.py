@@ -1,0 +1,44 @@
+from pathlib import Path
+from typing import Dict, Optional
+
+import lightning.pytorch as pl
+from torch_geometric.loader import DataLoader
+
+from .dataset import EuclideanDataset
+
+
+class BaseDataModule(pl.LightningDataModule):
+    """Datamodule to do all data stuff."""
+
+    def __init__(
+        self,
+        data_dir: Path | None = None,
+        dataloader_args: Optional[Dict] = None,
+    ) -> None:
+        super().__init__()
+        self.data_dir = data_dir
+        self.dataloader_args = dict(dataloader_args or {})
+
+
+    def __repr__(self) -> str:
+        return "RNARefinementDataModule"
+
+    def setup(self, stage: str = None):
+        if stage in (None, "fit"):
+            self.train_dataset = EuclideanDataset(self.data_dir, split="train")
+            self.val_dataset = EuclideanDataset(self.data_dir, split="val")
+        elif stage == "validate":
+            self.val_dataset = EuclideanDataset(self.data_dir, split="val")
+        if stage in (None, "test"):
+            self.test_dataset = EuclideanDataset(self.data_dir, split="test")
+
+    def train_dataloader(self):
+        """Creates train dataloader"""
+        return DataLoader(self.train_dataset, shuffle=True, **self.dataloader_args)
+
+    def val_dataloader(self):
+        """Creates val dataloader"""
+        return DataLoader(self.val_dataset, shuffle=False, **self.dataloader_args)
+
+    def test_dataloader(self):
+        return DataLoader(self.test_dataset, shuffle=False, **self.dataloader_args)

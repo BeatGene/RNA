@@ -30,3 +30,5 @@
 *.whl
 
 *.csv
+
+/Code/New_Data_pipeline_reports/CODE_SYNC_20260930/*.tar.gz

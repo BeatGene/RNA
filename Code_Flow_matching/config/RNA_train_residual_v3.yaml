@@ -11,7 +11,7 @@ datamodule_args:
     long_rna_threshold_nt: 50
     long_rna_oversample_factor: 2.0
     dataloader_args:
-        batch_size: 4
+        batch_size: 3
         num_workers: 2
         pin_memory: true
         persistent_workers: true
@@ -129,7 +129,7 @@ trainer_args:
     devices: 4
     accelerator: gpu
     strategy: ddp
-    accumulate_grad_batches: 3
+    accumulate_grad_batches: 4
     precision: bf16-mixed
     num_sanity_val_steps: 0
     gradient_clip_val: 5.0

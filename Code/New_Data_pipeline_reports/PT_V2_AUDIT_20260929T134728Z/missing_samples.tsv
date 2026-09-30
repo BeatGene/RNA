@@ -1,0 +1,1201 @@
+split	pdb_id	seed	sample	stage	reason	detail
+train	1QZA	300	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	300	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	300	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	300	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	301	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	301	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	301	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	301	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	302	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	302	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	302	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	302	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	303	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	303	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	303	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	303	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	304	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	304	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	304	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	304	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	305	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	305	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	305	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	305	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	306	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	306	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	306	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	306	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	307	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	307	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	307	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	307	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	308	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	308	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	308	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	308	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	309	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	309	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	309	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	309	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	310	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	310	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	310	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	310	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	311	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	311	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	311	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	311	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	312	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	312	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	312	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	312	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	313	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	313	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	313	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	313	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	314	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	314	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	314	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	314	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	315	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	315	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	315	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	315	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	316	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	316	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	316	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	316	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	317	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	317	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	317	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	317	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	318	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	318	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	318	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	318	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	319	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	319	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	319	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	319	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	320	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	320	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	320	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	320	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	321	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	321	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	321	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	321	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	322	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	322	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	322	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	322	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	323	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	323	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	323	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	323	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	324	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	324	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	324	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	324	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	325	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	325	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	325	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	325	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	326	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	326	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	326	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	326	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	327	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	327	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	327	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	327	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	328	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	328	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	328	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	328	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	329	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	329	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	329	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	329	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	330	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	330	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	330	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	330	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	331	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	331	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	331	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	331	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	332	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	332	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	332	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	332	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	333	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	333	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	333	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	333	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	334	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	334	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	334	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	334	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	335	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	335	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	335	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	335	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	336	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	336	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	336	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	336	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	337	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	337	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	337	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	337	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	338	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	338	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	338	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	338	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	339	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	339	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	339	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	339	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	340	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	340	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	340	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	340	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	341	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	341	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	341	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	341	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	342	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	342	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	342	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	342	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	343	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	343	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	343	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	343	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	344	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	344	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	344	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	344	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	345	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	345	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	345	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	345	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	346	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	346	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	346	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	346	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	347	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	347	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	347	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	347	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	348	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	348	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	348	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	348	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	349	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	349	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	349	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZA	349	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	1QZB	300	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	300	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	300	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	300	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	301	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	301	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	301	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	301	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	302	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	302	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	302	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	302	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	303	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	303	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	303	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	303	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	304	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	304	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	304	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	304	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	305	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	305	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	305	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	305	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	306	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	306	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	306	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	306	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	307	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	307	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	307	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	307	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	308	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	308	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	308	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	308	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	309	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	309	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	309	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	309	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	310	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	310	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	310	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	310	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	311	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	311	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	311	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	311	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	312	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	312	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	312	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	312	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	313	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	313	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	313	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	313	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	314	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	314	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	314	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	314	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	315	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	315	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	315	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	315	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	316	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	316	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	316	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	316	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	317	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	317	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	317	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	317	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	318	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	318	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	318	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	318	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	319	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	319	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	319	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	319	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	320	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	320	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	320	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	320	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	321	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	321	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	321	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	321	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	322	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	322	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	322	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	322	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	323	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	323	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	323	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	323	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	324	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	324	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	324	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	324	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	325	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	325	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	325	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	325	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	326	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	326	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	326	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	326	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	327	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	327	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	327	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	327	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	328	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	328	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	328	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	328	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	329	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	329	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	329	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	329	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	330	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	330	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	330	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	330	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	331	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	331	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	331	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	331	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	332	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	332	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	332	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	332	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	333	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	333	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	333	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	333	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	334	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	334	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	334	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	334	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	335	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	335	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	335	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	335	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	336	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	336	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	336	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	336	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	337	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	337	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	337	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	337	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	338	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	338	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	338	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	338	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	339	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	339	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	339	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	339	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	340	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	340	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	340	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	340	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	341	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	341	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	341	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	341	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	342	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	342	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	342	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	342	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	343	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	343	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	343	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	343	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	344	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	344	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	344	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	344	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	345	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	345	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	345	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	345	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	346	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	346	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	346	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	346	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	347	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	347	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	347	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	347	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	348	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	348	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	348	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	348	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	349	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	349	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	349	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	1QZB	349	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 76 RNA residues have only one native atom each; observed PT atom fraction about 0.046
+train	2JJA	300	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	300	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	300	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	300	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	301	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	301	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	301	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	301	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	302	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	302	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	302	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	302	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	303	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	303	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	303	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	303	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	304	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	304	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	304	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	304	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	305	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	305	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	305	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	305	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	306	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	306	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	306	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	306	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	307	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	307	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	307	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	307	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	308	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	308	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	308	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	308	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	309	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	309	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	309	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	309	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	310	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	310	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	310	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	310	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	311	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	311	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	311	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	311	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	312	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	312	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	312	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	312	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	313	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	313	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	313	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	313	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	314	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	314	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	314	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	314	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	315	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	315	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	315	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	315	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	316	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	316	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	316	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	316	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	317	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	317	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	317	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	317	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	318	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	318	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	318	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	318	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	319	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	319	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	319	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	319	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	320	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	320	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	320	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	320	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	321	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	321	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	321	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	321	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	322	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	322	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	322	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	322	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	323	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	323	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	323	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	323	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	324	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	324	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	324	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	324	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	325	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	325	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	325	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	325	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	326	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	326	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	326	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	326	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	327	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	327	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	327	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	327	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	328	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	328	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	328	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	328	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	329	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	329	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	329	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	329	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	330	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	330	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	330	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	330	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	331	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	331	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	331	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	331	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	332	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	332	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	332	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	332	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	333	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	333	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	333	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	333	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	334	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	334	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	334	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	334	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	335	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	335	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	335	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	335	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	336	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	336	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	336	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	336	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	337	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	337	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	337	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	337	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	338	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	338	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	338	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	338	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	339	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	339	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	339	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	339	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	340	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	340	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	340	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	340	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	341	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	341	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	341	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	341	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	342	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	342	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	342	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	342	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	343	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	343	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	343	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	343	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	344	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	344	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	344	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	344	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	345	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	345	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	345	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	345	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	346	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	346	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	346	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	346	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	347	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	347	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	347	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	347	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	348	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	348	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	348	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	348	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	349	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	349	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	349	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2JJA	349	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZHP and ZTH have no unambiguous canonical CCD parent; RNA-FM sequence contains N/X
+train	2XC6	300	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	300	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	300	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	300	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	301	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	301	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	301	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	301	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	302	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	302	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	302	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	302	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	303	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	303	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	303	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	303	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	304	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	304	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	304	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	304	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	305	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	305	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	305	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	305	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	306	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	306	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	306	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	306	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	307	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	307	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	307	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	307	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	308	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	308	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	308	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	308	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	309	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	309	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	309	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	309	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	310	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	310	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	310	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	310	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	311	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	311	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	311	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	311	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	312	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	312	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	312	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	312	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	313	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	313	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	313	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	313	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	314	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	314	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	314	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	314	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	315	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	315	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	315	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	315	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	316	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	316	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	316	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	316	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	317	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	317	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	317	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	317	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	318	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	318	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	318	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	318	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	319	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	319	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	319	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	319	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	320	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	320	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	320	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	320	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	321	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	321	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	321	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	321	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	322	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	322	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	322	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	322	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	323	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	323	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	323	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	323	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	324	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	324	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	324	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	324	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	325	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	325	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	325	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	325	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	326	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	326	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	326	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	326	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	327	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	327	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	327	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	327	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	328	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	328	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	328	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	328	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	329	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	329	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	329	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	329	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	330	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	330	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	330	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	330	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	331	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	331	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	331	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	331	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	332	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	332	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	332	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	332	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	333	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	333	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	333	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	333	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	334	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	334	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	334	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	334	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	335	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	335	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	335	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	335	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	336	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	336	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	336	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	336	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	337	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	337	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	337	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	337	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	338	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	338	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	338	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	338	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	339	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	339	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	339	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	339	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	340	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	340	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	340	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	340	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	341	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	341	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	341	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	341	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	342	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	342	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	342	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	342	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	343	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	343	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	343	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	343	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	344	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	344	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	344	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	344	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	345	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	345	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	345	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	345	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	346	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	346	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	346	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	346	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	347	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	347	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	347	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	347	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	348	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	348	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	348	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	348	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	349	0	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	349	1	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	349	2	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2XC6	349	3	pt	PT_UNUSABLE_UNRESOLVED_MODIFIED_RESIDUES	ZTH has no unambiguous canonical CCD parent; prediction contains an unsupported X residue
+train	2Z9Q	300	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	300	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	300	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	300	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	301	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	301	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	301	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	301	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	302	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	302	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	302	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	302	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	303	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	303	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	303	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	303	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	304	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	304	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	304	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	304	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	305	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	305	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	305	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	305	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	306	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	306	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	306	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	306	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	307	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	307	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	307	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	307	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	308	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	308	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	308	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	308	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	309	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	309	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	309	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	309	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	310	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	310	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	310	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	310	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	311	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	311	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	311	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	311	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	312	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	312	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	312	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	312	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	313	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	313	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	313	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	313	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	314	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	314	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	314	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	314	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	315	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	315	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	315	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	315	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	316	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	316	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	316	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	316	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	317	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	317	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	317	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	317	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	318	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	318	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	318	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	318	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	319	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	319	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	319	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	319	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	320	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	320	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	320	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	320	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	321	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	321	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	321	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	321	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	322	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	322	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	322	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	322	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	323	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	323	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	323	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	323	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	324	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	324	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	324	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	324	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	325	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	325	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	325	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	325	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	326	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	326	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	326	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	326	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	327	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	327	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	327	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	327	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	328	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	328	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	328	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	328	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	329	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	329	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	329	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	329	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	330	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	330	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	330	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	330	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	331	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	331	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	331	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	331	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	332	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	332	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	332	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	332	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	333	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	333	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	333	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	333	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	334	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	334	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	334	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	334	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	335	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	335	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	335	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	335	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	336	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	336	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	336	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	336	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	337	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	337	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	337	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	337	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	338	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	338	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	338	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	338	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	339	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	339	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	339	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	339	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	340	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	340	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	340	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	340	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	341	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	341	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	341	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	341	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	342	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	342	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	342	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	342	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	343	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	343	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	343	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	343	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	344	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	344	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	344	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	344	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	345	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	345	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	345	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	345	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	346	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	346	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	346	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	346	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	347	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	347	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	347	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	347	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	348	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	348	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	348	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	348	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	349	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	349	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	349	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	2Z9Q	349	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	75 of 75 RNA residues have only one native atom each; observed PT atom fraction about 0.047
+train	5K8H	300	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	300	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	300	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	300	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	301	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	301	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	301	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	301	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	302	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	302	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	302	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	302	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	303	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	303	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	303	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	303	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	304	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	304	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	304	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	304	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	305	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	305	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	305	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	305	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	306	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	306	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	306	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	306	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	307	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	307	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	307	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	307	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	308	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	308	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	308	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	308	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	309	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	309	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	309	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	309	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	310	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	310	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	310	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	310	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	311	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	311	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	311	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	311	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	312	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	312	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	312	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	312	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	313	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	313	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	313	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	313	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	314	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	314	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	314	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	314	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	315	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	315	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	315	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	315	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	316	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	316	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	316	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	316	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	317	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	317	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	317	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	317	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	318	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	318	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	318	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	318	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	319	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	319	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	319	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	319	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	320	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	320	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	320	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	320	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	321	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	321	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	321	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	321	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	322	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	322	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	322	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	322	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	323	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	323	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	323	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	323	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	324	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	324	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	324	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	324	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	325	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	325	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	325	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	325	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	326	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	326	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	326	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	326	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	327	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	327	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	327	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	327	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	328	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	328	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	328	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	328	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	329	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	329	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	329	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	329	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	330	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	330	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	330	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	330	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	331	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	331	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	331	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	331	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	332	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	332	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	332	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	332	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	333	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	333	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	333	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	333	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	334	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	334	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	334	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	334	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	335	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	335	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	335	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	335	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	336	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	336	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	336	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	336	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	337	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	337	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	337	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	337	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	338	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	338	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	338	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	338	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	339	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	339	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	339	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	339	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	340	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	340	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	340	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	340	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	341	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	341	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	341	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	341	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	342	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	342	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	342	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	342	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	343	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	343	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	343	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	343	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	344	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	344	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	344	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	344	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	345	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	345	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	345	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	345	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	346	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	346	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	346	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	346	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	347	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	347	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	347	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	347	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	348	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	348	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	348	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	348	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	349	0	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	349	1	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	349	2	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
+train	5K8H	349	3	pt	PT_UNUSABLE_SPARSE_NATIVE_COORDINATES	Only 2 of 7 native RNA residues have coordinates; observed PT atom fraction about 0.284
