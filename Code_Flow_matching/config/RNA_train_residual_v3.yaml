@@ -6,7 +6,10 @@ ckpt_path: null
 
 datamodule: BaseDataModule
 datamodule_args:
-    data_dir: /storage9920/home/tinghao.xia/Data_PT_V1
+    data_dir: /storage9920/home/tinghao.xia/Data_PT_V2
+    train_length_table: /storage9920/home/tinghao.xia/Code/pipeline_reports/DATA_SPLIT_V2_SINGLECHAIN_RANK1_ANNOTATION_20260924T155344Z_EXECUTE/selection_audit.tsv
+    long_rna_threshold_nt: 50
+    long_rna_oversample_factor: 2.0
     dataloader_args:
         batch_size: 4
         num_workers: 2
@@ -79,7 +82,7 @@ model_args:
     grad_norm_max_val: 5.0
 
     lr_scheduler_type: CosineAnnealingWarmupRestarts
-    # About three epochs at effective global batch size 48 (~3,034 steps/epoch).
+    # About three epochs at effective global batch size 48 (~3,150 steps/epoch).
     first_cycle_steps: 9_000
     cycle_mult: 1.0
     max_lr: 3.e-4
@@ -94,7 +97,7 @@ model_args:
 callbacks:
     - callback: ModelCheckpoint
       callback_args:
-          dirpath: /storage9920/home/tinghao.xia/Code_Flow_matching/checkpoints/rna_refinement_v2_residual_mobility
+          dirpath: /storage9920/home/tinghao.xia/Code_Flow_matching/checkpoints/rna_refinement_v3_residual_mobility
           filename: "epoch={epoch:02d}-step={step}"
           auto_insert_metric_name: false
           monitor: val/refined_rmsd
@@ -119,12 +122,14 @@ logger_args:
 trainer: Trainer
 trainer_args:
     # This is a safety cap, not an instruction to use the last checkpoint.
+    # Stop after about one week even if the epoch cap has not been reached.
     # Select the final model only by val/refined_rmsd from the saved top-k.
-    max_epochs: 50
-    devices: 6
+    max_epochs: 120
+    max_time: "7:00:00:00"
+    devices: 4
     accelerator: gpu
     strategy: ddp
-    accumulate_grad_batches: 2
+    accumulate_grad_batches: 3
     precision: bf16-mixed
     num_sanity_val_steps: 0
     gradient_clip_val: 5.0

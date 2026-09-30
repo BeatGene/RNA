@@ -6,6 +6,36 @@ import csv
 import math
 from pathlib import Path
 
+import torch
+from torch.utils.data.distributed import DistributedSampler
+
+
+class DistributedWeightedSampler(DistributedSampler):
+    """Draw weighted training examples independently on each DDP rank.
+
+    Subclassing DistributedSampler prevents Lightning from replacing the
+    weighted sampler with an unweighted distributed sampler.
+    """
+
+    def __init__(
+        self, weights: list[float], *, num_replicas: int, rank: int, seed: int = 42
+    ) -> None:
+        if not weights or any(not math.isfinite(w) or w <= 0 for w in weights):
+            raise ValueError("weights must be nonempty, finite, and positive")
+        self.weights = torch.as_tensor(weights, dtype=torch.double)
+        super().__init__(
+            range(len(weights)), num_replicas=num_replicas, rank=rank,
+            shuffle=False, seed=seed, drop_last=False,
+        )
+
+    def __iter__(self):
+        generator = torch.Generator()
+        generator.manual_seed(self.seed + self.epoch * self.num_replicas + self.rank)
+        indices = torch.multinomial(
+            self.weights, self.num_samples, replacement=True, generator=generator
+        )
+        return iter(indices.tolist())
+
 
 def long_rna_weights(
     data_files: list[Path],

@@ -3,11 +3,10 @@ from typing import Dict, Optional
 import math
 
 import lightning.pytorch as pl
-import torch
 from torch_geometric.loader import DataLoader
 
 from .dataset import EuclideanDataset
-from .length_sampling import long_rna_weights
+from .length_sampling import DistributedWeightedSampler, long_rna_weights
 
 
 class BaseDataModule(pl.LightningDataModule):
@@ -57,8 +56,11 @@ class BaseDataModule(pl.LightningDataModule):
                 threshold_nt=self.long_rna_threshold_nt,
                 factor=self.long_rna_oversample_factor,
             )
-            sampler = torch.utils.data.WeightedRandomSampler(
-                weights, num_samples=len(weights), replacement=True
+            sampler = DistributedWeightedSampler(
+                weights,
+                num_replicas=self.trainer.world_size,
+                rank=self.trainer.global_rank,
+                seed=42,
             )
             print(f"Long-RNA train sampling: {counts}; factor={self.long_rna_oversample_factor}")
             return DataLoader(self.train_dataset, sampler=sampler, **self.dataloader_args)
