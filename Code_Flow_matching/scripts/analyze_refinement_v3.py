@@ -79,9 +79,13 @@ def chain_rows(samples: list[dict]) -> list[dict]:
         groups[(row["pdb_id"], row["native_chain_id"])].append(row)
     result = []
     for (pdb_id, chain), group in sorted(groups.items()):
+        predicted_chains = {row["predicted_chain_id"] for row in group}
+        if len(predicted_chains) != 1:
+            raise ValueError(f"Mixed predicted chains for {pdb_id} native chain {chain}")
         item = {
             "pdb_id": pdb_id,
             "native_chain_id": chain,
+            "predicted_chain_id": predicted_chains.pop(),
             "sample_count": len(group),
             "length": median(row["length"] for row in group),
             "input_aligned_rmsd": mean(row["input_aligned_rmsd"] for row in group),
@@ -216,11 +220,12 @@ def foldbench_overlap(chains: list[dict], targets_path: Path) -> list[dict]:
     }
     result = []
     for row in chains:
-        key = row["pdb_id"].upper(), row["native_chain_id"]
+        key = row["pdb_id"].upper(), row["predicted_chain_id"]
         if key in target_map:
             result.append({
                 "pdb_id": row["pdb_id"],
                 "native_chain_id": row["native_chain_id"],
+                "predicted_chain_id": row["predicted_chain_id"],
                 "foldbench_target_id": target_map[key],
                 "sample_count": row["sample_count"],
                 "input_rmsd_mean_a": row["input_aligned_rmsd"],
@@ -290,7 +295,7 @@ def main() -> None:
     if args.foldbench_targets:
         write_tsv(
             args.output_dir / "foldbench_overlap.tsv", overlap,
-            ["pdb_id", "native_chain_id", "foldbench_target_id", "sample_count",
+            ["pdb_id", "native_chain_id", "predicted_chain_id", "foldbench_target_id", "sample_count",
              "input_rmsd_mean_a", "refined_rmsd_mean_a", "improvement_mean_a"],
         )
 
@@ -356,7 +361,7 @@ def main() -> None:
     if args.foldbench_targets:
         lines += [
             "## FoldBench RNA 单体重叠", "",
-            f"测试集匹配 {len(overlap)} 个 FoldBench monomer_rna 的 PDB+链。此处仍是本项目 RMSD，不是 FoldBench lDDT 分数。", "",
+            f"测试集按 PDB+预测链匹配 {len(overlap)} 个 FoldBench monomer_rna 目标。此处仍是本项目 RMSD，不是 FoldBench lDDT 分数。", "",
             markdown_table(overlap, ["foldbench_target_id", "sample_count", "input_rmsd_mean_a", "refined_rmsd_mean_a", "improvement_mean_a"]), "",
         ]
     lines += [

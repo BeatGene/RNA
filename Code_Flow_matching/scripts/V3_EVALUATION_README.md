@@ -67,7 +67,7 @@ evaluation/v3_20261008/test_locked/samples.tsv
 
 ## FoldBench RNA 单体分数
 
-V3 测试结果会与随附的 FoldBench `monomer_rna.csv`（15 个目标）按 **PDB ID + native chain** 匹配；实际匹配数量以 `foldbench_overlap.tsv` 为准。`finalize` 默认会对每个匹配目标按原始 Protenix `ranking_score` 选择一个候选，输出成对的原始/精修 CIF 和 FoldBench `prediction_reference.csv`。选择时不使用 native RMSD 或 lDDT。若暂不导出，可设置 `FOLDBENCH_EXPORT=0`。
+V3 测试结果会与随附的 FoldBench `monomer_rna.csv`（15 个目标）按 **PDB ID + 预测链编号** 匹配；epoch 49 实际匹配 9 个。原始链编号有时是 V/E，而预测链编号是 A。`finalize` 默认会对每个匹配目标按原始 Protenix `ranking_score` 选择一个候选，输出成对的原始/精修 CIF 和 FoldBench `prediction_reference.csv`。选择时不使用 native RMSD 或 lDDT。若暂不导出，可设置 `FOLDBENCH_EXPORT=0`。现有 `foldbench/` 目录保留了修复前导出的 6 个目标；9 目标评分请使用 `scripts/FOLDBENCH_EPOCH49_SCORING.md` 中的新入口，写入 `foldbench_9targets/`。
 
 FoldBench 官方 RNA 单体主分数是 **lDDT**；本项目的 Kabsch RMSD 不能当作 FoldBench 分数。需要 FoldBench 的 `ost` 环境和匹配目标的原始 `*-assembly1.cif` ground truth。官方仓库的 README 提供原始 CIF 下载地址。假设 FoldBench 在 `~/Code/FoldBench`，原始 CIF 在 `~/FoldBench_ground_truths`：
 

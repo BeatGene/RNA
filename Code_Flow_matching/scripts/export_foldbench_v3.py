@@ -1,7 +1,7 @@
 """Export the pre-ranked FoldBench RNA monomer subset as input/refined CIFs.
 
 This never chooses candidates by native structure accuracy.  Each target uses
-the original Protenix ranking_score stored in its source confidence JSON.
+the original Protenix ranking_score in its summary confidence JSON.
 """
 
 from __future__ import annotations
@@ -25,6 +25,29 @@ def read_tsv(path: Path) -> list[dict]:
         return list(csv.DictReader(handle, delimiter="\t"))
 
 
+def ranking_score_from_source(source_cif: Path, sample_number: int) -> tuple[float, Path]:
+    """Read the summary JSON paired with a Protenix sample CIF.
+
+    The .pt source_confidence_json points to full_data JSON, which contains
+    atom-wise confidence but does not contain ranking_score.
+    """
+    suffix = f"_sample_{sample_number}.cif"
+    if not source_cif.name.endswith(suffix):
+        raise ValueError(f"Sample CIF name does not match sample {sample_number}: {source_cif}")
+    prefix = source_cif.name[:-len(suffix)]
+    score_path = source_cif.with_name(
+        f"{prefix}_summary_confidence_sample_{sample_number}.json"
+    )
+    try:
+        score_data = json.loads(score_path.read_text(encoding="utf-8"))
+        score = float(score_data["ranking_score"])
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        raise ValueError(f"Missing or invalid Protenix ranking_score: {score_path}") from exc
+    if not math.isfinite(score):
+        raise ValueError(f"Nonfinite Protenix ranking_score: {score_path}")
+    return score, score_path
+
+
 def select_candidates(samples: list[dict], target_rows: list[dict]) -> list[dict]:
     target_map = {
         (row["pdb_id"].split("-", 1)[0].upper(), row["chain_id"]): row
@@ -32,25 +55,26 @@ def select_candidates(samples: list[dict], target_rows: list[dict]) -> list[dict
     }
     selected: dict[str, dict] = {}
     for sample in samples:
-        key = sample["pdb_id"].upper(), sample["native_chain_id"]
+        key = sample["pdb_id"].upper(), sample["predicted_chain_id"]
         target = target_map.get(key)
         if target is None:
             continue
         pt_path = Path(sample["sample_path"])
         payload = torch.load(pt_path, map_location="cpu", weights_only=False)
-        confidence_path = Path(payload["source_confidence_json"])
-        ranking_score = float(json.loads(confidence_path.read_text(encoding="utf-8"))["ranking_score"])
-        if not math.isfinite(ranking_score):
-            raise ValueError(f"Nonfinite ranking_score: {confidence_path}")
+        source_cif = Path(payload["source_predicted_cif"])
+        sample_number = int(sample["protenix_sample"])
+        ranking_score, score_path = ranking_score_from_source(source_cif, sample_number)
         candidate = {
             "foldbench_target_id": target["pdb_id"],
             "pdb_id": key[0],
-            "native_chain_id": key[1],
+            "native_chain_id": sample["native_chain_id"],
+            "predicted_chain_id": key[1],
             "sample_path": str(pt_path),
-            "source_cif": payload["source_predicted_cif"],
+            "source_cif": str(source_cif),
+            "ranking_score_json": str(score_path),
             "ranking_score": ranking_score,
             "seed": int(sample["protenix_seed"]),
-            "sample": int(sample["protenix_sample"]),
+            "sample": sample_number,
             "input_rmsd_a": float(sample["input_aligned_rmsd"]),
             "refined_rmsd_a": float(sample["refined_aligned_rmsd"]),
         }
@@ -140,7 +164,7 @@ def main() -> None:
         target_rows = list(csv.DictReader(handle))
     selected = select_candidates(read_tsv(args.test_dir / "samples.tsv"), target_rows)
     if not selected:
-        raise SystemExit("No FoldBench RNA monomer PDB+chain overlaps found")
+        raise SystemExit("No FoldBench RNA monomer PDB+predicted-chain overlaps found")
     (args.output_dir / "predictions").mkdir(parents=True)
     (args.output_dir / "targets").mkdir()
     (args.output_dir / "evaluation" / "ProtenixV3Input").mkdir(parents=True)
@@ -152,7 +176,7 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=["pdb_id", "chain_id"])
         writer.writeheader()
         for item in selected:
-            writer.writerow({"pdb_id": item["foldbench_target_id"], "chain_id": item["native_chain_id"]})
+            writer.writerow({"pdb_id": item["foldbench_target_id"], "chain_id": item["predicted_chain_id"]})
     for algorithm, field in (("ProtenixV3Input", "input_cif"), ("ProtenixV3Refined", "refined_cif")):
         path = args.output_dir / "evaluation" / algorithm / "prediction_reference.csv"
         with path.open("w", encoding="utf-8", newline="") as handle:

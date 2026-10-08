@@ -17,7 +17,7 @@ SELECT_SCRIPT = Path(__file__).with_name("select_refinement_v3_checkpoint.py")
 
 def fixture_row(split: str, pdb_id: str, before: float, after: float) -> dict:
     row = {
-        "split": split, "pdb_id": pdb_id, "native_chain_id": "A",
+        "split": split, "pdb_id": pdb_id, "native_chain_id": "A", "predicted_chain_id": "A",
         "length": 20, "mean_plddt": 0.8,
         "input_aligned_rmsd": before, "refined_aligned_rmsd": after,
         "aligned_improvement": before - after,
