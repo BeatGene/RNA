@@ -1,7 +1,8 @@
 """Export the pre-ranked FoldBench RNA monomer subset as input/refined CIFs.
 
-This never chooses candidates by native structure accuracy.  Each target uses
-the original Protenix ranking_score in its summary confidence JSON.
+This never chooses candidates by native structure accuracy. Each target uses
+the original Protenix ranking_score in its summary confidence JSON, or the
+PT build manifest if that JSON was subsequently moved or deleted.
 """
 
 from __future__ import annotations
@@ -23,6 +24,24 @@ from etflow.data.dataset import EuclideanDataset
 def read_tsv(path: Path) -> list[dict]:
     with path.open("r", encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def resolve_source_cif(recorded: Path, prediction_root: Path, pdb_id: str,
+                       seed: int) -> Path:
+    """Find a prediction moved from the old val tree into the test links."""
+    if recorded.is_file():
+        return recorded
+    candidates = (
+        prediction_root / "test" / pdb_id.lower() / f"seed_{seed}" / "predictions" / recorded.name,
+        prediction_root / "val" / pdb_id.lower() / f"seed_{seed}" / "predictions" / recorded.name,
+    )
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    raise FileNotFoundError(
+        f"Original predicted CIF is missing: {recorded}; also searched "
+        + ", ".join(str(path) for path in candidates)
+    )
 
 
 def ranking_score_from_source(source_cif: Path, sample_number: int) -> tuple[float, Path]:
@@ -48,7 +67,34 @@ def ranking_score_from_source(source_cif: Path, sample_number: int) -> tuple[flo
     return score, score_path
 
 
-def select_candidates(samples: list[dict], target_rows: list[dict]) -> list[dict]:
+def read_manifest_scores(paths: list[Path], target_pdb_ids: set[str]) -> dict[str, tuple[float, Path]]:
+    """Load original ranking scores captured when the .pt dataset was built."""
+    scores: dict[str, tuple[float, Path]] = {}
+    for path in sorted(set(paths)):
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            for row in csv.DictReader(handle, delimiter="\t"):
+                pdb_id = (row.get("pdb_id") or "").upper()
+                if pdb_id not in target_pdb_ids or not row.get("ranking_score"):
+                    continue
+                try:
+                    key = str(Path(row["output"]).resolve())
+                    if not row["output"] or not Path(row["output"]).is_absolute():
+                        raise ValueError("manifest output path must be absolute")
+                    score = float(row["ranking_score"])
+                except (TypeError, ValueError, KeyError) as exc:
+                    raise ValueError(f"Invalid ranking score in {path}: {row}") from exc
+                if not math.isfinite(score):
+                    raise ValueError(f"Nonfinite ranking score in {path}: {row}")
+                previous = scores.get(key)
+                if previous is not None and not math.isclose(previous[0], score, rel_tol=0, abs_tol=1e-9):
+                    raise ValueError(f"Conflicting build-manifest ranking scores for {key}: {previous[1]} and {path}")
+                scores[key] = score, path
+    return scores
+
+
+def select_candidates(samples: list[dict], target_rows: list[dict],
+                      manifest_scores: dict[str, tuple[float, Path]] | None = None,
+                      prediction_root: Path | None = None) -> list[dict]:
     target_map = {
         (row["pdb_id"].split("-", 1)[0].upper(), row["chain_id"]): row
         for row in target_rows
@@ -61,9 +107,30 @@ def select_candidates(samples: list[dict], target_rows: list[dict]) -> list[dict
             continue
         pt_path = Path(sample["sample_path"])
         payload = torch.load(pt_path, map_location="cpu", weights_only=False)
-        source_cif = Path(payload["source_predicted_cif"])
         sample_number = int(sample["protenix_sample"])
-        ranking_score, score_path = ranking_score_from_source(source_cif, sample_number)
+        seed = int(sample["protenix_seed"])
+        recorded_cif = Path(payload["source_predicted_cif"])
+        source_cif = resolve_source_cif(
+            recorded_cif, prediction_root or Path.home() / "Data_V2", key[0], seed,
+        )
+        summary_suffix = f"_sample_{sample_number}.cif"
+        if not source_cif.name.endswith(summary_suffix):
+            raise ValueError(f"Sample CIF name does not match sample {sample_number}: {source_cif}")
+        score_path = source_cif.with_name(
+            f"{source_cif.name[:-len(summary_suffix)]}_summary_confidence_sample_{sample_number}.json"
+        )
+        if score_path.is_file():
+            ranking_score, score_path = ranking_score_from_source(source_cif, sample_number)
+            score_source = str(score_path)
+        else:
+            manifest_entry = (manifest_scores or {}).get(str(pt_path.resolve()))
+            if manifest_entry is None:
+                raise ValueError(
+                    f"Missing Protenix ranking_score for {key[0]} seed={seed} sample={sample_number}; "
+                    f"summary JSON absent: {score_path}; no score for this exact .pt path in the PT build manifest"
+                )
+            ranking_score, manifest_path = manifest_entry
+            score_source = str(manifest_path)
         candidate = {
             "foldbench_target_id": target["pdb_id"],
             "pdb_id": key[0],
@@ -71,9 +138,10 @@ def select_candidates(samples: list[dict], target_rows: list[dict]) -> list[dict
             "predicted_chain_id": key[1],
             "sample_path": str(pt_path),
             "source_cif": str(source_cif),
-            "ranking_score_json": str(score_path),
+            "ranking_score_json": str(score_path) if score_path.is_file() else "",
+            "ranking_score_source": score_source,
             "ranking_score": ranking_score,
-            "seed": int(sample["protenix_seed"]),
+            "seed": seed,
             "sample": sample_number,
             "input_rmsd_a": float(sample["input_aligned_rmsd"]),
             "refined_rmsd_a": float(sample["refined_aligned_rmsd"]),
@@ -154,6 +222,10 @@ def main() -> None:
     parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--precision", choices=("bf16", "fp32"), default="bf16")
+    parser.add_argument("--ranking-manifest", type=Path, action="append", default=[],
+                        help="Additional PT build manifest.tsv with original ranking_score")
+    parser.add_argument("--prediction-root", type=Path, default=Path.home() / "Data_V2",
+                        help="Prediction dataset root containing the current test/PDB links")
     args = parser.parse_args()
     summary = json.loads((args.test_dir / "summary.json").read_text(encoding="utf-8"))
     if summary["split"] != "test" or Path(summary["checkpoint"]).resolve() != args.checkpoint.resolve():
@@ -162,7 +234,13 @@ def main() -> None:
         raise SystemExit(f"output directory is not empty: {args.output_dir}")
     with args.targets.open("r", encoding="utf-8", newline="") as handle:
         target_rows = list(csv.DictReader(handle))
-    selected = select_candidates(read_tsv(args.test_dir / "samples.tsv"), target_rows)
+    target_pdb_ids = {row["pdb_id"].split("-", 1)[0].upper() for row in target_rows}
+    manifest_paths = list((args.data_dir / "logs").glob("*/manifest.tsv")) + args.ranking_manifest
+    manifest_scores = read_manifest_scores(manifest_paths, target_pdb_ids)
+    selected = select_candidates(
+        read_tsv(args.test_dir / "samples.tsv"), target_rows, manifest_scores,
+        args.prediction_root,
+    )
     if not selected:
         raise SystemExit("No FoldBench RNA monomer PDB+predicted-chain overlaps found")
     (args.output_dir / "predictions").mkdir(parents=True)

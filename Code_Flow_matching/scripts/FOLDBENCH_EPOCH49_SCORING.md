@@ -40,13 +40,18 @@ done
 9 行都显示 `OK` 才能开始评分。文件名与非空检查不能证明文件来源；应保留官方
 下载包，并从该包解压。评分脚本还会在 GPU 导出前检查目录和 Conda 环境。
 
+若参考结构包是放在该目录中的 `ground_truth_1522.tar`，可以直接在运行时传入
+`--ground-truth-tar "$GT_DIR/ground_truth_1522.tar"`。脚本先核对压缩包里是否包含
+全部 9 个目标，再只提取这些 CIF 到 `GT_DIR`；无须解压全部 1522 个文件。
+
 在服务器激活 `protenix-1.0.5` 后执行，按实际位置修改最后两个参数：
 
 ```bash
 cd ~/Code_Flow_matching
 python -u scripts/compare_foldbench_refinement_v3.py \
   --foldbench-repo "$FB_REPO" \
-  --ground-truth-dir "$GT_DIR"
+  --ground-truth-dir "$GT_DIR" \
+  --ground-truth-tar "$GT_DIR/ground_truth_1522.tar"
 ```
 
 若 FoldBench 环境名称不同，增加 `--foldbench-conda-env 环境名`。若只想先导出 9 个
@@ -62,5 +67,17 @@ evaluation/foldbench_epoch49_9targets_comparison/paired_lddt_all.tsv
 ```
 
 每个目标按照原始 Protenix `ranking_score` 选择一个候选，精修前后使用同一候选。
+若原始预测目录的 `summary_confidence` JSON 已不存在，导出脚本会读取
+`~/Data_PT_V2/logs/*/manifest.tsv` 中建集时记录的原始 `ranking_score`。
+若建集日志放在其他位置，可重复提供 `--ranking-manifest /实际路径/manifest.tsv`。
+如果两处都没有分数，脚本会停止，不会改按真实 RMSD 或其他指标挑选候选。
 报告中的平均 lDDT 是 9 个目标的子集平均，不能直接与 FoldBench 官方 15 个 RNA
 单体目标的榜单均值比较。若任何目标的导出或 lDDT 缺失，脚本报错，不生成完整报告。
+# 原始预测路径迁移
+
+`.pt` 内的 `source_predicted_cif` 可能仍指向旧的 `Data_V2/val/<PDB>`，而现在的
+`Data_V2/test/<PDB>` 是指向 `Data_V1` 原始预测目录的符号链接。导出脚本会先检查
+`.pt` 记录的路径；若文件不存在，再按同一 PDB、seed、sample 文件名到
+`~/Data_V2/test` 查找。它仍从对应原始预测的 `summary_confidence` JSON 读取
+Protenix `ranking_score`，不会改变候选选择准则。若预测数据根目录不是
+`~/Data_V2`，单独运行导出脚本时可传 `--prediction-root /实际目录`。

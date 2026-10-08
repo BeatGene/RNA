@@ -1,0 +1,145 @@
+split	unit	input_bin_a	refined_bin_a	count	within_input_bin_rate
+val	candidate	[0,2)	[0,2)	11	0.9166666666666666
+val	candidate	[0,2)	[2,5)	1	0.08333333333333333
+val	candidate	[0,2)	[5,10)	0	0.0
+val	candidate	[0,2)	[10,20)	0	0.0
+val	candidate	[0,2)	[20,30)	0	0.0
+val	candidate	[0,2)	[30,inf)	0	0.0
+val	candidate	[2,5)	[0,2)	0	0.0
+val	candidate	[2,5)	[2,5)	24	1.0
+val	candidate	[2,5)	[5,10)	0	0.0
+val	candidate	[2,5)	[10,20)	0	0.0
+val	candidate	[2,5)	[20,30)	0	0.0
+val	candidate	[2,5)	[30,inf)	0	0.0
+val	candidate	[5,10)	[0,2)	0	0.0
+val	candidate	[5,10)	[2,5)	2	0.06666666666666667
+val	candidate	[5,10)	[5,10)	28	0.9333333333333333
+val	candidate	[5,10)	[10,20)	0	0.0
+val	candidate	[5,10)	[20,30)	0	0.0
+val	candidate	[5,10)	[30,inf)	0	0.0
+val	candidate	[10,20)	[0,2)	1	0.04
+val	candidate	[10,20)	[2,5)	1	0.04
+val	candidate	[10,20)	[5,10)	1	0.04
+val	candidate	[10,20)	[10,20)	22	0.88
+val	candidate	[10,20)	[20,30)	0	0.0
+val	candidate	[10,20)	[30,inf)	0	0.0
+val	candidate	[20,30)	[0,2)	0	0.0
+val	candidate	[20,30)	[2,5)	0	0.0
+val	candidate	[20,30)	[5,10)	0	0.0
+val	candidate	[20,30)	[10,20)	1	0.08333333333333333
+val	candidate	[20,30)	[20,30)	11	0.9166666666666666
+val	candidate	[20,30)	[30,inf)	0	0.0
+val	candidate	[30,inf)	[0,2)	0	nan
+val	candidate	[30,inf)	[2,5)	0	nan
+val	candidate	[30,inf)	[5,10)	0	nan
+val	candidate	[30,inf)	[10,20)	0	nan
+val	candidate	[30,inf)	[20,30)	0	nan
+val	candidate	[30,inf)	[30,inf)	0	nan
+val	PDB-chain macro	[0,2)	[0,2)	11	0.9166666666666666
+val	PDB-chain macro	[0,2)	[2,5)	1	0.08333333333333333
+val	PDB-chain macro	[0,2)	[5,10)	0	0.0
+val	PDB-chain macro	[0,2)	[10,20)	0	0.0
+val	PDB-chain macro	[0,2)	[20,30)	0	0.0
+val	PDB-chain macro	[0,2)	[30,inf)	0	0.0
+val	PDB-chain macro	[2,5)	[0,2)	0	0.0
+val	PDB-chain macro	[2,5)	[2,5)	24	1.0
+val	PDB-chain macro	[2,5)	[5,10)	0	0.0
+val	PDB-chain macro	[2,5)	[10,20)	0	0.0
+val	PDB-chain macro	[2,5)	[20,30)	0	0.0
+val	PDB-chain macro	[2,5)	[30,inf)	0	0.0
+val	PDB-chain macro	[5,10)	[0,2)	0	0.0
+val	PDB-chain macro	[5,10)	[2,5)	2	0.06666666666666667
+val	PDB-chain macro	[5,10)	[5,10)	28	0.9333333333333333
+val	PDB-chain macro	[5,10)	[10,20)	0	0.0
+val	PDB-chain macro	[5,10)	[20,30)	0	0.0
+val	PDB-chain macro	[5,10)	[30,inf)	0	0.0
+val	PDB-chain macro	[10,20)	[0,2)	1	0.04
+val	PDB-chain macro	[10,20)	[2,5)	1	0.04
+val	PDB-chain macro	[10,20)	[5,10)	1	0.04
+val	PDB-chain macro	[10,20)	[10,20)	22	0.88
+val	PDB-chain macro	[10,20)	[20,30)	0	0.0
+val	PDB-chain macro	[10,20)	[30,inf)	0	0.0
+val	PDB-chain macro	[20,30)	[0,2)	0	0.0
+val	PDB-chain macro	[20,30)	[2,5)	0	0.0
+val	PDB-chain macro	[20,30)	[5,10)	0	0.0
+val	PDB-chain macro	[20,30)	[10,20)	1	0.08333333333333333
+val	PDB-chain macro	[20,30)	[20,30)	11	0.9166666666666666
+val	PDB-chain macro	[20,30)	[30,inf)	0	0.0
+val	PDB-chain macro	[30,inf)	[0,2)	0	nan
+val	PDB-chain macro	[30,inf)	[2,5)	0	nan
+val	PDB-chain macro	[30,inf)	[5,10)	0	nan
+val	PDB-chain macro	[30,inf)	[10,20)	0	nan
+val	PDB-chain macro	[30,inf)	[20,30)	0	nan
+val	PDB-chain macro	[30,inf)	[30,inf)	0	nan
+test	candidate	[0,2)	[0,2)	3	1.0
+test	candidate	[0,2)	[2,5)	0	0.0
+test	candidate	[0,2)	[5,10)	0	0.0
+test	candidate	[0,2)	[10,20)	0	0.0
+test	candidate	[0,2)	[20,30)	0	0.0
+test	candidate	[0,2)	[30,inf)	0	0.0
+test	candidate	[2,5)	[0,2)	0	0.0
+test	candidate	[2,5)	[2,5)	29	1.0
+test	candidate	[2,5)	[5,10)	0	0.0
+test	candidate	[2,5)	[10,20)	0	0.0
+test	candidate	[2,5)	[20,30)	0	0.0
+test	candidate	[2,5)	[30,inf)	0	0.0
+test	candidate	[5,10)	[0,2)	0	0.0
+test	candidate	[5,10)	[2,5)	1	0.06666666666666667
+test	candidate	[5,10)	[5,10)	14	0.9333333333333333
+test	candidate	[5,10)	[10,20)	0	0.0
+test	candidate	[5,10)	[20,30)	0	0.0
+test	candidate	[5,10)	[30,inf)	0	0.0
+test	candidate	[10,20)	[0,2)	0	0.0
+test	candidate	[10,20)	[2,5)	0	0.0
+test	candidate	[10,20)	[5,10)	0	0.0
+test	candidate	[10,20)	[10,20)	5	1.0
+test	candidate	[10,20)	[20,30)	0	0.0
+test	candidate	[10,20)	[30,inf)	0	0.0
+test	candidate	[20,30)	[0,2)	0	0.0
+test	candidate	[20,30)	[2,5)	0	0.0
+test	candidate	[20,30)	[5,10)	0	0.0
+test	candidate	[20,30)	[10,20)	0	0.0
+test	candidate	[20,30)	[20,30)	14	1.0
+test	candidate	[20,30)	[30,inf)	0	0.0
+test	candidate	[30,inf)	[0,2)	0	0.0
+test	candidate	[30,inf)	[2,5)	0	0.0
+test	candidate	[30,inf)	[5,10)	0	0.0
+test	candidate	[30,inf)	[10,20)	0	0.0
+test	candidate	[30,inf)	[20,30)	0	0.0
+test	candidate	[30,inf)	[30,inf)	1	1.0
+test	PDB-chain macro	[0,2)	[0,2)	3	1.0
+test	PDB-chain macro	[0,2)	[2,5)	0	0.0
+test	PDB-chain macro	[0,2)	[5,10)	0	0.0
+test	PDB-chain macro	[0,2)	[10,20)	0	0.0
+test	PDB-chain macro	[0,2)	[20,30)	0	0.0
+test	PDB-chain macro	[0,2)	[30,inf)	0	0.0
+test	PDB-chain macro	[2,5)	[0,2)	0	0.0
+test	PDB-chain macro	[2,5)	[2,5)	29	1.0
+test	PDB-chain macro	[2,5)	[5,10)	0	0.0
+test	PDB-chain macro	[2,5)	[10,20)	0	0.0
+test	PDB-chain macro	[2,5)	[20,30)	0	0.0
+test	PDB-chain macro	[2,5)	[30,inf)	0	0.0
+test	PDB-chain macro	[5,10)	[0,2)	0	0.0
+test	PDB-chain macro	[5,10)	[2,5)	1	0.06666666666666667
+test	PDB-chain macro	[5,10)	[5,10)	14	0.9333333333333333
+test	PDB-chain macro	[5,10)	[10,20)	0	0.0
+test	PDB-chain macro	[5,10)	[20,30)	0	0.0
+test	PDB-chain macro	[5,10)	[30,inf)	0	0.0
+test	PDB-chain macro	[10,20)	[0,2)	0	0.0
+test	PDB-chain macro	[10,20)	[2,5)	0	0.0
+test	PDB-chain macro	[10,20)	[5,10)	0	0.0
+test	PDB-chain macro	[10,20)	[10,20)	5	1.0
+test	PDB-chain macro	[10,20)	[20,30)	0	0.0
+test	PDB-chain macro	[10,20)	[30,inf)	0	0.0
+test	PDB-chain macro	[20,30)	[0,2)	0	0.0
+test	PDB-chain macro	[20,30)	[2,5)	0	0.0
+test	PDB-chain macro	[20,30)	[5,10)	0	0.0
+test	PDB-chain macro	[20,30)	[10,20)	0	0.0
+test	PDB-chain macro	[20,30)	[20,30)	14	1.0
+test	PDB-chain macro	[20,30)	[30,inf)	0	0.0
+test	PDB-chain macro	[30,inf)	[0,2)	0	0.0
+test	PDB-chain macro	[30,inf)	[2,5)	0	0.0
+test	PDB-chain macro	[30,inf)	[5,10)	0	0.0
+test	PDB-chain macro	[30,inf)	[10,20)	0	0.0
+test	PDB-chain macro	[30,inf)	[20,30)	0	0.0
+test	PDB-chain macro	[30,inf)	[30,inf)	1	1.0

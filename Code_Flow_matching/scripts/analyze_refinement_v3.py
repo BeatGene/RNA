@@ -261,6 +261,10 @@ def main() -> None:
         data[split] = (samples, chain_rows(samples), summary)
     if data["val"][2]["checkpoint"] != data["test"][2]["checkpoint"]:
         raise ValueError("Validation and test results use different checkpoints")
+    val_data_dir = data["val"][2].get("data_dir")
+    test_data_dir = data["test"][2].get("data_dir")
+    if val_data_dir and test_data_dir and val_data_dir != test_data_dir:
+        raise ValueError("Validation and test results use different data directories")
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     metrics, physics, distributions, transitions, histograms = [], [], [], [], []
@@ -335,7 +339,7 @@ def main() -> None:
         "# V3 RNA refinement evaluation", "",
         f"Checkpoint: `{data['val'][2]['checkpoint']}`", "",
         "主 RMSD 是 native observed atoms 的逐候选 Kabsch 对齐 RMSD，单位 Å；改善量 = 输入 − refinement 后。",
-        "同一链的候选相关，链层面的宏平均是主要统计单位。分层按输入值固定，避免 refinement 后跨组导致口径改变。RMSD 仅用 native 可观测原子；物理 loss 则按训练定义使用预测结构的全部原子。", "",
+        "以 PDB 链为主要统计单位；同一链有多个候选时，它们彼此相关。分层按输入值固定，避免 refinement 后跨组导致口径改变。RMSD 仅用 native 可观测原子；物理 loss 则按训练定义使用预测结构的全部原子。", "",
         "## 验证集与测试集总览", "",
         markdown_table(overall, ["split", "unit", "count", "input_rmsd_mean_a", "refined_rmsd_mean_a", "improvement_mean_a", "win_rate", "worsen_rate"]), "",
         "## 输入 RMSD <2 Å", "",
@@ -367,7 +371,7 @@ def main() -> None:
     lines += [
         "## 文件", "",
         "`rmsd_comparison.tsv` 包含总览、长度、输入 RMSD 和 <2 Å 子集；`low_input_rmsd_chains.tsv` 为低输入误差链清单；`physical_comparison.tsv` 包含对应候选/链级物理 loss；`rmsd_histogram.tsv`、`rmsd_distribution.tsv` 与 `rmsd_transitions.tsv` 记录前后分布。", "",
-        "评估只覆盖 Data_PT_V2 中实际存在的 .pt 候选；FoldBench 分数需使用原始/精修结构文件由 FoldBench OpenStructure 流程另算，并按预先指定的排名分数选每靶标一个候选。", "",
+        f"评估数据目录：`{val_data_dir or test_data_dir or '未记录'}`。只覆盖该目录中实际存在的 .pt 候选；FoldBench 分数需使用原始/精修结构文件由 FoldBench OpenStructure 流程另算。", "",
     ]
     (args.output_dir / "analysis.md").write_text("\n".join(lines), encoding="utf-8")
     print(f"ANALYSIS_COMPLETE output_dir={args.output_dir}")

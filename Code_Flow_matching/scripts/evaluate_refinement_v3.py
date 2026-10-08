@@ -20,6 +20,7 @@ from torch_geometric.data import Batch
 
 import evaluate_refinement as base
 from etflow.data.dataset import EuclideanDataset
+from etflow.data.constants import ATOM_NAME_TO_ID
 from etflow.models.loss import bond_length_loss, steric_clash_loss
 from etflow.models.utils import center_of_mass
 
@@ -29,7 +30,18 @@ PHYSICS_FIELDS = [
     "input_clash_loss_a2", "refined_clash_loss_a2",
     "input_plane_loss_a2", "refined_plane_loss_a2",
 ]
-SAMPLE_FIELDS = base.SAMPLE_FIELDS + PHYSICS_FIELDS
+BACKBONE_ATOM_NAMES = (
+    "P", "OP1", "OP2", "OP3", "O5'", "C5'", "C4'", "O4'",
+    "C3'", "O3'", "C2'", "O2'", "C1'",
+)
+BACKBONE_ATOM_IDS = tuple(ATOM_NAME_TO_ID[name] for name in BACKBONE_ATOM_NAMES)
+BACKBONE_FIELDS = [
+    "observed_backbone_atom_count",
+    "input_backbone_aligned_rmsd",
+    "refined_backbone_aligned_rmsd",
+    "backbone_aligned_improvement",
+]
+SAMPLE_FIELDS = base.SAMPLE_FIELDS + BACKBONE_FIELDS + PHYSICS_FIELDS
 
 
 def parse_args() -> argparse.Namespace:
@@ -116,6 +128,7 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
         indices = indices[:args.limit]
     indices = indices[rank::world_size]
     model = base.load_model(args.config, args.checkpoint, device)
+    backbone_ids = torch.tensor(BACKBONE_ATOM_IDS, dtype=torch.long, device=device)
     shard_path = args.output_dir / f"samples.rank{rank:03d}.tsv"
     started = time.perf_counter()
     processed = 0
@@ -168,6 +181,7 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
             for graph_index, graph in enumerate(data_list):
                 atom_selector = batch.batch == graph_index
                 observed_selector = atom_selector & batch.target_mask
+                backbone_selector = observed_selector & torch.isin(batch.atom_name_id, backbone_ids)
                 source_observed = batch.pos_pred[observed_selector]
                 target_observed = batch.pos[observed_selector]
                 refined_observed = prediction[observed_selector]
@@ -180,6 +194,12 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
                 input_aligned = base.aligned_rmsd(source_observed, target_observed)
                 refined_aligned = base.aligned_rmsd(refined_observed, target_observed)
                 improvement = input_aligned - refined_aligned
+                input_backbone = base.aligned_rmsd(
+                    batch.pos_pred[backbone_selector], batch.pos[backbone_selector],
+                )
+                refined_backbone = base.aligned_rmsd(
+                    prediction[backbone_selector], batch.pos[backbone_selector],
+                )
                 atom_count = int(atom_selector.sum())
                 observed_count = int(observed_selector.sum())
                 row = {
@@ -202,6 +222,10 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
                     "refined_aligned_rmsd": refined_aligned,
                     "aligned_improvement": improvement,
                     "stored_input_rmsd": float(metadata["stored_rmsds"][graph_index]),
+                    "observed_backbone_atom_count": int(backbone_selector.sum()),
+                    "input_backbone_aligned_rmsd": input_backbone,
+                    "refined_backbone_aligned_rmsd": refined_backbone,
+                    "backbone_aligned_improvement": input_backbone - refined_backbone,
                     "improved": int(improvement > args.tie_tolerance),
                     "worsened": int(improvement < -args.tie_tolerance),
                     "sample_path": metadata["sample_paths"][graph_index],

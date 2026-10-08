@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import csv
+import io
 from pathlib import Path
+import tarfile
 import tempfile
 import unittest
 
@@ -19,6 +21,26 @@ def write_rows(path: Path, rows: list[dict], delimiter: str) -> None:
 
 
 class PairedFoldBenchTests(unittest.TestCase):
+    def test_extracts_only_nine_reference_cifs_from_nested_tar(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            archive = root / "ground_truth_1522.tar"
+            content = b"data_test\n#\n"
+            with tarfile.open(archive, "w") as handle:
+                for filename in sorted(f"{target}.cif" for target in runner.TARGET_IDS):
+                    member = tarfile.TarInfo(f"nested/ground_truths/{filename}")
+                    member.size = len(content)
+                    handle.addfile(member, io.BytesIO(content))
+                extra = tarfile.TarInfo("../unrelated.cif")
+                extra.size = len(content)
+                handle.addfile(extra, io.BytesIO(content))
+            output = root / "ground_truths"
+            runner.extract_ground_truth_tar(archive, output)
+            runner.validate_ground_truth(output)
+            self.assertEqual({path.name for path in output.iterdir()},
+                             {f"{target}.cif" for target in runner.TARGET_IDS})
+            runner.extract_ground_truth_tar(archive, output)
+
     def test_requires_nine_paired_targets_and_writes_epoch49_comparison(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

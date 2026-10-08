@@ -17,6 +17,7 @@ import shutil
 import statistics
 import subprocess
 import sys
+import tarfile
 
 
 TARGET_IDS = frozenset(
@@ -83,6 +84,47 @@ def validate_ground_truth(directory: Path) -> None:
         check_file(path)
         if path.stat().st_size == 0:
             raise ValueError(f"Ground-truth CIF is empty: {path}")
+
+
+def extract_ground_truth_tar(archive: Path, directory: Path) -> None:
+    """Copy only the nine expected regular CIF members, without extracting paths."""
+    check_file(archive)
+    wanted = {f"{target}.cif" for target in TARGET_IDS}
+    with tarfile.open(archive, "r:*") as handle:
+        found: dict[str, tarfile.TarInfo] = {}
+        for member in handle:
+            filename = Path(member.name).name.lower()
+            if filename not in wanted:
+                continue
+            if not member.isfile() or member.size == 0:
+                raise ValueError(f"Invalid ground-truth member in {archive}: {member.name}")
+            if filename in found:
+                raise ValueError(f"Duplicate ground-truth member in {archive}: {filename}")
+            found[filename] = member
+        missing = wanted - found.keys()
+        if missing:
+            raise ValueError(f"Reference tar is missing {sorted(missing)}: {archive}")
+        directory.mkdir(parents=True, exist_ok=True)
+        for filename in sorted(wanted):
+            member = found[filename]
+            destination = directory / filename
+            if destination.exists():
+                if destination.is_file() and destination.stat().st_size == member.size:
+                    print(f"REFERENCE_EXISTS {destination}", flush=True)
+                    continue
+                raise ValueError(f"Existing reference differs from archive; inspect it: {destination}")
+            source = handle.extractfile(member)
+            if source is None:
+                raise ValueError(f"Cannot read reference from tar: {member.name}")
+            try:
+                with source, destination.open("xb") as output:
+                    shutil.copyfileobj(source, output)
+                if destination.stat().st_size != member.size:
+                    raise ValueError(f"Extracted reference size mismatch: {destination}")
+            except BaseException:
+                destination.unlink(missing_ok=True)
+                raise
+            print(f"REFERENCE_EXTRACTED {destination} bytes={member.size}", flush=True)
 
 
 def check_foldbench_environment(name: str) -> None:
@@ -170,9 +212,13 @@ def main() -> None:
                         help="FoldBench repository containing evaluate.py")
     parser.add_argument("--ground-truth-dir", type=Path, required=True,
                         help="Directory with the official <pdb>-assembly1.cif files")
+    parser.add_argument("--ground-truth-tar", type=Path,
+                        help="Optional official tar archive; extract only the nine RNA references")
     parser.add_argument("--stage", choices=("all", "export", "score"), default="all")
     parser.add_argument("--foldbench-conda-env", default="foldbench")
     parser.add_argument("--data-dir", type=Path, default=Path.home() / "Data_PT_V2")
+    parser.add_argument("--ranking-manifest", type=Path, action="append", default=[],
+                        help="Additional PT build manifest.tsv with original ranking_score")
     parser.add_argument("--checkpoint-dir", type=Path,
                         default=project / "checkpoints" / "rna_refinement_v3_residual_mobility")
     parser.add_argument("--output-subdir", default="foldbench_9targets")
@@ -197,10 +243,12 @@ def main() -> None:
     if args.stage in ("all", "score"):
         for file in (fb_repo / "evaluate.py", fb_repo / "task_score_summary.py"):
             check_file(file)
-        validate_ground_truth(ground_truth)
         if shutil.which("conda") is None:
             raise RuntimeError("conda was not found; activate Conda before running this script")
         check_foldbench_environment(args.foldbench_conda_env)
+        if args.ground_truth_tar is not None:
+            extract_ground_truth_tar(args.ground_truth_tar.resolve(), ground_truth)
+        validate_ground_truth(ground_truth)
 
     roots: dict[str, Path] = {}
     for name in names:
@@ -216,12 +264,15 @@ def main() -> None:
             raise ValueError(f"{name}: test evaluation checkpoint does not match {checkpoint}")
         if args.stage in ("all", "export") and not (output / "selected_candidates.tsv").exists():
             check_file(checkpoint)
-            run([
+            command = [
                 sys.executable, str(exporter), "--test-dir", str(test_dir),
                 "--targets", str(targets), "--config", str(config),
                 "--checkpoint", str(checkpoint), "--data-dir", str(args.data_dir),
                 "--output-dir", str(output),
-            ], cwd=project)
+            ]
+            for manifest in args.ranking_manifest:
+                command += ["--ranking-manifest", str(manifest.resolve())]
+            run(command, cwd=project)
         validate_export(output)
         print(f"EXPORT_OK model={name} targets=9 path={output}", flush=True)
     if args.stage == "export":
