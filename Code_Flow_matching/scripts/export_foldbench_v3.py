@@ -1,0 +1,177 @@
+"""Export the pre-ranked FoldBench RNA monomer subset as input/refined CIFs.
+
+This never chooses candidates by native structure accuracy.  Each target uses
+the original Protenix ranking_score stored in its source confidence JSON.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import math
+from pathlib import Path
+
+import gemmi
+import torch
+from torch_geometric.data import Batch
+
+import evaluate_refinement as base
+from etflow.data.dataset import EuclideanDataset
+
+
+def read_tsv(path: Path) -> list[dict]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def select_candidates(samples: list[dict], target_rows: list[dict]) -> list[dict]:
+    target_map = {
+        (row["pdb_id"].split("-", 1)[0].upper(), row["chain_id"]): row
+        for row in target_rows
+    }
+    selected: dict[str, dict] = {}
+    for sample in samples:
+        key = sample["pdb_id"].upper(), sample["native_chain_id"]
+        target = target_map.get(key)
+        if target is None:
+            continue
+        pt_path = Path(sample["sample_path"])
+        payload = torch.load(pt_path, map_location="cpu", weights_only=False)
+        confidence_path = Path(payload["source_confidence_json"])
+        ranking_score = float(json.loads(confidence_path.read_text(encoding="utf-8"))["ranking_score"])
+        if not math.isfinite(ranking_score):
+            raise ValueError(f"Nonfinite ranking_score: {confidence_path}")
+        candidate = {
+            "foldbench_target_id": target["pdb_id"],
+            "pdb_id": key[0],
+            "native_chain_id": key[1],
+            "sample_path": str(pt_path),
+            "source_cif": payload["source_predicted_cif"],
+            "ranking_score": ranking_score,
+            "seed": int(sample["protenix_seed"]),
+            "sample": int(sample["protenix_sample"]),
+            "input_rmsd_a": float(sample["input_aligned_rmsd"]),
+            "refined_rmsd_a": float(sample["refined_aligned_rmsd"]),
+        }
+        previous = selected.get(target["pdb_id"])
+        if previous is None or (ranking_score, -candidate["seed"], -candidate["sample"]) > (
+            previous["ranking_score"], -previous["seed"], -previous["sample"],
+        ):
+            selected[target["pdb_id"]] = candidate
+    return [selected[key] for key in sorted(selected)]
+
+
+def write_refined_cif(source_path: Path, dest_path: Path, atom_rows, source_pos, refined_pos) -> None:
+    doc = gemmi.cif.read_file(str(source_path))
+    table = doc.sole_block().find_mmcif_category("_atom_site.")
+    tags = list(table.tags)
+    columns = [tags.index(f"_atom_site.Cartn_{axis}") for axis in "xyz"]
+    if len(atom_rows) != len(source_pos) or len(atom_rows) != len(refined_pos):
+        raise ValueError("Atom mapping and coordinate array sizes differ")
+    for index, cif_row in enumerate(atom_rows):
+        row = table[int(cif_row)]
+        cif_source = [float(row[column]) for column in columns]
+        if max(abs(cif_source[axis] - float(source_pos[index, axis])) for axis in range(3)) > 0.01:
+            raise ValueError(f"Source CIF and .pt atom mapping differ at row {cif_row}: {source_path}")
+        for axis, column in enumerate(columns):
+            row[column] = f"{float(refined_pos[index, axis]):.4f}"
+    doc.write_file(str(dest_path))
+
+
+def run_inference(selected: list[dict], config: Path, checkpoint: Path, data_dir: Path,
+                  output_dir: Path, precision: str) -> None:
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    if device.type == "cuda":
+        torch.cuda.set_device(0)
+    model = base.load_model(config, checkpoint, device)
+    dataset = EuclideanDataset(data_dir, split="test", include_metadata=True)
+    path_to_index = {str(path.resolve()): index for index, path in enumerate(dataset.data_files)}
+    amp_enabled = device.type == "cuda" and precision == "bf16"
+    for item in selected:
+        sample_path = str(Path(item["sample_path"]).resolve())
+        graph = dataset.get(path_to_index[sample_path])
+        batch = Batch.from_data_list([graph]).to(device)
+        with torch.inference_mode(), torch.autocast(
+            device_type=device.type, dtype=torch.bfloat16, enabled=amp_enabled,
+        ):
+            refined_centered = model.sample(
+                z=batch.atomic_numbers, pos_pred=batch.pos_pred,
+                bond_index=batch.edge_index, batch=batch.batch,
+                node_attr=batch.node_attr, edge_attr=batch.edge_attr,
+                atom_plddt=batch.atom_plddt,
+                atom_to_token_idx=batch.atom_to_token_idx,
+                token_pair_confidence=batch.token_pair_confidence,
+                num_tokens=batch.num_tokens,
+                atom_mobility_attr=batch.atom_mobility_attr,
+                geometry_bond_index=batch.geometry_bond_index,
+                ideal_bond_length=batch.ideal_bond_length,
+                clash_exclusion_index=batch.clash_exclusion_index,
+                n_timesteps=1,
+            )
+        refined = (refined_centered.float() + batch.pos_pred.float().mean(dim=0)).cpu()
+        source = batch.pos_pred.float().cpu()
+        destination = output_dir / "predictions" / f"{item['foldbench_target_id']}_refined.cif"
+        write_refined_cif(
+            Path(item["source_cif"]), destination,
+            torch.load(sample_path, map_location="cpu", weights_only=False)["predicted_atom_site_row"],
+            source, refined,
+        )
+        item["refined_cif"] = str(destination.resolve())
+        item["input_cif"] = str(Path(item["source_cif"]).resolve())
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--test-dir", type=Path, required=True)
+    parser.add_argument("--targets", type=Path, required=True, help="FoldBench targets/monomer_rna.csv")
+    parser.add_argument("--config", type=Path, required=True)
+    parser.add_argument("--checkpoint", type=Path, required=True)
+    parser.add_argument("--data-dir", type=Path, required=True)
+    parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--precision", choices=("bf16", "fp32"), default="bf16")
+    args = parser.parse_args()
+    summary = json.loads((args.test_dir / "summary.json").read_text(encoding="utf-8"))
+    if summary["split"] != "test" or Path(summary["checkpoint"]).resolve() != args.checkpoint.resolve():
+        raise ValueError("Export checkpoint differs from locked test evaluation")
+    if args.output_dir.exists() and any(args.output_dir.iterdir()):
+        raise SystemExit(f"output directory is not empty: {args.output_dir}")
+    with args.targets.open("r", encoding="utf-8", newline="") as handle:
+        target_rows = list(csv.DictReader(handle))
+    selected = select_candidates(read_tsv(args.test_dir / "samples.tsv"), target_rows)
+    if not selected:
+        raise SystemExit("No FoldBench RNA monomer PDB+chain overlaps found")
+    (args.output_dir / "predictions").mkdir(parents=True)
+    (args.output_dir / "targets").mkdir()
+    (args.output_dir / "evaluation" / "ProtenixV3Input").mkdir(parents=True)
+    (args.output_dir / "evaluation" / "ProtenixV3Refined").mkdir(parents=True)
+    run_inference(
+        selected, args.config, args.checkpoint, args.data_dir, args.output_dir, args.precision,
+    )
+    with (args.output_dir / "targets" / "monomer_rna.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["pdb_id", "chain_id"])
+        writer.writeheader()
+        for item in selected:
+            writer.writerow({"pdb_id": item["foldbench_target_id"], "chain_id": item["native_chain_id"]})
+    for algorithm, field in (("ProtenixV3Input", "input_cif"), ("ProtenixV3Refined", "refined_cif")):
+        path = args.output_dir / "evaluation" / algorithm / "prediction_reference.csv"
+        with path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(
+                handle, fieldnames=["pdb_id", "seed", "sample", "ranking_score", "prediction_path"],
+            )
+            writer.writeheader()
+            for item in selected:
+                writer.writerow({
+                    "pdb_id": item["foldbench_target_id"],
+                    "seed": item["seed"], "sample": item["sample"],
+                    "ranking_score": item["ranking_score"], "prediction_path": item[field],
+                })
+    with (args.output_dir / "selected_candidates.tsv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(selected[0]), delimiter="\t")
+        writer.writeheader()
+        writer.writerows(selected)
+    print(f"FOLDBENCH_EXPORT_COMPLETE matched_targets={len(selected)} output_dir={args.output_dir}")
+
+
+if __name__ == "__main__":
+    main()
