@@ -26,6 +26,12 @@
 ## pipeline_reports
 
 **注意:从New_Data_pipeline_reports改名而来 与实验室服务器上保持一致**
+
+## RNA_FM_pipeline
+
+用于生成RNA_FM
+
+
 # Code_Audit
 
 保存了代码审查的文件
