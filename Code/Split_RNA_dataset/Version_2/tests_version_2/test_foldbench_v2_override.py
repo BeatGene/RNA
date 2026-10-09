@@ -12,7 +12,7 @@ from Code.Split_RNA_dataset.Version_2.audit_pdb_lifecycle import FIELDS
 
 VERSION = Path(__file__).resolve().parents[1]
 WORKSPACE = VERSION.parents[2]
-SPLIT_REPORT = WORKSPACE / "Code/New_Data_pipeline_reports/DATA_SPLIT_V2_SINGLECHAIN_RANK1_ANNOTATION_20260924T155344Z_EXECUTE"
+SPLIT_REPORT = WORKSPACE / "Code/pipeline_reports/DATA_SPLIT_V2_SINGLECHAIN_RANK1_ANNOTATION_20260924T155344Z_EXECUTE"
 SCRIPT = VERSION / "apply_v2_foldbench_test_override.py"
 PROMOTE = ("7SXP", "7WIA", "7WII", "7ZJ4", "8HB8")
 HOLDOUT = ("7WI9", "7WIB", "7WIE", "7WIF", "7ZJ5")

@@ -43,7 +43,7 @@ class WorkspaceSyncTest(unittest.TestCase):
             server = base / "server"
             files = {
                 local / "Code" / "script.py": b"local code",
-                local / "Code" / "New_Data_pipeline_reports" / "audit.txt": b"local report",
+                local / "Code" / "pipeline_reports" / "audit.txt": b"local report",
                 local / "Code_Flow_matching" / "shared.txt": b"same",
                 server / "Code" / "script.py": b"old server code",
                 server / "Code" / "only_server.txt": b"download me",
@@ -55,7 +55,7 @@ class WorkspaceSyncTest(unittest.TestCase):
                 path.write_bytes(data)
             manifests = {}
             for side, root, reports in (
-                ("local", local, "New_Data_pipeline_reports"),
+                ("local", local, "pipeline_reports"),
                 ("server", server, "pipeline_reports"),
             ):
                 manifest = base / f"{side}.jsonl"

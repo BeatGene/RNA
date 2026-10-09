@@ -30,4 +30,9 @@
 *.csv
 !Code_Flow_matching/config/foldbench_monomer_rna_targets.csv
 
-/Code/New_Data_pipeline_reports/CODE_SYNC_20260930/*.tar.gz
+
+/Code/pipeline_reports/CODE_SYNC_20260930/*.tar.gz
+
+/Code/pipeline_reports/CODE_SYNC_20260930/*.tar
+
+/Code/pipeline_reports/CODE_SYNC_20260930/*.gz

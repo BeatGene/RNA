@@ -68,7 +68,7 @@ class V2PtRecoveryTests(unittest.TestCase):
             output = Path(temp) / "lifecycle"
             result = subprocess.run([
                 sys.executable, str(VERSION / "audit_pdb_lifecycle.py"),
-                "--split-report", str(WORKSPACE / "Code/New_Data_pipeline_reports/DATA_SPLIT_V2_SINGLECHAIN_RANK1_ANNOTATION_20260924T155344Z_EXECUTE"),
+                "--split-report", str(WORKSPACE / "Code/pipeline_reports/DATA_SPLIT_V2_SINGLECHAIN_RANK1_ANNOTATION_20260924T155344Z_EXECUTE"),
                 "--pt-unusable-file", str(VERSION / "pt_unusable_new_train_v2.tsv"),
                 "--output-dir", str(output),
             ], capture_output=True, text=True, check=True)
@@ -161,8 +161,8 @@ class V2PtRecoveryTests(unittest.TestCase):
             }), encoding="utf-8")
             new_pt = root / "Data_PT_V2"
             command = [sys.executable, str(VERSION / "plan_v2_pt_reuse.py"),
-                       "--old-split-report", str(WORKSPACE / "Code/New_Data_pipeline_reports/DATA_SPLIT_V1_SINGLECHAIN_RMSD15A_20260826T100510Z_EXECUTE"),
-                       "--new-split-report", str(WORKSPACE / "Code/New_Data_pipeline_reports/DATA_SPLIT_V2_SINGLECHAIN_RANK1_ANNOTATION_20260924T155344Z_EXECUTE"),
+                       "--old-split-report", str(WORKSPACE / "Code/pipeline_reports/DATA_SPLIT_V1_SINGLECHAIN_RMSD15A_20260826T100510Z_EXECUTE"),
+                       "--new-split-report", str(WORKSPACE / "Code/pipeline_reports/DATA_SPLIT_V2_SINGLECHAIN_RANK1_ANNOTATION_20260924T155344Z_EXECUTE"),
                        "--old-pt-root", str(old_pt), "--old-pt-run", str(old_run),
                        "--new-pt-root", str(new_pt),
                        "--exclude-pdb-file", str(WORKSPACE / "Code_Flow_matching/config/refinement_excluded_pdb_ids_v2.tsv"),

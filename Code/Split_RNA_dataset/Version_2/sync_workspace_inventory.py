@@ -1,7 +1,7 @@
 """Inventory the two code trees with a stable reports-directory mapping.
 
 Run on either the local Windows workspace or the laboratory server. The
-logical ``reports/`` tree maps to ``Code/New_Data_pipeline_reports`` locally
+logical ``reports/`` tree maps to ``Code/pipeline_reports`` locally
 and ``Code/pipeline_reports`` on the server. This script only reads source
 files; it never copies or overwrites them.
 """
@@ -74,7 +74,7 @@ def main():
     args = parser.parse_args()
     code = args.root / "Code"
     flow = args.root / "Code_Flow_matching"
-    reports = code / ("New_Data_pipeline_reports" if args.side == "local" else "pipeline_reports")
+    reports = code / ("pipeline_reports" if args.side == "local" else "pipeline_reports")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     if args.output.exists():
         raise FileExistsError(args.output)

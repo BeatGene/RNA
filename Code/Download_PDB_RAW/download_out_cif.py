@@ -17,7 +17,7 @@ from openpyxl import load_workbook
 
 
 DEFAULT_XLSX = Path(
-    "~/Code/Download_PDB_RAW/Second_PDB_ID_xlsx_and_InOut/"
+    "~/Code/Download_PDB_RAW/"
     "experimental_pure_rna_pdb_ids.xlsx"
 ).expanduser()
 DEFAULT_OUTPUT_DIR = Path("~/pdb_data_mixed").expanduser()

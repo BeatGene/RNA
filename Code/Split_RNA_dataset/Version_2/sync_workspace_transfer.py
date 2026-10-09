@@ -56,7 +56,7 @@ def path_for(root: Path, side: str, key: str) -> Path:
     elif prefix == "flow":
         base = root / "Code_Flow_matching"
     else:
-        base = root / "Code" / ("New_Data_pipeline_reports" if side == "local" else "pipeline_reports")
+        base = root / "Code" / ("pipeline_reports" if side == "local" else "pipeline_reports")
     return base.joinpath(*remainder.split("/"))
 
 
