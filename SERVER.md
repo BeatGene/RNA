@@ -2,6 +2,19 @@
 
 删除了服务器上的文件夹Download_PDB_RAW
 
+# ~/Json_data
+
+## /Simple_json
+里面有2227个
+
+# ~/Data
+
+第零次划分数据集的产物 没有文件 已经删除
+
+# ~/Data_PT_V1
+
+.pt文件 验证集和测试集没有选200个里面最好的
+
 # ~/pdb_data
 
 原来一共包含2246个cif，现在我把Code/Download_PDB_RAW/alignment_pdb_ids_not_in_experimental_pure_rna.xlsx的五个删除了 现在2241个.cif
