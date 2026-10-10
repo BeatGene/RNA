@@ -105,8 +105,15 @@ pt生成日志
 
 ## RNA_FM_pipeline
 
-用于生成RNA_FM
+用于生成RNA_FM的脚本
 
+## Split_RNA_dataset
+
+用于划分数据集的脚本
+
+## predict_protenix
+
+生成decoy的脚本
 
 # Code_Audit
 
