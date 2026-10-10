@@ -102,9 +102,6 @@ pt生成日志
 
 ### FOLDBENCH
 
-### DECOYS
-
-最开始进来的时候审计
 
 ## RNA_FM_pipeline
 
