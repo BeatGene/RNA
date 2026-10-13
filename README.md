@@ -27,6 +27,31 @@
 
 **注意:从New_Data_pipeline_reports改名而来 与实验室服务器上保持一致**
 
+### DATA_DECOY_GENERATION
+
+生成包含置信度decoy的log日志
+#### V1
+
+~/Data_V1
+生成包含置信度的decoy
+
+#### V2
+
+~/Data_V2
+补充生成41个包含置信度的decoy 其余符号链接到V1
+
+### DATA_PT_GENERATION
+
+pt生成日志
+
+#### V2
+
+~/Data_PT_V2
+
+去除掉大于30Å的.pt文件 但是保存在~/Data_PT_V2_RMSD_GT30
+
+只生成41个新的cif的.pt文件
+
 ### DATA_SPLIT
 
 划分数据集的log日志
@@ -71,37 +96,15 @@
 
 把验证集中foldbench的移动到测试集
 
-### DATA_DECOY_GENERATION
-
-生成包含置信度decoy的log日志
-#### V1
-
-~/Data_V1
-生成包含置信度的decoy
-
-#### V2
-
-~/Data_V1
-补充生成41个包含置信度的decoy 其余符号链接到V1
+### FOLDBENCH
 
 ### RNA_FM
 
 生成RNA_FM的log日志
 
-### DATA_PT_GENERATION
+## predict_protenix
 
-pt生成日志
-
-#### V2
-
-~/Data_PT_V2
-
-去除掉大于30Å的.pt文件 但是保存在~/Data_PT_V2_RMSD_GT30
-
-只生成41个新的cif的.pt文件
-
-### FOLDBENCH
-
+生成decoy的脚本
 
 ## RNA_FM_pipeline
 
@@ -111,34 +114,41 @@ pt生成日志
 
 用于划分数据集的脚本
 
-## predict_protenix
-
-生成decoy的脚本
-
 # Code_Audit
 
 保存了代码审查的文件
 
-# Data_PT_V1
+# Code_Flow_matching
 
+
+# Data_PT_V1
 实验室服务器上保存的基本单位是.pt文件，本地保存的是两次冒烟、一次真正跑的log记录
 
 # Json_data
-
- 保存了foldbench计算5*5RMSD的结果，用来评估protenix预测的RNA构象的质量；保存了配对mapping情况
+保存了foldbench计算5*5RMSD的结果，用来评估protenix预测的RNA构象的质量；保存了配对mapping情况
 
 # PPT
-
 保存了历次汇报的PPT
 
 # README.md
-
 本文件记录了本地以及github仓库中的文件情况
 
-# SERVER.md
+1.允许pptx上传到github仓库 | 更改了README.md的功能 | 删除了把实验室服务器文件与本地同步的脚本和压缩包
 
+2.删除了protenix的仓库和ETFlow的仓库
+
+3.删除了.cluade和文献目录
+
+4.删除了训练图片(wandb上面有) 和临时审查
+
+5.删除根目录缓存和 literature 残留文件
+
+6.删除了第一次下载PDB的脚本 保留了第二次
+
+7.删除了本地的protenix RNA-FM Foldbench库 | 把本地的日志存放文件名New_Data_pipeline_reports改成pipeline_reports 与远程服务器一致
+
+# SERVER.md
 记录了实验室服务器上的文件情况
 
 # wb.txt
-
 保存了wandb的API KEY

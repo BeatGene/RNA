@@ -40,6 +40,9 @@ BACKBONE_FIELDS = [
     "input_backbone_aligned_rmsd",
     "refined_backbone_aligned_rmsd",
     "backbone_aligned_improvement",
+    "input_backbone_after_all_atom_fit_rmsd",
+    "refined_backbone_after_all_atom_fit_rmsd",
+    "backbone_after_all_atom_fit_improvement",
 ]
 SAMPLE_FIELDS = base.SAMPLE_FIELDS + BACKBONE_FIELDS + PHYSICS_FIELDS
 
@@ -60,7 +63,38 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--limit", type=int)
     parser.add_argument("--progress-every", type=int, default=100)
     parser.add_argument("--physics", action="store_true", help="Calculate all three V3 physical losses before and after refinement")
+    parser.add_argument("--export-structures", action="store_true", help="Export matched native, input and refined CIFs in the same coordinate frame")
+    parser.add_argument("--prediction-root", type=Path, default=Path.home() / "Data_V2")
+    parser.add_argument("--native-root", type=Path, default=Path.home() / "pdb_data")
     return parser.parse_args()
+
+
+def backbone_rmsd_after_all_atom_fit(
+    mobile_observed: torch.Tensor,
+    target_observed: torch.Tensor,
+    backbone_in_observed: torch.Tensor,
+) -> float:
+    """Fit on all observed atoms, then score only their backbone subset."""
+    if mobile_observed.shape != target_observed.shape or mobile_observed.shape[0] < 3:
+        raise ValueError("all-atom fit requires at least three paired observed atoms")
+    if backbone_in_observed.shape != (mobile_observed.shape[0],) or int(backbone_in_observed.sum()) < 3:
+        raise ValueError("backbone subset requires at least three observed atoms")
+    mobile = mobile_observed.double()
+    target = target_observed.double()
+    mobile_mean = mobile.mean(dim=0, keepdim=True)
+    target_mean = target.mean(dim=0, keepdim=True)
+    centered_mobile = mobile - mobile_mean
+    centered_target = target - target_mean
+    u, _, vh = torch.linalg.svd(centered_mobile.T @ centered_target)
+    v = vh.T
+    rotation = v @ u.T
+    if torch.det(rotation) < 0:
+        v = v.clone()
+        v[:, -1] *= -1
+        rotation = v @ u.T
+    aligned = (rotation @ centered_mobile.T).T + target_mean
+    difference = aligned[backbone_in_observed] - target[backbone_in_observed]
+    return float(torch.sqrt(difference.square().sum(dim=-1).mean()))
 
 
 def plane_loss_vectorized(
@@ -129,6 +163,10 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
     indices = indices[rank::world_size]
     model = base.load_model(args.config, args.checkpoint, device)
     backbone_ids = torch.tensor(BACKBONE_ATOM_IDS, dtype=torch.long, device=device)
+    if args.export_structures:
+        from export_rank1_pymol_v3 import export_sample_trio, MANIFEST_FIELDS
+        (args.output_dir / "structures").mkdir(exist_ok=True)
+        structure_rows = []
     shard_path = args.output_dir / f"samples.rank{rank:03d}.tsv"
     started = time.perf_counter()
     processed = 0
@@ -182,6 +220,7 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
                 atom_selector = batch.batch == graph_index
                 observed_selector = atom_selector & batch.target_mask
                 backbone_selector = observed_selector & torch.isin(batch.atom_name_id, backbone_ids)
+                backbone_in_observed = torch.isin(batch.atom_name_id[observed_selector], backbone_ids)
                 source_observed = batch.pos_pred[observed_selector]
                 target_observed = batch.pos[observed_selector]
                 refined_observed = prediction[observed_selector]
@@ -199,6 +238,12 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
                 )
                 refined_backbone = base.aligned_rmsd(
                     prediction[backbone_selector], batch.pos[backbone_selector],
+                )
+                input_backbone_all_fit = backbone_rmsd_after_all_atom_fit(
+                    source_observed, target_observed, backbone_in_observed,
+                )
+                refined_backbone_all_fit = backbone_rmsd_after_all_atom_fit(
+                    refined_observed, target_observed, backbone_in_observed,
                 )
                 atom_count = int(atom_selector.sum())
                 observed_count = int(observed_selector.sum())
@@ -226,6 +271,9 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
                     "input_backbone_aligned_rmsd": input_backbone,
                     "refined_backbone_aligned_rmsd": refined_backbone,
                     "backbone_aligned_improvement": input_backbone - refined_backbone,
+                    "input_backbone_after_all_atom_fit_rmsd": input_backbone_all_fit,
+                    "refined_backbone_after_all_atom_fit_rmsd": refined_backbone_all_fit,
+                    "backbone_after_all_atom_fit_improvement": input_backbone_all_fit - refined_backbone_all_fit,
                     "improved": int(improvement > args.tie_tolerance),
                     "worsened": int(improvement < -args.tie_tolerance),
                     "sample_path": metadata["sample_paths"][graph_index],
@@ -243,6 +291,21 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
                 else:
                     row.update({field: float("nan") for field in PHYSICS_FIELDS})
                 writer.writerow({key: base.fmt(row[key]) for key in SAMPLE_FIELDS})
+                if args.export_structures:
+                    structure_rows.append(export_sample_trio(
+                        payload_path=Path(metadata["sample_paths"][graph_index]),
+                        output_dir=args.output_dir,
+                        split=args.split,
+                        pdb_id=row["pdb_id"],
+                        sample_id=row["sample_id"],
+                        source=batch.pos_pred[atom_selector].detach().float().cpu(),
+                        native=batch.pos[atom_selector].detach().float().cpu(),
+                        refined=(prediction[atom_selector].detach().float().cpu()
+                                 + batch.pos_pred[atom_selector].detach().float().cpu().mean(dim=0)),
+                        prediction_root=args.prediction_root,
+                        native_root=args.native_root,
+                        metrics=row,
+                    ))
 
             processed += graph_count
             if rank == 0 and args.progress_every > 0 and processed % args.progress_every == 0:
@@ -252,6 +315,14 @@ def evaluate_rank(args: argparse.Namespace, rank: int, world_size: int, local_ra
                     f"samples_per_second={processed / max(elapsed, 1e-9):.3f}",
                     flush=True,
                 )
+
+    if args.export_structures:
+        with (args.output_dir / f"structure_manifest.rank{rank:03d}.tsv").open(
+            "w", encoding="utf-8", newline="",
+        ) as handle:
+            writer = csv.DictWriter(handle, fieldnames=MANIFEST_FIELDS, delimiter="\t")
+            writer.writeheader()
+            writer.writerows(structure_rows)
 
 
 def aggregate_outputs(args: argparse.Namespace, world_size: int) -> None:
@@ -272,6 +343,23 @@ def aggregate_outputs(args: argparse.Namespace, world_size: int) -> None:
         writer = csv.DictWriter(handle, fieldnames=SAMPLE_FIELDS, delimiter="\t")
         writer.writeheader()
         writer.writerows(rows)
+    if args.export_structures:
+        from export_rank1_pymol_v3 import MANIFEST_FIELDS
+        structure_rows = []
+        for rank in range(world_size):
+            with (args.output_dir / f"structure_manifest.rank{rank:03d}.tsv").open(
+                "r", encoding="utf-8", newline="",
+            ) as handle:
+                structure_rows.extend(csv.DictReader(handle, delimiter="\t"))
+        structure_rows.sort(key=lambda row: row["sample_id"])
+        if len(structure_rows) != len(rows) or {row["sample_id"] for row in structure_rows} != {row["sample_id"] for row in rows}:
+            raise ValueError("structure manifest does not match evaluated samples")
+        with (args.output_dir / "structure_manifest.tsv").open(
+            "w", encoding="utf-8", newline="",
+        ) as handle:
+            writer = csv.DictWriter(handle, fieldnames=MANIFEST_FIELDS, delimiter="\t")
+            writer.writeheader()
+            writer.writerows(structure_rows)
 
 
 def main() -> None:

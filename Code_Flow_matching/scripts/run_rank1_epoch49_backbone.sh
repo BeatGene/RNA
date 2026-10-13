@@ -2,28 +2,34 @@
 set -euo pipefail
 
 project_root="${PROJECT_ROOT:-$HOME/Code_Flow_matching}"
-data_root="${DATA_ROOT:-$HOME/Data_PT_V2_rank1}"
-output_root="${BACKBONE_EVAL_ROOT:-$project_root/evaluation/v3_rank1_epoch49_backbone_20261008}"
+data_root="${DATA_ROOT:-$HOME/Data_PT_V2}"
+archive_root="${RANK1_ARCHIVE_ROOT:-$HOME/Data_PT_V2_all_candidates_20261013}"
+selection_file="$archive_root/rank1_selection.tsv"
+summary_file="$archive_root/rank1_summary.json"
+output_root="${BACKBONE_EVAL_ROOT:-$project_root/evaluation/v3_rank1_epoch49_backbone_v2promoted_20261013}"
 checkpoint="$project_root/checkpoints/rna_refinement_v3_residual_mobility/epoch=49-step=157550.ckpt"
 config="$project_root/config/RNA_train_residual_v3.yaml"
 gpu_count="${EVAL_GPUS:-4}"
 
-for file in "$data_root/summary.json" "$data_root/selection.tsv" "$checkpoint" "$config" \
+for file in "$selection_file" "$summary_file" "$checkpoint" "$config" \
   "$project_root/scripts/evaluate_refinement_v3.py" \
   "$project_root/scripts/summarize_backbone_rmsd_v3.py"; do
   [[ -f "$file" ]] || { echo "missing file: $file" >&2; exit 1; }
 done
 
 mkdir -p "$output_root"
+selection_hash="$(sha256sum "$selection_file")"
+selection_hash="${selection_hash%% *}"
 if [[ -f "$output_root/rank1_selection.sha256" ]]; then
-  sha256sum -c "$output_root/rank1_selection.sha256" >/dev/null
+  read -r previous_hash _ < "$output_root/rank1_selection.sha256"
+  [[ "$previous_hash" == "$selection_hash" ]] || { echo "rank-1 selection changed" >&2; exit 1; }
 else
-  sha256sum "$data_root/selection.tsv" > "$output_root/rank1_selection.sha256"
+  printf '%s  %s\n' "$selection_hash" "$selection_file" > "$output_root/rank1_selection.sha256"
 fi
 
 for split in val test; do
   [[ -d "$data_root/$split" ]] || { echo "missing split: $split" >&2; exit 1; }
-  expected="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["selected_count"][sys.argv[2]])' "$data_root/summary.json" "$split")"
+  expected="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["selected_count"][sys.argv[2]])' "$summary_file" "$split")"
   actual="$(find "$data_root/$split" -name '*.pt' | wc -l)"
   [[ "$actual" -eq "$expected" ]] || { echo "$split: $actual .pt, expected $expected" >&2; exit 1; }
   while IFS= read -r -d '' link; do
