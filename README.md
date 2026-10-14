@@ -37,11 +37,14 @@ RNA_FM 生成RNA_FM的log日志
 
 # Code_Flow_matching
 
-# Json_data
-保存了foldbench计算5*5RMSD的结果，用来评估protenix预测的RNA构象的质量
-
 # PPT
 保存了历次汇报的PPT
+
+# pymol_bundle
+第三次训练的模型的pymol可视化(对验证集和测试集)
+
+# AGENT.md
+vibe coding 需要遵守的规则
 
 # README.md
 本文件记录了本地以及github仓库中的文件情况

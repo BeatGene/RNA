@@ -4,14 +4,14 @@ import torch
 from torch import Tensor, nn
 from torch_geometric.nn import MessagePassing
 from torch_geometric.utils import scatter
+from etflow.commons.reductions import center_by_graph
 
 from .modules import CoorsNorm, EquivariantVectorOutput
 from .utils import CosineCutoff, NeighborEmbedding, act_class_mapping, rbf_class_mapping
 
 
 def center(pos, batch):
-    pos_center = pos - scatter(pos, batch, dim=0, reduce="mean")[batch]
-    return pos_center
+    return center_by_graph(pos, batch=batch)
 
 
 class EquivariantMultiHeadAttention(MessagePassing):

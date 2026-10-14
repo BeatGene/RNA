@@ -5,6 +5,7 @@ from typing import Optional
 from etflow.models.utils import build_dynamic_radius_graph
 import torch
 from torch_geometric.utils import scatter
+from etflow.commons.reductions import grouped_mean, reduction_dtype
 
 
 def correct_tensor_shape(t: torch.Tensor) -> torch.Tensor:
@@ -54,9 +55,10 @@ def batchwise_mse_loss(
     prediction = correct_tensor_shape(prediction)
     target = correct_tensor_shape(target)
 
-    return scatter(
-        ((prediction - target) ** 2).sum(dim=-1), index=batch, reduce=reduce
-    ).mean(dim=0)
+    dtype = torch.promote_types(reduction_dtype(prediction), reduction_dtype(target))
+    atom_loss = ((prediction.to(dtype) - target.to(dtype)) ** 2).sum(dim=-1)
+    pooled = grouped_mean(atom_loss, batch) if reduce == "mean" else scatter(atom_loss, index=batch, reduce=reduce)
+    return pooled.mean(dim=0)
 
 
 def batchwise_l2_loss(
@@ -75,9 +77,11 @@ def batchwise_l2_loss(
     prediction = correct_tensor_shape(prediction)
     target = correct_tensor_shape(target)
 
-    atom_loss = torch.norm(prediction - target, p=2, dim=-1)
+    dtype = torch.promote_types(reduction_dtype(prediction), reduction_dtype(target))
+    atom_loss = torch.norm(prediction.to(dtype) - target.to(dtype), p=2, dim=-1)
     if mask is None:
-        return scatter(atom_loss, index=batch, reduce=reduce).mean(dim=0)
+        pooled = grouped_mean(atom_loss, batch) if reduce == "mean" else scatter(atom_loss, index=batch, reduce=reduce)
+        return pooled.mean(dim=0)
 
     mask = mask.to(device=prediction.device).bool().view(-1)
     if mask.numel() != prediction.size(0):
@@ -94,13 +98,7 @@ def batchwise_l2_loss(
         dim_size=num_graphs,
         reduce="sum",
     )
-    observed_count = scatter(
-        weights,
-        index=batch,
-        dim=0,
-        dim_size=num_graphs,
-        reduce="sum",
-    )
+    observed_count = torch.bincount(batch[mask], minlength=num_graphs)
     valid_graph = observed_count > 0
     if not valid_graph.any():
         raise ValueError("batch has no native-observed atoms")
@@ -162,12 +160,11 @@ def atomwise_bond_error(
 
     atom_index = torch.cat([atom_i, atom_j], dim=0)
     atom_error = torch.cat([relative_error, relative_error], dim=0)
-    return scatter(
+    return grouped_mean(
         atom_error,
         atom_index,
         dim=0,
         dim_size=num_atoms,
-        reduce="mean",
     ).unsqueeze(-1)
 
 

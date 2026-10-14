@@ -4,6 +4,7 @@ from typing import Optional
 import torch
 from torch import Tensor, nn
 from torch_geometric.utils import scatter
+from etflow.commons.reductions import grouped_mean
 
 from .utils import GatedEquivariantBlock, act_class_mapping
 
@@ -37,6 +38,8 @@ class OutputModel(nn.Module, metaclass=ABCMeta):
         return
 
     def reduce(self, x, batch):
+        if self.reduce_op == "mean":
+            return grouped_mean(x, batch)
         return scatter(x, batch, dim=0, reduce=self.reduce_op)
 
     def post_reduce(self, x):

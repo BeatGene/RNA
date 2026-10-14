@@ -2,10 +2,10 @@ import torch
 from torch_cluster import radius_graph
 from torch.nn.functional import pad
 from torch_geometric.utils import get_laplacian, scatter, to_dense_adj
+from etflow.commons.reductions import center_by_graph, grouped_mean, reduction_dtype
 
 def center_pos(pos, batch):
-    pos_center = pos - scatter(pos, batch, dim=0, reduce="mean")[batch]
-    return pos_center
+    return center_by_graph(pos, batch=batch)
 
 
 def linear_schedule(low, high, max_steps, total_steps) -> torch.Tensor:
@@ -145,18 +145,12 @@ def merge_dynamic_radius_edges(
 
 
 def center_of_mass(x, dim=0, batch=None):
-    num_nodes = x.size(0)
-
-    if batch is None:
-        batch = torch.zeros(num_nodes, dtype=torch.long, device=x.device)
-
-    x_com = scatter(x, batch, dim=dim, reduce="mean")[batch]
-    return x - x_com
+    return center_by_graph(x, batch=batch, dim=dim)
 
 
 def assert_zero_mean(x: torch.Tensor, batch: torch.Tensor, eps=1e-10) -> bool:
     largest_value = x.abs().max().item()
-    a = scatter(x, batch, dim=0, reduce="mean") if batch is not None else x.mean(dim=0)
+    a = grouped_mean(x, batch) if batch is not None else x.to(reduction_dtype(x)).mean(dim=0)
     error = a.abs().max().item()
     rel_error = error / (largest_value + eps)
     assert rel_error < 1e-2, f"Mean is not zero, relative_error {rel_error}"

@@ -4,6 +4,7 @@ import torch
 import torch.nn.functional as F
 from torch import Tensor
 from torch_geometric.utils import scatter
+from etflow.commons.reductions import grouped_mean
 
 
 from etflow.models.base import BaseModel
@@ -467,12 +468,11 @@ class BaseFlow(BaseModel):
 
         global_residue_index, total_residues = self.build_global_residue_index(batch=batch,atom_to_token_idx=atom_to_token_idx,num_tokens=num_tokens,)
 
-        residue_gate_input = scatter(
+        residue_gate_input = grouped_mean(
             atom_gate_input,
             global_residue_index,
             dim=0,
             dim_size=total_residues,
-            reduce="mean",
         )
         mobility_residue = torch.sigmoid(
             self.mobility_head(residue_gate_input)
