@@ -1,14 +1,19 @@
+[//]: # (ToDo)
 # Code
 ## Download_PDB_RAW 
 alignment_pdb_ids_not_in_experimental_pure_rna.xlsx 5个原来脚本判断为纯RNA实际不是的PDB_id 
 
+check_cifs_against_rcsb.py                          检查服务器上2241+77cif文件
+
+download_out_cif.py                                 从experimental_pure_rna_pdb_ids.xlsx表2中下载OUT的cif文件(杂牌)
+
 experimental_pure_rna_pdb_ids.xlsx                  表1:2241个纯RNA的PDB_id 表2:RNARefine文章中涉及到的PDB_id 实际纯RNA的PDB_id已经全部在表1中了
 
-rna_entity_metadata.xlsx                            2241+77个cif文件的metadata 由build_rna_entity_metadata.py脚本生成（包括纯的和杂牌的）
+pdb_cif_pipeline.py                                 下载cif文件的主程序脚本
 
 requirements_pdb_pipeline.txt                       脚本pdb_cif_pipeline.py的环境要求
 
-download_out_cif.py                                 从experimental_pure_rna_pdb_ids.xlsx表2中下载OUT的cif文件(杂牌)
+rna_entity_metadata.xlsx                            2241+77个cif文件的metadata 由build_rna_entity_metadata.py脚本生成（包括纯的和杂牌的）
 
 ## pipeline_reports
 日志文件
@@ -35,6 +40,7 @@ RNA_FM 生成RNA_FM的log日志
 # Code_Audit
 保存了代码审查的文件
 
+[//]: # (ToDo)
 # Code_Flow_matching
 Code_Flow_matching/config 模型yaml配置文件
 
@@ -42,7 +48,6 @@ Code_Flow_matching/etflow 模型本体
 
 Code_Flow_matching/evaluation 
 
-[//]: # (ToDo)
 Code_Flow_matching/scripts 待检查 
 
 # PPT
