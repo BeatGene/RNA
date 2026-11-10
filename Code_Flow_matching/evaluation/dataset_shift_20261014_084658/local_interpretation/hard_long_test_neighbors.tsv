@@ -1,0 +1,14 @@
+key	split	pdb_id	length	rmsd	nearest_distance	nearest_train_pdb	outside_reference_q95	reference_q95	nearest_train_candidate_count
+current/test/7ZJ4/348/0	test	7ZJ4	374	41.662832	3.0425753	4C4Q	False	4.0416166	10
+current/test/8BU8/304/1	test	8BU8	354	20.253456	4.1999194	4C4Q	True	4.0416166	10
+current/test/8K15/309/0	test	8K15	621	24.495172	2.3231092	5G2Y	False	4.0416166	40
+current/test/8QO2/313/2	test	8QO2	222	23.516305	2.6305791	3IZD	False	4.0416166	200
+current/test/9E74/301/0	test	9E74	255	27.351706	3.4334932	4C4Q	False	4.0416166	10
+current/test/9ELY/326/0	test	9ELY	205	27.193645	2.233116	2N1Q	False	4.0416166	174
+current/test/9G7C/309/0	test	9G7C	224	29.799799	2.1414414	2N1Q	False	4.0416166	174
+current/test/9ISV/313/3	test	9ISV	580	27.617527	2.278581	5G2Y	False	4.0416166	40
+current/test/9K9G/307/0	test	9K9G	334	18.982279	2.4225216	3DHS	False	4.0416166	200
+current/test/9LEC/332/3	test	9LEC	378	29.680667	3.5715187	4C4Q	False	4.0416166	10
+current/test/9LEL/305/3	test	9LEL	476	28.122286	3.464775	5G2Y	False	4.0416166	40
+current/test/9M79/344/1	test	9M79	520	29.073075	2.9695291	5G2Y	False	4.0416166	40
+current/test/9QTJ/330/0	test	9QTJ	481	10.81213	2.1241039	2A64	False	4.0416166	200

@@ -16,6 +16,22 @@
 # ~/Code_Flow_matching
 模型以及跑的wandb、log所在地
 
+~/Code_Flow_matching/checkpoints 历次训练权重保存
+
+~/Code_Flow_matching/config      每次训练的yaml配置文件
+
+~/Code_Flow_matching/etflow      模型
+
+~/Code_Flow_matching/evaluation  评估测试结果
+
+~/Code_Flow_matching/logs        每次固定创建的文件夹 实际上没有内容
+
+~/Code_Flow_matching/scripts     应该只保留train utils build_refinement_pt三个py文件
+
+~/Code_Flow_matching/training_logs 每次的log与pid
+
+~/Code_Flow_matching/wandb        wandb文件
+
 # ~/Data_FM
 ~/Data_FM/model_cache模型权重
 

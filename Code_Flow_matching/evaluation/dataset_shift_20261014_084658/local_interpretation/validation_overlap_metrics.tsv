@@ -1,0 +1,3 @@
+train_sequence_overlap	pdbs	mean_input_rmsd	median_input_rmsd	rmsd_lt2_count	historical_mean_improvement	historical_median_improvement
+False	82	10.8998116834	8.69393232719	0	0.286542315366	0.05285283
+True	21	3.30008415128	1.72883009019	12	0.988491469048	0.05366523

@@ -1,0 +1,126 @@
+﻿relative_path	category	role_or_relation	output	identical_root_copy	size_bytes
+README_FOLDBENCH_RNA_RMSD.md	流程文档	流程/环境说明；需按代码核对历史口径	无		4258
+README_FOLDBENCH_STAGE1.md	流程文档	流程/环境说明；需按代码核对历史口径	无		5465
+README_PERSISTENT_CONDA.md	流程文档	流程/环境说明；需按代码核对历史口径	无		1728
+README_STAGE2_DECOYS.md	流程文档	流程/环境说明；需按代码核对历史口径	无		7961
+Version_2/foldbench_55_version_2/monitor_foldbench_pred.sh	监控	读取相应实验运行目录、进程/资源与日志	终端状态		2781
+Version_2/foldbench_55_version_2/run_foldbench_pred.sh	FoldBench_5x5入口	固定5 seeds×5 samples并调用核心pred；与根目录同名文件逐字节相同	Foldbench_predictions中的CIF/confidence及审计	run_foldbench_pred.sh	2687
+Version_2/foldbench_55_version_2/start_foldbench_pred.sh	FoldBench_5x5入口	后台启动根目录run_foldbench_pred.sh；与根目录同名文件逐字节相同	pred运行目录、日志、PID、状态	start_foldbench_pred.sh	2031
+Version_2/mapping_version_2/build_chain_maps.py	链映射质控	输入RNA链与GT坐标链的序列映射	mapping/tsv/PDB/chain_map.tsv		34360
+Version_2/mapping_version_2/build_mapping_targets_xlsx.py	链映射质控	预测目录+date_audit+PDB manifest构建目标概览	mapping/xlsx/targets.xlsx		15812
+Version_2/mapping_version_2/resolve_chain_maps_by_coordinates.py	链映射质控	导入build_chain_maps，用整体坐标消歧，默认C4prime	chain_map_variants/mapping_NN/chain_map.tsv、chain_map.txt		46563
+Version_2/prep_version_2/monitor_foldbench_prep.sh	监控	读取相应实验运行目录、进程/资源与日志	终端状态		1964
+Version_2/prep_version_2/run_foldbench_stage1.sh	FoldBench_5x5入口	固定环境与路径，选择preflight/audit/cached-prep/pred；与根目录同名文件逐字节相同	对应阶段数据与退出码	run_foldbench_stage1.sh	3724
+Version_2/prep_version_2/start_foldbench_prep.sh	FoldBench_5x5入口	后台启动根目录run_foldbench_stage1.sh prep；与根目录同名文件逐字节相同	prep运行目录、日志、PID、状态	start_foldbench_prep.sh	1716
+Version_2/tests/__pycache__/test_build_chain_maps.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		16701
+Version_2/tests/__pycache__/test_build_mapping_targets_xlsx.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		8163
+Version_2/tests/__pycache__/test_cached_rna_prep.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		9008
+Version_2/tests/__pycache__/test_deep_prep_audit.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		6199
+Version_2/tests/__pycache__/test_foldbench_rna_rmsd.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		23312
+Version_2/tests/__pycache__/test_resolve_chain_maps_by_coordinates.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		9294
+Version_2/tests/__pycache__/test_stage2_decoy_pipeline.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		17629
+Version_2/tests/test_build_chain_maps.py	测试	单元测试；部分Version_2导入路径需要同步当前布局	临时测试数据和测试结果		11767
+Version_2/tests/test_build_mapping_targets_xlsx.py	测试	单元测试；部分Version_2导入路径需要同步当前布局	临时测试数据和测试结果		5291
+Version_2/tests/test_cached_rna_prep.py	测试	单元测试；部分Version_2导入路径需要同步当前布局	临时测试数据和测试结果		5017
+Version_2/tests/test_deep_prep_audit.py	测试	单元测试；部分Version_2导入路径需要同步当前布局	临时测试数据和测试结果		3847
+Version_2/tests/test_foldbench_rna_rmsd.py	测试	单元测试；部分Version_2导入路径需要同步当前布局	临时测试数据和测试结果		19883
+Version_2/tests/test_resolve_chain_maps_by_coordinates.py	测试	单元测试；部分Version_2导入路径需要同步当前布局	临时测试数据和测试结果		6790
+Version_2/tests/test_stage2_decoy_pipeline.py	测试	单元测试；部分Version_2导入路径需要同步当前布局	临时测试数据和测试结果		10453
+Version_2/train_504_version_2/monitor_eval_50x4.sh	监控	读取相应实验运行目录、进程/资源与日志	终端状态		4968
+Version_2/train_504_version_2/monitor_train_50x4.sh	监控	读取相应实验运行目录、进程/资源与日志	终端状态		4494
+Version_2/train_504_version_2/start_eval_50x4_6gpu.sh	旧Data_50x4入口	使用train运行的排除表，预测val/test；不算RMSD；与根目录同名文件逐字节相同	val/test manifests、Foldbench_predictions_50x4_val/test、运行报告	start_eval_50x4_6gpu.sh	17584
+Version_2/train_504_version_2/start_train_50x4_8gpu.sh	旧Data_50x4入口	筛选旧train集合并调用核心预测；不训练模型；与根目录同名文件逐字节相同	train manifest/排除表、Foldbench_predictions_50x4_train、运行报告	start_train_50x4_8gpu.sh	17116
+Version_3/data_v1_50x4_confidence/README.md	流程文档	流程/环境说明；需按代码核对历史口径	无		2119
+Version_3/data_v1_50x4_confidence/__pycache__/prepare_data_v1_confidence_run.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		11689
+Version_3/data_v1_50x4_confidence/monitor_data_v1_50x4_confidence.sh	监控	查看Data_V1完整置信度任务状态	终端状态		4827
+Version_3/data_v1_50x4_confidence/prepare_data_v1_confidence_run.py	Data_V1完整置信度	构建核对train/val/test推理清单	split manifests、eligible IDs、smoke_manifest.csv、selection_summary.json		9323
+Version_3/data_v1_50x4_confidence/run_data_v1_50x4_confidence.sh	Data_V1完整置信度	分split分轮调用核心pred，full confidence和dataset布局	Data_V1/split/pdb/seed/predictions中的CIF+两类JSON；分轮审计		7467
+Version_3/data_v1_50x4_confidence/start_data_v1_50x4_confidence_8gpu.sh	Data_V1完整置信度	预检、prepare、冒烟和后台启动run脚本；调用根目录核心	运行目录、smoke、日志/PID与Data_V1预测		8467
+Version_3/tests/__pycache__/test_prepare_data_v1_confidence_run.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		6489
+Version_3/tests/test_prepare_data_v1_confidence_run.py	测试	单元测试；部分Version_2导入路径需要同步当前布局	临时测试数据和测试结果		4722
+__pycache__/build_chain_maps.cpython-311.pyc	自动缓存	Python字节码；可再生	无实验数据		53684
+__pycache__/build_chain_maps.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		45004
+__pycache__/build_foldbench_rna_multimetric_report.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		40320
+__pycache__/build_foldbench_rna_rmsd_final_report.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		40789
+__pycache__/build_mapping_targets_xlsx.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		23264
+__pycache__/cached_rna_prep.cpython-311.pyc	自动缓存	Python字节码；可再生	无实验数据		39934
+__pycache__/cached_rna_prep.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		35053
+__pycache__/compare_cif_ids.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		15487
+__pycache__/deep_prep_audit.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		40457
+__pycache__/rescue_foldbench_rna_rmsd.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		18532
+__pycache__/resident_protenix_pred.cpython-311.pyc	自动缓存	Python字节码；可再生	无实验数据		17397
+__pycache__/resident_protenix_pred.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		16537
+__pycache__/resolve_chain_maps_by_coordinates.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		61610
+__pycache__/run_foldbench_rna_rmsd.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		37084
+__pycache__/run_foldbench_rna_rmsd.cpython-39.pyc	自动缓存	Python字节码；可再生	无实验数据		21034
+__pycache__/stage2_decoy_pipeline.cpython-311.pyc	自动缓存	Python字节码；可再生	无实验数据		96308
+__pycache__/stage2_decoy_pipeline.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		92247
+__pycache__/summarize_foldbench_rna_rmsd.cpython-312.pyc	自动缓存	Python字节码；可再生	无实验数据		41054
+backups/before_conda_migration_20260813T110130Z/run_foldbench_pred.sh	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		2394
+backups/before_conda_migration_20260813T110130Z/run_foldbench_stage1.sh	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		3108
+backups/before_conda_migration_20260813T110130Z/stage2_decoy_pipeline.py	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		57897
+backups/before_conda_migration_20260813T110130Z/start_foldbench_pred.sh	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		1719
+backups/before_conda_migration_20260813T110130Z/start_foldbench_prep.sh	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		1294
+backups/before_conda_scripts_20260813T114924Z/run_foldbench_pred.sh	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		2394
+backups/before_conda_scripts_20260813T114924Z/run_foldbench_stage1.sh	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		3108
+backups/before_conda_scripts_20260813T114924Z/stage2_decoy_pipeline.py	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		57897
+backups/before_conda_scripts_20260813T114924Z/start_foldbench_pred.sh	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		1719
+backups/before_conda_scripts_20260813T114924Z/start_foldbench_prep.sh	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		1294
+build_foldbench_rna_multimetric_report.py	评估报告	从rank1_targets.csv生成多指标报告	多指标XLSX、表格、三组PNG/PDF/SVG和说明		30321
+build_foldbench_rna_rmsd_final_report.py	评估报告	从汇总CSV和冻结排除表生成最终RMSD报告	final_report下XLSX、TSV/CSV、PNG/PDF/SVG和说明		28785
+cached_rna_prep.py	预处理	按RNA序列复用与搜索MSA；导入stage2核心	A3M缓存、final-updated.json、兼容链接、缓存使用报告		25010
+check_pred_environment.sh	运行环境	环境/API/资源/可写性诊断	终端检查结果		1512
+compare_cif_ids.py	质量检查	比较单对GT/预测的链与残基编号	终端比较结果；可选JSON		11579
+deep_prep_audit.py	质量检查	序列/JSON/A3M一致性深度审计	deep_prep两张CSV、summary JSON、audit XLSX		28213
+environment/protenix-1.0.5/builds/20260813T100714Z/requirements.original.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		568
+environment/protenix-1.0.5/builds/20260813T100714Z/source/assets/license_header.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		587
+environment/protenix-1.0.5/builds/20260813T100714Z/source/docs/PTX_V1_Technical_Report_202602042356.pdf	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		1104468
+environment/protenix-1.0.5/builds/20260813T100714Z/source/docs/Protenix_Technical_Report_2024.pdf	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		3586577
+environment/protenix-1.0.5/builds/20260813T100714Z/source/examples/7pzb.pdb	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		440668
+environment/protenix-1.0.5/builds/20260813T100714Z/source/examples/example.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		3471
+environment/protenix-1.0.5/builds/20260813T100714Z/source/examples/example_constraint_msa.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		7287
+environment/protenix-1.0.5/builds/20260813T100714Z/source/examples/example_without_msa.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		865
+environment/protenix-1.0.5/builds/20260813T100714Z/source/examples/examples_with_rna_msa/example_9gmw_2.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		470
+environment/protenix-1.0.5/builds/20260813T100714Z/source/examples/examples_with_template/example_9fm7.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		1015
+environment/protenix-1.0.5/builds/20260813T100714Z/source/examples/examples_with_template/example_mgyp004658859411.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		1018
+environment/protenix-1.0.5/builds/20260813T100714Z/source/examples/finetune_subset.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		28
+environment/protenix-1.0.5/builds/20260813T100714Z/source/examples/input.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		1002
+environment/protenix-1.0.5/builds/20260813T100714Z/source/protenix.egg-info/SOURCES.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		4786
+environment/protenix-1.0.5/builds/20260813T100714Z/source/protenix.egg-info/dependency_links.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		1
+environment/protenix-1.0.5/builds/20260813T100714Z/source/protenix.egg-info/entry_points.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		65
+environment/protenix-1.0.5/builds/20260813T100714Z/source/protenix.egg-info/requires.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		557
+environment/protenix-1.0.5/builds/20260813T100714Z/source/protenix.egg-info/top_level.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		38
+environment/protenix-1.0.5/builds/20260813T100714Z/source/requirements.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		557
+environment/protenix-1.0.5/builds/20260813T100714Z/source/scripts/msa/data/pdb_seqs/pdb_index_to_seq.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		895
+environment/protenix-1.0.5/builds/20260813T100714Z/source/scripts/msa/data/pdb_seqs/pdb_seq.csv	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		2686
+environment/protenix-1.0.5/builds/20260813T100714Z/source/scripts/msa/data/pdb_seqs/seq_to_pdb_id_entity_id.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		1216
+environment/protenix-1.0.5/builds/20260813T100714Z/source/scripts/msa/data/pdb_seqs/seq_to_pdb_index.json	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		887
+environment/protenix-1.0.5/builds/20260813T100714Z/wheelhouse/protenix-1.0.5-py3-none-any.whl	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		484214
+environment/protenix-1.0.5/old-working-constraints.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		1513
+environment/protenix-1.0.5/old-working-non-gpu.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		1502
+environment/protenix-1.0.5/protenix-requirements-no-gpu.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		433
+environment/protenix-1.0.5/snapshots/20260813T100714Z/conda-explicit-linux-64.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		11508
+environment/protenix-1.0.5/snapshots/20260813T100714Z/pip-freeze.txt	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		2920
+environment/protenix-1.0.5/snapshots/20260813T100714Z/protenix-1.0.5-py3-none-any.whl	环境复现材料	Protenix安装包、依赖快照、文档/示例/索引材料	无本项目预测产物		484214
+monitor_foldbench_rna_rmsd.sh	监控	查看评估/报告进度	终端状态		2041
+pred_abandoned_25.txt	历史实验清单	25个放弃目标记录；50x4脚本内嵌同类集合	无；不是预测结果		313
+pred_oom_quarantine.txt	调度配置	普通5x5队列的隔离输入	无；被--exclude-pdb-file读取		595
+protenix_env.sh	运行环境	被shell source的Conda/CUDA环境及辅助函数	环境变量、缓存目录		3478
+protenix_test.inspect.json	历史环境快照	旧Docker inspect或pip freeze快照	无RNA预测产物		15834
+protenix_test.pip-freeze.txt	历史环境快照	旧Docker inspect或pip freeze快照	无RNA预测产物		5565
+protenix_test.portable-freeze.txt	历史环境快照	旧Docker inspect或pip freeze快照	无RNA预测产物		2130
+requirements_foldbench_rmsd_report.txt	依赖声明	openpyxl/matplotlib；高级报告另需pandas/numpy	无		37
+requirements_stage2_decoys.txt	依赖声明	调度与审计Python依赖	无；不是完整GPU环境		39
+rescue_foldbench_rna_rmsd.py	结构评估	导入RMSD runner，对两类已知错误补rigid-only	rigid_only_rescue下JSON、errors、进度和统计		14141
+resident_protenix_pred.py	共用核心	核心调度器调用的常驻GPU推理worker	预测CIF、summary-confidence；可选full-data JSON、心跳/失败日志		12633
+run_foldbench_pred.sh	FoldBench_5x5入口	固定5 seeds×5 samples并调用核心pred	Foldbench_predictions中的CIF/confidence及审计		2687
+run_foldbench_rna_rmsd.py	结构评估	调用ost compare-structures，评估传统布局候选	candidates.csv、details JSON、errors、progress/run_summary/事件		28679
+run_foldbench_stage1.sh	FoldBench_5x5入口	固定环境与路径，选择preflight/audit/cached-prep/pred	对应阶段数据与退出码		3724
+run_foldbench_stage1.sh.before_oom_20260810	历史备份	变更前脚本快照；非主入口	无；保留用于追溯		2591
+stage2_decoy_pipeline.py	共用核心	全流程审计与增量调度	JSON、prep、预测CIF/confidence、decoy审计报告		67300
+start_eval_50x4_6gpu.sh	旧Data_50x4入口	使用train运行的排除表，预测val/test；不算RMSD	val/test manifests、Foldbench_predictions_50x4_val/test、运行报告		17584
+start_foldbench_pred.sh	FoldBench_5x5入口	后台启动根目录run_foldbench_pred.sh	pred运行目录、日志、PID、状态		2031
+start_foldbench_prep.sh	FoldBench_5x5入口	后台启动根目录run_foldbench_stage1.sh prep	prep运行目录、日志、PID、状态		1716
+start_foldbench_rna_rmsd.sh	结构评估入口	后台启动评估/补救/汇总/两类报告	运行命令、日志、PID、退出码及对应任务产物		4726
+start_train_50x4_8gpu.sh	旧Data_50x4入口	筛选旧train集合并调用核心预测；不训练模型	train manifest/排除表、Foldbench_predictions_50x4_train、运行报告		17116
+summarize_foldbench_rna_rmsd.py	评估报告	合并标准与补救结果，严格按ranking_score选择rank1	reports下candidate/rank1 CSV、审计排除表、rmsd_report.xlsx、PNG		29528

@@ -11,6 +11,8 @@ requirements_pdb_pipeline.txt                       脚本pdb_cif_pipeline.py的
 download_out_cif.py                                 从experimental_pure_rna_pdb_ids.xlsx表2中下载OUT的cif文件(杂牌)
 
 ## pipeline_reports
+日志文件
+
 DATA_DECOY_GENERATION 生成包含置信度decoy的log日志
 
 DATA_PT_GENERATION  pt生成日志
@@ -18,8 +20,6 @@ DATA_PT_GENERATION  pt生成日志
 DATA_SPLIT 划分数据集的log日志
 
 DATA_V2_FOLDBENCH_TEST_OVERRIDE_20260930T081218Z 把验证集中foldbench的移动到测试集
-
-
 
 RNA_FM 生成RNA_FM的log日志
 
@@ -36,12 +36,17 @@ RNA_FM 生成RNA_FM的log日志
 保存了代码审查的文件
 
 # Code_Flow_matching
+Code_Flow_matching/config 模型yaml配置文件
+
+Code_Flow_matching/etflow 模型本体
+
+Code_Flow_matching/evaluation 
+
+[//]: # (ToDo)
+Code_Flow_matching/scripts 待检查 
 
 # PPT
 保存了历次汇报的PPT
-
-# pymol_bundle
-第三次训练的模型的pymol可视化(对验证集和测试集)
 
 # AGENT.md
 vibe coding 需要遵守的规则
