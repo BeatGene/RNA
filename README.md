@@ -1,4 +1,3 @@
-[//]: # (ToDo)
 # Code
 ## Download_PDB_RAW 
 alignment_pdb_ids_not_in_experimental_pure_rna.xlsx 5个原来脚本判断为纯RNA实际不是的PDB_id 
