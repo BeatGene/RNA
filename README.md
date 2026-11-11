@@ -27,9 +27,24 @@ DATA_V2_FOLDBENCH_TEST_OVERRIDE_20260930T081218Z 把验证集中foldbench的移�
 
 RNA_FM 生成RNA_FM的log日志
 
-## predict_protenix 
-生成decoy的脚本
+## predict_protenix
 
+### MSA_cached_input
+cached_rna_prep.py 以唯一RNA序列为单位准备MSA。优先复用已有有效MSA、当前数据库集合的缓存；可选使用官方预计算MSA；其余序列才进行新搜索。
+
+### qc
+check_simple_json.py  原始JSON是否与实验CIF、服务器安装的Protenix转换器结果一致，包括序列、拷贝数、修饰、配体和共价键
+
+check_prep.py         raw/final JSON内容是否一致、A3M全部记录是否可解析、query是否匹配、路径和链接是否有效
+
+deep_prep_audit.py    序列级prep检查，并与已有链序列清单交叉核对；默认范围偏向旧数据集合
+
+qc/compare_cif_ids.py 对比实验CIF与预测CIF的链ID、残基编号和序列，方便定位编号差异
+
+### share_predict_core
+stage2_decoy_pipeline.py  总调度程序，提供audit、make-json、prep、pred、preflight子命令。负责检查已有产物、寻找缺失任务、分配GPU、记录日志、生成审计报告。
+
+resident_protenix_pred.py 实际执行推理的GPU worker。在一个进程中复用已加载的模型，连续处理多个目标和seed。
 ## RNA_FM_pipeline
 用于生成RNA_FM的脚本
 
