@@ -39,7 +39,7 @@ check_prep.py         raw/final JSON内容是否一致、A3M全部记录是否�
 
 deep_prep_audit.py    序列级prep检查，并与已有链序列清单交叉核对；默认范围偏向旧数据集合
 
-qc/compare_cif_ids.py 对比实验CIF与预测CIF的链ID、残基编号和序列，方便定位编号差异
+compare_cif_ids.py 对比实验CIF与预测CIF的链ID、残基编号和序列，方便定位编号差异
 
 ### share_predict_core
 stage2_decoy_pipeline.py  总调度程序，提供audit、make-json、prep、pred、preflight子命令。负责检查已有产物、寻找缺失任务、分配GPU、记录日志、生成审计报告。

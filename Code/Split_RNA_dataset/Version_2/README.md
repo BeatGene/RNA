@@ -54,7 +54,7 @@ Run this from the laboratory server.  No directories below `~/Data` are
 created in this mode.
 
 ```bash
-python3 ~/Code/Split_RNA_dataset/split_rna_dataset.py
+python3 ~/Code/Split_RNA_dataset/split_rna_dataset_new.py
 ```
 
 The command prints the timestamped report directory created under
@@ -65,7 +65,7 @@ The command prints the timestamped report directory created under
 ## 2. Create the empty directories
 
 ```bash
-python3 ~/Code/Split_RNA_dataset/split_rna_dataset.py --execute
+python3 ~/Code/Split_RNA_dataset/split_rna_dataset_new.py --execute
 ```
 
 The command refuses to proceed if it detects an existing four-character PDB

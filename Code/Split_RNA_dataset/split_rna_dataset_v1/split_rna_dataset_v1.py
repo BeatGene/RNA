@@ -24,10 +24,9 @@ from collections import Counter
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import Any, Sequence
 
-import split_rna_dataset as legacy
-
+from Code.Split_RNA_dataset.split_rna_dataset import split_rna_dataset as legacy
 
 PIPELINE_VERSION = "3.0-single-chain-rmsd15"
 DEFAULT_CIF_DIR = Path("~/pdb_data").expanduser()
