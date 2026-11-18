@@ -92,18 +92,18 @@ class EuclideanDataset(Dataset):
         confidence = confidence_features(data, residue_index, self.confidence_mode)
 
         result = RNAData(
-            pos=pos,
-            pos_pred=pos_pred,
-            target_mask=target_mask,
-            atomic_numbers=atomic_numbers,
-            edge_index=edge_index,
-            edge_attr=edge_attr,
-            node_attr=node_attr,
-            geometry_bond_index=geometry_bond_index,
-            ideal_bond_length=ideal_bond_length,
-            residue_index=residue_index,
-            atom_name_id=atom_name_id,
-            clash_exclusion_index=clash_exclusion_index,
+            pos=pos,            #[N,3]
+            pos_pred=pos_pred,  #[N,3]
+            target_mask=target_mask, #[N]
+            atomic_numbers=atomic_numbers, #[N]
+            edge_index=edge_index,    #[2,E]
+            edge_attr=edge_attr,      #[E,7]
+            node_attr=node_attr,      #[N,640+29+5]
+            geometry_bond_index=geometry_bond_index, #[2,G]
+            ideal_bond_length=ideal_bond_length,     #[G]
+            residue_index=residue_index,             #[N]
+            atom_name_id=atom_name_id,               #[N]
+            clash_exclusion_index=clash_exclusion_index,# [2,G] or [2,C]
             **confidence,
         )
 

@@ -61,7 +61,7 @@ Code_Flow_matching/etflow 模型本体
 
 Code_Flow_matching/evaluation 
 
-Code_Flow_matching/scripts 待检查 
+Code_Flow_matching/scripts 
 
 # PPT
 保存了历次汇报的PPT

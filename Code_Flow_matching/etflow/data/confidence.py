@@ -36,7 +36,7 @@ def confidence_features(data, residue_index, mode="auto"):
         plddt, pairs = torch.zeros(n), torch.zeros(t, t, 4)
     if idx.numel() != n or (idx < 0).any() or (idx >= t).any():
         raise ValueError("atom_to_token_idx must contain N local token indices")
-    return dict(atom_plddt=plddt, atom_to_token_idx=idx,
+    return dict(atom_plddt=plddt, atom_to_token_idx=idx,                # [N]  [N]  [t*t,4]    [1]   [N,4]
                 token_pair_confidence=pairs.reshape(-1,4).contiguous(),
                 num_tokens=torch.tensor([t], dtype=torch.long),
                 atom_mobility_attr=pairs.mean(1)[idx].contiguous())
