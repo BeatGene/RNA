@@ -74,7 +74,7 @@
 # ~/output
 ~/output/ERR包含protenix进行构象生成时错误的PDB_id及其原因
 
-# ~/pdb_data
+# ~/pdb_data****
 一共包含2241个.cif(纯RNA)
 
 # ~/pdb_data_mixed

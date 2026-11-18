@@ -54,7 +54,6 @@ resident_protenix_pred.py 实际执行推理的GPU worker。在一个进程中�
 # Code_Audit
 保存了代码审查的文件
 
-[//]: # (ToDo)
 # Code_Flow_matching
 Code_Flow_matching/config 模型yaml配置文件
 
