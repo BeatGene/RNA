@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pathlib import Path
 from typing import Dict, Optional
 import math
@@ -16,12 +17,15 @@ class BaseDataModule(pl.LightningDataModule):
         self,
         data_dir: Path | None = None,
         dataloader_args: Optional[Dict] = None,
+        confidence_mode: str = "auto",
+        validate_inputs: bool = True,
         train_length_table: Path | None = None,
         long_rna_oversample_factor: float = 1.0,
         long_rna_threshold_nt: int = 50,
     ) -> None:
         super().__init__()
         self.data_dir = data_dir
+        self.dataset_args = dict(confidence_mode=confidence_mode, validate_inputs=validate_inputs)
         self.dataloader_args = dict(dataloader_args or {})
         self.train_length_table = Path(train_length_table) if train_length_table else None
         self.long_rna_oversample_factor = float(long_rna_oversample_factor)
@@ -39,12 +43,12 @@ class BaseDataModule(pl.LightningDataModule):
 
     def setup(self, stage: str = None):
         if stage in (None, "fit"):
-            self.train_dataset = EuclideanDataset(self.data_dir, split="train")
-            self.val_dataset = EuclideanDataset(self.data_dir, split="val")
+            self.train_dataset = EuclideanDataset(self.data_dir, split="train", **self.dataset_args)
+            self.val_dataset = EuclideanDataset(self.data_dir, split="val", **self.dataset_args)
         elif stage == "validate":
-            self.val_dataset = EuclideanDataset(self.data_dir, split="val")
+            self.val_dataset = EuclideanDataset(self.data_dir, split="val", **self.dataset_args)
         if stage in (None, "test"):
-            self.test_dataset = EuclideanDataset(self.data_dir, split="test")
+            self.test_dataset = EuclideanDataset(self.data_dir, split="test", **self.dataset_args)
 
     def train_dataloader(self):
         """Creates train dataloader"""

@@ -1,14 +1,8 @@
+from __future__ import annotations
 from pathlib import Path
 
 import torch
-# Modify_4
-import torch.nn.functional as F
 from torch_geometric.data import Data, Dataset
-
-from etflow.data.constants import (
-    NUM_ATOM_NAME_TYPES,
-    NUM_RNA_RESIDUE_TYPES,
-)
 
 
 # Modify_4
@@ -36,12 +30,16 @@ class EuclideanDataset(Dataset):
         data_dir: Path | None = None,
         split: str = "train",
         include_metadata: bool = False,
+        confidence_mode: str = "auto",
+        validate_inputs: bool = True,
     ):
         super().__init__()
 
         self.data_dir = Path(data_dir)
         self.split = split
         self.include_metadata = include_metadata
+        self.confidence_mode = confidence_mode
+        self.validate_inputs = validate_inputs
 
         self.data_files = list((self.data_dir / split).rglob("*.pt"))
 
@@ -60,6 +58,10 @@ class EuclideanDataset(Dataset):
         # Load the data file
         data_path = self.data_files[idx]
         data = torch.load(data_path,map_location="cpu",)
+
+        if self.validate_inputs:
+            from .validation import validate_record
+            validate_record(data)
 
         # Modify_3
         pos = data['pos'].float() # [N, 3] 真实的晶体结构坐标 (Ground Truth)
@@ -83,47 +85,11 @@ class EuclideanDataset(Dataset):
 
         clash_exclusion_index = clash_exclusion_index.long().contiguous()
 
-        rnafm_embedding = data["rnafm_embedding"].float().contiguous()
-        residue_type_id = data["residue_type_id"].long().view(-1)
-        rnafm_atom = rnafm_embedding[residue_index]
+        from .features import node_features
+        node_attr = node_features(data, residue_index, atom_name_id)
 
-        atom_role_one_hot = F.one_hot(atom_name_id,num_classes=NUM_ATOM_NAME_TYPES,).float()
-        residue_type_atom = residue_type_id[residue_index]
-        residue_type_one_hot = F.one_hot(residue_type_atom,num_classes=NUM_RNA_RESIDUE_TYPES,).float()
-
-        node_attr = torch.cat([rnafm_atom,atom_role_one_hot,residue_type_one_hot,],dim=-1,).contiguous()
-
-        atom_plddt = data["atom_plddt"].float().view(-1)
-        atom_to_token_idx = data["atom_to_token_idx"].long().view(-1)
-        token_pair_pae = data["token_pair_pae"].float().contiguous()
-        token_pair_pde = data["token_pair_pde"].float().contiguous()
-        contact_probs = data["contact_probs"].float().contiguous()
-
-        num_tokens = token_pair_pae.size(0)
-
-        # Protenix当前PAE/PDE分箱范围是0–32 Å。
-        token_pair_confidence = torch.stack(
-            [
-                token_pair_pae.clamp(0.0, 32.0) / 32.0,
-                token_pair_pae.transpose(0, 1).clamp(0.0, 32.0) / 32.0,
-                token_pair_pde.clamp(0.0, 32.0) / 32.0,
-                contact_probs.clamp(0.0, 1.0),
-            ],
-            dim=-1,
-        ).reshape(-1, 4).contiguous()
-
-        # Modify_5
-        token_mobility_attr = torch.stack(
-            [
-                token_pair_pae.mean(dim=1).clamp(0.0, 32.0) / 32.0,
-                token_pair_pae.mean(dim=0).clamp(0.0, 32.0) / 32.0,
-                token_pair_pde.mean(dim=1).clamp(0.0, 32.0) / 32.0,
-                contact_probs.mean(dim=1).clamp(0.0, 1.0),
-            ],
-            dim=-1,
-        )
-
-        atom_mobility_attr = token_mobility_attr[atom_to_token_idx].contiguous()
+        from .confidence import confidence_features
+        confidence = confidence_features(data, residue_index, self.confidence_mode)
 
         result = RNAData(
             pos=pos,
@@ -138,16 +104,7 @@ class EuclideanDataset(Dataset):
             residue_index=residue_index,
             atom_name_id=atom_name_id,
             clash_exclusion_index=clash_exclusion_index,
-            # Modify_4
-            atom_plddt=atom_plddt,
-            atom_to_token_idx=atom_to_token_idx,
-            token_pair_confidence=token_pair_confidence,
-            num_tokens=torch.tensor(
-                [num_tokens],
-                dtype=torch.long,
-            ),
-            # Modify_5
-            atom_mobility_attr=atom_mobility_attr,
+            **confidence,
         )
 
         # Training does not need Python/string metadata, but evaluation needs a

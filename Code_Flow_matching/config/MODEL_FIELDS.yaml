@@ -1,0 +1,355 @@
+note: 字段说明文件，不作为训练配置传入。flow_matching_loss固定权重1，所有模式均保留。
+model_args:
+  network_type:
+    default: TorchMDDynamics
+    description: 兼容旧配置的网络包装名，仅 TorchMDDynamics；实际后端由 representation_type 选择。
+  hidden_channels:
+    default: 128
+    description: 标量/向量潜变量通道数；TorchMD 必须被 num_heads 整除。
+  num_layers:
+    default: 8
+    description: 表征网络消息传递/Transformer 层数。
+  num_rbf:
+    default: 64
+    description: 距离径向基数量；ABRefine 使用高斯基。
+  rbf_type:
+    default: expnorm
+    description: TorchMD 距离基类型：expnorm 或 gauss。
+  trainable_rbf:
+    default: false
+    description: TorchMD 径向基是否可训练；ABRefine 高斯基始终可训练。
+  activation:
+    default: silu
+    description: TorchMD 及 gated 输出头激活函数。
+  neighbor_embedding:
+    default: true
+    description: TorchMD 是否在初始化时汇总邻居特征。
+  cutoff_lower:
+    default: 0.0
+    description: TorchMD 径向基/邻域包络下界，Å。
+  cutoff_upper:
+    default: 10.0
+    description: 径向基距离上界，Å；动态半径不应超过它。
+  max_z:
+    default: 100
+    description: 原子序数嵌入表大小，必须严格大于所有原子序数。
+  node_attr_dim:
+    default: 0
+    description: 置信度融合前的原子特征维数；当前 RNAFM640 + atom-role31 + residue-type3 = 674。
+  edge_attr_dim:
+    default: 7
+    description: 置信度融合前的边特征维数；动态边模式必须等于 num_edge_types。
+  attn_activation:
+    default: silu
+    description: TorchMD 注意力激活函数。
+  num_heads:
+    default: 8
+    description: 多头注意力数量。
+  distance_influence:
+    default: both
+    description: TorchMD 历史接口 keys/values/both/none；当前实现保留此参数，注意力均使用距离投影，不能作为距离消融开关。
+  reduce_op:
+    default: sum
+    description: 历史输出头接口；原子向量输出不进行分子级池化。
+  qk_norm:
+    default: false
+    description: TorchMD的q/k投影后是否添加LayerNorm。
+  output_layer_norm:
+    default: false
+    description: gated 输出头内是否做层归一化。
+  clip_during_norm:
+    default: false
+    description: TorchMD 边方向归一化分母下限设为 1e-2。
+  dynamic_graph:
+    default: true
+    description: 每次前向根据 x_t 重建空间半径边，并保留原拓扑边。
+  max_num_neighbors:
+    default: 32
+    description: 半径图的初始邻居上限；补反向边后实际度数可能超过此值。
+  num_edge_types:
+    default: 7
+    description: 拓扑/动态边的 one-hot 类别数。
+  dynamic_edge_type:
+    default: 3
+    description: 空间半径边的类型编号。
+  dynamic_radius_cutoff:
+    default: 4.5
+    description: 动态图半径，Å。
+  so3_equivariant:
+    default: false
+    description: TorchMD 是否增加叉积消息（SO(3)，含手性）；ABRefine 使用球谐等变算子。
+  source_conditioning:
+    default: true
+    description: 是否显式输入固定 x_pred；同时影响边特征、原子标量和初始向量；默认开。
+  confidence_conditioning:
+    default: false
+    description: 模型是否使用 pLDDT 和成对置信度；关时 mobility 的置信度输入也置零。
+  sigma:
+    default: 0.1
+    description: 随机训练路径噪声幅度；deterministic 路径忽略。
+  sample_time_dist:
+    default: uniform
+    description: 训练时间分布，目前仅 uniform。
+  edge_one_hot:
+    default: false
+    description: 保留的历史参数，当前模型不使用；边应由数据层提前 one-hot。
+  edge_one_hot_types:
+    default: 3
+    description: 保留的历史参数，当前模型不使用。
+  training_objective:
+    default: flow
+    description: flow：采样t并监督速度；residual：t=0监督一步位移，兼容旧实验。
+  flow_path:
+    default: deterministic
+    description: 训练插值路径 deterministic 或 stochastic；与推理 solver 独立。
+  bond_loss_weight:
+    default: 0.1
+    description: 键长惩罚权重，0 时不计算。
+  clash_loss_weight:
+    default: 0.01
+    description: 非键原子空间碰撞惩罚权重，0 时不计算。
+  plane_loss_weight:
+    default: 0.1
+    description: 碱基平面惩罚权重，0 时不计算。
+  use_mobility_v1:
+    default: false
+    description: 开启残基级 mobility gate 及相关监督；支持 flow/residual。
+  use_source_augmentation:
+    default: true
+    description: 只在训练阶段启用 identity/near-native 配对增强，与 mobility 开关独立。
+  mobility_gate_loss_weight:
+    default: 0.1
+    description: 残基 gate 的 SmoothL1 监督权重。
+  no_regret_loss_weight:
+    default: 0.5
+    description: refined残基误差超过输入误差部分的惩罚权重。
+  protect_loss_weight:
+    default: 0.2
+    description: 对原本准确残基的原子移动平方惩罚权重。
+  velocity_budget_loss_weight:
+    default: 0.01
+    description: 低mobility原子上的未门控速度平方预算惩罚权重。
+  identity_pair_probability:
+    default: 0.1
+    description: 每个图选择 identity 配对的概率；有效目标原子以native替换source。
+  near_native_pair_probability:
+    default: 0.2
+    description: 每个图选择 near-native 配对的概率；与identity概率之和不超过1。
+  near_native_min_alpha:
+    default: 0.05
+    description: near-native源=x_native+alpha*(x_pred-x_native)的alpha下界。
+  near_native_max_alpha:
+    default: 0.25
+    description: near-native alpha 上界，范围0到1。
+  mobility_good_error:
+    default: 0.3
+    description: 残基输入RMS误差低于该值时 gate监督目标为0，Å。
+  mobility_move_error:
+    default: 1.5
+    description: 残基输入RMS误差高于该值时 gate监督目标为1，Å。
+  protect_error_threshold:
+    default: 0.5
+    description: 输入残基RMS误差小于该阈值的有效原子接受protect惩罚，Å。
+  representation_type:
+    default: torchmd
+    description: 表征后端：torchmd 或 abrefine。
+  output_head_type:
+    default: gated
+    description: 输出头：gated、linear 或 abrefine；abrefine 头仅支持 abrefine 表征。
+  representation_args:
+    default: null
+    description: ABRefine 专用参数字典，见下方独立字段表；TorchMD 应为空。
+  confidence_strength:
+    default: 1.0
+    description: 置信度特征软融合强度 [0,1]，同时缩放网络和 mobility 置信度输入；不是坐标硬约束。
+  validate_inputs:
+    default: true
+    description: 模型每次前向是否执行形状、有限数、局部token及跨图边检查。
+  optimizer_type:
+    default: Adam
+    description: 优化器 Adam 或 AdamW。
+  lr:
+    default: 0.001
+    description: 优化器初始学习率。
+  beta1:
+    default: 0.95
+    description: Adam一阶动量系数。
+  beta2:
+    default: 0.999
+    description: Adam二阶动量系数。
+  weight_decay:
+    default: 0.0
+    description: 优化器权重衰减。
+  ams_grad:
+    default: false
+    description: AdamW是否开启AMSGrad；当前Adam分支未消费该字段。
+  grad_norm_max_val:
+    default: 100.0
+    description: 梯度裁剪额外上限；实际阈值为min(trainer_args.gradient_clip_val, grad_norm_max_val)。
+  lr_scheduler_type:
+    default: plateau
+    description: plateau、CosineAnnealingWarmupRestarts或null。
+  factor:
+    default: 0.6
+    description: plateau学习率缩减倍率。
+  patience:
+    default: 10
+    description: plateau等待周期。
+  first_cycle_steps:
+    default: 1000
+    description: 余弦热重启第一个周期长度。
+  cycle_mult:
+    default: 1.0
+    description: 热重启周期长度增长系数。
+  max_lr:
+    default: 0.0001
+    description: 热重启学习率上限。
+  min_lr:
+    default: 1.0e-08
+    description: 学习率下限。
+  warmup_steps:
+    default: 10000
+    description: 热重启warmup步数。
+  gamma:
+    default: 0.75
+    description: 热重启后最大学习率衰减系数。
+  last_epoch:
+    default: -1
+    description: 调度器恢复起点，默认-1。
+  lr_scheduler_monitor:
+    default: val/loss
+    description: 调度器监听的指标。
+  lr_scheduler_interval:
+    default: epoch
+    description: 调度器按step还是epoch更新。
+  lr_scheduler_frequency:
+    default: 1
+    description: 调度器更新频率。
+abrefine_representation_args:
+  attn_hidden_channels:
+    default: 64
+    description: 注意力隐藏通道数。
+  attn_alpha_channels:
+    default: 32
+    description: 每个头的注意力权重通道数。
+  attn_value_channels:
+    default: 8
+    description: 每个头的值通道数。
+  ffn_hidden_channels:
+    default: 64
+    description: 球面前馈层隐藏通道数。
+  norm_type:
+    default: layer_norm_sh
+    description: 球谐归一化类型，默认layer_norm_sh。
+  lmax_list:
+    default:
+    - 2
+    description: 单一分辨率的最大球谐阶数，例如[2]；必须>=1。
+  mmax_list:
+    default:
+    - 2
+    description: 单一分辨率的SO(2)最大m，要求0<=m<=l。
+  grid_resolution:
+    default: 14
+    description: 球面网格分辨率。
+  edge_channels:
+    default: 32
+    description: 边径向函数隐藏通道数。
+  use_atom_edge_embedding:
+    default: true
+    description: 每个块是否编码边端点的元素类型。
+  share_atom_edge_embedding:
+    default: false
+    description: 是否共享端点元素边嵌入。
+  use_m_share_rad:
+    default: false
+    description: 相同l的不同m是否共享径向权重。
+  attn_activation:
+    default: silu
+    description: 注意力激活。
+  use_s2_act_attn:
+    default: false
+    description: 是否使用S2激活注意力。
+  use_attn_renorm:
+    default: true
+    description: 是否重归一化注意力。
+  ffn_activation:
+    default: silu
+    description: 前馈激活。
+  use_gate_act:
+    default: false
+    description: 是否使用gate激活。
+  use_grid_mlp:
+    default: true
+    description: 是否使用球面网格MLP。
+  use_sep_s2_act:
+    default: true
+    description: 是否分离S2激活。
+  alpha_drop:
+    default: 0.1
+    description: 注意力dropout概率。
+  drop_path_rate:
+    default: 0.05
+    description: 图级随机深度概率。
+  proj_drop:
+    default: 0.0
+    description: 投影dropout概率。
+  weight_init:
+    default: uniform
+    description: 权重初始化normal/uniform。
+sampler_args:
+  sampler_type:
+    default: ode
+    description: ode=Euler无噪声；heun=二阶无噪声；sde=Euler-Maruyama启发式加噪；residual=一步位移，仅residual模型。
+  n_timesteps:
+    default: 50
+    description: 正整数；ODE/SDE积分步数；Heun每步两次网络调用；residual模式固定一次调用。
+  s_churn:
+    default: 1.0
+    description: SDE噪声乘数，ODE/Heun忽略。
+  std:
+    default: 1.0
+    description: SDE扩散尺度，Å/sqrt(time)；ODE/Heun忽略。
+  t_min:
+    default: 0.0
+    description: 积分起始时间，要求0<=t_min<t_max<=1；完整refinement使用0。
+  t_max:
+    default: 1.0
+    description: 积分终止时间，完整refinement使用1。
+datamodule_args:
+  confidence_mode:
+    default: auto
+    description: required=必须有完整置信度；auto=全有则用，全无则零填充，部分缺失报错；off=不读取置信度。
+  validate_inputs:
+    default: true
+    description: 加载原始PT时执行数据契约检查。
+  data_dir:
+    default: null
+    description: 包含train/val/test子目录的PT根目录。
+  dataloader_args:
+    default: {}
+    description: PyG DataLoader参数，如batch_size/num_workers/pin_memory。
+  train_length_table:
+    default: null
+    description: 可选训练长度表。
+  long_rna_oversample_factor:
+    default: 1.0
+    description: 长RNA训练重采样倍率，大于1需长度表。
+  long_rna_threshold_nt:
+    default: 50
+    description: 长RNA重采样阈值。
+runner_fields:
+  task_name: 实验名称与日志目录标识。
+  seed: 训练随机种子。
+  pretrained_ckpt: 只加载模型state_dict的预训练检查点，null禁用。
+  ckpt_path: Trainer恢复完整训练状态的检查点，null禁用。
+  datamodule: 保留声明；train.py当前固定实例化BaseDataModule。
+  model: 当前仅BaseFlow。
+  callbacks: 回调列表；callback为ModelCheckpoint或LearningRateMonitor，callback_args传给相应Lightning类。
+  logger: WandbLogger或null；新示例默认为null。
+  logger_args: 日志器参数字典。
+  trainer: 当前Trainer。
+  trainer_args: Lightning Trainer参数：max_epochs训练轮数，devices设备数，accelerator设备类型，strategy并行策略，accumulate_grad_batches梯度累积，precision数值精度，num_sanity_val_steps训练前验证步数，gradient_clip_val梯度范数阈值，log_every_n_steps日志间隔，enable_progress_bar进度条开关。
+  eval_args: 训练脚本不消费；batch_size供评估数据加载使用，sampler_args由调用方传给model.sample。
+  callbacks.ModelCheckpoint: dirpath保存目录，filename文件名格式，auto_insert_metric_name是否插入指标名，monitor监听指标，mode最小/最大，save_last保存最后一步，every_n_epochs保存间隔，save_top_k最佳模型保留数。
+  callbacks.LearningRateMonitor: log_momentum是否记录动量，logging_interval按step/epoch记录学习率。
