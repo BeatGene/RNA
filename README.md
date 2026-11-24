@@ -59,9 +59,9 @@ Code_Flow_matching/config 模型yaml配置文件
 
 Code_Flow_matching/etflow 模型本体
 
-Code_Flow_matching/evaluation 
+Code_Flow_matching/evaluation  评估
 
-Code_Flow_matching/scripts 
+Code_Flow_matching/scripts   训练脚本&其他脚本
 
 # PPT
 保存了历次汇报的PPT
