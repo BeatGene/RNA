@@ -64,15 +64,18 @@ class BaseFlow(TrainingMixin, MetricsMixin, LossMixin, FlowPathMixin,
         inputs = prepare_network_inputs(
             self, z, t, pos, bond_index, pos_source, edge_attr, node_attr, batch,
             atom_plddt, atom_to_token_idx, token_pair_confidence, num_tokens)
+
         # B + C: representation -> scalar/vector latents -> vector output head
         velocity, hidden = self.network(**inputs, return_hidden=True)
         aux = {}
+
         # D: atom vectors + residue features -> gated velocity and gate supervision
         if self.use_mobility_v1:
             velocity, aux = self.apply_residue_mobility_gate(
                 velocity, hidden, inputs["pos_source"], z, inputs["batch"], atom_plddt,
                 atom_mobility_attr, atom_to_token_idx, num_tokens,
                 geometry_bond_index, ideal_bond_length, clash_exclusion_index)
+
         # E: velocity [N,3], optional auxiliary residue outputs
         return (velocity, aux) if return_aux else velocity
 

@@ -41,6 +41,8 @@ def build_network(network_type, representation_type, output_head_type, represent
             return network  # preserve TorchMD state_dict names for existing checkpoints
         return ModularDynamics(network.representation_model,
                                LinearVectorHead(kwargs["hidden_channels"]), "linear")
+
+
     if representation_type != "abrefine":
         raise ValueError(f"Unknown representation_type: {representation_type}")
     try:

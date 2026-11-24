@@ -225,6 +225,9 @@ model_args:
   lr_scheduler_frequency:
     default: 1
     description: 调度器更新频率。
+  logged_metrics:
+    default: null
+    description: 发送给外部日志器（如W&B）的模型指标完整名称列表，如train/loss。null记录全部；空列表不发送模型指标。筛选涵盖梯度裁剪日志；内部callback_metrics仍保留。Lightning/W&B自动生成的epoch/global_step/系统指标及其他回调日志不受此字段控制。
 abrefine_representation_args:
   attn_hidden_channels:
     default: 64

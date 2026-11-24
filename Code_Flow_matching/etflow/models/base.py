@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import torch
 from lightning.pytorch import LightningModule
@@ -34,8 +34,15 @@ class BaseModel(LightningModule):
         lr_scheduler_monitor: str = "val/loss",
         lr_scheduler_interval: str = "epoch",
         lr_scheduler_frequency: int = 1,
+        logged_metrics: Optional[List[str]] = None,
     ):
         super().__init__()
+        if logged_metrics is not None and (
+            not isinstance(logged_metrics, (list, tuple))
+            or any(not isinstance(key, str) or not key.strip() for key in logged_metrics)
+        ):
+            raise ValueError("logged_metrics must be null or a list of nonempty metric names")
+        self.logged_metrics = None if logged_metrics is None else frozenset(logged_metrics)
 
         # optimizer
         self.optimizer_type = optimizer_type
@@ -141,6 +148,10 @@ class BaseModel(LightningModule):
         log.info("Using no lr scheduler")
         return {"optimizer": self.optimizer}
 
+    def should_log_metric(self, key: str) -> bool:
+        """Select external logger metrics; callback metrics remain available."""
+        return self.logged_metrics is None or key in self.logged_metrics
+
     def log_helper(self, key: str, value: torch.Tensor, batch_size: int):
         is_train_metric = key.startswith("train/")
         self.log(
@@ -150,8 +161,8 @@ class BaseModel(LightningModule):
             # validation metrics are reduced once per validation epoch.
             on_step=is_train_metric,
             on_epoch=not is_train_metric,
-            prog_bar=True,
-            logger=True,
+            prog_bar=self.should_log_metric(key),
+            logger=self.should_log_metric(key),
             batch_size=batch_size,
             # Avoid one distributed all-reduce per training metric and batch.
             # Validation must be synchronized to obtain a global checkpoint
@@ -189,7 +200,7 @@ class BaseModel(LightningModule):
             grad_norm,
             on_step=True,
             on_epoch=False,
-            logger=True,
+            logger=self.should_log_metric("train/grad_norm_unclipped"),
             prog_bar=False,
             sync_dist=False,
         )
@@ -198,7 +209,7 @@ class BaseModel(LightningModule):
             clip_fraction,
             on_step=True,
             on_epoch=False,
-            logger=True,
+            logger=self.should_log_metric("train/grad_clip_fraction"),
             prog_bar=False,
             sync_dist=False,
         )
