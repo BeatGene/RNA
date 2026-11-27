@@ -25,6 +25,7 @@ except ImportError:
 
 from .wigner import wigner_D
 from torch.nn import Linear
+from etflow.commons.reductions import reduction_dtype
 
 
 class CoefficientMappingModule(torch.nn.Module):
@@ -259,6 +260,7 @@ class SO3_Embedding():
         # code.
         self.length = len(embedding)
         self.embedding = embedding
+        self.device, self.dtype = embedding.device, embedding.dtype
 
     # Set the maximum order to be the maximum degree
     def set_lmax_mmax(self, lmax_list, mmax_list):
@@ -292,14 +294,13 @@ class SO3_Embedding():
     def _reduce_edge(self, edge_index, num_nodes):
         """Run _reduce_edge method."""
         # code.
-        new_embedding = torch.zeros(
-            num_nodes,
-            self.num_coefficients,
-            self.num_channels,
-            device=self.embedding.device,
-            dtype=self.embedding.dtype,
-        )
-        new_embedding.index_add_(0, edge_index, self.embedding)
+        # Autocast does not promote in-place index_add_. Accumulate low-precision
+        # messages in FP32 and keep the result there for downstream operations.
+        with torch.autocast(device_type=self.embedding.device.type, enabled=False):
+            values = self.embedding.to(reduction_dtype(self.embedding))
+            new_embedding = values.new_zeros(
+                num_nodes, self.num_coefficients, self.num_channels)
+            new_embedding.index_add_(0, edge_index, values)
         self.set_embedding(new_embedding)
 
     # Reshape the embedding l -> m
@@ -464,6 +465,7 @@ class SO3_Rotation(torch.nn.Module):
     def set_wigner(self, rot_mat3x3):
         """Run set_wigner method."""
         # code.
+        rot_mat3x3 = rot_mat3x3.to(reduction_dtype(rot_mat3x3))
         self.device, self.dtype = rot_mat3x3.device, rot_mat3x3.dtype
         length = len(rot_mat3x3)
         self.wigner = self.RotationToWignerDMatrix(rot_mat3x3, 0, self.lmax)
@@ -475,44 +477,52 @@ class SO3_Rotation(torch.nn.Module):
     def rotate(self, embedding, out_lmax, out_mmax):
         """Run rotate method."""
         # code.
-        out_mask = self.mapping.coefficient_idx(out_lmax, out_mmax)
-        wigner = self.wigner[:, out_mask, :]
-        return torch.bmm(wigner, embedding)
+        with torch.autocast(device_type=embedding.device.type, enabled=False):
+            values = embedding.to(reduction_dtype(embedding))
+            out_mask = self.mapping.coefficient_idx(out_lmax, out_mmax)
+            wigner = self.wigner[:, out_mask, :].to(values.dtype)
+            return torch.bmm(wigner, values)
 
     # Rotate the embedding by the inverse of the rotation matrix
     def rotate_inv(self, embedding, in_lmax, in_mmax):
         """Run rotate_inv method."""
         # code.
-        in_mask = self.mapping.coefficient_idx(in_lmax, in_mmax)
-        wigner_inv = self.wigner_inv[:, :, in_mask]
-        wigner_inv_rescale = self.mapping.get_rotate_inv_rescale(in_lmax, in_mmax)
-        wigner_inv = wigner_inv * wigner_inv_rescale
-        return torch.bmm(wigner_inv, embedding)
+        with torch.autocast(device_type=embedding.device.type, enabled=False):
+            values = embedding.to(reduction_dtype(embedding))
+            in_mask = self.mapping.coefficient_idx(in_lmax, in_mmax)
+            wigner_inv = self.wigner_inv[:, :, in_mask].to(values.dtype)
+            wigner_inv_rescale = self.mapping.get_rotate_inv_rescale(in_lmax, in_mmax)
+            wigner_inv = wigner_inv * wigner_inv_rescale.to(values.dtype)
+            return torch.bmm(wigner_inv, values)
 
     # Compute Wigner matrices from rotation matrix
     def RotationToWignerDMatrix(self, edge_rot_mat, start_lmax, end_lmax):
         """Run RotationToWignerDMatrix method."""
         # code.
-        x = edge_rot_mat @ edge_rot_mat.new_tensor([0.0, 1.0, 0.0])
-        alpha, beta = o3.xyz_to_angles(x)
-        R = (
-                o3.angles_to_matrix(
-                    alpha, beta, torch.zeros_like(alpha)
-                ).transpose(-1, -2)
-                @ edge_rot_mat
-        )
-        gamma = torch.atan2(R[..., 0, 2], R[..., 0, 0])
+        # Disabling autocast before computing angles/matrix products avoids
+        # rounding Wigner matrices to BF16 and only casting them back afterwards.
+        with torch.autocast(device_type=edge_rot_mat.device.type, enabled=False):
+            edge_rot_mat = edge_rot_mat.to(reduction_dtype(edge_rot_mat))
+            x = edge_rot_mat @ edge_rot_mat.new_tensor([0.0, 1.0, 0.0])
+            alpha, beta = o3.xyz_to_angles(x)
+            R = (
+                    o3.angles_to_matrix(
+                        alpha, beta, torch.zeros_like(alpha)
+                    ).transpose(-1, -2)
+                    @ edge_rot_mat
+            )
+            gamma = torch.atan2(R[..., 0, 2], R[..., 0, 0])
 
-        size = (end_lmax + 1) ** 2 - (start_lmax) ** 2
-        wigner = torch.zeros(len(alpha), size, size, device=self.device)
-        start = 0
-        for lmax in range(start_lmax, end_lmax + 1):
-            block = wigner_D(lmax, alpha, beta, gamma)
-            end = start + block.size()[1]
-            wigner[:, start:end, start:end] = block
-            start = end
+            size = (end_lmax + 1) ** 2 - (start_lmax) ** 2
+            wigner = edge_rot_mat.new_zeros(len(alpha), size, size)
+            start = 0
+            for lmax in range(start_lmax, end_lmax + 1):
+                block = wigner_D(lmax, alpha, beta, gamma)
+                end = start + block.size()[1]
+                wigner[:, start:end, start:end] = block
+                start = end
 
-        return wigner.detach()
+            return wigner.detach()
 
 
 class SO3_Grid(torch.nn.Module):

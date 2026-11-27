@@ -36,8 +36,12 @@ class ABRefineRepresentation(nn.Module):
         self.node_projection = nn.Linear(node_attr_dim, hidden_channels) if node_attr_dim else None
         self.time_projection = nn.Sequential(nn.Linear(1, hidden_channels), nn.SiLU(),
                                              nn.Linear(hidden_channels, hidden_channels))
-        self.delta_projection = nn.Sequential(nn.Linear(2, hidden_channels), nn.SiLU(),
-                                              nn.Linear(hidden_channels, hidden_channels))
+        # Disabled conditioning must not leave trainable parameters unused by DDP.
+        self.delta_projection = (
+            nn.Sequential(nn.Linear(2, hidden_channels), nn.SiLU(),
+                          nn.Linear(hidden_channels, hidden_channels))
+            if source_conditioning else None
+        )
         # Current/source distances and edge attributes are fused before every block.
         edge_input = num_rbf * (2 if source_conditioning else 1) + edge_attr_dim
         self.edge_projection = nn.Sequential(nn.Linear(edge_input, num_rbf), nn.SiLU(),
