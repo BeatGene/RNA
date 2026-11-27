@@ -32,7 +32,6 @@ def initialize(
         num_edge_types: int = 7,
         dynamic_edge_type: int = 3,
         dynamic_radius_cutoff: float = 4.5,
-        # max_num_neighbors: int = 32,
         so3_equivariant: bool = False,
         source_conditioning: bool = True,
         confidence_conditioning: bool = False,
