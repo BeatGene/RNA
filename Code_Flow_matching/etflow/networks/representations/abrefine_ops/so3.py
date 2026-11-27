@@ -14,6 +14,7 @@ TODO:
 
 import os
 import math
+from contextlib import contextmanager
 import torch
 import torch.nn as nn
 
@@ -26,6 +27,21 @@ except ImportError:
 from .wigner import wigner_D
 from torch.nn import Linear
 from etflow.commons.reductions import reduction_dtype
+
+
+@contextmanager
+def _geometry_precision(tensor):
+    """Disable autocast and CUDA TF32, then restore the caller's precision policy."""
+    with torch.autocast(device_type=tensor.device.type, enabled=False):
+        previous = torch.get_float32_matmul_precision()
+        change_precision = tensor.device.type == "cuda" and previous != "highest"
+        try:
+            if change_precision:
+                torch.set_float32_matmul_precision("highest")
+            yield
+        finally:
+            if change_precision:
+                torch.set_float32_matmul_precision(previous)
 
 
 class CoefficientMappingModule(torch.nn.Module):
@@ -477,7 +493,7 @@ class SO3_Rotation(torch.nn.Module):
     def rotate(self, embedding, out_lmax, out_mmax):
         """Run rotate method."""
         # code.
-        with torch.autocast(device_type=embedding.device.type, enabled=False):
+        with _geometry_precision(embedding):
             values = embedding.to(reduction_dtype(embedding))
             out_mask = self.mapping.coefficient_idx(out_lmax, out_mmax)
             wigner = self.wigner[:, out_mask, :].to(values.dtype)
@@ -487,7 +503,7 @@ class SO3_Rotation(torch.nn.Module):
     def rotate_inv(self, embedding, in_lmax, in_mmax):
         """Run rotate_inv method."""
         # code.
-        with torch.autocast(device_type=embedding.device.type, enabled=False):
+        with _geometry_precision(embedding):
             values = embedding.to(reduction_dtype(embedding))
             in_mask = self.mapping.coefficient_idx(in_lmax, in_mmax)
             wigner_inv = self.wigner_inv[:, :, in_mask].to(values.dtype)
@@ -499,9 +515,9 @@ class SO3_Rotation(torch.nn.Module):
     def RotationToWignerDMatrix(self, edge_rot_mat, start_lmax, end_lmax):
         """Run RotationToWignerDMatrix method."""
         # code.
-        # Disabling autocast before computing angles/matrix products avoids
-        # rounding Wigner matrices to BF16 and only casting them back afterwards.
-        with torch.autocast(device_type=edge_rot_mat.device.type, enabled=False):
+        # FP32 output dtype alone does not guarantee FP32 internal matmul math:
+        # both autocast and TF32 must be disabled for geometric matrices.
+        with _geometry_precision(edge_rot_mat):
             edge_rot_mat = edge_rot_mat.to(reduction_dtype(edge_rot_mat))
             x = edge_rot_mat @ edge_rot_mat.new_tensor([0.0, 1.0, 0.0])
             alpha, beta = o3.xyz_to_angles(x)

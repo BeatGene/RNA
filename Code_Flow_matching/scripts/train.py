@@ -23,7 +23,9 @@ from utils import (
 
 from etflow.data.datamodule import BaseDataModule
 
-torch.set_float32_matmul_precision("high")
+# Keep FP32 geometry/rotation math (including backward) out of TF32. The
+# Trainer's bf16-mixed autocast still accelerates eligible learned layers.
+torch.set_float32_matmul_precision("highest")
 
 
 

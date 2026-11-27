@@ -169,9 +169,14 @@ class ABRefinePrecisionTests(unittest.TestCase):
         expected_dtype = torch.float64 if dtype == torch.float64 else torch.float32
         for tensor in (frames, rotation.wigner, rotated, restored):
             self.assertEqual(tensor.dtype, expected_dtype)
-        identity = torch.eye(9, device=device, dtype=expected_dtype).expand(2, -1, -1)
-        torch.testing.assert_close(rotation.wigner @ rotation.wigner.transpose(-1, -2), identity,
+        # Check in CPU FP64 so the verification matmul cannot itself use TF32.
+        matrix = rotation.wigner.detach().double().cpu()
+        identity = torch.eye(9, dtype=torch.float64).expand(2, -1, -1)
+        torch.testing.assert_close(matrix @ matrix.transpose(-1, -2), identity,
                                    atol=3e-5, rtol=3e-5)
+        reference = SO3_Rotation(2).double()
+        reference.set_wigner(frames.detach().double().cpu())
+        torch.testing.assert_close(matrix, reference.wigner, atol=3e-5, rtol=3e-5)
         torch.testing.assert_close(restored, values.to(expected_dtype), atol=3e-5, rtol=3e-5)
         restored.sum().backward()
         self.assertTrue(torch.isfinite(values.grad).all())
@@ -193,7 +198,16 @@ class ABRefinePrecisionTests(unittest.TestCase):
         self.assertTrue(torch.isfinite(loss))
         loss.backward()
         check_gradients(model)
-        self.check_geometry("cuda", torch.bfloat16)
+        # Geometry must stay accurate even if an external caller enables TF32.
+        previous = torch.get_float32_matmul_precision()
+        try:
+            for precision in ("highest", "high", "medium"):
+                with self.subTest(matmul_precision=precision):
+                    torch.set_float32_matmul_precision(precision)
+                    self.check_geometry("cuda", torch.bfloat16)
+                    self.assertEqual(torch.get_float32_matmul_precision(), precision)
+        finally:
+            torch.set_float32_matmul_precision(previous)
 
     @unittest.skipUnless(dist.is_available() and dist.is_gloo_available(), "Gloo unavailable")
     def test_two_rank_ddp_bf16_with_accumulation(self):
