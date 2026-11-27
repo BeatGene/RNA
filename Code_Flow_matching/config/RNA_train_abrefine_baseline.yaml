@@ -1,11 +1,14 @@
-# Vector-only baseline: loss == flow_matching_loss, with no auxiliary penalties.
+# One-step residual baseline: loss == flow_matching_loss, no auxiliary penalties.
+# Train at t=0 on x0; predict displacement x1_centered - x0_centered.
+# Inference uses one forward pass: x_refined = x0_centered + predicted_displacement.
 # Keeps the chosen ABRefine representation/head, RNA features, graph and centering.
 # Disables explicit source conditioning, confidence, mobility, source augmentation,
 # long-RNA oversampling, weight decay and representation dropout.
 # source_conditioning may be set true independently without adding any loss.
 # Coordinates/graph/features are still loaded from the existing complete PT schema.
 # Uses Data_PT_V2; confirm that train/ and val/ exist before training.
-# Single GPU, batch=2, accumulation=3; BF16 mixed precision.
+# Four GPUs with DDP, per-GPU batch=2, accumulation=6; effective global batch=48.
+# BF16 mixed precision. A partial accumulation at epoch end can have fewer samples.
 # Existing flow_matching_loss is masked vector L2 (not squared MSE).
 # Edit data_dir/devices before training. eval_args is not consumed by train.py.
 # logged_metrics selects custom curves sent to W&B; null restores all metrics.
@@ -25,6 +28,7 @@ datamodule_args:
   confidence_mode: 'off'
   validate_inputs: true
   long_rna_oversample_factor: 1.0
+
 model: BaseFlow
 model_args:
   network_type: TorchMDDynamics
@@ -55,7 +59,8 @@ model_args:
   output_layer_norm: false
   so3_equivariant: true
   clip_during_norm: true
-  training_objective: flow
+  training_objective: residual
+  # Retained for config compatibility; residual training bypasses flow interpolation.
   flow_path: deterministic
   sigma: 0.0
   sample_time_dist: uniform
@@ -68,12 +73,12 @@ model_args:
   beta1: 0.95
   beta2: 0.999
   weight_decay: 0.0
-  grad_norm_max_val: 100.0
+  grad_norm_max_val: 5.0
   lr_scheduler_type: CosineAnnealingWarmupRestarts
-  first_cycle_steps: 32000
+  first_cycle_steps: 9_000
   cycle_mult: 1.0
   max_lr: 0.0003
-  min_lr: 3.0e-05
+  min_lr: 3.e-5
   warmup_steps: 1000
   gamma: 1.0
   last_epoch: -1
@@ -112,9 +117,9 @@ model_args:
   protect_error_threshold: 0.5
   logged_metrics:
   - train/loss
-  - train/flow_matching_loss
+  - train/grad_norm_unclipped
+  - train/grad_clip_fraction
   - val/loss
-  - val/flow_matching_loss
 callbacks:
 - callback: ModelCheckpoint
   callback_args:
@@ -125,26 +130,35 @@ callbacks:
     mode: min
     save_last: true
     every_n_epochs: 1
-    save_top_k: 3
-logger: null
-logger_args: {}
+    save_top_k: 5
+- callback: LearningRateMonitor
+  callback_args:
+    logging_interval: step
+    log_momentum: false
+logger: WandbLogger
+logger_args:
+  project: RNARefinement
+  save_dir: wandb
+  group: abrefine-residual-baseline
+  job_type: train
+  log_model: false
 trainer: Trainer
 trainer_args:
-  max_epochs: 10
-  devices: 1
+  max_epochs: 160
+  devices: 4
   accelerator: gpu
-  strategy: auto
-  accumulate_grad_batches: 3
+  strategy: ddp
+  accumulate_grad_batches: 6
   precision: bf16-mixed
   num_sanity_val_steps: 0
-  gradient_clip_val: 1.0
+  gradient_clip_val: 5.0
   log_every_n_steps: 50
   enable_progress_bar: false
 eval_args:
   batch_size: 1
   sampler_args:
-    sampler_type: ode
-    n_timesteps: 20
+    sampler_type: residual
+    n_timesteps: 1
     t_min: 0.0
     t_max: 1.0
     std: 0.0
