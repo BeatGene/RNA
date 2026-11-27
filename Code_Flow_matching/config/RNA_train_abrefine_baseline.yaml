@@ -1,0 +1,151 @@
+# Vector-only baseline: loss == flow_matching_loss, with no auxiliary penalties.
+# Keeps the chosen ABRefine representation/head, RNA features, graph and centering.
+# Disables explicit source conditioning, confidence, mobility, source augmentation,
+# long-RNA oversampling, weight decay and representation dropout.
+# source_conditioning may be set true independently without adding any loss.
+# Coordinates/graph/features are still loaded from the existing complete PT schema.
+# Uses Data_PT_V2; confirm that train/ and val/ exist before training.
+# Single GPU, batch=2, accumulation=3; BF16 mixed precision.
+# Existing flow_matching_loss is masked vector L2 (not squared MSE).
+# Edit data_dir/devices before training. eval_args is not consumed by train.py.
+# logged_metrics selects custom curves sent to W&B; null restores all metrics.
+task_name: rna_abrefine_baseline
+seed: 42
+pretrained_ckpt: null
+ckpt_path: null
+datamodule: BaseDataModule
+datamodule_args:
+  data_dir: /storage9920/home/tinghao.xia/Data_PT_V2
+  dataloader_args:
+    batch_size: 2
+    num_workers: 2
+    pin_memory: true
+    persistent_workers: true
+    drop_last: false
+  confidence_mode: 'off'
+  validate_inputs: true
+  long_rna_oversample_factor: 1.0
+model: BaseFlow
+model_args:
+  network_type: TorchMDDynamics
+  hidden_channels: 128
+  num_layers: 6
+  num_rbf: 64
+  rbf_type: expnorm
+  trainable_rbf: true
+  activation: silu
+  neighbor_embedding: true
+  cutoff_lower: 0.0
+  cutoff_upper: 6.0
+  dynamic_graph: true
+  dynamic_radius_cutoff: 6.0
+  max_num_neighbors: 64
+  dynamic_edge_type: 3
+  max_z: 20
+  node_attr_dim: 674
+  edge_attr_dim: 7
+  num_edge_types: 7
+  source_conditioning: false
+  confidence_conditioning: false
+  attn_activation: silu
+  num_heads: 8
+  distance_influence: both
+  reduce_op: sum
+  qk_norm: true
+  output_layer_norm: false
+  so3_equivariant: true
+  clip_during_norm: true
+  training_objective: flow
+  flow_path: deterministic
+  sigma: 0.0
+  sample_time_dist: uniform
+  bond_loss_weight: 0.0
+  clash_loss_weight: 0.0
+  plane_loss_weight: 0.0
+  use_mobility_v1: false
+  optimizer_type: AdamW
+  lr: 0.0003
+  beta1: 0.95
+  beta2: 0.999
+  weight_decay: 0.0
+  grad_norm_max_val: 100.0
+  lr_scheduler_type: CosineAnnealingWarmupRestarts
+  first_cycle_steps: 32000
+  cycle_mult: 1.0
+  max_lr: 0.0003
+  min_lr: 3.0e-05
+  warmup_steps: 1000
+  gamma: 1.0
+  last_epoch: -1
+  lr_scheduler_monitor: val/flow_matching_loss
+  lr_scheduler_interval: step
+  lr_scheduler_frequency: 1
+  representation_type: abrefine
+  output_head_type: abrefine
+  representation_args:
+    lmax_list:
+    - 2
+    mmax_list:
+    - 2
+    grid_resolution: 14
+    attn_hidden_channels: 64
+    attn_alpha_channels: 32
+    attn_value_channels: 8
+    ffn_hidden_channels: 128
+    edge_channels: 32
+    alpha_drop: 0.0
+    drop_path_rate: 0.0
+    proj_drop: 0.0
+  confidence_strength: 0.0
+  validate_inputs: true
+  use_source_augmentation: false
+  mobility_gate_loss_weight: 0.0
+  no_regret_loss_weight: 0.0
+  protect_loss_weight: 0.0
+  velocity_budget_loss_weight: 0.0
+  identity_pair_probability: 0.0
+  near_native_pair_probability: 0.0
+  near_native_min_alpha: 0.05
+  near_native_max_alpha: 0.25
+  mobility_good_error: 0.3
+  mobility_move_error: 1.5
+  protect_error_threshold: 0.5
+  logged_metrics:
+  - train/loss
+  - train/flow_matching_loss
+  - val/loss
+  - val/flow_matching_loss
+callbacks:
+- callback: ModelCheckpoint
+  callback_args:
+    dirpath: checkpoints/rna_abrefine_baseline
+    filename: epoch={epoch:02d}-step={step}
+    auto_insert_metric_name: false
+    monitor: val/flow_matching_loss
+    mode: min
+    save_last: true
+    every_n_epochs: 1
+    save_top_k: 3
+logger: null
+logger_args: {}
+trainer: Trainer
+trainer_args:
+  max_epochs: 10
+  devices: 1
+  accelerator: gpu
+  strategy: auto
+  accumulate_grad_batches: 3
+  precision: bf16-mixed
+  num_sanity_val_steps: 0
+  gradient_clip_val: 1.0
+  log_every_n_steps: 50
+  enable_progress_bar: false
+eval_args:
+  batch_size: 1
+  sampler_args:
+    sampler_type: ode
+    n_timesteps: 20
+    t_min: 0.0
+    t_max: 1.0
+    std: 0.0
+    s_churn: 0.0
